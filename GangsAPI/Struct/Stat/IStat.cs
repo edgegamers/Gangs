@@ -1,21 +1,21 @@
 ﻿namespace GangsAPI.Struct.Stat;
 
 /// <summary>
-/// Represents a numerical statistic.
+///   Represents a numerical statistic.
 /// </summary>
-public interface IStat : IEqualityComparer<IStat> {
+public interface IStat : IEqualityComparer<IStat>, IEquatable<IStat> {
   /// <summary>
-  /// The unique identifier of the statistic.
+  ///   The unique identifier of the statistic.
   /// </summary>
   string StatId { get; }
 
   /// <summary>
-  /// The name of the statistic.
+  ///   The name of the statistic.
   /// </summary>
   string Name { get; }
 
   /// <summary>
-  /// A description of the statistic.
+  ///   A description of the statistic.
   /// </summary>
   string? Description { get; }
 
@@ -27,16 +27,21 @@ public interface IStat : IEqualityComparer<IStat> {
   int IEqualityComparer<IStat>.GetHashCode(IStat obj) {
     return obj.StatId.GetHashCode();
   }
+
+  bool IEquatable<IStat>.Equals(IStat? other) {
+    if (other is null) return false;
+    return StatId == other.StatId;
+  }
 }
 
 public interface IStat<K, T> : IStat {
   /// <summary>
-  /// A key identifying an instance of the statistic.
+  ///   A key identifying an instance of the statistic.
   /// </summary>
   K Key { get; init; }
 
   /// <summary>
-  /// The value of the statistic.
+  ///   The value of the statistic.
   /// </summary>
   T Value { get; set; }
 }

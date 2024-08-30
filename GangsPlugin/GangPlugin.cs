@@ -1,20 +1,17 @@
 ﻿using System.Collections.Immutable;
 using CounterStrikeSharp.API.Core;
-using CounterStrikeSharp.API.Core.Commands;
 using GangsAPI;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
-namespace GangsImpl;
+namespace GangsPlugin;
 
 public class GangPlugin(IServiceProvider provider) : BasePlugin, IGangPlugin {
+  private IServiceScope? scope;
   public override string ModuleName => "Gangs";
   public override string ModuleVersion => "0.0.1";
   public BasePlugin Base => this;
   public IServiceProvider Services { get; } = provider;
-
-  private IServiceScope? scope;
 
   public override void Load(bool hotReload) {
     scope = Services.CreateScope();

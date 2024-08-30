@@ -2,7 +2,7 @@
 using GangsAPI;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GangsImpl;
+namespace GangsPlugin;
 
 public class GangServiceCollection : IPluginServiceCollection<IGangPlugin> {
   public void ConfigureServices(IServiceCollection serviceCollection) { }

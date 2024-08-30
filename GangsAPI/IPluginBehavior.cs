@@ -2,10 +2,10 @@
 
 namespace GangsAPI;
 
-public interface IPluginBehavior : IDisposable {
-  void IDisposable.Dispose() { }
+public interface IPluginBehavior : IBehavior {
+  internal void Start(BasePlugin? plugin) { }
 
-  internal void Start(BasePlugin plugin) { }
+  void Start(BasePlugin? plugin, bool hotReload) { Start(plugin); }
 
-  void Start(BasePlugin plugin, bool hotReload) { Start(plugin); }
+  void IBehavior.Start() { Start(null); }
 }

@@ -1,7 +1,6 @@
-﻿using GangsAPI;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace GangsImpl.Extensions;
+namespace GangsAPI.Extensions;
 
 public static class ServiceCollectionExtensions {
   /// <summary>
