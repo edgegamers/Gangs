@@ -10,4 +10,8 @@
       <ProjectReference Include="..\GangsAPI\GangsAPI.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Implementations\" />
+    </ItemGroup>
+
 </Project>

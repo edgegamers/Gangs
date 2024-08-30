@@ -1,11 +1,12 @@
 ﻿using GangsAPI.Struct;
+using GangsAPI.Struct.Gang;
 
 namespace GangsAPI.Services;
 
 /// <summary>
 /// A manager for players. Allows for the retrieval and creation of players.
 /// </summary>
-public interface IPlayerManager {
+public interface IPlayerManager : IPluginBehavior {
   /// <summary>
   /// Gets a player by their SteamID64, creating them if they do not exist.
   /// </summary>

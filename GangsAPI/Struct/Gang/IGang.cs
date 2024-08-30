@@ -1,11 +1,13 @@
 ﻿using GangsAPI.Permissions;
+using GangsAPI.Struct.Perk;
+using GangsAPI.Struct.Stat;
 
-namespace GangsAPI.Struct;
+namespace GangsAPI.Struct.Gang;
 
 /// <summary>
 /// Represents an instance of a gang.
 /// </summary>
-public interface IGang {
+public interface IGang : IEqualityComparer<IGang> {
   /// <summary>
   /// The unique identifier of the gang.
   /// All gangs have a unique identifier.
@@ -95,5 +97,14 @@ public interface IGang {
 
   IStat? GetStat(string statId) {
     return Stats.FirstOrDefault(s => s.StatId.Equals(statId));
+  }
+
+  bool IEqualityComparer<IGang>.Equals(IGang? x, IGang? y) {
+    if (x is null || y is null) return false;
+    return x.Id == y.Id;
+  }
+
+  int IEqualityComparer<IGang>.GetHashCode(IGang obj) {
+    return obj.Id.GetHashCode();
   }
 }

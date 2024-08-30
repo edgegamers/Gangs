@@ -1,11 +1,12 @@
 ﻿using GangsAPI.Struct;
+using GangsAPI.Struct.Perk;
 
 namespace GangsAPI.Services;
 
 /// <summary>
 /// A manager for perks. Allows for the registration, retrieval, and updating of perks.
 /// </summary>
-public interface IPerkManager {
+public interface IPerkManager : IPluginBehavior {
   /// <summary>
   /// Retrieves all perks.
   /// </summary>

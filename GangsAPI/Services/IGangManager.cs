@@ -1,4 +1,5 @@
 ﻿using GangsAPI.Struct;
+using GangsAPI.Struct.Gang;
 
 namespace GangsAPI.Services;
 
@@ -7,7 +8,7 @@ namespace GangsAPI.Services;
 /// The Gang Manager should not be used to manage perks or stats.
 /// Use the respective <see cref="IPerkManager"/> and <see cref="IStatManager"/> to manage those.
 /// </summary>
-public interface IGangManager {
+public interface IGangManager : IPluginBehavior {
   /// <summary>
   /// Gets all gangs.
   /// </summary>

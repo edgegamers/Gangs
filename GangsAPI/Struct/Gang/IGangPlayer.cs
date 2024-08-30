@@ -1,6 +1,7 @@
 ﻿using GangsAPI.Permissions;
+using GangsAPI.Struct.Stat;
 
-namespace GangsAPI.Struct;
+namespace GangsAPI.Struct.Gang;
 
 /// <summary>
 /// A gang player is a player tracked by the gangs plugin.

@@ -1,9 +1,9 @@
-﻿namespace GangsAPI.Struct;
+﻿namespace GangsAPI.Struct.Stat;
 
 /// <summary>
 /// Represents a numerical statistic.
 /// </summary>
-public interface IStat {
+public interface IStat : IEqualityComparer<IStat> {
   /// <summary>
   /// The unique identifier of the statistic.
   /// </summary>
@@ -18,6 +18,15 @@ public interface IStat {
   /// A description of the statistic.
   /// </summary>
   string? Description { get; }
+
+  bool IEqualityComparer<IStat>.Equals(IStat? x, IStat? y) {
+    if (x is null || y is null) return false;
+    return x.StatId == y.StatId;
+  }
+
+  int IEqualityComparer<IStat>.GetHashCode(IStat obj) {
+    return obj.StatId.GetHashCode();
+  }
 }
 
 public interface IStat<K, T> : IStat {
