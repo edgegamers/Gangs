@@ -15,6 +15,9 @@ jobs:
           MARIADB_DATABASE: gangs
         ports:
           - 3306:3306
+    steps:
+      - name: Database setup complete
+        run: echo "Database setup complete"
 
   build:
     runs-on: ubuntu-latest
