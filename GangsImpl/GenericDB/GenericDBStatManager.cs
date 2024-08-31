@@ -39,9 +39,9 @@ public abstract class GenericDBStatManager(string connectionString,
   }
 
   protected async Task LoadStats() {
-    (await connection.QueryAsync<DBStat>($"SELECT * FROM {table}",
-        transaction: transaction)).ToList()
-     .ForEach(stat => stats.Add(stat));
+    // (await connection.QueryAsync<DBStat>($"SELECT * FROM {table}",
+    //     transaction: transaction)).ToList()
+    //  .ForEach(stat => stats.Add(stat));
   }
 
   public void Dispose() {
