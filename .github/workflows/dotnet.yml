@@ -98,7 +98,7 @@ jobs:
       - name: Create Test Coverage Badge
         uses: simon-k/dotnet-code-coverage-badge@v1.0.0
         id: create_coverage_badge
-        if: matrix.dotnet-version == '9.0.x' && github.base_ref == 'main'
+        if: matrix.dotnet-version == '9.0.x' && github.ref_name == 'main'
         with:
           label: Unit Test Coverage
           color: brightgreen
