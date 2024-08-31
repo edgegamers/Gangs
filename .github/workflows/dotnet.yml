@@ -95,6 +95,18 @@ jobs:
           recreate: true
           path: code-coverage-results.md
 
+      - name: Create Test Coverage Badge
+        uses: simon-k/dotnet-code-coverage-badge@v1.0.0
+        id: create_coverage_badge
+        if: matrix.dotnet-version == '9.0.x' && github.base_ref == 'main'
+        with:
+          label: Unit Test Coverage
+          color: brightgreen
+          path: 'coverage/*/coverage.cobertura.xml'
+          gist-filename: code-coverage.json
+          gist-id: 72f982ea80cb7dabb6e91f21d6594ba8
+          gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}
+
       - name: Write to Job Summary
         if: ${{ matrix.dotnet-version == '9.0.x' }}
         run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
