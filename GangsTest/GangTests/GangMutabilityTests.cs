@@ -3,7 +3,7 @@ using GangsImpl.Memory;
 
 namespace GangsTest.GangTests;
 
-public class GangMutabilityTests(IPlayerManager playerMgr) {
+public class GangMutabilityTests {
   [Theory]
   [ClassData(typeof(GangManagerData))]
   public async Task GangMutability_Name(IGangManager mgr) {
