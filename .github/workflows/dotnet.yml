@@ -5,25 +5,22 @@ on:
   pull_request:
 
 jobs:
-  setup-db:
+  build:
+
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        dotnet-version: [ 6.0.x, 7.0.x, 8.0.x, 9.0.x ] # Test on multiple .NET versions
+
     services:
-      mariadb:
+      mysql:
         image: mariadb:latest
         env:
           MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
           MARIADB_DATABASE: gangs
         ports:
           - 3306:3306
-    steps:
-      - name: Database setup complete
-        run: echo "Database setup complete"
-
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: [ 6.0.x, 7.0.x, 8.0.x, 9.0.x ] # Test on multiple .NET versions
 
     steps:
       - uses: actions/checkout@v4
@@ -40,40 +37,11 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
         run: dotnet build --no-restore
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-output
-          path: |
-            **/bin/**/*.dll
-            **/bin/**/*.pdb
-
-  test:
-    runs-on: ubuntu-latest
-    needs: [ setup-db, build ]
-    strategy:
-      matrix:
-        dotnet-version: [ 6.0.x, 7.0.x, 8.0.x, 9.0.x ] # Test on multiple .NET versions
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: build-output
 
       - name: Test
         run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
