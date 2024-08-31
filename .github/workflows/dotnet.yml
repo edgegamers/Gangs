@@ -2,7 +2,13 @@ name: .NET
 
 on:
   push:
+    paths:
+      - 'Gangs*/**'
+      - '.github/workflows/dotnet.yml'
   pull_request:
+    paths:
+      - 'Gangs*/**'
+      - '.github/workflows/dotnet.yml'
 
 jobs:
   build:
@@ -41,7 +47,7 @@ jobs:
           MYSQL_DATABASE: gangs
         ports:
           - 3306:3306
-        options: --health-cmd "mysqladmin ping --silent" --health-interval 10s
+        options: --health-cmd "mysqladmin ping --silent" --health-interval 10
       mariadb:
         image: mariadb:latest
         env:
@@ -87,6 +93,7 @@ jobs:
           badge: true
           format: 'markdown'
           output: 'both'
+          thresholds: '33 75'
 
       - name: Add Coverage PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
@@ -96,16 +103,15 @@ jobs:
           path: code-coverage-results.md
 
       - name: Create Test Coverage Badge
-        uses: simon-k/dotnet-code-coverage-badge@v1.0.0
+        uses: Schneegans/dynamic-badges-action@v1.7.0
         id: create_coverage_badge
         if: matrix.dotnet-version == '9.0.x' && github.ref_name == 'main'
         with:
-          label: Unit Test Coverage
-          color: brightgreen
-          path: 'coverage/*/coverage.cobertura.xml'
-          gist-filename: code-coverage.json
-          gist-id: 72f982ea80cb7dabb6e91f21d6594ba8
-          gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}
+          auth: ${{ secrets.GIST_AUTH_TOKEN }}
+          gistID: 72f982ea80cb7dabb6e91f21d6594ba8
+          filename: code-coverage.json
+          label: 'Code Coverage'
+          message: $(tail -n 1 test.md | grep -oP '(?<=\*\*Summary\*\* \|\s\*\*)[0-9]+(?=%)')
 
       - name: Write to Job Summary
         if: ${{ matrix.dotnet-version == '9.0.x' }}
