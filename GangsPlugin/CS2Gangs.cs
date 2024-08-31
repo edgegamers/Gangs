@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GangsImpl;
 
-public class GangPlugin(IServiceProvider provider) : BasePlugin, IGangPlugin {
+public class CS2Gangs(IServiceProvider provider) : BasePlugin, IGangPlugin {
   private IServiceScope? scope;
   public override string ModuleName => "Gangs";
   public override string ModuleVersion => "0.0.1";

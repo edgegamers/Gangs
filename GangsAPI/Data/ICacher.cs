@@ -1,6 +1,6 @@
 ﻿namespace GangsAPI.Data;
 
-public interface Cacheable {
+public interface ICacher {
   void ClearCache();
   Task Load();
 }

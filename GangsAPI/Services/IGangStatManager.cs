@@ -4,7 +4,7 @@ using GangsAPI.Data.Stat;
 
 namespace GangsAPI.Services;
 
-public interface IGangStatManager : Cacheable {
+public interface IGangStatManager : ICacher {
   Task<IGangStat<V>?> GetForGang<V>(int key, string id);
   Task<bool> PushToGang<V>(int gangId, string id, V value);
 

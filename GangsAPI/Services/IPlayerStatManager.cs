@@ -3,7 +3,7 @@ using GangsAPI.Data.Stat;
 
 namespace GangsAPI.Services;
 
-public interface IPlayerStatManager : Cacheable {
+public interface IPlayerStatManager : ICacher {
   Task<IPlayerStat<V>?> GetForPlayer<V>(ulong key, string statId);
 
   Task<bool> PushToPlayer<V>(ulong key, IPlayerStat<V> value) {
