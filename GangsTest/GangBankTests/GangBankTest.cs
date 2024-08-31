@@ -1,17 +1,14 @@
-﻿using CounterStrikeSharp.API.Core;
-using GangsAPI.Data.Gang;
-using GangsAPI.Data.Stat;
+﻿using GangsAPI.Data.Stat;
 using GangsAPI.Services;
-using GangsImpl.Memory;
 using GangsTest.GangTests;
 
 namespace GangsTest.GangBankTests;
 
 public class GangBankTest {
-  private readonly IGangManager gangManager;
-  private readonly IStatManager statManager;
-  private readonly IGangStatManager gangStatManager;
   private readonly IStat bankStat = new MockBankStat();
+  private readonly IGangManager gangManager;
+  private readonly IGangStatManager gangStatManager;
+  private readonly IStatManager statManager;
 
   public GangBankTest(IGangManager gangManager, IStatManager statManager,
     IGangStatManager gangStatManager) {

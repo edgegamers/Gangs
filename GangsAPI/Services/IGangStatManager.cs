@@ -1,4 +1,3 @@
-using System.Collections;
 using GangsAPI.Data.Gang;
 using GangsAPI.Data.Stat;
 
@@ -13,7 +12,7 @@ public interface IGangStatManager {
   }
 
   Task<bool> PushToGang<V>(IGang gang, string id, V value) {
-    return PushToGang<V>(gang.GangId, id, value);
+    return PushToGang(gang.GangId, id, value);
   }
 
   Task<IGangStat<V>?> GetForGang<V>(IGang gang, IStat stat, V value) {
@@ -21,15 +20,15 @@ public interface IGangStatManager {
   }
 
   Task<bool> PushToGang<V>(IGang gang, IStat stat, V value) {
-    return PushToGang<V>(gang, stat.StatId, value);
+    return PushToGang(gang, stat.StatId, value);
   }
 
   Task<bool> PushToGang<V>(int gangId, IStat<V> stat) {
-    return PushToGang<V>(gangId, stat.StatId, stat.Value);
+    return PushToGang(gangId, stat.StatId, stat.Value);
   }
 
   Task<bool> PushToGang<V>(IGang gang, IStat<V> stat) {
-    return PushToGang<V>(gang, stat.StatId, stat.Value);
+    return PushToGang(gang, stat.StatId, stat.Value);
   }
 
   Task<IGangStat<V>?> GetForGang<V>(int key, IStat stat, V value) {
@@ -37,7 +36,7 @@ public interface IGangStatManager {
   }
 
   Task<bool> PushToGang<V>(int gangId, IStat stat, V value) {
-    return PushToGang<V>(gangId, stat.StatId, value);
+    return PushToGang(gangId, stat.StatId, value);
   }
 
   Task<IGangStat<V>?> GetForGang<V>(IGang gang, IStat stat) {

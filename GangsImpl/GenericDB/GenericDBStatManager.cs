@@ -1,18 +1,18 @@
-﻿using Dapper;
+﻿using System.Data.Common;
+using Dapper;
 using GangsAPI.Data.Stat;
 using GangsAPI.Services;
-using MySqlConnector;
 
-namespace GangsImpl.SQL;
+namespace GenericDB;
 
-public class SQLStatManager(string connectionString,
+public abstract class GenericDBStatManager(string connectionString,
   string table = "gang_stats") : IStatManager {
   private readonly HashSet<IStat> stats = [];
-  private MySqlConnection connection = null!;
-  private MySqlTransaction transaction = null!;
+  private DbConnection connection = null!;
+  private DbTransaction transaction = null!;
 
   public void Start() {
-    connection = new MySqlConnection(connectionString);
+    connection = CreateDbConnection(connectionString);
 
     connection.Open();
     transaction = connection.BeginTransaction();
@@ -22,11 +22,11 @@ public class SQLStatManager(string connectionString,
 
       command.Transaction = transaction;
       command.CommandText =
-        $"CREATE TEMPORARY TABLE IF NOT EXISTS {table} (StatId VARCHAR(255) PRIMARY KEY, Name VARCHAR(255), Description TEXT)";
+        $"CREATE TEMPORARY TABLE IF NOT EXISTS {table} (StatId VARCHAR(255) NOT NULL PRIMARY KEY, Name VARCHAR(255) NOT NULL, Description TEXT)";
       command.ExecuteNonQuery();
 
       connection
-       .Query<SQLStat>($"SELECT * FROM {table}", transaction: transaction)
+       .Query<DBStat>($"SELECT * FROM {table}", transaction: transaction)
        .ToList()
        .ForEach(stat => stats.Add(stat));
     } catch (Exception e) {
@@ -54,20 +54,27 @@ public class SQLStatManager(string connectionString,
     string? description = null) {
     var stat = await GetStat(id);
     if (stat != null) return stat;
-    stat = new SQLStat { StatId = id, Name = name, Description = description };
+    stat = new DBStat { StatId = id, Name = name, Description = description };
     return stat;
   }
 
   public async Task<bool> RegisterStat(IStat stat) {
     if (stats.Contains(stat)) return false;
-    var sqlStat = (SQLStat)stat;
+    var sqlStat = (DBStat)stat;
     var command = connection.CreateCommand();
     command.Transaction = transaction;
     command.CommandText =
       $"INSERT INTO {table} (StatId, Name, Description) VALUES (@StatId, @Name, @Description)";
-    command.Parameters.AddWithValue("@StatId", sqlStat.StatId);
-    command.Parameters.AddWithValue("@Name", sqlStat.Name);
-    command.Parameters.AddWithValue("@Description", sqlStat.Description);
+
+    command.Parameters.Add(CreateDbParameter("@StatId", sqlStat.StatId));
+    command.Parameters.Add(CreateDbParameter("@Name", sqlStat.Name));
+
+    if (sqlStat.Description != null)
+      command.Parameters.Add(CreateDbParameter("@Description",
+        sqlStat.Description));
+    else
+      command.Parameters.Add(CreateDbParameter("@Description", DBNull.Value));
+
     await command.ExecuteNonQueryAsync();
     return stats.Add(stat);
   }
@@ -79,9 +86,13 @@ public class SQLStatManager(string connectionString,
     var command = connection.CreateCommand();
     command.Transaction = transaction;
     command.CommandText = $"DELETE FROM {table} WHERE StatId = @StatId";
-    command.Parameters.AddWithValue("@StatId", id);
+    command.Parameters.Add(CreateDbParameter("@StatId", id));
     await command.ExecuteNonQueryAsync();
 
     return await Task.FromResult(matches.Count > 0);
   }
+
+  public abstract DbConnection CreateDbConnection(string connectionString);
+
+  public abstract DbParameter CreateDbParameter(string key, object value);
 }

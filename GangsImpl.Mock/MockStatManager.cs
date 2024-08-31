@@ -1,5 +1,4 @@
-﻿using GangsAPI.Data.Gang;
-using GangsAPI.Data.Stat;
+﻿using GangsAPI.Data.Stat;
 using GangsAPI.Services;
 
 namespace GangsImpl.Memory;

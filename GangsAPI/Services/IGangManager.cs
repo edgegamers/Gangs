@@ -36,8 +36,10 @@ public interface IGangManager : IPluginBehavior {
   ///   All other changes should be done through the respective managers.
   /// </summary>
   /// <param name="gang"></param>
-  /// <returns>True if the update was successful, false otherwise (e.g. gang
-  /// was not previously registered)</returns>
+  /// <returns>
+  ///   True if the update was successful, false otherwise (e.g. gang
+  ///   was not previously registered)
+  /// </returns>
   Task<bool> UpdateGang(IGang gang);
 
   /// <summary>

@@ -1,18 +1,10 @@
-﻿using System.Collections;
-using GangsAPI.Data.Gang;
+﻿using GangsAPI.Data.Gang;
 using GangsAPI.Data.Stat;
 using GangsAPI.Permissions;
 
 namespace GangsImpl.Memory;
 
 public class MockGang : IGang {
-  public int GangId { get; }
-  public string Name { get; set; }
-  public IDictionary<ulong, IGangRank> Members { get; }
-  public ISet<IGangRank> Ranks { get; }
-  public ISet<IStat> Perks { get; }
-  public ISet<IStat> Stats { get; }
-
   public MockGang(int id, string name, ulong owner) {
     GangId  = id;
     Name    = name;
@@ -24,6 +16,13 @@ public class MockGang : IGang {
     Members.Add(owner,
       new MockGangRank(0, "Owner", IGangRank.Permissions.OWNER));
   }
+
+  public int GangId { get; }
+  public string Name { get; set; }
+  public IDictionary<ulong, IGangRank> Members { get; }
+  public ISet<IGangRank> Ranks { get; }
+  public ISet<IStat> Perks { get; }
+  public ISet<IStat> Stats { get; }
 
   public object Clone() {
     var clone = new MockGang(GangId, Name, ((IGang)this).Owner);

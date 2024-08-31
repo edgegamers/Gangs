@@ -29,7 +29,7 @@ public interface IGang : IEqualityComparer<IGang>, IEquatable<IGang>,
   IDictionary<ulong, IGangRank> Members { get; }
 
   /// <summary>
-  /// The ranks of the gang.
+  ///   The ranks of the gang.
   /// </summary>
   ISet<IGangRank> Ranks { get; }
 
@@ -101,6 +101,14 @@ public interface IGang : IEqualityComparer<IGang>, IEquatable<IGang>,
     }
   }
 
+  IEnumerator IEnumerable.GetEnumerator() {
+    return Members.Keys.GetEnumerator();
+  }
+
+  IEnumerator<ulong> IEnumerable<ulong>.GetEnumerator() {
+    return Members.Keys.GetEnumerator();
+  }
+
   bool IEqualityComparer<IGang>.Equals(IGang? x, IGang? y) {
     if (x is null || y is null) return false;
     return x.GangId == y.GangId;
@@ -121,13 +129,5 @@ public interface IGang : IEqualityComparer<IGang>, IEquatable<IGang>,
 
   IStat? GetStat(string statId) {
     return Stats.FirstOrDefault(s => s.StatId.Equals(statId));
-  }
-
-  IEnumerator IEnumerable.GetEnumerator() {
-    return Members.Keys.GetEnumerator();
-  }
-
-  IEnumerator<ulong> IEnumerable<ulong>.GetEnumerator() {
-    return Members.Keys.GetEnumerator();
   }
 }

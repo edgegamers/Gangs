@@ -1,4 +1,3 @@
-using GangsAPI.Data.Gang;
 using GangsAPI.Data.Stat;
 
 namespace GangsAPI.Services;
@@ -11,5 +10,4 @@ public interface IPlayerStatManager {
   }
 
   Task<bool> PushToPlayer<V>(ulong key, string statId, V value);
-
 }
