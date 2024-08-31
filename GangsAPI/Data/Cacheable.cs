@@ -2,4 +2,5 @@
 
 public interface Cacheable {
   void ClearCache();
+  Task Load();
 }

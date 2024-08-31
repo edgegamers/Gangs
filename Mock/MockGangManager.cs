@@ -39,4 +39,6 @@ public class MockGangManager : IGangManager {
   }
 
   public void ClearCache() { gangs.Clear(); }
+
+  public Task Load() { return Task.CompletedTask; }
 }

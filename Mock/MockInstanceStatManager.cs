@@ -48,4 +48,6 @@ public class MockInstanceStatManager(IStatManager mgr)
     gangStats.Clear();
     playerStats.Clear();
   }
+
+  public Task Load() { return Task.CompletedTask; }
 }

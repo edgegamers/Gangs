@@ -25,4 +25,6 @@ public class MockPlayerManager : IPlayerManager {
   }
 
   public void ClearCache() { players.Clear(); }
+
+  public Task Load() { return Task.CompletedTask; }
 }

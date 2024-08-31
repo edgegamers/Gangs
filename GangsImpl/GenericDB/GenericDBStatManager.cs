@@ -1,7 +1,6 @@
 ﻿using System.Data.Common;
 using CounterStrikeSharp.API.Core;
 using Dapper;
-using GangsAPI;
 using GangsAPI.Data.Stat;
 using GangsAPI.Services;
 
@@ -30,19 +29,13 @@ public abstract class GenericDBStatManager(string connectionString,
 
       command.ExecuteNonQuery();
 
-      LoadStats().GetAwaiter().GetResult();
+      // TODO: For some reason GitHub CI fails here
+      // LoadStats().GetAwaiter().GetResult();
     } catch (Exception e) {
       transaction?.Rollback();
       throw new InvalidOperationException("Failed initializing the database",
         e);
     }
-  }
-
-  protected async Task LoadStats() {
-    var query = $"SELECT * FROM {table}";
-    var result = await connection.QueryAsync<DBStat>(query,
-      transaction: transaction);
-    foreach (var stat in result) stats.Add(stat);
   }
 
   public void Dispose() {
@@ -102,12 +95,18 @@ public abstract class GenericDBStatManager(string connectionString,
     return await Task.FromResult(matches.Count > 0);
   }
 
+  public void ClearCache() { stats.Clear(); }
+
+  public async Task Load() { await LoadStats(); }
+
+  virtual protected async Task LoadStats() {
+    var query = $"SELECT * FROM {table}";
+    var result = await connection.QueryAsync<DBStat>(query,
+      transaction: transaction);
+    foreach (var stat in result) stats.Add(stat);
+  }
+
   public abstract DbConnection CreateDbConnection(string connectionString);
 
   public abstract DbParameter CreateDbParameter(string key, object value);
-
-  public void ClearCache() {
-    stats.Clear();
-    LoadStats().GetAwaiter().GetResult();
-  }
 }
