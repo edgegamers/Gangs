@@ -15,13 +15,12 @@ jobs:
 
     services:
       mysql:
-        image: mysql:latest
+        image: mariadb:latest
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: gang
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
+          MARIADB_DATABASE: gangs
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - uses: actions/checkout@v4
@@ -38,13 +37,6 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
-      - name: Wait for MySQL
-        run: |
-          until mysqladmin ping -h "localhost" --silent; do
-            echo "Waiting for database connection..."
-            sleep 2
-          done
 
       - name: Restore dependencies
         run: dotnet restore

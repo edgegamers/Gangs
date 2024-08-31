@@ -9,7 +9,7 @@ namespace GangsTest.StatTests;
 public class StatManagerData : IEnumerable<object[]> {
   private readonly IBehavior[] behaviors = [
     new MockStatManager(),
-    new SQLStatManager("Server=localhost;User=root;Database=gang",
+    new SQLStatManager("Server=localhost;User=root;Database=gangs",
       "gang_unit_test"),
     new SQLiteStatManager("Data Source=:memory:", "gang_unit_test")
   ];
