@@ -5,22 +5,31 @@ on:
   pull_request:
 
 jobs:
-  build:
-
+  db:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        dotnet-version: [ 6.0.x, 7.0.x, 8.0.x, 9.0.x ] # Test on multiple .NET versions
-
     services:
-      mysql:
+      mariadb:
         image: mariadb:latest
         env:
           MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
           MARIADB_DATABASE: gangs
         ports:
           - 3306:3306
+
+    steps:
+      - name: Wait for MariaDB
+        run: |
+          until mysqladmin ping -h "localhost" --silent; do
+            echo "Waiting for database connection..."
+            sleep 2
+          done
+
+  build:
+    runs-on: ubuntu-latest
+    needs: db
+    strategy:
+      matrix:
+        dotnet-version: [ 6.0.x, 7.0.x, 8.0.x, 9.0.x ] # Test on multiple .NET versions
 
     steps:
       - uses: actions/checkout@v4
