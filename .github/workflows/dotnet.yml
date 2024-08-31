@@ -6,13 +6,33 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         dotnet-version: [ 6.0.x, 7.0.x, 8.0.x, 9.0.x ] # Test on multiple .NET versions
-
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Cache .NET packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+  
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ 8.0.x, 9.0.x ]
     services:
       mysql:
         image: mysql:latest
@@ -22,7 +42,6 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd "mysqladmin ping --silent" --health-interval 10s
-
       mariadb:
         image: mariadb:latest
         env:
@@ -30,15 +49,12 @@ jobs:
           MARIADB_DATABASE: gangs
         ports:
           - 3307:3306
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-
       - name: Cache .NET packages
         uses: actions/cache@v4
         with:
@@ -46,30 +62,39 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
       - name: Restore dependencies
         run: dotnet restore
-
       - name: Build
         run: dotnet build --no-restore
-
       - name: Test with MariaDB
         env:
           DB_CONNECTION_STRING: "Server=localhost;Port=3307;Database=gangs;User=root"
-        run: dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=opencover  --no-build --verbosity normal GangsTest/GangsTest.csproj
-        
+        run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
       - name: Test with MySQL
         env:
           DB_CONNECTION_STRING: "Server=localhost;Port=3306;Database=gangs;User=root"
         run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
-        
-      - name: Create Test Coverage Badge
-        uses: simon-k/dotnet-code-coverage-badge@v1.0.0
-        id: create_coverage_badge
+      - name: Generate Code Coverage Report
+        env:
+          DB_CONNECTION_STRING: "Server=localhost;Port=3306;Database=gangs;User=root"
+        if: ${{ matrix.dotnet-version == '9.0.x' }}
+        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        if: ${{ matrix.dotnet-version == '9.0.x' }}
         with:
-          label: Unit Test Coverage
-          color: brightgreen
-          path: GangsTest/TestResults/coverage.opencover.xml
-          gist-filename: code-coverage.json
-          gist-id: 72f982ea80cb7dabb6e91f21d6594ba8
-          gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}       
+          filename: 'coverage/*/coverage.cobertura.xml'
+          badge: true
+          format: 'markdown'
+          output: 'both'
+
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request' && matrix.dotnet-version == '9.0.x'
+        with:
+          recreate: true
+          path: code-coverage-results.md
+
+      - name: Write to Job Summary
+        if: ${{ matrix.dotnet-version == '9.0.x' }}
+        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
