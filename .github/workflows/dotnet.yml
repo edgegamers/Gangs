@@ -62,7 +62,6 @@ jobs:
         env:
           DB_CONNECTION_STRING: "Server=localhost;Port=3306;Database=gangs;User=root"
         run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
-      - name: Create Test Coverage Badge
         
       - name: Create Test Coverage Badge
         uses: simon-k/dotnet-code-coverage-badge@v1.0.0
