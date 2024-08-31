@@ -1,18 +1,19 @@
 ﻿using Dapper;
 using GangsAPI.Data.Stat;
 using GangsAPI.Services;
-using MySqlConnector;
+using GangsImpl.SQL;
+using Microsoft.Data.Sqlite;
 
-namespace GangsImpl.SQL;
+namespace GangsImpl.SQLLite;
 
-public class SQLStatManager(string connectionString,
+public class SQLiteStatManager(string connectionString,
   string table = "gang_stats") : IStatManager {
   private readonly HashSet<IStat> stats = [];
-  private MySqlConnection connection = null!;
-  private MySqlTransaction transaction = null!;
+  private SqliteConnection connection = null!;
+  private SqliteTransaction transaction = null!;
 
   public void Start() {
-    connection = new MySqlConnection(connectionString);
+    connection = new SqliteConnection(connectionString);
 
     connection.Open();
     transaction = connection.BeginTransaction();

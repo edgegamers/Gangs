@@ -30,6 +30,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\GangsImpl.Mock\GangsImpl.Mock.csproj"/>
+        <ProjectReference Include="..\GangsImpl.SQLite\GangsImpl.SQLite.csproj" />
         <ProjectReference Include="..\GangsImpl.SQL\GangsImpl.SQL.csproj"/>
     </ItemGroup>
 

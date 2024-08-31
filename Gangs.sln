@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsImpl.Mock", "GangsImpl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsImpl.SQL", "GangsImpl.SQL\GangsImpl.SQL.csproj", "{7F519D8B-63B5-4628-9806-5E9FE79F9797}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsImpl.SQLite", "GangsImpl.SQLite\GangsImpl.SQLite.csproj", "{F87CD126-3D2D-47B7-A11E-93987772D1B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{7F519D8B-63B5-4628-9806-5E9FE79F9797}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F519D8B-63B5-4628-9806-5E9FE79F9797}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F519D8B-63B5-4628-9806-5E9FE79F9797}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F87CD126-3D2D-47B7-A11E-93987772D1B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F87CD126-3D2D-47B7-A11E-93987772D1B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F87CD126-3D2D-47B7-A11E-93987772D1B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F87CD126-3D2D-47B7-A11E-93987772D1B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
