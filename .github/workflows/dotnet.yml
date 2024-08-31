@@ -35,6 +35,8 @@ jobs:
         run: dotnet build --no-restore
   
   test:
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
