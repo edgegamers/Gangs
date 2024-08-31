@@ -2,7 +2,7 @@
 using GenericDB;
 using Microsoft.Data.Sqlite;
 
-namespace GangsImpl.SQLLite;
+namespace SQLite;
 
 public class SQLiteStatManager(string connectionString,
   string table = "gang_stats", bool testing = false)

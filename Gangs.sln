@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsPlugin", "GangsPlugin\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsTest", "GangsTest\GangsTest.csproj", "{B1D1E7C7-BDF3-4238-9025-4FEB2B7DAB89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mock", "Mock\Mock.csproj", "{140E1706-30E8-4440-AAA0-56E8DD32F054}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mock", "GangsImpl\Mock\Mock.csproj", "{140E1706-30E8-4440-AAA0-56E8DD32F054}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GangsImpl", "GangsImpl", "{3AB7703F-880F-4A41-96EE-B891FA888C65}"
 EndProject

@@ -1,7 +1,7 @@
 ﻿using GangsAPI.Data.Stat;
 using GangsAPI.Services;
 
-namespace GangsImpl.Memory;
+namespace Mock;
 
 public class MockStatManager : IStatManager {
   private readonly HashSet<IStat> cachedStats = [], backendStats = [];

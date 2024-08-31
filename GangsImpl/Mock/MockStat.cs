@@ -1,6 +1,6 @@
 using GangsAPI.Data.Stat;
 
-namespace GangsImpl.Memory;
+namespace Mock;
 
 public class MockStat(string statId, string name, string? desc) : IStat {
   public string StatId { get; } = statId;

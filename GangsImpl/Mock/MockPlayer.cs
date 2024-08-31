@@ -2,7 +2,7 @@
 using GangsAPI.Data.Stat;
 using GangsAPI.Permissions;
 
-namespace GangsImpl.Memory;
+namespace Mock;
 
 public class MockPlayer(ulong steam) : IGangPlayer {
   public ulong Steam { get; } = steam;

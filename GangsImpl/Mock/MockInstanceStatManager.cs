@@ -1,7 +1,7 @@
 ﻿using GangsAPI.Data.Stat;
 using GangsAPI.Services;
 
-namespace GangsImpl.Memory;
+namespace Mock;
 
 public class MockInstanceStatManager(IStatManager mgr)
   : IPlayerStatManager, IGangStatManager {

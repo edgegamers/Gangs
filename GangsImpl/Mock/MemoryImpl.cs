@@ -2,7 +2,7 @@
 using GangsAPI.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GangsImpl.Memory;
+namespace Mock;
 
 public static class MemoryImpl {
   public static void AddMemoryImpl(this IServiceCollection collection) {

@@ -1,8 +1,8 @@
 using System.Collections;
 using GangsAPI;
-using GangsImpl.Memory;
-using GangsImpl.SQLLite;
+using Mock;
 using SQLImpl;
+using SQLite;
 
 namespace GangsTest.StatTests;
 

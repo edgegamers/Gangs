@@ -1,6 +1,6 @@
 ﻿using GangsAPI.Permissions;
 
-namespace GangsImpl.Memory;
+namespace Mock;
 
 public class MockGangRank(int rank, string name,
   IGangRank.Permissions perms = 0) : IGangRank {

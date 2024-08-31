@@ -19,7 +19,6 @@
 
     <ItemGroup>
         <Using Include="Xunit"/>
-        <!-- Disable parallelism for xunit tests -->
     </ItemGroup>
 
     <ItemGroup>
@@ -29,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Mock\Mock.csproj"/>
+        <ProjectReference Include="..\GangsImpl\Mock\Mock.csproj"/>
         <ProjectReference Include="..\GangsImpl\SQLite\SQLite.csproj"/>
         <ProjectReference Include="..\GangsImpl\SQL\SQL.csproj"/>
     </ItemGroup>

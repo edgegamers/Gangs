@@ -2,7 +2,7 @@
 using GangsAPI.Data.Stat;
 using GangsAPI.Permissions;
 
-namespace GangsImpl.Memory;
+namespace Mock;
 
 public class MockGang : IGang {
   public MockGang(int id, string name, ulong owner) {

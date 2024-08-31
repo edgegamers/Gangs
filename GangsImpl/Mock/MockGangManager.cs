@@ -1,7 +1,7 @@
 ﻿using GangsAPI.Data.Gang;
 using GangsAPI.Services;
 
-namespace GangsImpl.Memory;
+namespace Mock;
 
 public class MockGangManager : IGangManager {
   private readonly HashSet<IGang> gangs = [];

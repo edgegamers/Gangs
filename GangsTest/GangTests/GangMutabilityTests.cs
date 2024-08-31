@@ -1,5 +1,5 @@
 ﻿using GangsAPI.Services;
-using GangsImpl.Memory;
+using Mock;
 
 namespace GangsTest.GangTests;
 

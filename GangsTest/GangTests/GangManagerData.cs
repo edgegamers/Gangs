@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using GangsAPI;
-using GangsImpl.Memory;
+using Mock;
 
 namespace GangsTest.GangTests;
 
