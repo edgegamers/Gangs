@@ -101,7 +101,9 @@ jobs:
         with:
           recreate: true
           path: code-coverage-results.md
-
+      - name: Export Code Coverage
+        if: ${{ matrix.dotnet-version == '9.0.x' }}
+        run: echo "CODE_COVERAGE=$(tail -n 1 test.md | grep -oP '(?<=\*\*Summary\*\* \|\s\*\*)[0-9]+(?=%)')" >> $GITHUB_ENV
       - name: Create Test Coverage Badge
         uses: Schneegans/dynamic-badges-action@v1.7.0
         id: create_coverage_badge
@@ -111,7 +113,10 @@ jobs:
           gistID: 72f982ea80cb7dabb6e91f21d6594ba8
           filename: code-coverage.json
           label: 'Code Coverage'
-          message: $(tail -n 1 test.md | grep -oP '(?<=\*\*Summary\*\* \|\s\*\*)[0-9]+(?=%)')
+          message: ${{ env.CODE_COVERAGE }}%
+          valColorRange: ${{ env.CODE_COVERAGE }}
+          maxColorRange: 100
+          minColorRange: 33
 
       - name: Write to Job Summary
         if: ${{ matrix.dotnet-version == '9.0.x' }}
