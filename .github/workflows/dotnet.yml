@@ -103,7 +103,7 @@ jobs:
           path: code-coverage-results.md
       - name: Export Code Coverage
         if: ${{ matrix.dotnet-version == '9.0.x' }}
-        run: echo "CODE_COVERAGE=$(tail -n 1 test.md | grep -oP '(?<=\*\*Summary\*\* \|\s\*\*)[0-9]+(?=%)')" >> $GITHUB_ENV
+        run: echo "CODE_COVERAGE=$(tail -n 1 code-coverage-results.md | grep -oP '(?<=\*\*Summary\*\* \|\s\*\*)[0-9]+(?=%)')" >> $GITHUB_ENV
       - name: Create Test Coverage Badge
         uses: Schneegans/dynamic-badges-action@v1.7.0
         id: create_coverage_badge
