@@ -1,5 +1,4 @@
 ﻿name: Static Code Analysis
-
 on:
   push:
     paths:
@@ -11,21 +10,29 @@ on:
       - '.github/workflows/inspect.yml'
 
 jobs:
-  inspection:
+  sample:
+    name: .NET Code Analysis runner
+
     runs-on: ubuntu-latest
-    name: Inspection
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
       - name: Setup .NET
         id: setup-dotnet
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
-      - name: Restore
+      
+      # Run NuGet restore for the solution at repo root
+      - name: Run NuGet restore
         run: dotnet restore
-      - name: Inspect code
-        uses: muno92/resharper_inspectcode@v1
+      
+      # Run code analysis for the solution at repo root
+      - name: Run .NET Code Analysis
+        uses: dotnet/code-analysis@main
+        id: code-analysis
         with:
-          solutionPath: ./Gangs.sln
-          dotnetVersion: ${{ steps.setup-dotnet.outputs.dotnet-version }}
+          build-breaking: true
+          project: 'Gangs.sln'
+          all-categories: all
