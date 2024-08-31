@@ -1,11 +1,11 @@
 using GangsAPI.Services;
 
-namespace GangsTest;
+namespace GangsTest.StatTests;
 
 public class StatFieldTests {
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Fields_Name(IStatManager mgr) {
+  public async Task Stat_Fields_Name(IStatManager mgr) {
     var dummy = await StatTestUtil.CreateStat(mgr);
     Assert.NotNull(dummy);
     Assert.Equal("name", dummy.Name);
@@ -13,7 +13,7 @@ public class StatFieldTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Fields_Id(IStatManager mgr) {
+  public async Task Stat_Fields_Id(IStatManager mgr) {
     var dummy = await StatTestUtil.CreateStat(mgr);
     Assert.NotNull(dummy);
     Assert.Equal("id", dummy.StatId);
@@ -21,7 +21,7 @@ public class StatFieldTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Fields_Desc_Null(IStatManager statManager) {
+  public async Task Stat_Fields_Desc_Null(IStatManager statManager) {
     var dummy = await StatTestUtil.CreateStat(statManager, desc: null);
     Assert.NotNull(dummy);
     Assert.Null(dummy.Description);
@@ -29,7 +29,7 @@ public class StatFieldTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Fields_Desc_Empty(IStatManager statManager) {
+  public async Task Stat_Fields_Desc_Empty(IStatManager statManager) {
     var dummy = await StatTestUtil.CreateStat(statManager, desc: "");
     Assert.NotNull(dummy);
     Assert.Equal("", dummy.Description);
@@ -37,7 +37,7 @@ public class StatFieldTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Fields_Desc_Basic(IStatManager statManager) {
+  public async Task Stat_Fields_Desc_Basic(IStatManager statManager) {
     var dummy = await StatTestUtil.CreateStat(statManager);
     Assert.NotNull(dummy);
     Assert.Equal("desc", dummy.Description);

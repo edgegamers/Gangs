@@ -4,7 +4,7 @@ using GangsAPI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace GangsPlugin;
+namespace GangsImpl;
 
 public class GangPlugin(IServiceProvider provider) : BasePlugin, IGangPlugin {
   private IServiceScope? scope;

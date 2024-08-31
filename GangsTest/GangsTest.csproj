@@ -10,14 +10,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="6.0.0"/>
-        <PackageReference Include="FuzzDotNet.MSTest" Version="0.1.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+        <PackageReference Include="coverlet.collector" Version="6.0.0" />
+        <PackageReference Include="FuzzDotNet.MSTest" Version="0.1.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+        <PackageReference Include="Xunit.DependencyInjection" Version="9.3.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit"/>
+        <Using Include="Xunit" />
     </ItemGroup>
 
     <ItemGroup>
@@ -27,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\GangsImpl.Memory\GangsImpl.Memory.csproj"/>
+        <ProjectReference Include="..\GangsImpl.Mock\GangsImpl.Mock.csproj" />
     </ItemGroup>
 
 </Project>

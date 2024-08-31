@@ -1,4 +1,4 @@
-﻿using GangsAPI.Struct.Gang;
+﻿using GangsAPI.Data.Gang;
 
 namespace GangsAPI.Services;
 
@@ -7,14 +7,17 @@ namespace GangsAPI.Services;
 /// </summary>
 public interface IPlayerManager : IPluginBehavior {
   /// <summary>
-  ///   Gets a player by their SteamID64, creating them if they do not exist.
+  ///   Gets a player by their SteamID64.
   /// </summary>
   /// <param name="steamId">The SteamID64 of the player.</param>
-  /// <returns>The player, or null if there was an error creating one.</returns>
-  Task<IGangPlayer?> GetPlayer(ulong steamId);
+  /// <returns>The player, or null if they did not exist.</returns>
+  Task<IGangPlayer?> GetPlayer(ulong steamId) {
+    return GetPlayer(steamId, false);
+  }
 
   /// <summary>
   ///   Gets a player by their SteamID64.
+  ///   If the player was already created, returns them.
   /// </summary>
   /// <param name="steamId">The SteamID64 of the player.</param>
   /// <param name="create">True if the manager should create a new player if they don't exist.</param>

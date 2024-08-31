@@ -1,4 +1,4 @@
-﻿using GangsAPI.Struct.Stat;
+﻿using GangsAPI.Data.Stat;
 
 namespace GangsAPI.Services;
 

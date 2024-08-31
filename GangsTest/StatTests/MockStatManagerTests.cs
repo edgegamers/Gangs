@@ -1,18 +1,18 @@
 using GangsAPI.Services;
 
-namespace GangsTest;
+namespace GangsTest.StatTests;
 
-public class MemoryStatManagerTests {
+public class MockStatManagerTests {
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Create(IStatManager mgr) {
+  public async Task Stat_Create(IStatManager mgr) {
     var dummy = await mgr.CreateStat("dummy", "name");
     Assert.NotNull(dummy);
   }
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Create_Multiple(IStatManager mgr) {
+  public async Task Stat_Create_Multiple(IStatManager mgr) {
     var foo = await StatTestUtil.CreateStat(mgr, "foo");
     var bar = await StatTestUtil.CreateStat(mgr, "bar");
     Assert.NotSame(foo, bar);

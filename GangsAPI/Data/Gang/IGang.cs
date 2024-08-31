@@ -1,17 +1,19 @@
-﻿using GangsAPI.Permissions;
-using GangsAPI.Struct.Stat;
+﻿using System.Collections;
+using GangsAPI.Data.Stat;
+using GangsAPI.Permissions;
 
-namespace GangsAPI.Struct.Gang;
+namespace GangsAPI.Data.Gang;
 
 /// <summary>
 ///   Represents an instance of a gang.
 /// </summary>
-public interface IGang : IEqualityComparer<IGang> {
+public interface IGang : IEqualityComparer<IGang>, IEquatable<IGang>,
+  IEnumerable<ulong>, ICloneable {
   /// <summary>
   ///   The unique identifier of the gang.
   ///   All gangs have a unique identifier.
   /// </summary>
-  int Id { get; }
+  int GangId { get; }
 
   /// <summary>
   ///   The name of the gang.
@@ -22,22 +24,31 @@ public interface IGang : IEqualityComparer<IGang> {
 
   /// <summary>
   ///   The members of the gang.
+  ///   All gangs have at least one owner.
   /// </summary>
   IDictionary<ulong, IGangRank> Members { get; }
+
+  /// <summary>
+  /// The ranks of the gang.
+  /// </summary>
+  ISet<IGangRank> Ranks { get; }
+
+  ulong Owner
+    => Members.First(m => m.Value.Perms.HasFlag(IGangRank.Permissions.OWNER))
+     .Key;
 
   /// <summary>
   ///   The amount of currency the gang has in its bank.
   /// </summary>
   int? Bank {
     get {
-      var stat = GetStat("gang_bank") as IStat<ulong, int>;
+      var stat = GetStat("gang_bank") as IStat<int>;
       return stat?.Value;
     }
 
     set {
       ArgumentNullException.ThrowIfNull(value);
-      if (GetStat("gang_bank") is IStat<ulong, int> stat)
-        stat.Value = value.Value;
+      if (GetStat("gang_bank") is IStat<int> stat) stat.Value = value.Value;
     }
   }
 
@@ -92,11 +103,16 @@ public interface IGang : IEqualityComparer<IGang> {
 
   bool IEqualityComparer<IGang>.Equals(IGang? x, IGang? y) {
     if (x is null || y is null) return false;
-    return x.Id == y.Id;
+    return x.GangId == y.GangId;
   }
 
   int IEqualityComparer<IGang>.GetHashCode(IGang obj) {
-    return obj.Id.GetHashCode();
+    return obj.GangId.GetHashCode();
+  }
+
+  bool IEquatable<IGang>.Equals(IGang? other) {
+    if (other is null) return false;
+    return GangId == other.GangId;
   }
 
   IStat? GetPerk(string perkId) {
@@ -105,5 +121,13 @@ public interface IGang : IEqualityComparer<IGang> {
 
   IStat? GetStat(string statId) {
     return Stats.FirstOrDefault(s => s.StatId.Equals(statId));
+  }
+
+  IEnumerator IEnumerable.GetEnumerator() {
+    return Members.Keys.GetEnumerator();
+  }
+
+  IEnumerator<ulong> IEnumerable<ulong>.GetEnumerator() {
+    return Members.Keys.GetEnumerator();
   }
 }

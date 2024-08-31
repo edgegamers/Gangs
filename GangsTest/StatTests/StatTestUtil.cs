@@ -1,7 +1,7 @@
+using GangsAPI.Data.Stat;
 using GangsAPI.Services;
-using GangsAPI.Struct.Stat;
 
-namespace GangsTest;
+namespace GangsTest.StatTests;
 
 public class StatTestUtil {
   public static async Task<IStat?> CreateStat(IStatManager statManager,

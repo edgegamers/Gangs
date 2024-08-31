@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsPlugin", "GangsPlugin\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsTest", "GangsTest\GangsTest.csproj", "{B1D1E7C7-BDF3-4238-9025-4FEB2B7DAB89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsImpl.Memory", "GangsImpl.Memory\GangsImpl.Memory.csproj", "{140E1706-30E8-4440-AAA0-56E8DD32F054}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsImpl.Mock", "GangsImpl.Mock\GangsImpl.Mock.csproj", "{140E1706-30E8-4440-AAA0-56E8DD32F054}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

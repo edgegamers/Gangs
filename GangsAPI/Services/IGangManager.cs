@@ -1,4 +1,4 @@
-﻿using GangsAPI.Struct.Gang;
+﻿using GangsAPI.Data.Gang;
 
 namespace GangsAPI.Services;
 
@@ -31,12 +31,14 @@ public interface IGangManager : IPluginBehavior {
   Task<IGang?> GetGang(ulong steam);
 
   /// <summary>
-  ///   Pushes a gang to the database.
-  ///   Used for updating or creating gangs.
+  ///   Updates a gang to the database.
+  ///   Used for updating a gang's name or members.
+  ///   All other changes should be done through the respective managers.
   /// </summary>
   /// <param name="gang"></param>
-  /// <returns>True if the update was successful</returns>
-  Task<bool> PushGang(IGang gang);
+  /// <returns>True if the update was successful, false otherwise (e.g. gang
+  /// was not previously registered)</returns>
+  Task<bool> UpdateGang(IGang gang);
 
   /// <summary>
   ///   Deletes a gang by its ID.

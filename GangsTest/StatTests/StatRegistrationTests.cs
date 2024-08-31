@@ -1,11 +1,11 @@
 using GangsAPI.Services;
 
-namespace GangsTest;
+namespace GangsTest.StatTests;
 
 public class StatRegistrationTests {
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Register(IStatManager mgr) {
+  public async Task Stat_Register(IStatManager mgr) {
     var stat = await StatTestUtil.CreateStat(mgr);
     Assert.NotNull(stat);
     Assert.True(await mgr.RegisterStat(stat),
@@ -14,7 +14,7 @@ public class StatRegistrationTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Register_Duplicate(IStatManager mgr) {
+  public async Task Stat_Register_Duplicate(IStatManager mgr) {
     var stat = await StatTestUtil.CreateStat(mgr);
     Assert.NotNull(stat);
     Assert.True(await mgr.RegisterStat(stat),
@@ -25,7 +25,7 @@ public class StatRegistrationTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Unregistered(IStatManager mgr) {
+  public async Task Stat_Unregistered(IStatManager mgr) {
     Assert.Null(await mgr.GetStat("id"));
     await StatTestUtil.CreateStat(mgr);
     Assert.Null(await mgr.GetStat("id"));
@@ -37,7 +37,7 @@ public class StatRegistrationTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Unregister(IStatManager mgr) {
+  public async Task Stat_Unregister(IStatManager mgr) {
     var stat = await StatTestUtil.CreateStat(mgr);
     Assert.NotNull(stat);
     Assert.True(await mgr.RegisterStat(stat),

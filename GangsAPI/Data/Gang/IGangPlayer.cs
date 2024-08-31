@@ -1,7 +1,7 @@
-﻿using GangsAPI.Permissions;
-using GangsAPI.Struct.Stat;
+﻿using GangsAPI.Data.Stat;
+using GangsAPI.Permissions;
 
-namespace GangsAPI.Struct.Gang;
+namespace GangsAPI.Data.Gang;
 
 /// <summary>
 ///   A gang player is a player tracked by the gangs plugin.
@@ -33,27 +33,28 @@ public interface IGangPlayer {
   /// </summary>
   DateTime? LastSeen {
     get {
-      var stat = GetStat("last_seen") as IStat<ulong, DateTime>;
+      var stat = GetStat("gang_native_lastseen") as IStat<DateTime>;
       return stat?.Value;
     }
 
     set {
-      if (GetStat("last_seen") is IStat<ulong, DateTime?> stat)
+      if (GetStat("gang_native_lastseen") is IStat<DateTime?> stat)
         stat.Value = value;
     }
   }
 
   ISet<IStat> Stats { get; }
+  ISet<IStat> Perks { get; }
 
   int? Balance {
     get {
-      var stat = GetStat("balance") as IStat<ulong, int>;
+      var stat = GetStat("gang_native_balance") as IStat<int>;
       return stat?.Value;
     }
 
     set {
       ArgumentNullException.ThrowIfNull(value);
-      if (GetStat("balance") is IStat<ulong, int> stat)
+      if (GetStat("gang_native_balance") is IStat<int> stat)
         stat.Value = value.Value;
     }
   }

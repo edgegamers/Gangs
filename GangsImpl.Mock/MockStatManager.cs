@@ -1,10 +1,11 @@
-﻿using GangsAPI.Services;
-using GangsAPI.Struct.Stat;
+﻿using GangsAPI.Data.Gang;
+using GangsAPI.Data.Stat;
+using GangsAPI.Services;
 
 namespace GangsImpl.Memory;
 
-public class MemoryStatManager : IStatManager {
-  private readonly HashSet<IStat> stats = new();
+public class MockStatManager : IStatManager {
+  private readonly HashSet<IStat> stats = [];
 
   public Task<IEnumerable<IStat>> GetStats() {
     return Task.FromResult<IEnumerable<IStat>>(stats);
@@ -18,7 +19,7 @@ public class MemoryStatManager : IStatManager {
     string? description = null) {
     var stat = await GetStat(id);
     if (stat != null) return stat;
-    stat = new EphemeralStat(id, name, description);
+    stat = new MockStat(id, name, description);
     return stat;
   }
 

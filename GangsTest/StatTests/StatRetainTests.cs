@@ -1,11 +1,11 @@
 using GangsAPI.Services;
 
-namespace GangsTest;
+namespace GangsTest.StatTests;
 
 public class StatRetainTests {
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Retain(IStatManager mgr) {
+  public async Task Stat_Retain(IStatManager mgr) {
     var foo1 = await StatTestUtil.CreateStat(mgr);
     Assert.NotNull(foo1);
     await mgr.RegisterStat(foo1);
@@ -15,7 +15,7 @@ public class StatRetainTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Retain_NonTrivial_Name(IStatManager mgr) {
+  public async Task Stat_Retain_NonTrivial_Name(IStatManager mgr) {
     var foo1 = await StatTestUtil.CreateStat(mgr, "foo", "bar");
     Assert.NotNull(foo1);
     await mgr.RegisterStat(foo1);
@@ -27,7 +27,7 @@ public class StatRetainTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Retain_NonTrivial_Desc(IStatManager mgr) {
+  public async Task Stat_Retain_NonTrivial_Desc(IStatManager mgr) {
     var foo1 = await StatTestUtil.CreateStat(mgr, "foo", desc: "bar");
     Assert.NotNull(foo1);
     await mgr.RegisterStat(foo1);
@@ -39,7 +39,7 @@ public class StatRetainTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
-  public async void Stat_Retain_NonTrivial_Both(IStatManager mgr) {
+  public async Task Stat_Retain_NonTrivial_Both(IStatManager mgr) {
     var foo1 = await StatTestUtil.CreateStat(mgr, "foo", "foobar", "barfoo");
     Assert.NotNull(foo1);
     await mgr.RegisterStat(foo1);

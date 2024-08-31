@@ -1,13 +1,13 @@
-using System.Collections;
+﻿using System.Collections;
 using GangsAPI;
 using GangsImpl.Memory;
 
-namespace GangsTest.StatTests;
+namespace GangsTest.GangTests;
 
-public class StatManagerData : IEnumerable<object[]> {
-  private readonly IBehavior[] behaviors = [new MockStatManager()];
+public class GangManagerData : IEnumerable<object[]> {
+  private readonly IBehavior[] behaviors = [new MockGangManager()];
 
-  public StatManagerData() {
+  public GangManagerData() {
     foreach (var behavior in behaviors) behavior.Start();
   }
 
