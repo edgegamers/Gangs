@@ -23,4 +23,6 @@ public class MockPlayerManager : IPlayerManager {
   public Task<bool> DeletePlayer(ulong steamId) {
     return Task.FromResult(players.Remove(steamId));
   }
+
+  public void ClearCache() { players.Clear(); }
 }

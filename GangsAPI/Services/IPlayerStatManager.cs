@@ -1,8 +1,9 @@
+using GangsAPI.Data;
 using GangsAPI.Data.Stat;
 
 namespace GangsAPI.Services;
 
-public interface IPlayerStatManager {
+public interface IPlayerStatManager : Cacheable {
   Task<IPlayerStat<V>?> GetForPlayer<V>(ulong key, string statId);
 
   Task<bool> PushToPlayer<V>(ulong key, IPlayerStat<V> value) {

@@ -1,9 +1,10 @@
+using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Data.Stat;
 
 namespace GangsAPI.Services;
 
-public interface IGangStatManager {
+public interface IGangStatManager : Cacheable {
   Task<IGangStat<V>?> GetForGang<V>(int key, string id);
   Task<bool> PushToGang<V>(int gangId, string id, V value);
 

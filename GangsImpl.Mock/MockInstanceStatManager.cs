@@ -43,4 +43,9 @@ public class MockInstanceStatManager(IStatManager mgr)
     playerStatMap[id] = new MockPlayerStat<V>(stat, value);
     return true;
   }
+
+  public void ClearCache() {
+    gangStats.Clear();
+    playerStats.Clear();
+  }
 }

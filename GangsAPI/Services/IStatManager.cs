@@ -1,11 +1,12 @@
-﻿using GangsAPI.Data.Stat;
+﻿using GangsAPI.Data;
+using GangsAPI.Data.Stat;
 
 namespace GangsAPI.Services;
 
 /// <summary>
 ///   A manager for statistics. Allows for the registration, retrieval, and updating of statistics.
 /// </summary>
-public interface IStatManager : IPluginBehavior {
+public interface IStatManager : IPluginBehavior, Cacheable {
   /// <summary>
   ///   Retrieves all statistics.
   /// </summary>

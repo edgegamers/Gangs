@@ -37,4 +37,6 @@ public class MockGangManager : IGangManager {
     var gang = new MockGang(id, name, owner);
     return Task.FromResult((IGang?)(gangs.Add(gang) ? gang.Clone() : null));
   }
+
+  public void ClearCache() { gangs.Clear(); }
 }

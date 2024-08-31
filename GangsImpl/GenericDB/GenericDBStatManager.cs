@@ -1,43 +1,51 @@
 ﻿using System.Data.Common;
+using CounterStrikeSharp.API.Core;
 using Dapper;
+using GangsAPI;
 using GangsAPI.Data.Stat;
 using GangsAPI.Services;
 
 namespace GenericDB;
 
 public abstract class GenericDBStatManager(string connectionString,
-  string table = "gang_stats") : IStatManager {
+  string table = "gang_stats", bool testing = false) : IStatManager {
   private readonly HashSet<IStat> stats = [];
   private DbConnection connection = null!;
-  private DbTransaction transaction = null!;
+  private DbTransaction? transaction;
 
-  public void Start() {
+  public void Start(BasePlugin? plugin, bool hotReload) {
     connection = CreateDbConnection(connectionString);
 
     connection.Open();
-    transaction = connection.BeginTransaction();
+
+    if (testing) transaction = connection.BeginTransaction();
 
     try {
       var command = connection.CreateCommand();
 
       command.Transaction = transaction;
-      command.CommandText =
-        $"CREATE TEMPORARY TABLE IF NOT EXISTS {table} (StatId VARCHAR(255) NOT NULL PRIMARY KEY, Name VARCHAR(255) NOT NULL, Description TEXT)";
+      command.CommandText = testing ?
+        $"CREATE TEMPORARY TABLE IF NOT EXISTS {table} (StatId VARCHAR(255) NOT NULL PRIMARY KEY, Name VARCHAR(255) NOT NULL, Description TEXT)" :
+        $"CREATE TABLE IF NOT EXISTS {table} (StatId VARCHAR(255) NOT NULL PRIMARY KEY, Name VARCHAR(255) NOT NULL, Description TEXT)";
+
       command.ExecuteNonQuery();
 
-      connection
-       .Query<DBStat>($"SELECT * FROM {table}", transaction: transaction)
-       .ToList()
-       .ForEach(stat => stats.Add(stat));
+      LoadStats().GetAwaiter().GetResult();
     } catch (Exception e) {
-      transaction.Rollback();
+      transaction?.Rollback();
       throw new InvalidOperationException("Failed initializing the database",
         e);
     }
   }
 
+  protected async Task LoadStats() {
+    (await connection.QueryAsync<DBStat>($"SELECT * FROM {table}",
+        transaction: transaction)).ToList()
+     .ForEach(stat => stats.Add(stat));
+  }
+
   public void Dispose() {
-    transaction.Rollback();
+    transaction?.Commit();
     connection.Close();
     connection.Dispose();
   }
@@ -54,7 +62,8 @@ public abstract class GenericDBStatManager(string connectionString,
     string? description = null) {
     var stat = await GetStat(id);
     if (stat != null) return stat;
-    stat = new DBStat { StatId = id, Name = name, Description = description };
+    // stat = new DBStat { StatId = id, Name = name, Description = description };
+    stat = new DBStat(id, name, description);
     return stat;
   }
 
@@ -95,4 +104,9 @@ public abstract class GenericDBStatManager(string connectionString,
   public abstract DbConnection CreateDbConnection(string connectionString);
 
   public abstract DbParameter CreateDbParameter(string key, object value);
+
+  public void ClearCache() {
+    stats.Clear();
+    LoadStats().GetAwaiter().GetResult();
+  }
 }

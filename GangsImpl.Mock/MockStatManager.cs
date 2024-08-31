@@ -31,4 +31,6 @@ public class MockStatManager : IStatManager {
     foreach (var stat in matches) stats.Remove(stat);
     return Task.FromResult(matches.Count > 0);
   }
+
+  public void ClearCache() { stats.Clear(); }
 }
