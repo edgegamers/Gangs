@@ -15,12 +15,22 @@ jobs:
 
     services:
       mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: gangs
+        ports:
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping --silent" --health-interval 10s
+
+      mariadb:
         image: mariadb:latest
         env:
           MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
           MARIADB_DATABASE: gangs
         ports:
-          - 3306:3306
+          - 3307:3306
+        options: --health-cmd "mysqladmin ping --silent" --health-interval 10s
 
     steps:
       - uses: actions/checkout@v4
@@ -37,11 +47,19 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
+
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Test
+      - name: Test with MySQL
+        env:
+          DB_CONNECTION_STRING: "Server=localhost;Port=3306;Database=gangs;User=root"
+        run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
+
+      - name: Test with MariaDB
+        env:
+          DB_CONNECTION_STRING: "Server=localhost;Port=3307;Database=gangs;User=root"
         run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
