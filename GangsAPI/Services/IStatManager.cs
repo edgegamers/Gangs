@@ -43,11 +43,4 @@ public interface IStatManager : IPluginBehavior {
   /// <param name="id"></param>
   /// <returns></returns>
   Task<bool> UnregisterStat(string id);
-
-  /// <summary>
-  ///   Updates a statistic with the manager.
-  /// </summary>
-  /// <param name="stat"></param>
-  /// <returns></returns>
-  Task<bool> UpdateStat(IStat stat);
 }

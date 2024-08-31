@@ -32,11 +32,4 @@ public class MockStatManager : IStatManager {
     foreach (var stat in matches) stats.Remove(stat);
     return Task.FromResult(matches.Count > 0);
   }
-
-  public Task<bool> UpdateStat(IStat stat) {
-    var matches = stats.Where(s => s.StatId == stat.StatId).ToList();
-    foreach (var match in matches) stats.Remove(match);
-    stats.Add(stat);
-    return Task.FromResult(matches.Count > 0);
-  }
 }
