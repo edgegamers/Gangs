@@ -7,7 +7,7 @@ on:
 jobs:
   build:
 
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -53,12 +53,12 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Test with MySQL
-        env:
-          DB_CONNECTION_STRING: "Server=localhost;Port=3306;Database=gangs;User=root"
-        run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
-
       - name: Test with MariaDB
         env:
           DB_CONNECTION_STRING: "Server=localhost;Port=3307;Database=gangs;User=root"
+        run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
+        
+      - name: Test with MySQL
+        env:
+          DB_CONNECTION_STRING: "Server=localhost;Port=3306;Database=gangs;User=root"
         run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
