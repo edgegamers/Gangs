@@ -11,7 +11,7 @@ public class StatManagerData : IEnumerable<object[]> {
     new MockStatManager(),
     new SqlStatStatManager(
       Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
-      ?? throw new NullReferenceException("DB_CONNECTION_STRING is not set"),
+      ?? "Host=localhost;User=root;Database=gangs",
       "gang_unit_test", true),
     new SQLiteStatManager("Data Source=:memory:", "gang_unit_test", true)
   ];

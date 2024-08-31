@@ -7,21 +7,21 @@ public class PlayerWrapper {
   public readonly string? Name;
   public readonly CCSPlayerController? Player;
   public readonly ulong Steam;
-  public AdminData? data;
+  public AdminData? Data;
 
   public PlayerWrapper(CCSPlayerController player) {
     Player = player;
     Steam  = player.SteamID;
     Name   = player.PlayerName;
 
-    data = AdminManager.GetPlayerAdminData(player);
+    Data = AdminManager.GetPlayerAdminData(player);
   }
 
   public PlayerWrapper(ulong steam, string? name) {
     Steam = steam;
     Name  = name;
 
-    data = new AdminData { Identity = Steam.ToString() };
+    Data = new AdminData { Identity = Steam.ToString() };
   }
 
   private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
@@ -49,16 +49,40 @@ public class PlayerWrapper {
       flagMap[domain] = map;
     }
 
-    data = new AdminData {
-      Identity = Steam.ToString(), Flags = flagMap, Groups = data?.Groups ?? []
+    Data = new AdminData {
+      Identity = Steam.ToString(), Flags = flagMap, Groups = Data?.Groups ?? []
     };
     return this;
   }
 
+  public bool HasFlags(params string[] flags) {
+    if (Data == null) return false;
+
+    foreach (var flag in flags) {
+      if (!flag.StartsWith(USER_CHAR))
+        throw new ArgumentException(
+          $"Expected flag ${flag} to start with {USER_CHAR}");
+
+      var slashIndex = flag.IndexOf('/', StringComparison.Ordinal);
+
+      if (slashIndex == -1)
+        throw new ArgumentException(
+          $"Expected flag ${flag} to contain a / character");
+
+      var domain     = flag[..slashIndex];
+      var permission = flag[(slashIndex + 1)..];
+
+      if (!Data.Flags.TryGetValue(domain, out var map)) return false;
+      if (!map.Contains(permission)) return false;
+    }
+
+    return true;
+  }
+
   public PlayerWrapper WithGroups(params string[] groups) {
-    data = new AdminData {
+    Data = new AdminData {
       Identity = Steam.ToString(),
-      Flags    = data?.Flags ?? new Dictionary<string, HashSet<string>>(),
+      Flags    = Data?.Flags ?? new Dictionary<string, HashSet<string>>(),
       Groups   = groups.ToHashSet()
     };
     return this;
