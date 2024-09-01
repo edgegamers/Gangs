@@ -30,7 +30,7 @@ public class GangBankTest {
     Assert.NotNull(gang);
     Assert.Null(gang.Bank);
     gang.Stats.Add(bankStat);
-    Assert.Equal(gang.Bank, 0);
+    Assert.Equal(0, gang.Bank);
 
     Assert.True(await gangManager.UpdateGang(gang));
     gang = await gangManager.GetGang(gang.GangId);
@@ -43,7 +43,7 @@ public class GangBankTest {
     var gang = await GangTestUtil.CreateGang(gangManager);
     Assert.NotNull(gang);
     gang.Stats.Add(bankStat);
-    Assert.Equal(gang.Bank, 0);
+    Assert.Equal(0, gang.Bank);
 
     var stat = gang.GetStat(bankStat.StatId);
     Assert.Same(stat, bankStat);

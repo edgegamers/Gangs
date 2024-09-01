@@ -1,10 +1,11 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 
 namespace Commands.gang;
 
-public class CreateCommand : ICommand {
+public class CreateCommand(IGangManager gang) : ICommand {
   public string Name => "create";
   public string? Description => "Creates a new gang";
 

@@ -1,4 +1,5 @@
 ﻿using GangsAPI.Services;
+using GangsAPI.Services.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Mock;
 
@@ -11,5 +12,6 @@ public class Startup {
     services.AddScoped<IStatManager, MockStatManager>();
     services.AddScoped<IGangStatManager, MockInstanceStatManager>();
     services.AddScoped<IPlayerStatManager, MockInstanceStatManager>();
+    services.AddScoped<ICommandManager, MockCommandManager>();
   }
 }

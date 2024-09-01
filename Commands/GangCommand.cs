@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using Commands.gang;
+using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using Mock;
@@ -19,16 +20,27 @@ public class GangCommand : ICommand {
     // ["promote"] = new PromoteGangCommand(),
     // ["demote"] = new DemoteGangCommand(),
     // ["info"] = new InfoGangCommand()
+    ["help"] = new HelpCommand()
   };
 
   public CommandResult
     Execute(PlayerWrapper? executor, CommandInfoWrapper info) {
-    if (info.ArgCount == 0) return CommandResult.FAILURE;
-    if (!sub.TryGetValue(info[0], out var command)) {
-      // print usage
-      return CommandResult.INVALID_ARGS;
+    if (info.ArgCount == 0 || info[0] != Name) {
+      if (info.ArgCount == 0)
+        throw new InvalidOperationException(
+          "Attempted to execute GangCommand with no arguments");
+      throw new InvalidOperationException(
+        $"Attempted to execute GangCommand with invalid name: {info[0]}");
     }
 
-    return CommandResult.SUCCESS;
+    if (info.ArgCount == 1) return CommandResult.INVALID_ARGS;
+
+    if (!sub.TryGetValue(info[1], out var command)) {
+      // print usage
+      return CommandResult.UNKNOWN_COMMAND;
+    }
+
+    var newInfo = new CommandInfoWrapper(info, 1);
+    return command.Execute(executor, info);
   }
 }

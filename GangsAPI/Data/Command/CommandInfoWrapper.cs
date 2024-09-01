@@ -15,6 +15,11 @@ public class CommandInfoWrapper(CCSPlayerController? executor, int offset = 0,
     CallingContext = info.CallingContext;
   }
 
+  public CommandInfoWrapper(CommandInfoWrapper info, int offset) : this(
+    info.CallingPlayer, offset, info.ArgString.Split(" ")) {
+    CallingContext = info.CallingContext;
+  }
+
   public int ArgCount => args.Length - offset;
   public string this[int index] => args[index + offset];
 
