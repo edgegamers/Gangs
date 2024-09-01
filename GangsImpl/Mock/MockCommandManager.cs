@@ -1,4 +1,5 @@
 ﻿using GangsAPI.Data;
+using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 
 namespace Mock;
@@ -14,23 +15,14 @@ public class MockCommandManager : ICommandManager {
     return commands.Remove(command.Name);
   }
 
-  public bool ProcessCommand(PlayerWrapper? executor, string[] args) {
-    if (args.Length == 0) return false;
-    if (!commands.TryGetValue(args[0], out var command)) return false;
+  public CommandResult ProcessCommand(PlayerWrapper? executor, string[] args) {
+    if (args.Length == 0) return CommandResult.FAILURE;
+    if (!commands.TryGetValue(args[0], out var command))
+      return CommandResult.UNKNOWN_COMMAND;
 
-    if (executor == null)
-      return command.Execute(executor,
-        new CommandInfoWrapper(executor?.Player, args));
-
-    if (command.RequiredFlags.Any(flag => !executor.HasFlags(flag)))
-      return false;
-
-    foreach (var group in command.RequiredGroups) {
-      if (executor.Data == null) return false;
-      if (!executor.Data.Groups.Contains(group)) return false;
-    }
+    if (!command.CanExecute(executor)) return CommandResult.NO_PERMISSION;
 
     return command.Execute(executor,
-      new CommandInfoWrapper(executor?.Player, args));
+      new CommandInfoWrapper(executor?.Player, args: args));
   }
 }

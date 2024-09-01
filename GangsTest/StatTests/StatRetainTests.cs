@@ -15,12 +15,20 @@ public class StatRetainTests {
 
   [Theory]
   [ClassData(typeof(StatManagerData))]
+  public async Task Stat_Retain_Unregsitered(IStatManager mgr) {
+    var foo1 = await StatTestUtil.CreateStat(mgr);
+    Assert.NotNull(foo1);
+    var foo2 = await StatTestUtil.CreateStat(mgr);
+    Assert.NotSame(foo1, foo2);
+  }
+
+  [Theory]
+  [ClassData(typeof(StatManagerData))]
   public async Task Stat_Retain_NonTrivial_Name(IStatManager mgr) {
     var foo1 = await StatTestUtil.CreateStat(mgr, "foo", "bar");
     Assert.NotNull(foo1);
     await mgr.RegisterStat(foo1);
     var foo2 = await StatTestUtil.CreateStat(mgr, "foo", "foobar");
-    Assert.NotNull(foo1);
     Assert.NotNull(foo2);
     Assert.Same(foo1, foo2);
   }

@@ -1,4 +1,5 @@
 ﻿using GangsAPI.Data;
+using GangsAPI.Data.Command;
 
 namespace GangsAPI.Services.Commands;
 
@@ -24,5 +25,5 @@ public interface ICommandManager : IPluginBehavior {
   /// <param name="executor"></param>
   /// <param name="args"></param>
   /// <returns>True if the command finished processing successfully.</returns>
-  bool ProcessCommand(PlayerWrapper? executor, params string[] args);
+  CommandResult ProcessCommand(PlayerWrapper? executor, params string[] args);
 }

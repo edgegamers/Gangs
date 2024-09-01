@@ -1,4 +1,5 @@
-﻿using GangsAPI.Services.Commands;
+﻿using GangsAPI.Data.Command;
+using GangsAPI.Services.Commands;
 
 namespace GangsTest.Commands.ManagerTests;
 
@@ -7,13 +8,15 @@ public class RegistrationTests : ManagerTests {
   [ClassData(typeof(ManagerData))]
   public void Command_Register(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
-    Assert.True(mgr.ProcessCommand(TestPlayer, "css_dummy", "foobar"));
+    Assert.Equal(CommandResult.SUCCESS,
+      mgr.ProcessCommand(TestPlayer, "css_dummy", "foobar"));
   }
 
   [Theory]
   [ClassData(typeof(ManagerData))]
   public void Command_Unregistered(ICommandManager mgr) {
-    Assert.False(mgr.ProcessCommand(TestPlayer, "css_dummy"));
+    Assert.Equal(CommandResult.UNKNOWN_COMMAND,
+      mgr.ProcessCommand(TestPlayer, "css_dummy"));
   }
 
   [Theory]
@@ -21,7 +24,8 @@ public class RegistrationTests : ManagerTests {
   public void Command_Unregister(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.True(mgr.UnregisterCommand(Dummy));
-    Assert.False(mgr.ProcessCommand(TestPlayer, "css_dummy", "foobar"));
+    Assert.Equal(CommandResult.UNKNOWN_COMMAND,
+      mgr.ProcessCommand(TestPlayer, "css_dummy"));
   }
 
   [Theory]

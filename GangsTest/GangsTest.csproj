@@ -31,7 +31,7 @@
         <ProjectReference Include="..\GangsImpl\Mock\Mock.csproj"/>
         <ProjectReference Include="..\GangsImpl\SQLite\SQLite.csproj"/>
         <ProjectReference Include="..\GangsImpl\SQL\SQL.csproj"/>
-        <ProjectReference Include="..\GangsPlugin\GangsPlugin.csproj" />
+        <ProjectReference Include="..\Core\Core.csproj" />
     </ItemGroup>
 
 </Project>

@@ -8,16 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Commands\Commands.csproj" />
         <ProjectReference Include="..\GangsAPI\GangsAPI.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CounterStrikeSharp.API" Version="1.0.263"/>
         <PackageReference Include="xunit" Version="2.9.0"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Commands\" />
     </ItemGroup>
 
 </Project>

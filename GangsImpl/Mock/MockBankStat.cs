@@ -1,6 +1,6 @@
 ﻿using GangsAPI.Data.Stat;
 
-namespace GangsTest.GangBankTests;
+namespace Mock;
 
 public class MockBankStat : IGangStat<int> {
   public string StatId => "gang_bank";

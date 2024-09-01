@@ -40,8 +40,12 @@ public class PlayerWrapper {
         throw new ArgumentException(
           $"Expected flag ${flag} to contain a / character");
 
-      var domain     = flag[..slashIndex];
+      var domain     = flag[1..slashIndex];
       var permission = flag[(slashIndex + 1)..];
+
+      if (permission.Length == 0)
+        throw new ArgumentException(
+          $"Expected flag ${flag} to contain a permission after / character");
 
       if (!flagMap.TryGetValue(domain, out var map)) flagMap[domain] = map = [];
 
@@ -69,11 +73,12 @@ public class PlayerWrapper {
         throw new ArgumentException(
           $"Expected flag ${flag} to contain a / character");
 
-      var domain     = flag[..slashIndex];
+      var domain     = flag[1..slashIndex];
       var permission = flag[(slashIndex + 1)..];
 
-      if (!Data.Flags.TryGetValue(domain, out var map)) return false;
-      if (!map.Contains(permission)) return false;
+      if (!Data.Flags.TryGetValue(domain, out var perms)) return false;
+      if (perms.Contains("root")) return true;
+      if (!perms.Any(p => permission.StartsWith(p))) return false;
     }
 
     return true;

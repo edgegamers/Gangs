@@ -1,6 +1,7 @@
 ﻿using GangsAPI.Data.Stat;
 using GangsAPI.Services;
 using GangsTest.GangTests;
+using Mock;
 
 namespace GangsTest.GangBankTests;
 
@@ -68,6 +69,10 @@ public class GangBankTest {
   [InlineData(5, 25)]
   [InlineData(-5, 25)]
   [InlineData(-5, -25)]
+  [InlineData(int.MaxValue, int.MinValue)]
+  [InlineData(int.MinValue, int.MaxValue)]
+  [InlineData(int.MaxValue, int.MaxValue)]
+  [InlineData(int.MinValue, int.MinValue)]
   public async Task GangBank_Withdraw(int initial, int withdraw) {
     var gang = await GangTestUtil.CreateGang(gangManager);
     Assert.NotNull(gang);
@@ -88,6 +93,10 @@ public class GangBankTest {
   [InlineData(5, 25)]
   [InlineData(-5, 25)]
   [InlineData(-5, -25)]
+  [InlineData(int.MaxValue, int.MinValue)]
+  [InlineData(int.MinValue, int.MaxValue)]
+  [InlineData(int.MaxValue, int.MaxValue)]
+  [InlineData(int.MinValue, int.MinValue)]
   public async Task
     GangBank_Withdraw_Indirect_Alias(int initial, int withdraw) {
     var gang = await GangTestUtil.CreateGang(gangManager);

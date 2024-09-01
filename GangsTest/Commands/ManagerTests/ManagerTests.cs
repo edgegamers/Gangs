@@ -1,4 +1,5 @@
 ﻿using GangsAPI.Data;
+using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 
 namespace GangsTest.Commands.ManagerTests;
@@ -15,11 +16,14 @@ public class ManagerTests {
     public string[] RequiredFlags { get; } = [];
     public string[] RequiredGroups { get; } = [];
 
-    public bool Execute(PlayerWrapper? executor, CommandInfoWrapper info) {
+    public CommandResult Execute(PlayerWrapper? executor,
+      CommandInfoWrapper info) {
       if (info[0] != Name)
         throw new InvalidOperationException("Command name mismatch");
 
-      return info[1] == "foobar";
+      return info[1] == "foobar" ?
+        CommandResult.SUCCESS :
+        CommandResult.FAILURE;
     }
   }
 }
