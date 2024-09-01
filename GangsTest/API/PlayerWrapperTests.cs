@@ -26,16 +26,26 @@ public class PlayerWrapperTests {
     Assert.True(player.Data.Flags.ContainsKey("test"));
   }
 
-  [Fact]
-  public void PlayerWrapper_Init_InvalidFlag() {
-    Assert.ThrowsAny<ArgumentException>(() => testPlayer.WithFlags("invalid"));
-    Assert.ThrowsAny<ArgumentException>(()
-      => testPlayer.WithFlags(GROUP_CHAR + "invalid"));
-    Assert.ThrowsAny<ArgumentException>(() => testPlayer.WithFlags("_invalid"));
-    Assert.ThrowsAny<ArgumentException>(()
-      => testPlayer.WithFlags(USER_CHAR + "test"));
-    Assert.ThrowsAny<ArgumentException>(()
-      => testPlayer.WithFlags(USER_CHAR + "test/"));
+  [Theory]
+  [InlineData("test/flag")]
+  [InlineData("test/flag/child")]
+  [InlineData("#test/flag")]
+  [InlineData("_test/flag")]
+  [InlineData("@test")]
+  [InlineData("@test/")]
+  public void PlayerWrapper_Init_InvalidFlag(string flag) {
+    Assert.ThrowsAny<ArgumentException>(() => testPlayer.WithFlags(flag));
+  }
+
+  [Theory]
+  [InlineData("test/flag")]
+  [InlineData("test/flag/child")]
+  [InlineData("#test/flag")]
+  [InlineData("_test/flag")]
+  [InlineData("@test")]
+  [InlineData("@test/")]
+  public void PlayerWrapper_Test_InvalidFlag(string flag) {
+    Assert.ThrowsAny<ArgumentException>(() => testPlayer.HasFlags(flag));
   }
 
   [Fact]

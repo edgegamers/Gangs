@@ -30,9 +30,9 @@ public class PlayerWrapper {
   public PlayerWrapper WithFlags(params string[] flags) {
     var flagMap = new Dictionary<string, HashSet<string>>();
     foreach (var flag in flags) {
-      if (!flag.StartsWith(USER_CHAR) && !flag.StartsWith(GROUP_CHAR))
+      if (!flag.StartsWith(USER_CHAR))
         throw new ArgumentException(
-          $"Expected flag ${flag} to start with {USER_CHAR} or {GROUP_CHAR}");
+          $"Expected flag ${flag} to start with {USER_CHAR}");
 
       var slashIndex = flag.IndexOf('/', StringComparison.Ordinal);
 
@@ -75,6 +75,10 @@ public class PlayerWrapper {
 
       var domain     = flag[1..slashIndex];
       var permission = flag[(slashIndex + 1)..];
+
+      if (permission.Length == 0)
+        throw new ArgumentException(
+          $"Expected flag ${flag} to contain a permission after / character");
 
       if (!Data.Flags.TryGetValue(domain, out var perms)) return false;
       if (perms.Contains("root")) return true;
