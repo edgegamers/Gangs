@@ -26,6 +26,22 @@ public class PlayerWrapperTests {
     Assert.True(player.Data.Flags.ContainsKey("test"));
   }
 
+  [Fact]
+  public void PlayerWrapper_Print_Chat() {
+    Assert.Empty(testPlayer.ChatOutput);
+    testPlayer.PrintToChat("Test Message");
+    Assert.Single(testPlayer.ChatOutput);
+    Assert.Equal("Test Message", testPlayer.ChatOutput[0]);
+  }
+
+  [Fact]
+  public void PlayerWrapper_Print_Console() {
+    Assert.Empty(testPlayer.ConsoleOutput);
+    testPlayer.PrintToConsole("Test Message");
+    Assert.Single(testPlayer.ConsoleOutput);
+    Assert.Equal("Test Message", testPlayer.ConsoleOutput[0]);
+  }
+
   [Theory]
   [InlineData("test/flag")]
   [InlineData("test/flag/child")]

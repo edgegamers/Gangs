@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Core;
+﻿using System.Diagnostics;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Admin;
 
 namespace GangsAPI.Data;
@@ -8,6 +9,9 @@ public class PlayerWrapper {
   public readonly CCSPlayerController? Player;
   public readonly ulong Steam;
   public AdminData? Data;
+  private readonly List<string> chatOutput = [], consoleOutput = [];
+  public IReadOnlyList<string> ChatOutput => chatOutput;
+  public IReadOnlyList<string> ConsoleOutput => consoleOutput;
 
   public PlayerWrapper(CCSPlayerController player) {
     Player = player;
@@ -21,7 +25,8 @@ public class PlayerWrapper {
     Steam = steam;
     Name  = name;
 
-    Data = new AdminData { Identity = Steam.ToString() };
+    chatOutput = new();
+    Data       = new AdminData { Identity = Steam.ToString() };
   }
 
   private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
@@ -99,19 +104,21 @@ public class PlayerWrapper {
 
   public void PrintToChat(string message) {
     if (Player == null) {
-      Console.WriteLine($"{Steam} {Player} received chat: {message}");
+      Debug.WriteLine($"{Steam} {Name} received chat: {message}");
+      chatOutput.Add(message);
       return;
     }
 
-    Player?.PrintToChat(message);
+    Player.PrintToChat(message);
   }
 
   public void PrintToConsole(string message) {
     if (Player == null) {
-      Console.WriteLine($"{Steam} {Player} received console: {message}");
+      Console.WriteLine($"{Steam} {Name} received chat: {message}");
+      consoleOutput.Add(message);
       return;
     }
 
-    Player?.PrintToConsole(message);
+    Player.PrintToConsole(message);
   }
 }
