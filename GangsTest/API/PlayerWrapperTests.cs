@@ -16,6 +16,8 @@ public class PlayerWrapperTests {
     Assert.Null(testPlayer.Player);
     Assert.NotNull(testPlayer.Data);
     Assert.True(testPlayer.Data.Identity == testPlayer.Steam.ToString());
+    Assert.Empty(testPlayer.ChatOutput);
+    Assert.Empty(testPlayer.ConsoleOutput);
   }
 
   [Fact]
@@ -28,7 +30,6 @@ public class PlayerWrapperTests {
 
   [Fact]
   public void PlayerWrapper_Print_Chat() {
-    Assert.Empty(testPlayer.ChatOutput);
     testPlayer.PrintToChat("Test Message");
     Assert.Single(testPlayer.ChatOutput);
     Assert.Equal("Test Message", testPlayer.ChatOutput[0]);
@@ -36,10 +37,37 @@ public class PlayerWrapperTests {
 
   [Fact]
   public void PlayerWrapper_Print_Console() {
-    Assert.Empty(testPlayer.ConsoleOutput);
     testPlayer.PrintToConsole("Test Message");
     Assert.Single(testPlayer.ConsoleOutput);
     Assert.Equal("Test Message", testPlayer.ConsoleOutput[0]);
+  }
+
+  [Fact]
+  public void PlayerWrapper_Print_Both() {
+    testPlayer.PrintToConsole("Test Message A");
+    testPlayer.PrintToChat("Test Message B");
+    Assert.Single(testPlayer.ConsoleOutput);
+    Assert.Single(testPlayer.ChatOutput);
+    Assert.Equal("Test Message A", testPlayer.ConsoleOutput[0]);
+    Assert.Equal("Test Message B", testPlayer.ChatOutput[0]);
+  }
+
+  [Fact]
+  public void PlayerWrapper_Chat_Order() {
+    testPlayer.PrintToChat("Test Message 1");
+    testPlayer.PrintToChat("Test Message 2");
+    Assert.Equal(2, testPlayer.ChatOutput.Count);
+    Assert.Equal("Test Message 1", testPlayer.ChatOutput[0]);
+    Assert.Equal("Test Message 2", testPlayer.ChatOutput[1]);
+  }
+
+  [Fact]
+  public void PlayerWrapper_Console_Order() {
+    testPlayer.PrintToConsole("Test Message 1");
+    testPlayer.PrintToConsole("Test Message 2");
+    Assert.Equal(2, testPlayer.ConsoleOutput.Count);
+    Assert.Equal("Test Message 1", testPlayer.ConsoleOutput[0]);
+    Assert.Equal("Test Message 2", testPlayer.ConsoleOutput[1]);
   }
 
   [Theory]

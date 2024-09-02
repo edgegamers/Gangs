@@ -1,17 +1,19 @@
-﻿using CounterStrikeSharp.API.Core;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Commands;
 
-namespace GangsAPI.Data;
+namespace GangsAPI.Data.Command;
 
-public class CommandInfoWrapper(CCSPlayerController? executor, int offset = 0,
+public class CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
   params string[] args) {
-  public readonly CCSPlayerController? CallingPlayer = executor;
+  public readonly PlayerWrapper? CallingPlayer = executor;
 
   public readonly CommandCallingContext CallingContext =
     CommandCallingContext.Console;
 
   public CommandInfoWrapper(CommandInfo info, int offset = 0) : this(
-    info.CallingPlayer, offset, info.ArgString.Split(" ")) {
+    info.CallingPlayer == null ? null : new PlayerWrapper(info.CallingPlayer),
+    offset, info.ArgString.Split(" ")) {
     CallingContext = info.CallingContext;
   }
 
@@ -28,15 +30,23 @@ public class CommandInfoWrapper(CCSPlayerController? executor, int offset = 0,
 
   public string GetCommandString => string.Join(' ', args.Skip(offset));
 
-  public void ReplyToCommand(string message) {
+  public void ReplyToCommandSync(string message) {
     if (CallingPlayer == null) {
       Console.WriteLine(message);
       return;
     }
 
-    if (CallingContext == CommandCallingContext.Console)
-      CallingPlayer.PrintToConsole(message);
-    else
-      CallingPlayer.PrintToChat(message);
+    new Task(() => {
+      if (!CallingPlayer.IsValid) {
+        Console.Error.WriteLine(
+          $"Player {CallingPlayer} is not valid, cannot reply to command");
+        return;
+      }
+
+      if (CallingContext == CommandCallingContext.Console)
+        CallingPlayer.PrintToConsole(message);
+      else
+        CallingPlayer.PrintToChat(message);
+    }).RunSynchronously();
   }
 }

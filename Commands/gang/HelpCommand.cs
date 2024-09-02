@@ -9,9 +9,9 @@ public class HelpCommand : ICommand {
   public string Name => "help";
   public string? Description => "Displays help for gangs";
 
-  public CommandResult
-    Execute(PlayerWrapper? executor, CommandInfoWrapper info) {
-    executor?.PrintToChat("Gang commands:");
-    return CommandResult.SUCCESS;
+  public Task<CommandResult> Execute(PlayerWrapper? executor,
+    CommandInfoWrapper info) {
+    info.ReplyToCommandSync("create [name] - Creates a new gang");
+    return Task.FromResult(CommandResult.SUCCESS);
   }
 }

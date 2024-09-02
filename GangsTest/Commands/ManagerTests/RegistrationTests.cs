@@ -6,26 +6,26 @@ namespace GangsTest.Commands.ManagerTests;
 public class RegistrationTests : ManagerTests {
   [Theory]
   [ClassData(typeof(ManagerData))]
-  public void Command_Register(ICommandManager mgr) {
+  public async Task Command_Register(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.Equal(CommandResult.SUCCESS,
-      mgr.ProcessCommand(TestPlayer, "css_dummy", "foobar"));
+      await mgr.ProcessCommand(TestPlayer, "css_dummy", "foobar"));
   }
 
   [Theory]
   [ClassData(typeof(ManagerData))]
-  public void Command_Unregistered(ICommandManager mgr) {
+  public async Task Command_Unregistered(ICommandManager mgr) {
     Assert.Equal(CommandResult.UNKNOWN_COMMAND,
-      mgr.ProcessCommand(TestPlayer, "css_dummy"));
+      await mgr.ProcessCommand(TestPlayer, "css_dummy"));
   }
 
   [Theory]
   [ClassData(typeof(ManagerData))]
-  public void Command_Unregister(ICommandManager mgr) {
+  public async Task Command_Unregister(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.True(mgr.UnregisterCommand(Dummy));
     Assert.Equal(CommandResult.UNKNOWN_COMMAND,
-      mgr.ProcessCommand(TestPlayer, "css_dummy"));
+      await mgr.ProcessCommand(TestPlayer, "css_dummy"));
   }
 
   [Theory]

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Admin;
 
@@ -25,9 +27,10 @@ public class PlayerWrapper {
     Steam = steam;
     Name  = name;
 
-    chatOutput = new();
-    Data       = new AdminData { Identity = Steam.ToString() };
+    Data = new AdminData { Identity = Steam.ToString() };
   }
+
+  public bool IsValid => Player == null || Player.IsValid;
 
   private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
   private static char GROUP_CHAR => PermissionCharacters.GroupPermissionChar;
@@ -64,6 +67,7 @@ public class PlayerWrapper {
     return this;
   }
 
+  [Pure]
   public bool HasFlags(params string[] flags) {
     if (Data == null) return false;
 

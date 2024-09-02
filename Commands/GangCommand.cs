@@ -23,8 +23,8 @@ public class GangCommand : ICommand {
     ["help"] = new HelpCommand()
   };
 
-  public CommandResult
-    Execute(PlayerWrapper? executor, CommandInfoWrapper info) {
+  public async Task<CommandResult> Execute(PlayerWrapper? executor,
+    CommandInfoWrapper info) {
     if (info.ArgCount == 0 || info[0] != Name) {
       if (info.ArgCount == 0)
         throw new InvalidOperationException(
@@ -41,6 +41,6 @@ public class GangCommand : ICommand {
     }
 
     var newInfo = new CommandInfoWrapper(info, 1);
-    return command.Execute(executor, info);
+    return await command.Execute(executor, newInfo);
   }
 }

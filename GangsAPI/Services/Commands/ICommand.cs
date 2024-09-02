@@ -17,5 +17,5 @@ public interface ICommand : IPluginBehavior {
       && RequiredGroups.All(group => executor.Data.Groups.Contains(group));
   }
 
-  CommandResult Execute(PlayerWrapper? executor, CommandInfoWrapper info);
+  Task<CommandResult> Execute(PlayerWrapper? executor, CommandInfoWrapper info);
 }

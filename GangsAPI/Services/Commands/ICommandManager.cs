@@ -25,5 +25,6 @@ public interface ICommandManager : IPluginBehavior {
   /// <param name="executor"></param>
   /// <param name="args"></param>
   /// <returns>True if the command finished processing successfully.</returns>
-  CommandResult ProcessCommand(PlayerWrapper? executor, params string[] args);
+  Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
+    params string[] args);
 }

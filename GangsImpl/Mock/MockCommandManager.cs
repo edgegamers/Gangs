@@ -15,14 +15,20 @@ public class MockCommandManager : ICommandManager {
     return commands.Remove(command.Name);
   }
 
-  public CommandResult ProcessCommand(PlayerWrapper? executor, string[] args) {
+  public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
+    params string[] args) {
     if (args.Length == 0) return CommandResult.FAILURE;
     if (!commands.TryGetValue(args[0], out var command))
       return CommandResult.UNKNOWN_COMMAND;
 
     if (!command.CanExecute(executor)) return CommandResult.NO_PERMISSION;
 
-    return command.Execute(executor,
-      new CommandInfoWrapper(executor?.Player, args: args));
+    var result = CommandResult.FAILURE;
+    await Task.Run(async () => {
+      result = await command.Execute(executor,
+        new CommandInfoWrapper(executor, args: args));
+    });
+
+    return result;
   }
 }

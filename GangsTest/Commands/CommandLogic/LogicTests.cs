@@ -8,17 +8,17 @@ namespace GangsTest.Commands.CommandLogic;
 public class LogicTests : ManagerTests.ManagerTests {
   [Theory]
   [ClassData(typeof(ManagerData))]
-  public void Command_Logic(ICommandManager mgr) {
+  public async Task Command_Logic(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.Equal(CommandResult.SUCCESS,
-      mgr.ProcessCommand(TestPlayer, "css_dummy", "foobar"));
+      await mgr.ProcessCommand(TestPlayer, "css_dummy", "foobar"));
   }
 
   [Theory]
   [ClassData(typeof(ManagerData))]
-  public void Command_Logic_Fail(ICommandManager mgr) {
+  public async Task Command_Logic_Fail(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.Equal(CommandResult.FAILURE,
-      mgr.ProcessCommand(TestPlayer, "css_dummy", "barfoo"));
+      await mgr.ProcessCommand(TestPlayer, "css_dummy", "barfoo"));
   }
 }
