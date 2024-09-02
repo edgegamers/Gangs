@@ -17,6 +17,19 @@
         <PackageReference Include="xunit" Version="2.9.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="build\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="build\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="build\**" />
+      <None Remove="Gangs.zip" />
+    </ItemGroup>
+
     <PropertyGroup>
         <!--Publish Configuration-->
         <PublishBaseDirectory>$(MSBuildThisFileDirectory)/../build</PublishBaseDirectory>
