@@ -36,8 +36,4 @@
         <UseAppHost>false</UseAppHost>
     </PropertyGroup>
 
-    <Target Name="ZipOutputPath" AfterTargets="Publish">
-        <ZipDirectory Overwrite="true" SourceDirectory="$(PublishDir)\" DestinationFile="$(PublishBaseDirectory)\Gangs.zip"/>
-    </Target>
-
 </Project>
