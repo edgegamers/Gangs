@@ -11,7 +11,7 @@ public class HelpCommand : ICommand {
 
   public Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
-    info.ReplyToCommandSync("create [name] - Creates a new gang");
+    info.ReplySync("create [name] - Creates a new gang");
     return Task.FromResult(CommandResult.SUCCESS);
   }
 }

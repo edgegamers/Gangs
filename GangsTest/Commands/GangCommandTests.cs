@@ -1,11 +1,12 @@
 ﻿using Commands;
 using GangsAPI.Data.Command;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 
 namespace GangsTest.Commands;
 
-public class GangCommandTestses(ICommandManager commands)
-  : CommandTests(commands, new GangCommand()) {
+public class GangCommandTests(ICommandManager commands, IGangManager gangMgr)
+  : CommandTests(commands, new GangCommand(gangMgr)) {
   [Fact]
   public async Task Gang_TestBase() {
     Assert.Equal("css_gang", Command.Name);

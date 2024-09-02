@@ -30,7 +30,7 @@ public class CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
 
   public string GetCommandString => string.Join(' ', args.Skip(offset));
 
-  public void ReplyToCommandSync(string message) {
+  public void ReplySync(string message) {
     if (CallingPlayer == null) {
       Console.WriteLine(message);
       return;

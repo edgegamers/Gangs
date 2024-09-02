@@ -1,26 +1,26 @@
 ﻿using Commands.gang;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using Mock;
 
 namespace Commands;
 
-public class GangCommand : ICommand {
+public class GangCommand(IGangManager gangMgr) : ICommand {
   public string Name => "css_gang";
   public string? Description => "Master command for gangs";
 
-  private Dictionary<string, ICommand> sub = new() {
-    // ["create"] = new CreateGangCommand(),
+  private readonly Dictionary<string, ICommand> sub = new() {
     // ["delete"] = new DeleteGangCommand(),
     // ["invite"] = new InviteGangCommand(),
     // ["kick"] = new KickGangCommand(),
-    // ["leave"] = new LeaveGangCommand(),
+    // ["leave"] = new LeaveGangCommand(),ggG
     // ["list"] = new ListGangCommand(),
     // ["promote"] = new PromoteGangCommand(),
     // ["demote"] = new DemoteGangCommand(),
     // ["info"] = new InfoGangCommand()
-    ["help"] = new HelpCommand()
+    ["create"] = new CreateCommand(gangMgr), ["help"] = new HelpCommand()
   };
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,

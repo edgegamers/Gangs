@@ -7,7 +7,7 @@ namespace Mock;
 public class MockCommandManager : ICommandManager {
   private readonly Dictionary<string, ICommand> commands = new();
 
-  public bool RegisterCommand(ICommand command) {
+  public virtual bool RegisterCommand(ICommand command) {
     return commands.TryAdd(command.Name, command);
   }
 

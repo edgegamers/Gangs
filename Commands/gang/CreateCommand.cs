@@ -17,19 +17,19 @@ public class CreateCommand(IGangManager gang) : ICommand {
     if (executor == null) { return CommandResult.PLAYER_ONLY; }
 
     if (info.ArgCount < 2) {
-      info.ReplyToCommandSync("Please provide a name for the gang");
+      info.ReplySync("Please provide a name for the gang");
       return CommandResult.FAILURE;
     }
 
     var name = string.Join(' ', info.ArgString.Split(" ").Skip(1));
 
     if (await gang.GetGang(executor.Steam) != null) {
-      info.ReplyToCommandSync("You are already in a gang");
+      info.ReplySync("You are already in a gang");
       return CommandResult.FAILURE;
     }
 
     if ((await gang.GetGangs()).Any(g => g.Name == name)) {
-      info.ReplyToCommandSync($"Gang '{name}' already exists");
+      info.ReplySync($"Gang '{name}' already exists");
       return CommandResult.FAILURE;
     }
 
