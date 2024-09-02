@@ -7,6 +7,11 @@
         <RootNamespace>GangsImpl</RootNamespace>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <!--CI Configurations-->
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\Commands\Commands.csproj"/>
         <ProjectReference Include="..\GangsAPI\GangsAPI.csproj"/>
