@@ -11,6 +11,8 @@ on:
     paths:
       - 'Gangs*/**'
       - '.github/workflows/nightly.yml'
+      - 'Core/**'
+      - 'Commands/**'
 
 jobs:
   build:

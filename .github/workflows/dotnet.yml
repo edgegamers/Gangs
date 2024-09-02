@@ -4,11 +4,15 @@ on:
   push:
     paths:
       - 'Gangs*/**'
-      - '.github/workflows/dotnet.yml'
+      - '.github/workflows/nightly.yml'
+      - 'Core/**'
+      - 'Commands/**'
   pull_request:
     paths:
       - 'Gangs*/**'
-      - '.github/workflows/dotnet.yml'
+      - '.github/workflows/nightly.yml'
+      - 'Core/**'
+      - 'Commands/**'
 
 jobs:
   build:
