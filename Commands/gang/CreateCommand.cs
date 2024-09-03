@@ -19,7 +19,7 @@ public class CreateCommand(IGangManager gang) : ICommand {
 
     if (info.ArgCount < 2) {
       info.ReplySync("Please provide a name for the gang");
-      return CommandResult.FAILURE;
+      return CommandResult.INVALID_ARGS;
     }
 
     var name = string.Join(' ', info.ArgString.Split(" ").Skip(1));
@@ -34,6 +34,14 @@ public class CreateCommand(IGangManager gang) : ICommand {
       return CommandResult.FAILURE;
     }
 
-    throw new NotImplementedException();
+    var newGang = await gang.CreateGang(name, executor.Steam);
+
+    if (newGang == null) {
+      info.ReplySync("Failed to create gang");
+      return CommandResult.FAILURE;
+    }
+
+    info.ReplySync($"Gang '{name}' (#{newGang.GangId}) created successfully");
+    return CommandResult.SUCCESS;
   }
 }

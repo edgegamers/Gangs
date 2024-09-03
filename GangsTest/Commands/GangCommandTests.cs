@@ -15,6 +15,21 @@ public class GangCommandTests(ICommandManager commands, IGangManager gangMgr)
   }
 
   [Fact]
+  public async Task Gang_TestInvalid_Name() {
+    await Assert.ThrowsAnyAsync<InvalidOperationException>(async () => {
+      await Command.Execute(TestPlayer,
+        new CommandInfoWrapper(TestPlayer, 0, "foobar"));
+    });
+  }
+
+  [Fact]
+  public async Task Gang_TestInvalid_Null() {
+    await Assert.ThrowsAnyAsync<InvalidOperationException>(async () => {
+      await Command.Execute(TestPlayer, new CommandInfoWrapper(TestPlayer, 0));
+    });
+  }
+
+  [Fact]
   public async Task Gang_TestUnknown() {
     Assert.Equal(CommandResult.UNKNOWN_COMMAND,
       await Commands.ProcessCommand(TestPlayer, Command.Name, "foobar"));
