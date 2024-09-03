@@ -1,11 +1,10 @@
-﻿<RunSettings>
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
   <DataCollectionRunSettings>
     <DataCollectors>
       <DataCollector friendlyName="XPlat Code Coverage">
         <Configuration>
-          <Exclude>
-            <Directory>**/Gangs/*</Directory>
-          </Exclude>
+          <ExcludeByFile>**\Gangs\*</ExcludeByFile>
         </Configuration>
       </DataCollector>
     </DataCollectors>
