@@ -7,12 +7,14 @@ on:
       - '.github/workflows/dotnet.yml'
       - 'Core/**'
       - 'Commands/**'
+      - 'coverage.runsettings'
   pull_request:
     paths:
       - 'Gangs*/**'
       - '.github/workflows/dotnet.yml'
       - 'Core/**'
       - 'Commands/**'
+      - 'coverage.runsettings'
 
 jobs:
   build:
