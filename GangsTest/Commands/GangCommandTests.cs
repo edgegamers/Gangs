@@ -25,7 +25,7 @@ public class GangCommandTests(ICommandManager commands, IGangManager gangMgr)
   [Fact]
   public async Task Gang_TestInvalid_Null() {
     await Assert.ThrowsAnyAsync<InvalidOperationException>(async () => {
-      await Command.Execute(TestPlayer, new CommandInfoWrapper(TestPlayer, 0));
+      await Command.Execute(TestPlayer, new CommandInfoWrapper(TestPlayer));
     });
   }
 

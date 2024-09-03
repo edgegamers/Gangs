@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using GangsAPI.Extensions;
-using GangsAPI.Services;
+﻿using GangsAPI.Extensions;
 using GangsAPI.Services.Commands;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands;
 

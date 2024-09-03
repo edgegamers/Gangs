@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GangsImpl", "GangsImpl", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQL", "GangsImpl\SQL\SQL.csproj", "{1899055E-62B8-4907-85A2-DFE22531729E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericDB", "GangsImpl\GenericDB\GenericDB.csproj", "{74B15261-4B12-4EF6-859A-E46B315E7DD3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractDB", "GangsImpl\AbstractDB\AbstractDB.csproj", "{74B15261-4B12-4EF6-859A-E46B315E7DD3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite", "GangsImpl\SQLite\SQLite.csproj", "{5186EA9C-D2A4-4D70-8F52-0D6C7B6A61B6}"
 EndProject

@@ -6,12 +6,8 @@ namespace SQLite;
 
 public class SQLiteStatManager(string connectionString,
   string table = "gang_stats", bool testing = false)
-  : GenericDBStatManager(connectionString, table, testing) {
+  : AbstractDBStatManager(connectionString, table, testing) {
   public override DbConnection CreateDbConnection(string connectionString) {
     return new SqliteConnection(connectionString);
-  }
-
-  public override DbParameter CreateDbParameter(string key, object value) {
-    return new SqliteParameter(key, value);
   }
 }

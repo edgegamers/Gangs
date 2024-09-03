@@ -5,12 +5,12 @@ using Mock;
 
 namespace GangsTest.Commands.ManagerTests;
 
-public class ManagerData : IEnumerable<object[]> {
+public class CommandTestData : IEnumerable<object[]> {
   private readonly IBehavior[] behaviors = [
     new MockCommandManager(), new CommandManager(new MockGangManager())
   ];
 
-  public ManagerData() {
+  public CommandTestData() {
     foreach (var behavior in behaviors) behavior.Start();
   }
 

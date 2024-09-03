@@ -1,9 +1,7 @@
-﻿using CounterStrikeSharp.API;
-using GangsAPI.Data;
+﻿using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
-using Microsoft.VisualBasic;
 
 namespace Commands.gang;
 
@@ -15,7 +13,7 @@ public class CreateCommand(IGangManager gang) : ICommand {
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
-    if (executor == null) { return CommandResult.PLAYER_ONLY; }
+    if (executor == null) return CommandResult.PLAYER_ONLY;
 
     if (info.ArgCount < 2) {
       info.ReplySync("Please provide a name for the gang");

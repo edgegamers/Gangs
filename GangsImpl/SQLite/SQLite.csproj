@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\GenericDB\GenericDB.csproj"/>
+        <ProjectReference Include="..\AbstractDB\AbstractDB.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -14,7 +14,7 @@ public interface ICommandManager : IPluginBehavior {
   bool RegisterCommand(ICommand command);
 
   /// <summary>
-  ///  Unregisters a command from the manager.
+  ///   Unregisters a command from the manager.
   /// </summary>
   /// <param name="command">True if the command was successfully unregistered.</param>
   bool UnregisterCommand(ICommand command);

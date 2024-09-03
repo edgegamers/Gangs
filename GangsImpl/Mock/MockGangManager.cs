@@ -1,10 +1,11 @@
-﻿using GangsAPI.Data.Gang;
+﻿using CounterStrikeSharp.API.Core;
+using GangsAPI.Data.Gang;
 using GangsAPI.Services;
 
 namespace Mock;
 
 public class MockGangManager : IGangManager {
-  private readonly HashSet<IGang> cachedGangs = [], backendGangs = [];
+  protected readonly HashSet<IGang> cachedGangs = [], backendGangs = [];
 
   public Task<IEnumerable<IGang>> GetGangs() {
     return Task.FromResult(cachedGangs.AsEnumerable());
@@ -19,7 +20,7 @@ public class MockGangManager : IGangManager {
       cachedGangs.FirstOrDefault(g => g.Members.ContainsKey(steam)));
   }
 
-  public Task<bool> UpdateGang(IGang gang) {
+  public virtual Task<bool> UpdateGang(IGang gang) {
     var g = cachedGangs.FirstOrDefault(g => g.GangId == gang.GangId);
     if (g == null) return Task.FromResult(false);
     g.Name = gang.Name;
@@ -28,11 +29,11 @@ public class MockGangManager : IGangManager {
     return Task.FromResult(true);
   }
 
-  public Task<bool> DeleteGang(int id) {
+  public virtual Task<bool> DeleteGang(int id) {
     return Task.FromResult(cachedGangs.RemoveWhere(g => g.GangId == id) > 0);
   }
 
-  public Task<IGang?> CreateGang(string name, ulong owner) {
+  public virtual Task<IGang?> CreateGang(string name, ulong owner) {
     var id   = cachedGangs.Count + 1;
     var gang = new MockGang(id, name, owner);
     if (cachedGangs.Any(g => g.GangId == id))
@@ -42,10 +43,13 @@ public class MockGangManager : IGangManager {
     return Task.FromResult(gang.Clone() as IGang);
   }
 
-  public void ClearCache() { cachedGangs.Clear(); }
+  public virtual void ClearCache() { cachedGangs.Clear(); }
 
-  public Task Load() {
+  public virtual Task Load() {
     cachedGangs.UnionWith(backendGangs);
     return Task.CompletedTask;
   }
+
+  public virtual void Start(BasePlugin? plugin, bool hotReload) { }
+  public virtual void Dispose() { }
 }

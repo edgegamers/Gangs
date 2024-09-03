@@ -10,6 +10,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Commands\Commands.csproj"/>
         <ProjectReference Include="..\GangsAPI\GangsAPI.csproj"/>
+        <ProjectReference Include="..\GangsImpl\SQL\SQL.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -18,16 +19,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="build\**" />
+        <Compile Remove="build\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Remove="build\**" />
+        <EmbeddedResource Remove="build\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="build\**" />
-      <None Remove="Gangs.zip" />
+        <None Remove="build\**"/>
+        <None Remove="Gangs.zip"/>
     </ItemGroup>
 
     <PropertyGroup>
