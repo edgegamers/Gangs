@@ -19,6 +19,9 @@ public class CS2Gangs(IServiceProvider provider) : BasePlugin, IGangPlugin {
     var extensions = scope.ServiceProvider.GetServices<IPluginBehavior>()
      .ToImmutableList();
 
+    Logger.LogInformation("[Gangs] Loading {Count} extensions",
+      extensions.Count);
+
     foreach (var ext in extensions) {
       RegisterAllAttributes(ext);
       try {

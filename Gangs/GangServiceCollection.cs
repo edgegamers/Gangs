@@ -8,7 +8,7 @@ using Mock;
 
 namespace GangsImpl;
 
-public class GangServiceCollection : IPluginServiceCollection<IGangPlugin> {
+public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
   public void ConfigureServices(IServiceCollection serviceCollection) {
     serviceCollection.AddPluginBehavior<IGangManager, MockGangManager>();
     serviceCollection.AddPluginBehavior<IPlayerManager, MockPlayerManager>();

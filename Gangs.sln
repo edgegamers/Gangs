@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsAPI", "GangsAPI\GangsAPI.csproj", "{787D12D8-1310-4042-ADCE-102E517F269E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{3EA38296-9022-4874-8309-872388D884DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gangs", "Gangs\Gangs.csproj", "{3EA38296-9022-4874-8309-872388D884DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GangsTest", "GangsTest\GangsTest.csproj", "{B1D1E7C7-BDF3-4238-9025-4FEB2B7DAB89}"
 EndProject

@@ -1,16 +1,20 @@
 ﻿using System.Collections;
 using Commands;
+using Commands.gang;
 using GangsAPI;
+using GangsAPI.Services;
 using Mock;
 
-namespace GangsTest.Commands.ManagerTests;
+namespace GangsTest.Commands;
 
-public class ManagerData : IEnumerable<object[]> {
+public class CommandTestData : IEnumerable<object[]> {
+  private static readonly IGangManager manager = new MockGangManager();
+
   private readonly IBehavior[] behaviors = [
-    new MockCommandManager(), new CommandManager(new MockGangManager())
+    new CreateCommand(manager), new HelpCommand(), new GangCommand(manager)
   ];
 
-  public ManagerData() {
+  public CommandTestData() {
     foreach (var behavior in behaviors) behavior.Start();
   }
 

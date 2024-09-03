@@ -25,18 +25,19 @@ public class GangCommand(IGangManager gangMgr) : ICommand {
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
-    if (info.ArgCount == 0 || info[0] != Name) {
-      if (info.ArgCount == 0)
-        throw new InvalidOperationException(
-          "Attempted to execute GangCommand with no arguments");
+    if (info.ArgCount == 0)
+      throw new InvalidOperationException(
+        "Attempted to execute GangCommand with no arguments");
+    if (info[0] != Name)
       throw new InvalidOperationException(
         $"Attempted to execute GangCommand with invalid name: {info[0]}");
-    }
+
 
     if (info.ArgCount == 1) return CommandResult.INVALID_ARGS;
 
     if (!sub.TryGetValue(info[1], out var command)) {
       // print usage
+      // info.ReplySync("Usage: /css_gang [create|help]");
       return CommandResult.UNKNOWN_COMMAND;
     }
 

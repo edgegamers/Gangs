@@ -24,10 +24,14 @@ public class MockCommandManager : ICommandManager {
     if (!command.CanExecute(executor)) return CommandResult.NO_PERMISSION;
 
     var result = CommandResult.FAILURE;
+    var info   = new CommandInfoWrapper(executor, args: args);
+
     await Task.Run(async () => {
-      result = await command.Execute(executor,
-        new CommandInfoWrapper(executor, args: args));
+      result = await command.Execute(executor, info);
     });
+
+    if (result == CommandResult.PLAYER_ONLY)
+      info.ReplySync("This command can only be executed by a player");
 
     return result;
   }
