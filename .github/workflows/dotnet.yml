@@ -4,13 +4,13 @@ on:
   push:
     paths:
       - 'Gangs*/**'
-      - '.github/workflows/nightly.yml'
+      - '.github/workflows/dotnet.yml'
       - 'Core/**'
       - 'Commands/**'
   pull_request:
     paths:
       - 'Gangs*/**'
-      - '.github/workflows/nightly.yml'
+      - '.github/workflows/dotnet.yml'
       - 'Core/**'
       - 'Commands/**'
 
