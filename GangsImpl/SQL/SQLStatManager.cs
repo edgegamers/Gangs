@@ -4,14 +4,10 @@ using MySqlConnector;
 
 namespace SQLImpl;
 
-public class SqlStatStatManager(string connectionString,
+public class SQLStatManager(string connectionString,
   string table = "gang_stats", bool testing = false)
-  : GenericDBStatManager(connectionString, table, testing) {
+  : AbstractDBStatManager(connectionString, table, testing) {
   public override DbConnection CreateDbConnection(string connectionString) {
     return new MySqlConnection(connectionString);
-  }
-
-  public override DbParameter CreateDbParameter(string key, object value) {
-    return new MySqlParameter(key, value);
   }
 }

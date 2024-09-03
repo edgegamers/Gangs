@@ -1,10 +1,8 @@
-﻿using System.Diagnostics;
-using Commands.gang;
+﻿using Commands.gang;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
-using Microsoft.VisualBasic;
 
 namespace GangsTest.Commands;
 

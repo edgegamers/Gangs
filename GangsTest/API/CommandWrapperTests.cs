@@ -1,5 +1,3 @@
 ﻿namespace GangsTest.API;
 
-public class CommandWrapperTests {
-  
-}
+public class CommandWrapperTests { }

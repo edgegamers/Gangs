@@ -14,7 +14,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
-        <ProjectReference Include="..\GenericDB\GenericDB.csproj"/>
+        <ProjectReference Include="..\AbstractDB\AbstractDB.csproj"/>
     </ItemGroup>
 
 </Project>

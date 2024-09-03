@@ -1,15 +1,14 @@
 ﻿using CounterStrikeSharp.API.Modules.Admin;
-using FuzzDotNet.Core;
 using GangsAPI.Data;
 
 namespace GangsTest.API;
 
 public class PlayerWrapperTests {
-  private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
-  private static char GROUP_CHAR => PermissionCharacters.GroupPermissionChar;
-
   private readonly PlayerWrapper testPlayer =
     new((ulong)new Random().NextInt64(), "Test Player");
+
+  private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
+  private static char GROUP_CHAR => PermissionCharacters.GroupPermissionChar;
 
   [Fact]
   public void PlayerWrapper_Init() {

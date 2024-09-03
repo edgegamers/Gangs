@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj" />
+        <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
     </ItemGroup>
 
 </Project>

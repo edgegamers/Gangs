@@ -1,13 +1,11 @@
-﻿using GangsAPI.Data;
-using GangsAPI.Data.Command;
+﻿using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
-using GangsTest.Commands.ManagerTests;
 
 namespace GangsTest.Commands.CommandLogic;
 
 public class LogicTests : ManagerTests.ManagerTests {
   [Theory]
-  [ClassData(typeof(ManagerData))]
+  [ClassData(typeof(ManagerTests.CommandTestData))]
   public async Task Command_Logic(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.Equal(CommandResult.SUCCESS,
@@ -15,7 +13,7 @@ public class LogicTests : ManagerTests.ManagerTests {
   }
 
   [Theory]
-  [ClassData(typeof(ManagerData))]
+  [ClassData(typeof(ManagerTests.CommandTestData))]
   public async Task Command_Logic_Fail(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.Equal(CommandResult.FAILURE,

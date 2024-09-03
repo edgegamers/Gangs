@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Admin;
@@ -7,13 +6,11 @@ using CounterStrikeSharp.API.Modules.Admin;
 namespace GangsAPI.Data;
 
 public class PlayerWrapper {
+  private readonly List<string> chatOutput = [], consoleOutput = [];
   public readonly string? Name;
   public readonly CCSPlayerController? Player;
   public readonly ulong Steam;
   public AdminData? Data;
-  private readonly List<string> chatOutput = [], consoleOutput = [];
-  public IReadOnlyList<string> ChatOutput => chatOutput;
-  public IReadOnlyList<string> ConsoleOutput => consoleOutput;
 
   public PlayerWrapper(CCSPlayerController player) {
     Player = player;
@@ -29,6 +26,9 @@ public class PlayerWrapper {
 
     Data = new AdminData { Identity = Steam.ToString() };
   }
+
+  public IReadOnlyList<string> ChatOutput => chatOutput;
+  public IReadOnlyList<string> ConsoleOutput => consoleOutput;
 
   public bool IsValid => Player == null || Player.IsValid;
 
