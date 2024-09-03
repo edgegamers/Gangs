@@ -2,7 +2,7 @@ using GangsAPI.Data.Stat;
 
 namespace Mock;
 
-public class MockStat(string statId, string name, string? desc) : IStat {
+public class MockStat(string statId, string name, string? desc = null) : IStat {
   public string StatId { get; } = statId;
   public string Name { get; } = name;
   public string? Description { get; } = desc;
@@ -31,6 +31,5 @@ public class MockGangStat<T>(string statId, string name, string? desc, T value)
   public MockGangStat(IStat b, T value) : this(b.StatId, b.Name, b.Description,
     value) { }
 
-  public int Key { get; init; }
   public T Value { get; set; } = value;
 }

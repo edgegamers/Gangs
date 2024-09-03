@@ -13,8 +13,10 @@ public class MockGang : IGang {
     Stats   = new HashSet<IStat>();
     Ranks   = new HashSet<IGangRank>();
 
-    Members.Add(owner,
-      new MockGangRank(0, "Owner", IGangRank.Permissions.OWNER));
+    var ownerRank = new MockGangRank(0, "Owner", IGangRank.Permissions.OWNER);
+
+    Members.Add(owner, ownerRank);
+    Ranks.Add(ownerRank);
   }
 
   public int GangId { get; }

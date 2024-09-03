@@ -67,12 +67,14 @@ public interface IGangRank {
     /// <summary>
     ///   The member has full access to all permissions.
     /// </summary>
-    ADMINISTRATOR = 1 << 10,
+    ADMINISTRATOR = 1 << 10 | INVITE_OTHERS | KICK_OTHERS | BANK_DEPOSIT
+      | BANK_WITHDRAW | PROMOTE_OTHERS | DEMOTE_OTHERS | PURCHASE_PERKS
+      | MANAGE_PERKS | MANAGE_RANKS | CREATE_RANKS,
 
     /// <summary>
     ///   The member is the owner of the gang, and can not be kicked.
     /// </summary>
-    OWNER = 1 << 11
+    OWNER = 1 << 11 | ADMINISTRATOR
   }
 
   string Name { get; }
