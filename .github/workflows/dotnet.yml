@@ -92,7 +92,7 @@ jobs:
         env:
           DB_CONNECTION_STRING: "Server=localhost;Port=3306;Database=gangs;User=root"
         if: ${{ matrix.dotnet-version == '9.0.x' }}
-        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage GangsTest/GangsTest.csproj
+        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage GangsTest/GangsTest.csproj --settings coverage.runsettings
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         if: ${{ matrix.dotnet-version == '9.0.x' }}
