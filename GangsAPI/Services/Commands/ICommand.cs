@@ -6,6 +6,7 @@ namespace GangsAPI.Services.Commands;
 public interface ICommand : IPluginBehavior {
   string Name { get; }
   string? Description { get; }
+  string Usage => "";
   string[] RequiredFlags => [];
   string[] RequiredGroups => [];
 

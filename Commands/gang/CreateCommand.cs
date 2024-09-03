@@ -11,6 +11,7 @@ namespace Commands.gang;
 public class CreateCommand(IGangManager gang) : ICommand {
   public string Name => "create";
   public string? Description => "Creates a new gang";
+  public string Usage => "[name]";
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

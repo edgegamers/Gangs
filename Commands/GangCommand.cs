@@ -37,6 +37,7 @@ public class GangCommand(IGangManager gangMgr) : ICommand {
 
     if (!sub.TryGetValue(info[1], out var command)) {
       // print usage
+      // info.ReplySync("Usage: /css_gang [create|help]");
       return CommandResult.UNKNOWN_COMMAND;
     }
 
