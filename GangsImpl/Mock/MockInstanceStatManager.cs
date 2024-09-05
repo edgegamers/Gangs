@@ -31,7 +31,7 @@ public class MockInstanceStatManager(IStatManager mgr)
     if (registered == null) return false;
     if (!gangStats.TryGetValue(gangId, out var gangStatMap))
       gangStats[gangId] = gangStatMap = new Dictionary<string, IStat>();
-    gangStatMap[stat.StatId] = stat;
+    gangStatMap[stat.StatId] = stat.Clone();
     gangStats[gangId]        = gangStatMap;
     return true;
   }

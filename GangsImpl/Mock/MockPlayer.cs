@@ -5,10 +5,7 @@ using GangsAPI.Permissions;
 namespace Mock;
 
 public class MockPlayer(ulong steam) : IGangPlayer {
-  public ISet<IStat> Stats { get; } = new HashSet<IStat>();
-  public ISet<IStat> Perks { get; } = new HashSet<IStat>();
   public ulong Steam { get; } = steam;
-  public string? Name { get; }
-  public int? GangId { get; }
-  public IGangRank? Rank { get; }
+  public string? Name { get; init; }
+  public int? GangId { get; init; }
 }

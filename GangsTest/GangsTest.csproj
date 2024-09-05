@@ -36,9 +36,4 @@
         <ProjectReference Include="..\Gangs\Gangs.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="StatTests\InstanceManageTests\GangManager\"/>
-        <Folder Include="StatTests\InstanceManageTests\PlayerManager\"/>
-    </ItemGroup>
-
 </Project>

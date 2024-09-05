@@ -21,9 +21,4 @@ public interface IGangPlayer {
   ///   The id of the gang that the player is a member of.
   /// </summary>
   int? GangId { get; }
-
-  /// <summary>
-  ///   The rank the player has in the gang (if in one).
-  /// </summary>
-  IGangRank? Rank { get; }
 }

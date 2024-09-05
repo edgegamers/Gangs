@@ -2,8 +2,7 @@ using GangsAPI.Data.Stat;
 
 namespace Mock;
 
-public class MockStat(string statId, string name, string? desc = null)
-  : IStat, IEquatable<MockStat> {
+public class MockStat(string statId, string name, string? desc = null) : IStat {
   public bool Equals(MockStat? other) {
     return other is not null && ((IStat)this).Equals(other);
   }
@@ -12,6 +11,9 @@ public class MockStat(string statId, string name, string? desc = null)
   public string Name { get; } = name;
   public string? Description { get; } = desc;
 
+  public bool Equals(IStat? other) {
+    return other is not null && StatId == other.StatId;
+  }
   public override bool Equals(object? obj) { return Equals(obj as MockStat); }
 
   public override int GetHashCode() { return HashCode.Combine(StatId); }

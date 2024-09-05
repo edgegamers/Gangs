@@ -9,4 +9,8 @@ public class DBStat(string StatID, string Name, string? Description) : IStat {
   public string StatId { get; init; } = StatID;
   public string Name { get; init; } = Name;
   public string? Description { get; init; } = Description;
+
+  public bool Equals(IStat? other) {
+    return other is not null && StatId == other.StatId;
+  }
 }

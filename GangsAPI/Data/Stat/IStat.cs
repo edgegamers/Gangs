@@ -18,16 +18,13 @@ public interface IStat : IEquatable<IStat> {
   ///   A description of the statistic.
   /// </summary>
   string? Description { get; }
-
-  bool IEquatable<IStat>.Equals(IStat? other) {
-    if (other is null) return false;
-    return StatId == other.StatId;
-  }
 }
 
-public interface IStat<T> : IStat {
+public interface IStat<T> : IStat, IEquatable<IStat<T>> {
   /// <summary>
   ///   The value of the statistic.
   /// </summary>
   T Value { get; set; }
+
+  IStat<T> Clone();
 }

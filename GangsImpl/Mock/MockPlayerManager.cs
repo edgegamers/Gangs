@@ -15,7 +15,7 @@ public class MockPlayerManager : IPlayerManager {
     string? name = null) {
     var existing = await GetPlayer(steamId);
     if (existing != null) return existing;
-    var player = new MockPlayer(steamId);
+    var player = new MockPlayer(steamId) { Name = name };
     players[steamId] = player;
     return player;
   }
