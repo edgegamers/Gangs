@@ -26,12 +26,13 @@ public class MockInstanceStatManager(IStatManager mgr)
     return Task.FromResult(result)!;
   }
 
-  public async Task<bool> PushToGang<V>(int gangId, string id, V value) {
+  public async Task<bool> PushToGang<V>(int gangId, IStat<V> stat) {
+    var registered = await mgr.GetStat(stat.StatId);
+    if (registered == null) return false;
     if (!gangStats.TryGetValue(gangId, out var gangStatMap))
       gangStats[gangId] = gangStatMap = new Dictionary<string, IStat>();
-    var stat = await mgr.GetStat(id);
-    if (stat == null) return false;
-    gangStatMap[id] = new MockStat<V>(stat, value);
+    gangStatMap[stat.StatId] = stat;
+    gangStats[gangId]        = gangStatMap;
     return true;
   }
 
@@ -49,6 +50,7 @@ public class MockInstanceStatManager(IStatManager mgr)
     var stat = await mgr.GetStat(id);
     if (stat == null) return false;
     playerStatMap[id] = new MockStat<V>(stat, value);
+    playerStats[key]  = playerStatMap;
     return true;
   }
 

@@ -20,7 +20,7 @@ public class CreateCommand(IGangManager gang) : ICommand {
       return CommandResult.INVALID_ARGS;
     }
 
-    var name = string.Join(' ', info.ArgString.Split(" ").Skip(1));
+    var name = string.Join(' ', info.ArgString.Split(" "));
 
     if (await gang.GetGang(executor.Steam) != null) {
       info.ReplySync("You are already in a gang");

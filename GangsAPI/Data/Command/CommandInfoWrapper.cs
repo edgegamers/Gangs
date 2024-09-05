@@ -24,7 +24,7 @@ public class CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
   public string this[int index] => args[index + offset];
 
   public string ArgString
-    => string.Join(' ', GetCommandString.Split(' ').Skip(offset));
+    => string.Join(' ', GetCommandString.Split(' ').Skip(offset + 1));
 
   public string GetCommandString => string.Join(' ', args.Skip(offset));
 
