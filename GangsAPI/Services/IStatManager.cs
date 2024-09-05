@@ -19,7 +19,7 @@ public interface IStatManager : IPluginBehavior, ICacher {
   /// <param name="id"></param>
   /// <returns></returns>
   Task<IStat?> GetStat(string id);
-
+  
   /// <summary>
   ///   Creates a statistic with the manager, but does not register it.
   ///   If the statistic already exists with the same ID,

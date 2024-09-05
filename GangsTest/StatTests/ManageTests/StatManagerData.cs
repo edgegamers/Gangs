@@ -4,7 +4,7 @@ using Mock;
 using SQLImpl;
 using SQLite;
 
-namespace GangsTest.StatTests;
+namespace GangsTest.StatTests.ManageTests;
 
 public class StatManagerData : IEnumerable<object[]> {
   private readonly IBehavior[] behaviors = [

@@ -10,12 +10,20 @@ public class MockInstanceStatManager(IStatManager mgr)
   private readonly Dictionary<ulong, Dictionary<string, IStat>>
     playerStats = [];
 
-  public Task<IGangStat<V>?> GetForGang<V>(int key, string id) {
+  public Task<IStat<V>?> GetForGang<V>(int key, string id) {
     if (!gangStats.TryGetValue(key, out var gangStatMap))
-      return Task.FromResult<IGangStat<V>?>(null);
+      return Task.FromResult<IStat<V>?>(null);
     if (!gangStatMap.TryGetValue(id, out var result))
-      return Task.FromResult<IGangStat<V>?>(null);
-    return Task.FromResult(result as IGangStat<V>);
+      return Task.FromResult<IStat<V>?>(null);
+    return Task.FromResult(result as IStat<V>);
+  }
+
+  public Task<IStat?> GetForGang(int key, string id) {
+    if (!gangStats.TryGetValue(key, out var gangStatMap))
+      return Task.FromResult<IStat?>(null);
+    if (!gangStatMap.TryGetValue(id, out var result))
+      return Task.FromResult<IStat?>(null);
+    return Task.FromResult(result)!;
   }
 
   public async Task<bool> PushToGang<V>(int gangId, string id, V value) {
@@ -23,16 +31,16 @@ public class MockInstanceStatManager(IStatManager mgr)
       gangStats[gangId] = gangStatMap = new Dictionary<string, IStat>();
     var stat = await mgr.GetStat(id);
     if (stat == null) return false;
-    gangStatMap[id] = new MockGangStat<V>(stat, value);
+    gangStatMap[id] = new MockStat<V>(stat, value);
     return true;
   }
 
-  public Task<IPlayerStat<V>?> GetForPlayer<V>(ulong key, string id) {
+  public Task<IStat<V>?> GetForPlayer<V>(ulong key, string id) {
     if (!playerStats.TryGetValue(key, out var playerStatMap))
-      return Task.FromResult<IPlayerStat<V>?>(null);
+      return Task.FromResult<IStat<V>?>(null);
     if (!playerStatMap.TryGetValue(id, out var result))
-      return Task.FromResult<IPlayerStat<V>?>(null);
-    return Task.FromResult(result as IPlayerStat<V>);
+      return Task.FromResult<IStat<V>?>(null);
+    return Task.FromResult(result as IStat<V>);
   }
 
   public async Task<bool> PushToPlayer<V>(ulong key, string id, V value) {
@@ -40,7 +48,7 @@ public class MockInstanceStatManager(IStatManager mgr)
       playerStats[key] = playerStatMap = new Dictionary<string, IStat>();
     var stat = await mgr.GetStat(id);
     if (stat == null) return false;
-    playerStatMap[id] = new MockPlayerStat<V>(stat, value);
+    playerStatMap[id] = new MockStat<V>(stat, value);
     return true;
   }
 

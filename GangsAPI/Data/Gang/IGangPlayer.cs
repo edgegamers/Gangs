@@ -27,39 +27,4 @@ public interface IGangPlayer {
   ///   The rank the player has in the gang (if in one).
   /// </summary>
   IGangRank? Rank { get; }
-
-  /// <summary>
-  ///   The last time the player was seen by the plugin.
-  /// </summary>
-  DateTime? LastSeen {
-    get {
-      var stat = GetStat("gang_native_lastseen") as IStat<DateTime>;
-      return stat?.Value;
-    }
-
-    set {
-      if (GetStat("gang_native_lastseen") is IStat<DateTime?> stat)
-        stat.Value = value;
-    }
-  }
-
-  ISet<IStat> Stats { get; }
-  ISet<IStat> Perks { get; }
-
-  int? Balance {
-    get {
-      var stat = GetStat("gang_native_balance") as IStat<int>;
-      return stat?.Value;
-    }
-
-    set {
-      ArgumentNullException.ThrowIfNull(value);
-      if (GetStat("gang_native_balance") is IStat<int> stat)
-        stat.Value = value.Value;
-    }
-  }
-
-  IStat? GetStat(string statId) {
-    return Stats.FirstOrDefault(stat => stat.StatId == statId);
-  }
 }

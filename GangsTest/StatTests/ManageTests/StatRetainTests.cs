@@ -1,6 +1,6 @@
 using GangsAPI.Services;
 
-namespace GangsTest.StatTests;
+namespace GangsTest.StatTests.ManageTests;
 
 public class StatRetainTests {
   [Theory]

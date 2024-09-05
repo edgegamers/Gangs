@@ -1,7 +1,7 @@
 ﻿using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 
-namespace GangsTest.Commands.CommandLogic;
+namespace GangsTest.Commands;
 
 public class LogicTests : ManagerTests.ManagerTests {
   [Theory]

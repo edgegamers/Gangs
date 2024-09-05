@@ -1,0 +1,7 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
+      MARIADB_DATABASE: gangs
+    network_mode: host

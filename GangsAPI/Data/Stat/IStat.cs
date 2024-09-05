@@ -3,7 +3,7 @@
 /// <summary>
 ///   Represents a numerical statistic.
 /// </summary>
-public interface IStat : IEqualityComparer<IStat>, IEquatable<IStat> {
+public interface IStat : IEquatable<IStat> {
   /// <summary>
   ///   The unique identifier of the statistic.
   /// </summary>
@@ -18,15 +18,6 @@ public interface IStat : IEqualityComparer<IStat>, IEquatable<IStat> {
   ///   A description of the statistic.
   /// </summary>
   string? Description { get; }
-
-  bool IEqualityComparer<IStat>.Equals(IStat? x, IStat? y) {
-    if (x is null || y is null) return false;
-    return x.StatId == y.StatId;
-  }
-
-  int IEqualityComparer<IStat>.GetHashCode(IStat obj) {
-    return obj.StatId.GetHashCode();
-  }
 
   bool IEquatable<IStat>.Equals(IStat? other) {
     if (other is null) return false;

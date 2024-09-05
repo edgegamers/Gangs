@@ -41,44 +41,6 @@ public class GangCreationTests(IPlayerManager playerMgr) {
     Assert.NotSame(dummy, clone);
     Assert.NotSame(dummy.Members, clone.Members);
     Assert.NotSame(dummy.Ranks, clone.Ranks);
-    Assert.NotSame(dummy.Perks, clone.Perks);
-    Assert.NotSame(dummy.Stats, clone.Stats);
-  }
-
-  [Theory]
-  [ClassData(typeof(GangManagerData))]
-  public async Task Gang_Clone_WithPerks(IGangManager mgr) {
-    var dummy = await mgr.CreateGang("foobar", 0);
-    Assert.NotNull(dummy);
-    dummy.Perks.Add(new MockStat("test_perk", "Test Perk"));
-    var clone = dummy.Clone() as IGang;
-    Assert.NotNull(clone);
-
-    Assert.Equivalent(dummy, clone, true);
-
-    Assert.NotSame(dummy, clone);
-    Assert.NotSame(dummy.Members, clone.Members);
-    Assert.NotSame(dummy.Ranks, clone.Ranks);
-    Assert.NotSame(dummy.Perks, clone.Perks);
-    Assert.NotSame(dummy.Stats, clone.Stats);
-  }
-
-  [Theory]
-  [ClassData(typeof(GangManagerData))]
-  public async Task Gang_Clone_WithStats(IGangManager mgr) {
-    var dummy = await mgr.CreateGang("foobar", 0);
-    Assert.NotNull(dummy);
-    dummy.Stats.Add(new MockStat("test_stats", "Test Stat"));
-    var clone = dummy.Clone() as IGang;
-    Assert.NotNull(clone);
-
-    Assert.Equivalent(dummy, clone, true);
-
-    Assert.NotSame(dummy, clone);
-    Assert.NotSame(dummy.Members, clone.Members);
-    Assert.NotSame(dummy.Ranks, clone.Ranks);
-    Assert.NotSame(dummy.Perks, clone.Perks);
-    Assert.NotSame(dummy.Stats, clone.Stats);
   }
 
   [Theory]
