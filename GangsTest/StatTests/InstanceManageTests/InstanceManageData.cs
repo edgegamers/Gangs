@@ -4,7 +4,7 @@ using Mock;
 namespace GangsTest.StatTests.InstanceManageTests;
 
 public class InstanceManageData : IEnumerable<object[]> {
-  private object[][] behaviors;
+  private readonly object[][] behaviors;
 
   public InstanceManageData() {
     var inst = new MockStatManager();

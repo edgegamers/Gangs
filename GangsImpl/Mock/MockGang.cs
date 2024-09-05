@@ -19,12 +19,13 @@ public class MockGang : IGang {
     Ranks.Add(ownerRank);
   }
 
+  public ISet<IStat> Perks { get; protected init; }
+  public ISet<IStat> Stats { get; protected init; }
+
   public int GangId { get; protected init; }
   public string Name { get; set; }
   public IDictionary<ulong, IGangRank> Members { get; protected init; }
   public ISet<IGangRank> Ranks { get; protected init; }
-  public ISet<IStat> Perks { get; protected init; }
-  public ISet<IStat> Stats { get; protected init; }
 
   public object Clone() {
     var clone = new MockGang(GangId, Name, ((IGang)this).Owner);

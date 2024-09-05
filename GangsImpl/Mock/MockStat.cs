@@ -4,13 +4,13 @@ namespace Mock;
 
 public class MockStat(string statId, string name, string? desc = null)
   : IStat, IEquatable<MockStat> {
-  public string StatId { get; } = statId;
-  public string Name { get; } = name;
-  public string? Description { get; } = desc;
-
   public bool Equals(MockStat? other) {
     return other is not null && ((IStat)this).Equals(other);
   }
+
+  public string StatId { get; } = statId;
+  public string Name { get; } = name;
+  public string? Description { get; } = desc;
 
   public override bool Equals(object? obj) { return Equals(obj as MockStat); }
 

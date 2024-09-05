@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using GangsAPI.Data.Stat;
 using GangsAPI.Permissions;
 
 namespace GangsAPI.Data.Gang;

@@ -5,14 +5,7 @@ using GangsAPI.Services;
 namespace GangsTest.StatTests.InstanceManageTests;
 
 public class InstanceGangTests(IGangManager gangMgr) {
-  private class TestStatInstance : IStat<int> {
-    public string StatId => "test_stat";
-    public string Name => "Test Stat";
-    public string? Description => "A test stat.";
-    public int Value { get; set; } = 32;
-  }
-
-  private IGang testGang =
+  private readonly IGang testGang =
     gangMgr.CreateGang("Test Gang", (ulong)new Random().NextInt64())
      .GetAwaiter()
      .GetResult() ?? throw new InvalidOperationException();
@@ -52,5 +45,12 @@ public class InstanceGangTests(IGangManager gangMgr) {
     Assert.True(await stat.RegisterStat(testStat));
     var result = await manager.GetForGang(testGang, testStat);
     Assert.Null(result);
+  }
+
+  private class TestStatInstance : IStat<int> {
+    public string StatId => "test_stat";
+    public string Name => "Test Stat";
+    public string? Description => "A test stat.";
+    public int Value { get; set; } = 32;
   }
 }
