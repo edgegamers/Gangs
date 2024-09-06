@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Modules.Commands;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Modules.Commands;
 
 namespace GangsAPI.Data.Command;
 
@@ -15,6 +16,7 @@ public class CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
     offset, new string[info.ArgCount]) {
     CallingContext = info.CallingContext;
     for (var i = 0; i < info.ArgCount; i++) args[i] = info.GetArg(i);
+    if (offset == 0 && info.ArgCount > 0) args[0]   = info.GetArg(0).ToLower();
   }
 
   public CommandInfoWrapper(CommandInfoWrapper info, int offset) : this(
@@ -42,9 +44,11 @@ public class CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
       return;
     }
 
-    if (CallingContext == CommandCallingContext.Console)
-      CallingPlayer.PrintToConsole(message);
-    else
-      CallingPlayer.PrintToChat(message);
+    Server.NextFrame(() => {
+      if (CallingContext == CommandCallingContext.Console)
+        CallingPlayer.PrintToConsole(message);
+      else
+        CallingPlayer.PrintToChat(message);
+    });
   }
 }

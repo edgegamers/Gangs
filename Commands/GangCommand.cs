@@ -29,13 +29,13 @@ public class GangCommand(IGangManager gangMgr) : ICommand {
     if (info.ArgCount == 0)
       throw new InvalidOperationException(
         "Attempted to execute GangCommand with no arguments");
-    if (info[0] != Name)
+    if (!Aliases.Contains(info[0]))
       throw new InvalidOperationException(
         $"Attempted to execute GangCommand with invalid name: {info[0]}");
 
     if (executor?.Player != null) {
       info.ReplySync(
-        $" {ChatColors.DarkRed}GANGS {ChatColors.White}> {ChatColors.Grey}SoonTM!");
+        $" {ChatColors.Red}GANGS {ChatColors.DarkRed}> {ChatColors.Grey}SoonTM!");
       return CommandResult.SUCCESS;
     }
 

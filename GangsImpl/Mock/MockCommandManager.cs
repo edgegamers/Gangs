@@ -9,52 +9,45 @@ public class MockCommandManager : ICommandManager {
   private readonly Dictionary<string, ICommand> commands = new();
 
   public virtual bool RegisterCommand(ICommand command) {
-    return commands.TryAdd(command.Name, command);
+    return command.Aliases.All(alias => commands.TryAdd(alias, command));
   }
 
   public bool UnregisterCommand(ICommand command) {
-    return commands.Remove(command.Name);
+    return command.Aliases.All(alias => commands.Remove(alias));
   }
 
   public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
     CommandInfo sourceInfo) {
     var info = new CommandInfoWrapper(sourceInfo);
-    if (info.ArgCount == 0) return CommandResult.FAILURE;
-    if (!commands.TryGetValue(info[0], out var command))
+    return await ProcessCommand(executor, info);
+  }
+
+  public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
+    CommandInfoWrapper sourceInfo) {
+    if (sourceInfo.ArgCount == 0) return CommandResult.FAILURE;
+    var result = CommandResult.FAILURE;
+
+    if (!commands.TryGetValue(sourceInfo[0], out var command)) {
+      sourceInfo.ReplySync("Unknown command: " + sourceInfo[0]);
       return CommandResult.UNKNOWN_COMMAND;
+    }
 
     if (!command.CanExecute(executor)) return CommandResult.NO_PERMISSION;
 
-    var result = CommandResult.FAILURE;
 
     await Task.Run(async () => {
-      result = await command.Execute(executor, info);
+      result = await command.Execute(executor, sourceInfo);
     });
 
     if (result == CommandResult.PLAYER_ONLY)
-      info.ReplySync("This command can only be executed by a player");
+      sourceInfo.ReplySync("This command can only be executed by a player");
 
     return result;
   }
 
   public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
     params string[] args) {
-    if (args.Length == 0) return CommandResult.FAILURE;
-    if (!commands.TryGetValue(args[0], out var command))
-      return CommandResult.UNKNOWN_COMMAND;
-
-    if (!command.CanExecute(executor)) return CommandResult.NO_PERMISSION;
-
-    var result = CommandResult.FAILURE;
-    var info   = new CommandInfoWrapper(executor, args: args);
-
-    await Task.Run(async () => {
-      result = await command.Execute(executor, info);
-    });
-
-    if (result == CommandResult.PLAYER_ONLY)
-      info.ReplySync("This command can only be executed by a player");
-
-    return result;
+    var info = new CommandInfoWrapper(executor, 0, args);
+    return await ProcessCommand(executor, info);
   }
 }

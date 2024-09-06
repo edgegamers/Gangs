@@ -2,6 +2,7 @@
 using CounterStrikeSharp.API.Core;
 using GangsAPI;
 using GangsAPI.Data;
+using GangsAPI.Data.Command;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using Mock;
@@ -22,12 +23,12 @@ public class CommandManager(IGangManager gangMgr)
     var result = base.RegisterCommand(command);
     if (result == false) return false;
     foreach (var alias in command.Aliases) {
-      plugin?.AddCommand(command.Name, command.Description ?? string.Empty,
+      plugin?.AddCommand(alias, command.Description ?? string.Empty,
         (player, info) => {
-          var wrapper = player == null ? null : new PlayerWrapper(player);
-          var args    = info.GetCommandString.Split(" ");
+          var wrapper     = player == null ? null : new PlayerWrapper(player);
+          var wrappedInfo = new CommandInfoWrapper(info);
           Server.NextFrameAsync(async () => {
-            await ProcessCommand(wrapper, info);
+            await ProcessCommand(wrapper, wrappedInfo);
           });
         });
     }
