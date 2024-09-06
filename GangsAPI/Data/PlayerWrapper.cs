@@ -114,7 +114,9 @@ public class PlayerWrapper {
       return;
     }
 
-    Server.NextFrame(() => Player.PrintToChat(message));
+    Server.NextFrame(() => {
+      if (Player.IsValid) Player.PrintToChat(message);
+    });
   }
 
   public void PrintToConsole(string message) {
@@ -124,6 +126,8 @@ public class PlayerWrapper {
       return;
     }
 
-    Server.NextFrame(() => Player.PrintToConsole(message));
+    Server.NextFrame(() => {
+      if (Player.IsValid) Player.PrintToConsole(message);
+    });
   }
 }

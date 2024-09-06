@@ -44,11 +44,9 @@ public class CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
       return;
     }
 
-    Server.NextFrame(() => {
-      if (CallingContext == CommandCallingContext.Console)
-        CallingPlayer.PrintToConsole(message);
-      else
-        CallingPlayer.PrintToChat(message);
-    });
+    if (CallingContext == CommandCallingContext.Console)
+      CallingPlayer.PrintToConsole(message);
+    else
+      CallingPlayer.PrintToChat(message);
   }
 }
