@@ -22,6 +22,7 @@ public class GangCommand(IGangManager gangMgr) : ICommand {
 
   public string Name => "css_gang";
   public string? Description => "Master command for gangs";
+  public string[] Aliases => ["css_gang", "css_gangs"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

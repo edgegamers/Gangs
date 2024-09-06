@@ -19,15 +19,19 @@ public class CommandManager(IGangManager gangMgr)
   }
 
   public override bool RegisterCommand(ICommand command) {
-    base.RegisterCommand(command);
-    plugin?.AddCommand(command.Name, command.Description ?? string.Empty,
-      (player, info) => {
-        var wrapper = player == null ? null : new PlayerWrapper(player);
-        var args    = info.GetCommandString.Split(" ");
-        Server.NextFrameAsync(async () => {
-          await ProcessCommand(wrapper, args);
+    var result = base.RegisterCommand(command);
+    if (result == false) return false;
+    foreach (var alias in command.Aliases) {
+      plugin?.AddCommand(command.Name, command.Description ?? string.Empty,
+        (player, info) => {
+          var wrapper = player == null ? null : new PlayerWrapper(player);
+          var args    = info.GetCommandString.Split(" ");
+          Server.NextFrameAsync(async () => {
+            await ProcessCommand(wrapper, args);
+          });
         });
-      });
+    }
+
     return true;
   }
 }
