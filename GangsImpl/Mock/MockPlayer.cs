@@ -1,6 +1,4 @@
 ﻿using GangsAPI.Data.Gang;
-using GangsAPI.Data.Stat;
-using GangsAPI.Permissions;
 
 namespace Mock;
 

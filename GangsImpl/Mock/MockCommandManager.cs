@@ -17,6 +17,12 @@ public class MockCommandManager : ICommandManager {
   }
 
   public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
+    params string[] args) {
+    var info = new CommandInfoWrapper(executor, 0, args);
+    return await ProcessCommand(executor, info);
+  }
+
+  public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
     CommandInfo sourceInfo) {
     var info = new CommandInfoWrapper(sourceInfo);
     return await ProcessCommand(executor, info);
@@ -43,11 +49,5 @@ public class MockCommandManager : ICommandManager {
       sourceInfo.ReplySync("This command can only be executed by a player");
 
     return result;
-  }
-
-  public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
-    params string[] args) {
-    var info = new CommandInfoWrapper(executor, 0, args);
-    return await ProcessCommand(executor, info);
   }
 }

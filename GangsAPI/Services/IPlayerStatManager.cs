@@ -13,8 +13,9 @@ public interface IPlayerStatManager : IPluginBehavior, ICacher {
   #region Get
 
   Task<bool> GetForPlayer<TV>(PlayerWrapper wrapper, string statId,
-    out TV? holder)
-    => GetForPlayer(wrapper.Steam, statId, out holder);
+    out TV? holder) {
+    return GetForPlayer(wrapper.Steam, statId, out holder);
+  }
 
   async Task<bool> GetForPlayer<TV>(ulong steam, IStat<TV> holder) {
     var success = await GetForPlayer(steam, holder.StatId, out TV? tmp);
@@ -23,34 +24,41 @@ public interface IPlayerStatManager : IPluginBehavior, ICacher {
     return true;
   }
 
-  Task<bool> GetForPlayer<TV>(PlayerWrapper wrapper, IStat<TV> holder)
-    => GetForPlayer(wrapper.Steam, holder);
+  Task<bool> GetForPlayer<TV>(PlayerWrapper wrapper, IStat<TV> holder) {
+    return GetForPlayer(wrapper.Steam, holder);
+  }
 
   #endregion
 
   #region Set
 
-  Task<bool> SetForPlayer<TV>(ulong steam, IStat<TV> stat)
-    => SetForPlayer(steam, stat.StatId, stat.Value);
+  Task<bool> SetForPlayer<TV>(ulong steam, IStat<TV> stat) {
+    return SetForPlayer(steam, stat.StatId, stat.Value);
+  }
 
-  Task<bool> SetForPlayer<TV>(PlayerWrapper wrapper, IStat<TV> stat)
-    => SetForPlayer(wrapper.Steam, stat);
+  Task<bool> SetForPlayer<TV>(PlayerWrapper wrapper, IStat<TV> stat) {
+    return SetForPlayer(wrapper.Steam, stat);
+  }
 
-  Task<bool> SetForPlayer<TV>(PlayerWrapper wrapper, string statId, TV value)
-    => SetForPlayer(wrapper.Steam, statId, value);
+  Task<bool> SetForPlayer<TV>(PlayerWrapper wrapper, string statId, TV value) {
+    return SetForPlayer(wrapper.Steam, statId, value);
+  }
 
   #endregion
 
   #region Remove
 
-  Task<bool> RemoveFromPlayer(ulong steam, IStat stat)
-    => RemoveFromPlayer(steam, stat.StatId);
+  Task<bool> RemoveFromPlayer(ulong steam, IStat stat) {
+    return RemoveFromPlayer(steam, stat.StatId);
+  }
 
-  Task<bool> RemoveFromPlayer(PlayerWrapper wrapper, string statId)
-    => RemoveFromPlayer(wrapper.Steam, statId);
+  Task<bool> RemoveFromPlayer(PlayerWrapper wrapper, string statId) {
+    return RemoveFromPlayer(wrapper.Steam, statId);
+  }
 
-  Task<bool> RemoveFromPlayer(PlayerWrapper wrapper, IStat stat)
-    => RemoveFromPlayer(wrapper, stat.StatId);
+  Task<bool> RemoveFromPlayer(PlayerWrapper wrapper, IStat stat) {
+    return RemoveFromPlayer(wrapper, stat.StatId);
+  }
 
   #endregion
 

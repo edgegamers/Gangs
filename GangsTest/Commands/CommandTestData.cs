@@ -12,8 +12,7 @@ public class CommandTestData : IEnumerable<object[]> {
   private static readonly IGangManager manager = new MockGangManager(playerMgr);
 
   private readonly IBehavior[] behaviors = [
-    new CreateCommand(manager), new HelpCommand(),
-    new GangCommand(manager, playerMgr)
+    new CreateCommand(manager), new HelpCommand(), new GangCommand(manager)
   ];
 
   public CommandTestData() {

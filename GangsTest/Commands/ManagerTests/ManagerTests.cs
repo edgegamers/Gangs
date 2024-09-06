@@ -12,7 +12,7 @@ public class ManagerTests {
 
   private class DummyCommand : ICommand {
     public string Name => "css_dummy";
-    public string? Description => "Dummy command for testing";
+    public string Description => "Dummy command for testing";
     public string[] RequiredFlags { get; } = [];
     public string[] RequiredGroups { get; } = [];
 

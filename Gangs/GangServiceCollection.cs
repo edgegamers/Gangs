@@ -5,7 +5,6 @@ using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Mock;
-using SQLImpl;
 
 namespace GangsImpl;
 

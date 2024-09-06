@@ -13,8 +13,9 @@ public interface IGangStatManager : ICacher {
 
   #region Get
 
-  Task<bool> GetForGang<TV>(IGang gang, string statId, out TV? holder)
-    => GetForGang(gang.GangId, statId, out holder);
+  Task<bool> GetForGang<TV>(IGang gang, string statId, out TV? holder) {
+    return GetForGang(gang.GangId, statId, out holder);
+  }
 
   async Task<bool> GetForGang<TV>(IGang gang, IStat<TV> holder) {
     var success = await GetForGang(gang, holder.StatId, out TV? tmp);
@@ -23,34 +24,41 @@ public interface IGangStatManager : ICacher {
     return true;
   }
 
-  Task<bool> GetForGang<TV>(IGang gang, IStat<TV> stat, out TV? holder)
-    => GetForGang(gang, stat.StatId, out holder);
+  Task<bool> GetForGang<TV>(IGang gang, IStat<TV> stat, out TV? holder) {
+    return GetForGang(gang, stat.StatId, out holder);
+  }
 
   #endregion
 
   #region Set
 
-  Task<bool> SetForGang<TV>(int gangId, IStat<TV> stat)
-    => SetForGang(gangId, stat.StatId, stat.Value);
+  Task<bool> SetForGang<TV>(int gangId, IStat<TV> stat) {
+    return SetForGang(gangId, stat.StatId, stat.Value);
+  }
 
-  Task<bool> SetForGang<TV>(IGang gang, IStat<TV> stat)
-    => SetForGang(gang.GangId, stat);
+  Task<bool> SetForGang<TV>(IGang gang, IStat<TV> stat) {
+    return SetForGang(gang.GangId, stat);
+  }
 
-  Task<bool> SetForGang<TV>(IGang gang, string statId, TV value)
-    => SetForGang(gang.GangId, statId, value);
+  Task<bool> SetForGang<TV>(IGang gang, string statId, TV value) {
+    return SetForGang(gang.GangId, statId, value);
+  }
 
   #endregion
 
   #region Remove
 
-  Task<bool> RemoveFromGang(int gangId, IStat stat)
-    => RemoveFromGang(gangId, stat.StatId);
+  Task<bool> RemoveFromGang(int gangId, IStat stat) {
+    return RemoveFromGang(gangId, stat.StatId);
+  }
 
-  Task<bool> RemoveFromGang(IGang gang, string statId)
-    => RemoveFromGang(gang.GangId, statId);
+  Task<bool> RemoveFromGang(IGang gang, string statId) {
+    return RemoveFromGang(gang.GangId, statId);
+  }
 
-  Task<bool> RemoveFromGang(IGang gang, IStat stat)
-    => RemoveFromGang(gang, stat.StatId);
+  Task<bool> RemoveFromGang(IGang gang, IStat stat) {
+    return RemoveFromGang(gang, stat.StatId);
+  }
 
   #endregion
 

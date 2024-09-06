@@ -6,8 +6,7 @@ using GangsAPI.Services.Commands;
 
 namespace GangsTest.Commands;
 
-public class CreateTests(ICommandManager commands, IGangManager gangMgr,
-  IPlayerManager playerMgr)
+public class CreateTests(ICommandManager commands, IGangManager gangMgr)
   : CommandTests(commands, new CreateCommand(gangMgr)) {
   private readonly PlayerWrapper player = new((ulong)new Random().NextInt64(),
     "Test Player");

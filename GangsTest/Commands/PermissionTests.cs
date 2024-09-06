@@ -91,7 +91,7 @@ public class PermissionTests : ManagerTests.ManagerTests {
 
   private class ElevatedCommand(string[] flags, string[] groups) : ICommand {
     public string Name => "css_elevated";
-    public string? Description => "Elevated command for testing";
+    public string Description => "Elevated command for testing";
     public string[] RequiredFlags { get; } = flags;
     public string[] RequiredGroups { get; } = groups;
 

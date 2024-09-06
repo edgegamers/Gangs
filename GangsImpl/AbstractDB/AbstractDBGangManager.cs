@@ -4,12 +4,12 @@ using Dapper;
 using GangsAPI.Data.Gang;
 using GangsAPI.Services;
 using Mock;
-using Xunit;
 
 namespace GenericDB;
 
-public abstract class AbstractDBGangManager(IPlayerManager playerMgr, string connectionString,
-  string table = "gang_gangs", bool testing = false) : MockGangManager(playerMgr) {
+public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
+  string connectionString, string table = "gang_gangs", bool testing = false)
+  : MockGangManager(playerMgr) {
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
   public override void ClearCache() { CachedGangs.Clear(); }
@@ -49,7 +49,7 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr, string con
     var result = await base.UpdateGang(gang);
     var query  = $"UPDATE {table} SET Name = @Name WHERE GangId = @GangId";
     await Connection.ExecuteAsync(query, new { gang.Name, gang.GangId },
-      transaction: Transaction);
+      Transaction);
     return result;
   }
 

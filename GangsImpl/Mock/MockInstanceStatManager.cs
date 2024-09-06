@@ -1,15 +1,30 @@
-﻿using GangsAPI.Data.Stat;
-using GangsAPI.Services;
+﻿using GangsAPI.Services;
 
 namespace Mock;
 
 public class MockInstanceStatManager : IPlayerStatManager, IGangStatManager {
+  public void ClearCache() {
+    cachedGangValues.Clear();
+    cachedPlayerValues.Clear();
+  }
+
+  public Task Load() {
+    cachedGangValues.Clear();
+    cachedPlayerValues.Clear();
+    foreach (var (gangId, gangStatMap) in backendGangValues)
+      cachedGangValues[gangId] = new Dictionary<string, object>(gangStatMap);
+    foreach (var (steam, playerStatMap) in backendPlayerValues)
+      cachedPlayerValues[steam] = new Dictionary<string, object>(playerStatMap);
+    return Task.CompletedTask;
+  }
+
   #region Player
 
   private readonly Dictionary<ulong, Dictionary<string, object>>
     cachedPlayerValues = [], backendPlayerValues = [];
 
-  public Task<bool> GetForPlayer<TV>(ulong steam, string statId, out TV? result) {
+  public Task<bool>
+    GetForPlayer<TV>(ulong steam, string statId, out TV? result) {
     result = default;
     if (!cachedPlayerValues.TryGetValue(steam, out var playerStatMap))
       return Task.FromResult(false);
@@ -79,19 +94,4 @@ public class MockInstanceStatManager : IPlayerStatManager, IGangStatManager {
   }
 
   #endregion
-
-  public void ClearCache() {
-    cachedGangValues.Clear();
-    cachedPlayerValues.Clear();
-  }
-
-  public Task Load() {
-    cachedGangValues.Clear();
-    cachedPlayerValues.Clear();
-    foreach (var (gangId, gangStatMap) in backendGangValues)
-      cachedGangValues[gangId] = new Dictionary<string, object>(gangStatMap);
-    foreach (var (steam, playerStatMap) in backendPlayerValues)
-      cachedPlayerValues[steam] = new Dictionary<string, object>(playerStatMap);
-    return Task.CompletedTask;
-  }
 }

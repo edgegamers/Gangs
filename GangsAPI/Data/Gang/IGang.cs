@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using GangsAPI.Permissions;
-
-namespace GangsAPI.Data.Gang;
+﻿namespace GangsAPI.Data.Gang;
 
 /// <summary>
 ///   Represents an instance of a gang.

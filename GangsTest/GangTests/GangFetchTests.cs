@@ -35,7 +35,9 @@ public class GangFetchTests(IPlayerManager playerMgr) {
     var dummy = await mgr.CreateGang("foobar", 0);
     Assert.NotNull(dummy);
     var clone = dummy.Clone() as IGang;
-    Assert.Single(await mgr.GetGangs());
+    Assert.NotNull(clone);
+    Assert.NotSame(dummy, clone);
+    Assert.Equal(dummy, clone);
   }
 
   [Theory]

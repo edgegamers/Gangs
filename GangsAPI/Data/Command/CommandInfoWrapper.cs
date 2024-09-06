@@ -1,15 +1,15 @@
-﻿using CounterStrikeSharp.API;
-using CounterStrikeSharp.API.Modules.Commands;
+﻿using CounterStrikeSharp.API.Modules.Commands;
 
 namespace GangsAPI.Data.Command;
 
 public class CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
   params string[] args) {
+  private readonly string[] args = args;
+
   public readonly CommandCallingContext CallingContext =
     CommandCallingContext.Console;
 
   public readonly PlayerWrapper? CallingPlayer = executor;
-  private readonly string[] args = args;
 
   public CommandInfoWrapper(CommandInfo info, int offset = 0) : this(
     info.CallingPlayer == null ? null : new PlayerWrapper(info.CallingPlayer),

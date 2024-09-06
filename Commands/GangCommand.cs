@@ -7,7 +7,7 @@ using GangsAPI.Services.Commands;
 
 namespace Commands;
 
-public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr) : ICommand {
+public class GangCommand(IGangManager gangMgr) : ICommand {
   private readonly Dictionary<string, ICommand> sub = new() {
     // ["delete"] = new DeleteGangCommand(),
     // ["invite"] = new InviteGangCommand(),

@@ -6,7 +6,7 @@ namespace Commands.gang;
 
 public class HelpCommand : ICommand {
   public string Name => "help";
-  public string? Description => "Displays help for gangs";
+  public string Description => "Displays help for gangs";
 
   public Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

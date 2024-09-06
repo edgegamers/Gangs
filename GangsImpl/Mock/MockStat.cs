@@ -3,10 +3,6 @@ using GangsAPI.Data.Stat;
 namespace Mock;
 
 public class MockStat(string statId, string name, string? desc = null) : IStat {
-  public bool Equals(MockStat? other) {
-    return other is not null && ((IStat)this).Equals(other);
-  }
-
   public string StatId { get; } = statId;
   public string Name { get; } = name;
   public string? Description { get; } = desc;
@@ -14,6 +10,11 @@ public class MockStat(string statId, string name, string? desc = null) : IStat {
   public bool Equals(IStat? other) {
     return other is not null && StatId == other.StatId;
   }
+
+  public bool Equals(MockStat? other) {
+    return other is not null && ((IStat)this).Equals(other);
+  }
+
   public override bool Equals(object? obj) { return Equals(obj as MockStat); }
 
   public override int GetHashCode() { return HashCode.Combine(StatId); }

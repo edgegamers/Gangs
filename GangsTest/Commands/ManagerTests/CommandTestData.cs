@@ -11,7 +11,7 @@ public class CommandTestData : IEnumerable<object[]> {
 
   private readonly IBehavior[] behaviors = [
     new MockCommandManager(),
-    new CommandManager(new MockGangManager(playerMgr), playerMgr)
+    new CommandManager(new MockGangManager(playerMgr))
   ];
 
   public CommandTestData() {
