@@ -52,18 +52,18 @@ public abstract class AbstractDBStatManager(string connectionString,
   }
 
   public override async Task<bool> RegisterStat(IStat stat) {
-    if (cachedStats.Contains(stat)) return false;
+    if (CachedStats.Contains(stat)) return false;
     var sqlStat = (DBStat)stat;
     // var command = connection.CreateCommand();
     await connection.ExecuteAsync(
       $"INSERT INTO {table} (StatId, Name, Description) VALUES (@StatId, @Name, @Description)",
       new { sqlStat.StatId, sqlStat.Name, sqlStat.Description }, transaction);
-    return cachedStats.Add(stat);
+    return CachedStats.Add(stat);
   }
 
   public override async Task<bool> UnregisterStat(string id) {
-    var matches = cachedStats.Where(stat => stat.StatId == id).ToList();
-    foreach (var stat in matches) cachedStats.Remove(stat);
+    var matches = CachedStats.Where(stat => stat.StatId == id).ToList();
+    foreach (var stat in matches) CachedStats.Remove(stat);
 
     await connection.ExecuteAsync($"DELETE FROM {table} WHERE StatId = @StatId",
       new { StatId = id }, transaction);
@@ -75,7 +75,7 @@ public abstract class AbstractDBStatManager(string connectionString,
     var query = $"SELECT * FROM {table}";
     var result = await connection.QueryAsync<DBStat>(query,
       transaction: transaction);
-    foreach (var stat in result) cachedStats.Add(stat);
+    foreach (var stat in result) CachedStats.Add(stat);
   }
 
   public abstract DbConnection CreateDbConnection(string connectionString);

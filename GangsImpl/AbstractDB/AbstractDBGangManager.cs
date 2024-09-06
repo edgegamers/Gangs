@@ -11,7 +11,7 @@ public abstract class AbstractDBGangManager(string connectionString,
   string table = "gang_gangs", bool testing = false) : MockGangManager {
   private DbConnection connection = null!;
   private DbTransaction? transaction;
-  public override void ClearCache() { cachedGangs.Clear(); }
+  public override void ClearCache() { CachedGangs.Clear(); }
 
   public override void Start(BasePlugin? plugin, bool hotReload) {
     Assert.NotNull(table);
@@ -42,7 +42,7 @@ public abstract class AbstractDBGangManager(string connectionString,
   public override async Task Load() {
     var query = $"SELECT * FROM {table}";
     var gangs = await connection.QueryAsync<DBGang>(query);
-    foreach (var gang in gangs) cachedGangs.Add(gang);
+    foreach (var gang in gangs) CachedGangs.Add(gang);
   }
 
   public override async Task<bool> UpdateGang(IGang gang) {
@@ -60,7 +60,7 @@ public abstract class AbstractDBGangManager(string connectionString,
 
   public override async Task<IGang?> CreateGang(string name, ulong owner) {
     Assert.NotNull(table);
-    if (cachedGangs.Any(g => g.Name == name)) return null;
+    if (CachedGangs.Any(g => g.Name == name)) return null;
     var query = $"INSERT INTO {table} (Name) VALUES (@name)";
     var result =
       await connection.ExecuteAsync(query, new { name }, transaction);
@@ -68,7 +68,7 @@ public abstract class AbstractDBGangManager(string connectionString,
     var id = await connection.ExecuteScalarAsync<int>("SELECT LAST_INSERT_ID()",
       transaction: transaction);
     var gang = new DBGang(id, name, owner);
-    cachedGangs.Add(gang);
+    CachedGangs.Add(gang);
     return gang.Clone() as IGang;
   }
 

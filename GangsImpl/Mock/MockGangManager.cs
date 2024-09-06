@@ -5,23 +5,23 @@ using GangsAPI.Services;
 namespace Mock;
 
 public class MockGangManager : IGangManager {
-  protected readonly HashSet<IGang> cachedGangs = [], backendGangs = [];
+  protected readonly HashSet<IGang> CachedGangs = [], BackendGangs = [];
 
   public Task<IEnumerable<IGang>> GetGangs() {
-    return Task.FromResult(cachedGangs.AsEnumerable());
+    return Task.FromResult(CachedGangs.AsEnumerable());
   }
 
   public Task<IGang?> GetGang(int id) {
-    return Task.FromResult(cachedGangs.FirstOrDefault(g => g.GangId == id));
+    return Task.FromResult(CachedGangs.FirstOrDefault(g => g.GangId == id));
   }
 
   public Task<IGang?> GetGang(ulong steam) {
     return Task.FromResult(
-      cachedGangs.FirstOrDefault(g => g.Members.ContainsKey(steam)));
+      CachedGangs.FirstOrDefault(g => g.Members.ContainsKey(steam)));
   }
 
   public virtual Task<bool> UpdateGang(IGang gang) {
-    var g = cachedGangs.FirstOrDefault(g => g.GangId == gang.GangId);
+    var g = CachedGangs.FirstOrDefault(g => g.GangId == gang.GangId);
     if (g == null) return Task.FromResult(false);
     g.Name = gang.Name;
     g.Members.Clear();
@@ -30,23 +30,23 @@ public class MockGangManager : IGangManager {
   }
 
   public virtual Task<bool> DeleteGang(int id) {
-    return Task.FromResult(cachedGangs.RemoveWhere(g => g.GangId == id) > 0);
+    return Task.FromResult(CachedGangs.RemoveWhere(g => g.GangId == id) > 0);
   }
 
   public virtual Task<IGang?> CreateGang(string name, ulong owner) {
-    var id   = cachedGangs.Count + 1;
+    var id   = CachedGangs.Count + 1;
     var gang = new MockGang(id, name, owner);
-    if (cachedGangs.Any(g => g.GangId == id))
+    if (CachedGangs.Any(g => g.GangId == id))
       return Task.FromResult<IGang?>(null);
-    cachedGangs.Add(gang);
-    backendGangs.Add(gang);
+    CachedGangs.Add(gang);
+    BackendGangs.Add(gang);
     return Task.FromResult(gang.Clone() as IGang);
   }
 
-  public virtual void ClearCache() { cachedGangs.Clear(); }
+  public virtual void ClearCache() { CachedGangs.Clear(); }
 
   public virtual Task Load() {
-    cachedGangs.UnionWith(backendGangs);
+    CachedGangs.UnionWith(BackendGangs);
     return Task.CompletedTask;
   }
 

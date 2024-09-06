@@ -19,19 +19,19 @@ public class MockStat(string statId, string name, string? desc = null) : IStat {
   public override int GetHashCode() { return HashCode.Combine(StatId); }
 }
 
-public class MockStat<VType>(string statId, string name, string? desc,
-  VType value) : MockStat(statId, name, desc), IEquatable<MockStat<VType>> {
-  public MockStat(IStat b, VType value) : this(b.StatId, b.Name, b.Description,
+public class MockStat<TVType>(string statId, string name, string? desc,
+  TVType value) : MockStat(statId, name, desc), IEquatable<MockStat<TVType>> {
+  public MockStat(IStat b, TVType value) : this(b.StatId, b.Name, b.Description,
     value) { }
 
-  public VType Value { get; set; } = value;
+  public TVType Value { get; set; } = value;
 
-  public bool Equals(MockStat<VType>? other) {
+  public bool Equals(MockStat<TVType>? other) {
     return other is not null && base.Equals(other);
   }
 
   public override bool Equals(object? obj) {
-    return Equals(obj as MockStat<VType>);
+    return Equals(obj as MockStat<TVType>);
   }
 
   public override int GetHashCode() {

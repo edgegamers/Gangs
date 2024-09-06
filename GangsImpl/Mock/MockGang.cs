@@ -9,8 +9,6 @@ public class MockGang : IGang {
     GangId  = id;
     Name    = name;
     Members = new Dictionary<ulong, IGangRank>();
-    Perks   = new HashSet<IStat>();
-    Stats   = new HashSet<IStat>();
     Ranks   = new HashSet<IGangRank>();
 
     var ownerRank = new MockGangRank(0, "Owner", IGangRank.Permissions.OWNER);
@@ -18,9 +16,6 @@ public class MockGang : IGang {
     Members.Add(owner, ownerRank);
     Ranks.Add(ownerRank);
   }
-
-  public ISet<IStat> Perks { get; protected init; }
-  public ISet<IStat> Stats { get; protected init; }
 
   public int GangId { get; protected init; }
   public string Name { get; set; }
@@ -31,8 +26,6 @@ public class MockGang : IGang {
     var clone = new MockGang(GangId, Name, ((IGang)this).Owner);
     clone.Members.Clear();
     foreach (var member in Members) clone.Members.Add(member);
-    foreach (var perk in Perks) clone.Perks.Add(perk);
-    foreach (var stat in Stats) clone.Stats.Add(stat);
     return clone;
   }
 }

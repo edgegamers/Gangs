@@ -4,15 +4,10 @@ using Mock;
 namespace GangsTest.StatTests.InstanceManageTests;
 
 public class InstanceManageData : IEnumerable<object[]> {
-  private readonly object[][] behaviors;
-
-  public InstanceManageData() {
-    var inst = new MockStatManager();
-    behaviors = new object[][] { [inst, new MockInstanceStatManager(inst)] };
-  }
+  private readonly object[] behaviors = [new MockInstanceStatManager()];
 
   public IEnumerator<object[]> GetEnumerator() {
-    return behaviors.Select(behavior => behavior).GetEnumerator();
+    return behaviors.Select(behavior => new[] { behavior }).GetEnumerator();
   }
 
   IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
