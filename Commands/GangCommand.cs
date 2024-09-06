@@ -1,4 +1,5 @@
 ﻿using Commands.gang;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services;
@@ -31,6 +32,11 @@ public class GangCommand(IGangManager gangMgr) : ICommand {
       throw new InvalidOperationException(
         $"Attempted to execute GangCommand with invalid name: {info[0]}");
 
+    if (executor?.Player != null) {
+      info.ReplySync(
+        $" {ChatColors.DarkRed}GANGS {ChatColors.White}> {ChatColors.Grey}SoonTM!");
+      return CommandResult.SUCCESS;
+    }
 
     if (info.ArgCount == 1) return CommandResult.INVALID_ARGS;
 

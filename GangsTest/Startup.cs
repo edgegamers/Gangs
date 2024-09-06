@@ -1,5 +1,6 @@
 ﻿using GangsAPI.Services;
 using GangsAPI.Services.Commands;
+using MartinCostello.Logging.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using Mock;
 
