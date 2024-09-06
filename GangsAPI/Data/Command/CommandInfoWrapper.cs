@@ -8,11 +8,13 @@ public class CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
     CommandCallingContext.Console;
 
   public readonly PlayerWrapper? CallingPlayer = executor;
+  private readonly string[] args = args;
 
   public CommandInfoWrapper(CommandInfo info, int offset = 0) : this(
     info.CallingPlayer == null ? null : new PlayerWrapper(info.CallingPlayer),
-    offset, info.ArgString.Split(" ")) {
+    offset, new string[info.ArgCount]) {
     CallingContext = info.CallingContext;
+    for (var i = 0; i < info.ArgCount; i++) args[i] = info.GetArg(i);
   }
 
   public CommandInfoWrapper(CommandInfoWrapper info, int offset) : this(
@@ -34,17 +36,15 @@ public class CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
       return;
     }
 
-    new Task(() => {
-      if (!CallingPlayer.IsValid) {
-        Console.Error.WriteLine(
-          $"Player {CallingPlayer} is not valid, cannot reply to command");
-        return;
-      }
+    if (!CallingPlayer.IsValid) {
+      Console.Error.WriteLine(
+        $"Player {CallingPlayer} is not valid, cannot reply to command");
+      return;
+    }
 
-      if (CallingContext == CommandCallingContext.Console)
-        CallingPlayer.PrintToConsole(message);
-      else
-        CallingPlayer.PrintToChat(message);
-    }).RunSynchronously();
+    if (CallingContext == CommandCallingContext.Console)
+      CallingPlayer.PrintToConsole(message);
+    else
+      CallingPlayer.PrintToChat(message);
   }
 }

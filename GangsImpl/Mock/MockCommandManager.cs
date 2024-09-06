@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 
@@ -13,6 +14,27 @@ public class MockCommandManager : ICommandManager {
 
   public bool UnregisterCommand(ICommand command) {
     return commands.Remove(command.Name);
+  }
+
+  public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
+    CommandInfo sourceInfo) {
+    var info = new CommandInfoWrapper(sourceInfo);
+    if (info.ArgCount == 0) return CommandResult.FAILURE;
+    if (!commands.TryGetValue(info[0], out var command))
+      return CommandResult.UNKNOWN_COMMAND;
+
+    if (!command.CanExecute(executor)) return CommandResult.NO_PERMISSION;
+
+    var result = CommandResult.FAILURE;
+
+    await Task.Run(async () => {
+      result = await command.Execute(executor, info);
+    });
+
+    if (result == CommandResult.PLAYER_ONLY)
+      info.ReplySync("This command can only be executed by a player");
+
+    return result;
   }
 
   public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,

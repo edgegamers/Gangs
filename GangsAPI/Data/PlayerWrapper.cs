@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Admin;
 
@@ -113,7 +114,7 @@ public class PlayerWrapper {
       return;
     }
 
-    Player.PrintToChat(message);
+    Server.NextFrame(() => Player.PrintToChat(message));
   }
 
   public void PrintToConsole(string message) {
@@ -123,6 +124,6 @@ public class PlayerWrapper {
       return;
     }
 
-    Player.PrintToConsole(message);
+    Server.NextFrame(() => Player.PrintToConsole(message));
   }
 }

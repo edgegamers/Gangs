@@ -27,7 +27,7 @@ public class CommandManager(IGangManager gangMgr)
           var wrapper = player == null ? null : new PlayerWrapper(player);
           var args    = info.GetCommandString.Split(" ");
           Server.NextFrameAsync(async () => {
-            await ProcessCommand(wrapper, args);
+            await ProcessCommand(wrapper, info);
           });
         });
     }
