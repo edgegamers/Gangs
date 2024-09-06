@@ -20,5 +20,7 @@ public interface IGangPlayer {
   /// <summary>
   ///   The id of the gang that the player is a member of.
   /// </summary>
-  int? GangId { get; }
+  int? GangId { get; set; }
+
+  int? GangRank { get; set; }
 }

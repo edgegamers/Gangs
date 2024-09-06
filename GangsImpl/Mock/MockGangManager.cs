@@ -4,7 +4,7 @@ using GangsAPI.Services;
 
 namespace Mock;
 
-public class MockGangManager : IGangManager {
+public class MockGangManager(IPlayerManager playerMgr) : IGangManager {
   protected readonly HashSet<IGang> CachedGangs = [], BackendGangs = [];
 
   public Task<IEnumerable<IGang>> GetGangs() {
@@ -15,17 +15,17 @@ public class MockGangManager : IGangManager {
     return Task.FromResult(CachedGangs.FirstOrDefault(g => g.GangId == id));
   }
 
-  public Task<IGang?> GetGang(ulong steam) {
-    return Task.FromResult(
-      CachedGangs.FirstOrDefault(g => g.Members.ContainsKey(steam)));
+  public async Task<IGang?> GetGang(ulong steam) {
+    var gangId = (await playerMgr.GetPlayer(steam))?.GangId;
+    return gangId == null ?
+      null :
+      CachedGangs.FirstOrDefault(g => g.GangId == gangId);
   }
 
   public virtual Task<bool> UpdateGang(IGang gang) {
     var g = CachedGangs.FirstOrDefault(g => g.GangId == gang.GangId);
     if (g == null) return Task.FromResult(false);
     g.Name = gang.Name;
-    g.Members.Clear();
-    foreach (var member in gang.Members) g.Members.Add(member);
     return Task.FromResult(true);
   }
 
@@ -33,14 +33,17 @@ public class MockGangManager : IGangManager {
     return Task.FromResult(CachedGangs.RemoveWhere(g => g.GangId == id) > 0);
   }
 
-  public virtual Task<IGang?> CreateGang(string name, ulong owner) {
-    var id   = CachedGangs.Count + 1;
-    var gang = new MockGang(id, name, owner);
-    if (CachedGangs.Any(g => g.GangId == id))
-      return Task.FromResult<IGang?>(null);
+  public virtual async Task<IGang?> CreateGang(string name, ulong owner) {
+    var id     = CachedGangs.Count + 1;
+    var gang   = new MockGang(id, name);
+    var player = await playerMgr.GetPlayer(owner, true);
+    if (player == null) return null;
+    player.GangId = id;
+    await playerMgr.UpdatePlayer(player);
+    if (CachedGangs.Any(g => g.GangId == id)) return null;
     CachedGangs.Add(gang);
     BackendGangs.Add(gang);
-    return Task.FromResult(gang.Clone() as IGang);
+    return gang.Clone() as IGang;
   }
 
   public virtual void ClearCache() { CachedGangs.Clear(); }

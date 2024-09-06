@@ -5,8 +5,9 @@ using GangsAPI.Services.Commands;
 
 namespace GangsTest.Commands;
 
-public class GangCommandTests(ICommandManager commands, IGangManager gangMgr)
-  : CommandTests(commands, new GangCommand(gangMgr)) {
+public class GangCommandTests(ICommandManager commands, IGangManager gangMgr,
+  IPlayerManager playerMgr)
+  : CommandTests(commands, new GangCommand(gangMgr, playerMgr)) {
   [Fact]
   public async Task Gang_TestBase() {
     Assert.Equal("css_gang", Command.Name);

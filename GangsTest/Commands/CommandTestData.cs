@@ -8,10 +8,12 @@ using Mock;
 namespace GangsTest.Commands;
 
 public class CommandTestData : IEnumerable<object[]> {
-  private static readonly IGangManager manager = new MockGangManager();
+  private static readonly IPlayerManager playerMgr = new MockPlayerManager();
+  private static readonly IGangManager manager = new MockGangManager(playerMgr);
 
   private readonly IBehavior[] behaviors = [
-    new CreateCommand(manager), new HelpCommand(), new GangCommand(manager)
+    new CreateCommand(manager), new HelpCommand(),
+    new GangCommand(manager, playerMgr)
   ];
 
   public CommandTestData() {

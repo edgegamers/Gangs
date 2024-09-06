@@ -20,6 +20,12 @@ public class MockPlayerManager : IPlayerManager {
     return player;
   }
 
+  public Task<bool> UpdatePlayer(IGangPlayer player) {
+    if (!players.ContainsKey(player.Steam)) return Task.FromResult(false);
+    players[player.Steam] = player;
+    return Task.FromResult(true);
+  }
+
   public Task<bool> DeletePlayer(ulong steamId) {
     return Task.FromResult(players.Remove(steamId));
   }

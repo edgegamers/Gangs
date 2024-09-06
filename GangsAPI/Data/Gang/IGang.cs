@@ -7,7 +7,7 @@ namespace GangsAPI.Data.Gang;
 ///   Represents an instance of a gang.
 /// </summary>
 public interface IGang : IEqualityComparer<IGang>, IEquatable<IGang>,
-  IEnumerable<ulong>, ICloneable {
+  ICloneable {
   /// <summary>
   ///   The unique identifier of the gang.
   ///   All gangs have a unique identifier.
@@ -20,29 +20,6 @@ public interface IGang : IEqualityComparer<IGang>, IEquatable<IGang>,
   ///   (Up to implementation)
   /// </summary>
   string Name { get; set; }
-
-  /// <summary>
-  ///   The members of the gang.
-  ///   All gangs have at least one owner.
-  /// </summary>
-  IDictionary<ulong, IGangRank> Members { get; }
-
-  /// <summary>
-  ///   The ranks of the gang.
-  /// </summary>
-  ISet<IGangRank> Ranks { get; }
-
-  ulong Owner
-    => Members.First(m => m.Value.Perms.HasFlag(IGangRank.Permissions.OWNER))
-     .Key;
-
-  IEnumerator IEnumerable.GetEnumerator() {
-    return Members.Keys.GetEnumerator();
-  }
-
-  IEnumerator<ulong> IEnumerable<ulong>.GetEnumerator() {
-    return Members.Keys.GetEnumerator();
-  }
 
   bool IEqualityComparer<IGang>.Equals(IGang? x, IGang? y) {
     if (x is null || y is null) return false;

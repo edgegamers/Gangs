@@ -37,6 +37,8 @@ public interface IPlayerManager : IPluginBehavior, ICacher {
   /// <param name="name">The name of the player.</param>
   /// <returns>The new player.</returns>
   Task<IGangPlayer> CreatePlayer(ulong steamId, string? name = null);
+  
+  Task<bool> UpdatePlayer(IGangPlayer player);
 
   /// <summary>
   ///   Deletes a player and all of their associated data.

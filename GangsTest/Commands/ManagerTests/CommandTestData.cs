@@ -1,13 +1,17 @@
 ﻿using System.Collections;
 using Commands;
 using GangsAPI;
+using GangsAPI.Services;
 using Mock;
 
 namespace GangsTest.Commands.ManagerTests;
 
 public class CommandTestData : IEnumerable<object[]> {
+  private static readonly IPlayerManager playerMgr = new MockPlayerManager();
+
   private readonly IBehavior[] behaviors = [
-    new MockCommandManager(), new CommandManager(new MockGangManager())
+    new MockCommandManager(),
+    new CommandManager(new MockGangManager(playerMgr), playerMgr)
   ];
 
   public CommandTestData() {

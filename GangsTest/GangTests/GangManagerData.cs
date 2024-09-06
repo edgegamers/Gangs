@@ -1,16 +1,22 @@
 ﻿using System.Collections;
 using GangsAPI;
+using GangsAPI.Services;
 using Mock;
 using SQLImpl;
+using SQLite;
 
 namespace GangsTest.GangTests;
 
 public class GangManagerData : IEnumerable<object[]> {
+  private static readonly IPlayerManager playerMgr = new MockPlayerManager();
+
   private readonly IBehavior[] behaviors = [
-    new MockGangManager(),
-    new SQLGangManager(
+    new MockGangManager(playerMgr),
+    new SQLGangManager(playerMgr,
       Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
-      ?? "Host=localhost;User=root;Database=gangs", "gang_unit_test", true)
+      ?? "Host=localhost;User=root;Database=gangs", "gang_unit_test", true),
+    new SQLiteGangManager(playerMgr, "Data Source=:memory:", "gang_unit_test",
+      true)
   ];
 
   public GangManagerData() {

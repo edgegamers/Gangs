@@ -10,9 +10,6 @@ public class GangCreationTests(IPlayerManager playerMgr) {
     var dummy = await mgr.CreateGang("foobar", 0);
     Assert.NotNull(dummy);
     Assert.Equal("foobar", dummy.Name);
-    Assert.Equal((ulong)0, dummy.Owner);
-    Assert.Single(dummy.Members);
-    Assert.Single(dummy.Ranks);
   }
 
   [Theory]
@@ -22,9 +19,6 @@ public class GangCreationTests(IPlayerManager playerMgr) {
     var dummy  = await mgr.CreateGang("foobar", player);
     Assert.NotNull(dummy);
     Assert.Equal("foobar", dummy.Name);
-    Assert.Equal((ulong)0, dummy.Owner);
-    Assert.Single(dummy.Members);
-    Assert.Single(dummy.Ranks);
   }
 
   [Theory]
@@ -38,8 +32,6 @@ public class GangCreationTests(IPlayerManager playerMgr) {
     Assert.Equivalent(dummy, clone, true);
 
     Assert.NotSame(dummy, clone);
-    Assert.NotSame(dummy.Members, clone.Members);
-    Assert.NotSame(dummy.Ranks, clone.Ranks);
   }
 
   [Theory]
@@ -50,13 +42,9 @@ public class GangCreationTests(IPlayerManager playerMgr) {
     var dummy1 = await mgr.CreateGang("foobar", steam1);
     Assert.NotNull(dummy1);
     Assert.Equal("foobar", dummy1.Name);
-    Assert.Equal(steam1, dummy1.Owner);
-    Assert.Single(dummy1.Members);
     var dummy2 = await mgr.CreateGang("barfoo", steam2);
     Assert.NotNull(dummy2);
     Assert.Equal("barfoo", dummy2.Name);
-    Assert.Equal(steam2, dummy2.Owner);
-    Assert.Single(dummy2.Members);
     Assert.NotSame(dummy1, dummy2);
     Assert.NotEqual(dummy1.GangId, dummy2.GangId);
   }
@@ -71,11 +59,7 @@ public class GangCreationTests(IPlayerManager playerMgr) {
     Assert.NotNull(dummy1);
     Assert.NotNull(dummy2);
     Assert.Equal("foobar", dummy1.Name);
-    Assert.Equal(player1.Steam, dummy1.Owner);
-    Assert.Single(dummy1.Members);
     Assert.Equal("barfoo", dummy2.Name);
-    Assert.Equal(player2.Steam, dummy2.Owner);
-    Assert.Single(dummy2.Members);
     Assert.NotSame(dummy1, dummy2);
     Assert.NotEqual(dummy1.GangId, dummy2.GangId);
   }

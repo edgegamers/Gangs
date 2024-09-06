@@ -27,7 +27,7 @@ public class GangManagerTests {
   [Theory]
   [ClassData(typeof(GangManagerData))]
   public async Task GangManager_Update_Fail(IGangManager mgr) {
-    var dummy = new MockGang(-1, "nonexistent", 0);
+    var dummy = new MockGang(-1, "nonexistent");
     Assert.False(await mgr.UpdateGang(dummy),
       "Gang manager reported update success for non-created gang");
   }

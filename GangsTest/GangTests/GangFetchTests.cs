@@ -62,14 +62,4 @@ public class GangFetchTests(IPlayerManager playerMgr) {
     Assert.NotNull(gang);
     Assert.Equal(dummy, gang);
   }
-
-  [Theory]
-  [ClassData(typeof(GangManagerData))]
-  public async Task Gang_FetchSteam(IGangManager mgr) {
-    var dummy = await mgr.CreateGang("foobar", (ulong)new Random().NextInt64());
-    Assert.NotNull(dummy);
-    var gang = await mgr.GetGang(dummy.Owner);
-    Assert.NotNull(gang);
-    Assert.Equal(dummy, gang);
-  }
 }

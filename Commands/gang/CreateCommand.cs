@@ -6,7 +6,7 @@ using GangsAPI.Services.Commands;
 namespace Commands.gang;
 
 // create [name]
-public class CreateCommand(IGangManager gang) : ICommand {
+public class CreateCommand(IGangManager gangs) : ICommand {
   public string Name => "create";
   public string? Description => "Creates a new gang";
   public string Usage => "[name]";
@@ -22,17 +22,17 @@ public class CreateCommand(IGangManager gang) : ICommand {
 
     var name = string.Join(' ', info.ArgString.Split(" "));
 
-    if (await gang.GetGang(executor.Steam) != null) {
+    if (await gangs.GetGang(executor.Steam) != null) {
       info.ReplySync("You are already in a gang");
       return CommandResult.FAILURE;
     }
 
-    if ((await gang.GetGangs()).Any(g => g.Name == name)) {
+    if ((await gangs.GetGangs()).Any(g => g.Name == name)) {
       info.ReplySync($"Gang '{name}' already exists");
       return CommandResult.FAILURE;
     }
 
-    var newGang = await gang.CreateGang(name, executor.Steam);
+    var newGang = await gangs.CreateGang(name, executor.Steam);
 
     if (newGang == null) {
       info.ReplySync("Failed to create gang");
