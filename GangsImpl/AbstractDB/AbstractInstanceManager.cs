@@ -8,7 +8,7 @@ namespace GenericDB;
 
 public abstract class AbstractInstanceManager<TK>(string connectionString,
   string table_prefix, bool testing = false) {
-  protected DbConnection Connection;
+  protected DbConnection Connection = null!;
   abstract protected string PrimaryKey { get; }
   private string primaryTypeString => GetDBType(typeof(TK));
 
@@ -19,21 +19,22 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
   public async Task<(bool, TV?)> Get<TV>(TK key, string statId) {
     await createTable<TV>(statId);
     try {
+      var dynamic = new DynamicParameters();
+      dynamic.Add(PrimaryKey, key);
       var result = await Connection.QuerySingleAsync<TV>(
-        $"SELECT {(typeof(TV).IsPrimitive ? statId : getFieldNames<TV>())} FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
-        new { GangId = key });
+        $"SELECT {(typeof(TV).IsPrimitive ? statId : GetFieldNames<TV>())} FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
+        dynamic);
       return (true, result);
-    } catch (InvalidOperationException) { return (false, default); }
+    } catch (InvalidOperationException e) {
+      if (!e.Message.Contains("Sequence contains no elements")) throw;
+      return (false, default);
+    }
   }
 
-  public async Task<bool> Set<TV>(TK key, string statId, TV value) {
-    await createTable<TV>(statId);
-    var fields = typeof(TV)
-     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-     .ToList();
-
-    var columns = getFieldNames<TV>();
-    var values  = getFieldNames<TV>("@");
+  virtual protected string GenerateInsertQuery<TV>(string statId,
+    IList<PropertyInfo> properties) {
+    var columns = GetFieldNames<TV>();
+    var values  = GetFieldNames<TV>("@");
 
     if (typeof(TV).IsPrimitive) {
       columns = statId;
@@ -41,12 +42,20 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     }
 
     var onDuplicate = string.Join(", ",
-      fields.Select(f => $"{f.Name} = @{f.Name}"));
+      properties.Select(f => $"{f.Name} = @{f.Name}"));
     if (typeof(TV).IsPrimitive) onDuplicate = $"{statId} = @{statId}";
-    var cmd =
+    return
       $"INSERT INTO {table_prefix}_{statId} ({PrimaryKey}, {columns}) VALUES (@{PrimaryKey}, {values}) ON DUPLICATE KEY UPDATE {onDuplicate}";
+  }
 
-    Debug.WriteLine(cmd);
+  public async Task<bool> Set<TV>(TK key, string statId, TV value) {
+    await createTable<TV>(statId);
+
+    var fields = typeof(TV)
+     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+     .ToList();
+
+    var cmd = GenerateInsertQuery<TV>(statId, fields);
 
     var fieldValues = new DynamicParameters();
     fieldValues.Add("@" + PrimaryKey, key);
@@ -70,7 +79,11 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
         $"DELETE FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamicParameters);
       return true;
-    } catch (DbException) { return false; }
+    } catch (DbException e) {
+      if (e.Message.Contains("no such table")) return false;
+      if (e.Message.EndsWith("doesn't exist")) return false;
+      throw;
+    }
   }
 
   public void Start(BasePlugin? plugin, bool hotReload) {
@@ -130,7 +143,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     await Connection.ExecuteAsync(cmd);
   }
 
-  private string getFieldNames<TV>(string prefix = "") {
+  protected string GetFieldNames<TV>(string prefix = "") {
     var fields = typeof(TV)
      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
      .ToList();

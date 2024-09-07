@@ -2,6 +2,7 @@ using System.Collections;
 using GangsAPI.Services.Gang;
 using Mock;
 using SQLImpl;
+using SQLite;
 
 namespace GangsTest.API.Services.Stat.Instance.Gang;
 
@@ -10,7 +11,9 @@ public class TestData : IEnumerable<object[]> {
     new MockInstanceStatManager(),
     new SQLGangInstanceManager(
       Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
-      ?? "Host=localhost;User=root;Database=gangs", "gang_inst_stats", true)
+      ?? "Host=localhost;User=root;Database=gangs", "gang_inst_stats", true),
+    new SQLiteGangInstanceManager("Data Source=:memory:", "gang_inst_stats",
+      true)
   ];
 
   public TestData() {

@@ -11,31 +11,27 @@ namespace SQLImpl;
 public class SQLGangInstanceManager(string connectionString,
   string table_prefix, bool testing = false)
   : AbstractInstanceManager<int>(connectionString, table_prefix, testing),
-    IPluginBehavior, IGangStatManager {
+    IGangStatManager {
   override protected string PrimaryKey => "GangId";
 
-  public Task<(bool, TV?)> GetForGang<TV>(int key, string statId) {
-    return Get<TV>(key, statId);
-  }
+  public Task<(bool, TV?)> GetForGang<TV>(int key, string statId)
+    => Get<TV>(key, statId);
 
-  public Task<bool> SetForGang<TV>(int gangId, string statId, TV value) {
-    return Set(gangId, statId, value);
-  }
+  public Task<bool> SetForGang<TV>(int gangId, string statId, TV value)
+    => Set(gangId, statId, value);
 
-  public Task<bool> RemoveFromGang(int gangId, string statId) {
-    return Remove(gangId, statId);
-  }
+  public Task<bool> RemoveFromGang(int gangId, string statId)
+    => Remove(gangId, statId);
 
-  override protected DbConnection CreateDbConnection(string connectionString) {
-    return new MySqlConnection(connectionString);
-  }
+  override protected DbConnection CreateDbConnection(string connectionString)
+    => new MySqlConnection(connectionString);
 }
 
 public class SQLPlayerInstanceManager(string connectionString,
   string table_prefix, bool testing = false)
   : AbstractInstanceManager<ulong>(connectionString, table_prefix, testing),
     IPlayerStatManager {
-  override protected string PrimaryKey => "GangId";
+  override protected string PrimaryKey => "Steam";
 
   public Task<(bool, TV?)> GetForPlayer<TV>(ulong steam, string statId) {
     return Get<TV>(steam, statId);
@@ -49,7 +45,6 @@ public class SQLPlayerInstanceManager(string connectionString,
     return Remove(steam, statId);
   }
 
-  override protected DbConnection CreateDbConnection(string connectionString) {
-    return new MySqlConnection(connectionString);
-  }
+  override protected DbConnection CreateDbConnection(string connectionString)
+    => new MySqlConnection(connectionString);
 }

@@ -48,6 +48,7 @@ public class TestParent {
 
   protected class Reputation(int Positive, int negative)
     : IEquatable<Reputation> {
+    public Reputation() : this(0, 0) { }
     public int Positive { get; } = Positive;
     public int Negative { get; } = negative;
 
