@@ -24,25 +24,17 @@ public class SQLInstanceManager(string connectionString, string table_prefix,
         $"SELECT {(typeof(TV).IsPrimitive ? statId : getFieldNames<TV>())} FROM {table_prefix}_{statId} WHERE GangId = @GangId",
         new { GangId = key });
       return (true, result);
-    } catch (InvalidOperationException e) {
-      Console.WriteLine(e);
-      return (false, default);
-    }
+    } catch (InvalidOperationException) { return (false, default); }
   }
 
   public async Task<bool> SetForGang<TV>(int gangId, string statId, TV value) {
     await createTable<TV>(statId);
-    // var fields = typeof(TV).GetRuntimeFields().ToList();
     var fields = typeof(TV)
      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
      .ToList();
 
-    // var fieldNames = fields.Select(f => f.Name).ToList();
-
-    // var columns = string.Join(", ", fieldNames);
     var columns = getFieldNames<TV>();
-    // var values  = string.Join(", ", fieldNames.Select(f => $"@{f}"));
-    var values = getFieldNames<TV>("@");
+    var values  = getFieldNames<TV>("@");
 
     if (typeof(TV).IsPrimitive) {
       columns = statId;
@@ -111,7 +103,6 @@ public class SQLInstanceManager(string connectionString, string table_prefix,
   }
 
   private async Task createTable<TV>(string id) {
-    // Get public fields of TV
     var fields = typeof(TV)
      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
      .ToList();
