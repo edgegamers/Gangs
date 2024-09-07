@@ -44,6 +44,7 @@ jobs:
     permissions:
       pull-requests: write
     runs-on: ubuntu-latest
+    fail-fast: false
     strategy:
       matrix:
         dotnet-version: [ 8.0.x, 9.0.x ]
