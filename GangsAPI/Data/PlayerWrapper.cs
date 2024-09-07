@@ -99,6 +99,16 @@ public class PlayerWrapper {
   }
 
   public PlayerWrapper WithGroups(params string[] groups) {
+    foreach (var group in groups) {
+      if (!group.StartsWith(GROUP_CHAR))
+        throw new ArgumentException(
+          $"Expected group ${group} to start with {GROUP_CHAR}");
+
+      if (group.Length == 1)
+        throw new ArgumentException(
+          $"Expected group ${group} to contain a group after {GROUP_CHAR}");
+    }
+
     Data = new AdminData {
       Identity = Steam.ToString(),
       Flags    = Data?.Flags ?? new Dictionary<string, HashSet<string>>(),

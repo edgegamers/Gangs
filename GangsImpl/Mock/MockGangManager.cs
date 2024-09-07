@@ -36,13 +36,15 @@ public class MockGangManager(IPlayerManager playerMgr) : IGangManager {
   }
 
   public virtual async Task<IGang?> CreateGang(string name, ulong owner) {
-    var id     = CachedGangs.Count + 1;
+    if (CachedGangs.Any(g => g.Name == name)) return null;
+    var id = CachedGangs.Count + 1;
+    if (CachedGangs.Any(g => g.GangId == id)) return null;
     var gang   = new MockGang(id, name);
-    var player = await playerMgr.GetPlayer(owner, true);
+    var player = await playerMgr.GetPlayer(owner);
     if (player == null) return null;
+    if (player.GangId != null) return null;
     player.GangId = id;
     await playerMgr.UpdatePlayer(player);
-    if (CachedGangs.Any(g => g.GangId == id)) return null;
     CachedGangs.Add(gang);
     BackendGangs.Add(gang);
     return gang.Clone() as IGang;

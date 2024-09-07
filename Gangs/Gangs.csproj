@@ -10,7 +10,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Commands\Commands.csproj"/>
         <ProjectReference Include="..\GangsAPI\GangsAPI.csproj"/>
-        <ProjectReference Include="..\GangsImpl\SQL\SQL.csproj"/>
+        <ProjectReference Include="..\GangsImpl\MySQL\MySQL.csproj" />
     </ItemGroup>
 
     <ItemGroup>

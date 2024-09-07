@@ -2,7 +2,7 @@
 
 namespace GangsTest.API.Services.Stat.Instance;
 
-public class TestParent {
+public class StatTestParent {
   protected readonly TestIntStat TestStat = new();
 
   protected class ReputationStat : IStat<Reputation> {

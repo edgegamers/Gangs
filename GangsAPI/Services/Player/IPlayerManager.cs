@@ -9,26 +9,11 @@ namespace GangsAPI.Services.Player;
 public interface IPlayerManager : IPluginBehavior, ICacher {
   /// <summary>
   ///   Gets a player by their SteamID64.
+  ///   If the player does not exist, attempts to create them.
   /// </summary>
   /// <param name="steamId">The SteamID64 of the player.</param>
   /// <returns>The player, or null if they did not exist.</returns>
-  Task<IGangPlayer?> GetPlayer(ulong steamId) {
-    return GetPlayer(steamId, false);
-  }
-
-  /// <summary>
-  ///   Gets a player by their SteamID64.
-  ///   If the player was already created, returns them.
-  /// </summary>
-  /// <param name="steamId">The SteamID64 of the player.</param>
-  /// <param name="create">True if the manager should create a new player if they don't exist.</param>
-  /// <returns>The player, or null if create is false, or an error occured creating one.</returns>
-  async Task<IGangPlayer?> GetPlayer(ulong steamId, bool create) {
-    var player = await GetPlayer(steamId);
-    if (!create || player != null) return player;
-    player = await CreatePlayer(steamId);
-    return player;
-  }
+  Task<IGangPlayer?> GetPlayer(ulong steamId, bool create = true);
 
   /// <summary>
   ///   Creates a new player.

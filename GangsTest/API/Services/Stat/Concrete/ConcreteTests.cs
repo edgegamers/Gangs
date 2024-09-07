@@ -8,4 +8,10 @@ public class ConcreteTests {
   public void Instance_Id(IStat stat) {
     Assert.Matches("^[a-z0-9_]+$", stat.StatId);
   }
+
+  [Theory]
+  [ClassData(typeof(TestData))]
+  public void Empty_Constructor(IStat stat) {
+    Assert.NotNull(stat.GetType().GetConstructor([]));
+  }
 }

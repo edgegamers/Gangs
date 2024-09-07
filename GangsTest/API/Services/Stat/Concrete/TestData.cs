@@ -5,7 +5,9 @@ using Stats;
 namespace GangsTest.API.Services.Stat.Concrete;
 
 public class TestData : IEnumerable<object[]> {
-  private readonly IStat[] stats = [new GangBankStat()];
+  private readonly IStat[] stats = [
+    new BalanceStat(), new DescriptionStat(), new CapacityStat()
+  ];
 
   public IEnumerator<object[]> GetEnumerator() {
     return stats.Select(stat => (object[]) [stat]).GetEnumerator();

@@ -26,9 +26,7 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
       var command = Connection.CreateCommand();
 
       command.Transaction = Transaction;
-      command.CommandText = testing ?
-        $"CREATE TEMPORARY TABLE IF NOT EXISTS {table} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)" :
-        $"CREATE TABLE IF NOT EXISTS {table} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)";
+      command.CommandText = CreateTableQuery(table, testing);
 
       command.ExecuteNonQuery();
     } catch (Exception e) {
@@ -39,6 +37,11 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
   }
 
   abstract protected DbConnection CreateDbConnection(string connectionString);
+
+  virtual protected string CreateTableQuery(string tableName, bool inTesting)
+    => inTesting ?
+      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)" :
+      $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)";
 
   public override async Task Load() {
     var query = $"SELECT * FROM {table}";
@@ -60,14 +63,25 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
     return await Connection.ExecuteAsync(query, new { id }, Transaction) > 0;
   }
 
+  virtual protected async Task<int> GetLastId() {
+    return await Connection.ExecuteScalarAsync<int>("SELECT LAST_INSERT_ID()",
+      transaction: Transaction);
+  }
+
   public override async Task<IGang?> CreateGang(string name, ulong owner) {
     if (CachedGangs.Any(g => g.Name == name)) return null;
+    var player = await playerMgr.GetPlayer(owner);
+    if (player == null) return null;
+    if (player.GangId != null)
+      throw new InvalidOperationException(
+        $"Attempted to create a gang for {owner} who is already in gang {player.GangId}");
     var query = $"INSERT INTO {table} (Name) VALUES (@name)";
     var result =
       await Connection.ExecuteAsync(query, new { name }, Transaction);
     if (result == 0) return null;
-    var id = await Connection.ExecuteScalarAsync<int>("SELECT LAST_INSERT_ID()",
-      transaction: Transaction);
+    var id = await GetLastId();
+    player.GangId = id;
+    await playerMgr.UpdatePlayer(player);
     var gang = new DBGang(id, name);
     CachedGangs.Add(gang);
     return gang.Clone() as IGang;

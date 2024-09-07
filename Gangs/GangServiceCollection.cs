@@ -14,7 +14,7 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
   public void ConfigureServices(IServiceCollection serviceCollection) {
     serviceCollection.AddPluginBehavior<IGangManager, MockGangManager>();
     serviceCollection.AddPluginBehavior<IPlayerManager, MockPlayerManager>();
-    serviceCollection.AddPluginBehavior<IStatManager, Creation>();
+    serviceCollection.AddPluginBehavior<IStatManager, MockStatManager>();
     serviceCollection
      .AddPluginBehavior<IGangStatManager, MockInstanceStatManager>();
     serviceCollection

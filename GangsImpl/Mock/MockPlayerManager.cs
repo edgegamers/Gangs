@@ -7,14 +7,14 @@ namespace Mock;
 public class MockPlayerManager : IPlayerManager {
   private readonly Dictionary<ulong, IGangPlayer> players = new();
 
-  public Task<IGangPlayer?> GetPlayer(ulong steamId) {
-    players.TryGetValue(steamId, out var player);
-    return Task.FromResult(player);
+  public async Task<IGangPlayer?> GetPlayer(ulong steamId, bool create = true) {
+    if (players.TryGetValue(steamId, out var player)) return player;
+    return await (create ? CreatePlayer(steamId) : null)!;
   }
 
   public async Task<IGangPlayer> CreatePlayer(ulong steamId,
     string? name = null) {
-    var existing = await GetPlayer(steamId);
+    var existing = players.GetValueOrDefault(steamId);
     if (existing != null) return existing;
     var player = new MockPlayer(steamId) { Name = name };
     players[steamId] = player;

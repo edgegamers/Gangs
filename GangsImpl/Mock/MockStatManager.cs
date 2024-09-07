@@ -4,7 +4,7 @@ using GangsAPI.Services;
 
 namespace Mock;
 
-public class Creation : IStatManager {
+public class MockStatManager : IStatManager {
   private readonly HashSet<IStat> backendStats = [];
   protected readonly HashSet<IStat> CachedStats = [];
 

@@ -8,11 +8,11 @@ using SQLite;
 namespace GangsTest.API.Services.Gang;
 
 public class TestData : IEnumerable<object[]> {
-  private static readonly IPlayerManager playerMgr = new MockPlayerManager();
+  private static IPlayerManager playerMgr => new MockPlayerManager();
 
   private readonly IBehavior[] behaviors = [
     new MockGangManager(playerMgr),
-    new SQLGangManager(playerMgr,
+    new MySQLGangManager(playerMgr,
       Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
       ?? "Host=localhost;User=root;Database=gangs", "gang_unit_test", true),
     new SQLiteGangManager(playerMgr, "Data Source=:memory:", "gang_unit_test",
