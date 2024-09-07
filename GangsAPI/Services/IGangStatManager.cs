@@ -5,7 +5,7 @@ using GangsAPI.Data.Stat;
 namespace GangsAPI.Services;
 
 public interface IGangStatManager : ICacher {
-  Task<bool> GetForGang<TV>(int key, string statId, out TV? holder);
+  Task<(bool, TV?)> GetForGang<TV>(int key, string statId);
   Task<bool> SetForGang<TV>(int gangId, string statId, TV value);
   Task<bool> RemoveFromGang(int gangId, string statId);
 
@@ -13,20 +13,8 @@ public interface IGangStatManager : ICacher {
 
   #region Get
 
-  Task<bool> GetForGang<TV>(IGang gang, string statId, out TV? holder) {
-    return GetForGang(gang.GangId, statId, out holder);
-  }
-
-  async Task<bool> GetForGang<TV>(IGang gang, IStat<TV> holder) {
-    var success = await GetForGang(gang, holder.StatId, out TV? tmp);
-    if (!success || tmp == null) return false;
-    holder.Value = tmp;
-    return true;
-  }
-
-  Task<bool> GetForGang<TV>(IGang gang, IStat<TV> stat, out TV? holder) {
-    return GetForGang(gang, stat.StatId, out holder);
-  }
+  Task<(bool, TV?)> GetForGang<TV>(IGang gang, string statId)
+    => GetForGang<TV>(gang.GangId, statId);
 
   #endregion
 

@@ -34,6 +34,6 @@ public class LogicTests : ManagerTests.ManagerTests {
   public async Task Command_CaseInsensitive2(ICommandManager mgr) {
     mgr.RegisterCommand(Dummy);
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(TestPlayer, "CsS_DmMMY", "foobar"));
+      await mgr.ProcessCommand(TestPlayer, "CsS_DumMY", "foobar"));
   }
 }

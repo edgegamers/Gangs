@@ -74,6 +74,16 @@ public class MockInstanceStatManager : IPlayerStatManager, IGangStatManager {
     return Task.FromResult(true);
   }
 
+  public Task<(bool, TV?)> GetForGang<TV>(int key, string statId) {
+    if (!cachedGangValues.TryGetValue(key, out var gangStatMap))
+      return Task.FromResult<(bool, TV?)>((false, default));
+    if (!gangStatMap.TryGetValue(statId, out var value))
+      return Task.FromResult<(bool, TV?)>((false, default));
+    return value is not TV val ?
+      Task.FromResult<(bool, TV?)>((false, default)) :
+      Task.FromResult((true, (TV?)val));
+  }
+
   public Task<bool> SetForGang<TV>(int gangId, string statId, TV value) {
     if (!cachedGangValues.TryGetValue(gangId, out var gangStatMap))
       cachedGangValues[gangId] = gangStatMap = new Dictionary<string, object>();

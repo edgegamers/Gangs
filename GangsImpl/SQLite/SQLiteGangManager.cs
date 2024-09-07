@@ -18,11 +18,11 @@ public class SQLiteGangManager(IPlayerManager playerMgr,
   public override void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(myConnectionString);
 
-    Connection.Open();
-
-    if (myTesting) Transaction = Connection.BeginTransaction();
-
     try {
+      Connection.Open();
+
+      if (myTesting) Transaction = Connection.BeginTransaction();
+
       var command = Connection.CreateCommand();
 
       command.Transaction = Transaction;

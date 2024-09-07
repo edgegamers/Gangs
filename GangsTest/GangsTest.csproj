@@ -36,4 +36,8 @@
         <ProjectReference Include="..\Gangs\Gangs.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="StatTests\InstanceManageTests\Primitives\" />
+    </ItemGroup>
+
 </Project>

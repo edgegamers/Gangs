@@ -1,10 +1,23 @@
 using System.Collections;
+using System.Net;
+using GangsAPI;
 using Mock;
+using SQLImpl;
 
 namespace GangsTest.StatTests.InstanceManageTests;
 
 public class InstanceManageData : IEnumerable<object[]> {
-  private readonly object[] behaviors = [new MockInstanceStatManager()];
+  private readonly IBehavior[] behaviors = [
+    new MockInstanceStatManager(),
+    new SQLInstanceManager(
+      Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+      ?? "Host=localhost;User=root;Database=gangs", "gang_inst_stats", "",
+      true),
+  ];
+
+  public InstanceManageData() {
+    foreach (var behavior in behaviors) behavior.Start();
+  }
 
   public IEnumerator<object[]> GetEnumerator() {
     return behaviors.Select(behavior => new[] { behavior }).GetEnumerator();
