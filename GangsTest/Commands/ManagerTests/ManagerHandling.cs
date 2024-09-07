@@ -6,7 +6,7 @@ namespace GangsTest.Commands.ManagerTests;
 
 public class ManagerHandling : ManagerTests {
   [Theory]
-  [ClassData(typeof(CommandTestData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Command_PlayerOnly(ICommandManager mgr) {
     mgr.RegisterCommand(new PlayerOnlyCommand());
     Assert.Equal(CommandResult.PLAYER_ONLY,

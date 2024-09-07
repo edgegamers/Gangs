@@ -6,7 +6,7 @@ using Mock;
 
 namespace GangsTest.Commands.ManagerTests;
 
-public class CommandTestData : IEnumerable<object[]> {
+public class CommandManagerData : IEnumerable<object[]> {
   private static readonly IPlayerManager playerMgr = new MockPlayerManager();
 
   private readonly IBehavior[] behaviors = [
@@ -14,7 +14,7 @@ public class CommandTestData : IEnumerable<object[]> {
     new CommandManager(new MockGangManager(playerMgr))
   ];
 
-  public CommandTestData() {
+  public CommandManagerData() {
     foreach (var behavior in behaviors) behavior.Start();
   }
 
