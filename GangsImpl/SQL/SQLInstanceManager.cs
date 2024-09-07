@@ -75,9 +75,10 @@ public class SQLInstanceManager(string connectionString, string table_prefix,
     var result = await connection.QuerySingleOrDefaultAsync(
       $"SELECT 1 FROM information_schema.tables WHERE table_name = '{table_prefix}_{statId}'");
     if (result == null) return false;
-    return await connection.ExecuteAsync(
+    await connection.ExecuteAsync(
       $"DELETE FROM {table_prefix}_{statId} WHERE GangId = @GangId",
-      new { GangId = gangId }) > 0;
+      new { GangId = gangId });
+    return true;
   }
 
   public void Start(BasePlugin? plugin, bool hotReload) {
