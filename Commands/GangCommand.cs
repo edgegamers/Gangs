@@ -2,7 +2,6 @@
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
-using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 
@@ -22,7 +21,7 @@ public class GangCommand(IGangManager gangMgr) : ICommand {
   };
 
   public string Name => "css_gang";
-  public string? Description => "Master command for gangs";
+  public string Description => "Master command for gangs";
   public string[] Aliases => ["css_gang", "css_gangs"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,

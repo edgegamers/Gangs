@@ -1,5 +1,4 @@
-﻿using GangsAPI;
-using GangsAPI.Data.Gang;
+﻿using GangsAPI.Data.Gang;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 

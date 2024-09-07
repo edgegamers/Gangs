@@ -2,7 +2,6 @@
 using CounterStrikeSharp.API.Core;
 using Dapper;
 using GangsAPI.Data.Gang;
-using GangsAPI.Services;
 using GangsAPI.Services.Player;
 using Mock;
 
@@ -38,10 +37,11 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
 
   abstract protected DbConnection CreateDbConnection(string connectionString);
 
-  virtual protected string CreateTableQuery(string tableName, bool inTesting)
-    => inTesting ?
+  virtual protected string CreateTableQuery(string tableName, bool inTesting) {
+    return inTesting ?
       $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)" :
       $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)";
+  }
 
   public override async Task Load() {
     var query = $"SELECT * FROM {table}";
@@ -70,7 +70,7 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
 
   public override async Task<IGang?> CreateGang(string name, ulong owner) {
     if (CachedGangs.Any(g => g.Name == name)) return null;
-    var player = await playerMgr.GetPlayer(owner);
+    var player = await PlayerMgr.GetPlayer(owner);
     if (player == null) return null;
     if (player.GangId != null)
       throw new InvalidOperationException(
@@ -81,7 +81,7 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
     if (result == 0) return null;
     var id = await GetLastId();
     player.GangId = id;
-    await playerMgr.UpdatePlayer(player);
+    await PlayerMgr.UpdatePlayer(player);
     var gang = new DBGang(id, name);
     CachedGangs.Add(gang);
     return gang.Clone() as IGang;

@@ -14,6 +14,18 @@ public class SQLiteGangInstanceManager(string connectionString,
   private readonly string myTablePrefix = tablePrefix;
   override protected string PrimaryKey => "GangId";
 
+  public Task<(bool, TV?)> GetForGang<TV>(int key, string statId) {
+    return Get<TV>(key, statId);
+  }
+
+  public Task<bool> SetForGang<TV>(int gangId, string statId, TV value) {
+    return Set(gangId, statId, value);
+  }
+
+  public Task<bool> RemoveFromGang(int gangId, string statId) {
+    return Remove(gangId, statId);
+  }
+
   override protected DbConnection CreateDbConnection(string connectionString) {
     return new SqliteConnection(connectionString);
   }
@@ -34,15 +46,6 @@ public class SQLiteGangInstanceManager(string connectionString,
     return
       $"INSERT INTO {myTablePrefix}_{statId} ({PrimaryKey}, {columns}) VALUES (@{PrimaryKey}, {values}) ON CONFLICT({PrimaryKey}) DO UPDATE SET {onDuplicate}";
   }
-
-  public Task<(bool, TV?)> GetForGang<TV>(int key, string statId)
-    => Get<TV>(key, statId);
-
-  public Task<bool> SetForGang<TV>(int gangId, string statId, TV value)
-    => Set(gangId, statId, value);
-
-  public Task<bool> RemoveFromGang(int gangId, string statId)
-    => Remove(gangId, statId);
 }
 
 public class SQLitePlayerInstanceManager(string connectionString,
@@ -52,6 +55,18 @@ public class SQLitePlayerInstanceManager(string connectionString,
   private readonly string myTablePrefix = tablePrefix;
   override protected string PrimaryKey => "Steam";
 
+  public Task<(bool, TV?)> GetForPlayer<TV>(ulong key, string statId) {
+    return Get<TV>(key, statId);
+  }
+
+  public Task<bool> SetForPlayer<TV>(ulong steam, string statId, TV value) {
+    return Set(steam, statId, value);
+  }
+
+  public Task<bool> RemoveFromPlayer(ulong steam, string statId) {
+    return Remove(steam, statId);
+  }
+
   override protected DbConnection CreateDbConnection(string connectionString) {
     return new SqliteConnection(connectionString);
   }
@@ -72,13 +87,4 @@ public class SQLitePlayerInstanceManager(string connectionString,
     return
       $"INSERT INTO {myTablePrefix}_{statId} ({PrimaryKey}, {columns}) VALUES (@{PrimaryKey}, {values}) ON CONFLICT({PrimaryKey}) DO UPDATE SET {onDuplicate}";
   }
-
-  public Task<(bool, TV?)> GetForPlayer<TV>(ulong key, string statId)
-    => Get<TV>(key, statId);
-
-  public Task<bool> SetForPlayer<TV>(ulong steam, string statId, TV value)
-    => Set(steam, statId, value);
-
-  public Task<bool> RemoveFromPlayer(ulong steam, string statId)
-    => Remove(steam, statId);
 }

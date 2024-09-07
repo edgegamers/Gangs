@@ -8,8 +8,6 @@ using SQLite;
 namespace GangsTest.API.Services.Gang;
 
 public class TestData : IEnumerable<object[]> {
-  private static IPlayerManager playerMgr => new MockPlayerManager();
-
   private readonly IBehavior[] behaviors = [
     new MockGangManager(playerMgr),
     new MySQLGangManager(playerMgr,
@@ -22,6 +20,8 @@ public class TestData : IEnumerable<object[]> {
   public TestData() {
     foreach (var behavior in behaviors) behavior.Start();
   }
+
+  private static IPlayerManager playerMgr => new MockPlayerManager();
 
   public IEnumerator<object[]> GetEnumerator() {
     return behaviors.Select(behavior => (object[]) [behavior]).GetEnumerator();

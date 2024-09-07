@@ -1,5 +1,4 @@
-﻿using GangsAPI.Services;
-using GangsAPI.Services.Gang;
+﻿using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 
 namespace Mock;

@@ -1,5 +1,4 @@
 ﻿using GangsAPI.Data.Gang;
-using GangsAPI.Services;
 using GangsAPI.Services.Player;
 
 namespace Mock;
@@ -12,13 +11,12 @@ public class MockPlayerManager : IPlayerManager {
     return await (create ? CreatePlayer(steamId) : null)!;
   }
 
-  public async Task<IGangPlayer> CreatePlayer(ulong steamId,
-    string? name = null) {
+  public Task<IGangPlayer> CreatePlayer(ulong steamId, string? name = null) {
     var existing = players.GetValueOrDefault(steamId);
-    if (existing != null) return existing;
+    if (existing != null) return Task.FromResult(existing);
     var player = new MockPlayer(steamId) { Name = name };
     players[steamId] = player;
-    return player;
+    return Task.FromResult<IGangPlayer>(player);
   }
 
   public Task<bool> UpdatePlayer(IGangPlayer player) {

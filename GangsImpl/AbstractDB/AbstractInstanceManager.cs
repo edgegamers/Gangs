@@ -1,5 +1,4 @@
 ﻿using System.Data.Common;
-using System.Diagnostics;
 using System.Reflection;
 using CounterStrikeSharp.API.Core;
 using Dapper;

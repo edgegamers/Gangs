@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using GangsAPI;
-using GangsAPI.Services;
 using GangsAPI.Services.Player;
 using Mock;
 
@@ -10,7 +9,8 @@ public class TestData : IEnumerable<object[]> {
   private static readonly IPlayerManager playerMgr = new MockPlayerManager();
 
   private readonly IBehavior[] behaviors = [
-    new MockCommandManager(), new global::Commands.CommandManager(new MockGangManager(playerMgr))
+    new MockCommandManager(),
+    new global::Commands.CommandManager(new MockGangManager(playerMgr))
   ];
 
   public TestData() {

@@ -1,6 +1,5 @@
 ﻿using CounterStrikeSharp.API.Core;
 using GangsAPI.Data.Gang;
-using GangsAPI.Services;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 
@@ -8,6 +7,7 @@ namespace Mock;
 
 public class MockGangManager(IPlayerManager playerMgr) : IGangManager {
   protected readonly HashSet<IGang> CachedGangs = [], BackendGangs = [];
+  protected readonly IPlayerManager PlayerMgr = playerMgr;
 
   public Task<IEnumerable<IGang>> GetGangs() {
     return Task.FromResult(CachedGangs.AsEnumerable());
@@ -18,7 +18,7 @@ public class MockGangManager(IPlayerManager playerMgr) : IGangManager {
   }
 
   public async Task<IGang?> GetGang(ulong steam) {
-    var gangId = (await playerMgr.GetPlayer(steam))?.GangId;
+    var gangId = (await PlayerMgr.GetPlayer(steam))?.GangId;
     return gangId == null ?
       null :
       CachedGangs.FirstOrDefault(g => g.GangId == gangId);
@@ -40,11 +40,11 @@ public class MockGangManager(IPlayerManager playerMgr) : IGangManager {
     var id = CachedGangs.Count + 1;
     if (CachedGangs.Any(g => g.GangId == id)) return null;
     var gang   = new MockGang(id, name);
-    var player = await playerMgr.GetPlayer(owner);
+    var player = await PlayerMgr.GetPlayer(owner);
     if (player == null) return null;
     if (player.GangId != null) return null;
     player.GangId = id;
-    await playerMgr.UpdatePlayer(player);
+    await PlayerMgr.UpdatePlayer(player);
     CachedGangs.Add(gang);
     BackendGangs.Add(gang);
     return gang.Clone() as IGang;

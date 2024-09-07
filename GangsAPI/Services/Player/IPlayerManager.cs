@@ -12,6 +12,7 @@ public interface IPlayerManager : IPluginBehavior, ICacher {
   ///   If the player does not exist, attempts to create them.
   /// </summary>
   /// <param name="steamId">The SteamID64 of the player.</param>
+  /// <param name="create"></param>
   /// <returns>The player, or null if they did not exist.</returns>
   Task<IGangPlayer?> GetPlayer(ulong steamId, bool create = true);
 

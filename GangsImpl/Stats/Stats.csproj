@@ -8,7 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
-        <ProjectReference Include="..\Mock\Mock.csproj" />
+        <ProjectReference Include="..\Mock\Mock.csproj"/>
     </ItemGroup>
 
 </Project>

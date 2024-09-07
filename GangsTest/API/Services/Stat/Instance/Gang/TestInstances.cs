@@ -1,6 +1,4 @@
-﻿using GangsAPI.Data.Gang;
-using GangsAPI.Data.Stat;
-using GangsAPI.Services.Gang;
+﻿using GangsAPI.Services.Gang;
 
 namespace GangsTest.API.Services.Stat.Instance.Gang;
 

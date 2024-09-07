@@ -1,6 +1,5 @@
 ﻿using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
-using GangsTest.API.Services.Commands.CommandManager;
 
 namespace GangsTest.API.Services.Commands.Command;
 
