@@ -11,9 +11,9 @@ namespace SQLite;
 public class SQLiteGangManager(IPlayerManager playerMgr,
   string connectionString, string table = "gang_gangs", bool testing = false)
   : AbstractDBGangManager(playerMgr, connectionString, table, testing) {
-  private readonly bool myTesting = testing;
-  private readonly string myTable = table;
   private readonly string myConnectionString = connectionString;
+  private readonly string myTable = table;
+  private readonly bool myTesting = testing;
 
   public override void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(myConnectionString);

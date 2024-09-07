@@ -13,7 +13,7 @@ public class GangManagerData : IEnumerable<object[]> {
   private readonly IBehavior[] behaviors = [
     new MockGangManager(playerMgr),
     new SQLGangManager(playerMgr,
-      Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+      Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
       ?? "Host=localhost;User=root;Database=gangs", "gang_unit_test", true),
     new SQLiteGangManager(playerMgr, "Data Source=:memory:", "gang_unit_test",
       true)

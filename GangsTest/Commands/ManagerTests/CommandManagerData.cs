@@ -10,8 +10,7 @@ public class CommandManagerData : IEnumerable<object[]> {
   private static readonly IPlayerManager playerMgr = new MockPlayerManager();
 
   private readonly IBehavior[] behaviors = [
-    new MockCommandManager(),
-    new CommandManager(new MockGangManager(playerMgr))
+    new MockCommandManager(), new CommandManager(new MockGangManager(playerMgr))
   ];
 
   public CommandManagerData() {

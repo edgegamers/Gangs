@@ -83,15 +83,15 @@ jobs:
         run: dotnet build --no-restore
       - name: Test with MariaDB
         env:
-          DB_CONNECTION_STRING: "Server=localhost;Port=3307;Database=gangs;User=root"
+          DB_GANGS_CONNECTION: "Server=localhost;Port=3307;Database=gangs;User=root"
         run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
       - name: Test with MySQL
         env:
-          DB_CONNECTION_STRING: "Server=localhost;Port=3306;Database=gangs;User=root"
+          DB_GANGS_CONNECTION: "Server=localhost;Port=3306;Database=gangs;User=root"
         run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
       - name: Generate Code Coverage Report
         env:
-          DB_CONNECTION_STRING: "Server=localhost;Port=3306;Database=gangs;User=root"
+          DB_GANGS_CONNECTION: "Server=localhost;Port=3306;Database=gangs;User=root"
         if: ${{ matrix.dotnet-version == '9.0.x' }}
         run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage GangsTest/GangsTest.csproj --settings coverage.runsettings
       - name: Code Coverage Summary Report

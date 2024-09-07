@@ -13,8 +13,9 @@ public interface IGangStatManager : ICacher {
 
   #region Get
 
-  Task<(bool, TV?)> GetForGang<TV>(IGang gang, string statId)
-    => GetForGang<TV>(gang.GangId, statId);
+  Task<(bool, TV?)> GetForGang<TV>(IGang gang, string statId) {
+    return GetForGang<TV>(gang.GangId, statId);
+  }
 
   #endregion
 

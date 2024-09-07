@@ -10,7 +10,7 @@ public class StatManagerData : IEnumerable<object[]> {
   private readonly IBehavior[] behaviors = [
     new MockStatManager(),
     new SQLStatManager(
-      Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+      Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
       ?? "Host=localhost;User=root;Database=gangs", "gang_unit_test", true),
     new SQLiteStatManager("Data Source=:memory:", "gang_unit_test", true)
   ];

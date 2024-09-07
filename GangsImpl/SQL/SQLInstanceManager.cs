@@ -1,7 +1,6 @@
 ﻿using System.Data.Common;
 using System.Diagnostics;
 using System.Reflection;
-using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using Dapper;
 using GangsAPI;
@@ -14,67 +13,9 @@ public class SQLInstanceManager(string connectionString, string table_prefix,
   string gangsTable, bool testing = false) : IPluginBehavior, IGangStatManager {
   private DbConnection connection = null!;
 
-  public void Start(BasePlugin? plugin, bool hotReload) {
-    connection = new MySqlConnection(connectionString);
-
-    connection.Open();
-  }
-
-  virtual protected string GetDBType(Type type) {
-    return type.Name switch {
-      "Int32" => "INT",
-      "String" => "VARCHAR(255)",
-      "Single" => "FLOAT",
-      "Boolean" => "BOOLEAN",
-      "Int64" => "BIGINT",
-      "UInt32" => "INT UNSIGNED",
-      "UInt64" => "BIGINT UNSIGNED",
-      "Double" => "DOUBLE",
-      "Decimal" => "DECIMAL",
-      "DateTime" => "DATETIME",
-      "TimeSpan" => "TIME",
-      "Byte" => "TINYINT",
-      "SByte" => "TINYINT",
-      "UInt16" => "SMALLINT UNSIGNED",
-      "Int16" => "SMALLINT",
-      "Guid" => "CHAR(36)",
-      "Char" => "CHAR",
-      _ => throw new NotImplementedException($"Unknown type {type.Name}")
-    };
-  }
-
   public void ClearCache() { }
 
   public Task Load() { return Task.CompletedTask; }
-
-  private async Task createTable<TV>(string id) {
-    // Get public fields of TV
-    var fields = typeof(TV)
-     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-     .ToList();
-
-    var cmd = testing ?
-      $"CREATE TEMPORARY TABLE IF NOT EXISTS {table_prefix}_{id} (GangId INT NOT NULL PRIMARY KEY, " :
-      $"CREATE TABLE IF NOT EXISTS {table_prefix}_{id} (GangId INT NOT NULL PRIMARY KEY, ";
-
-    if (typeof(TV).IsPrimitive) {
-      cmd += $"{id} {GetDBType(typeof(TV))}";
-      if (Nullable.GetUnderlyingType(typeof(TV)) == null) cmd += " NOT NULL)";
-    } else {
-      foreach (var field in fields) {
-        cmd += $"{field.Name} {GetDBType(field.PropertyType)}";
-        if (Nullable.GetUnderlyingType(field.PropertyType) == null)
-          cmd += " NOT NULL";
-        cmd += ", ";
-      }
-
-      cmd = cmd[..^2] + ")";
-    }
-
-    Console.WriteLine(cmd);
-
-    await connection.ExecuteAsync(cmd);
-  }
 
   public async Task<(bool, TV?)> GetForGang<TV>(int key, string statId) {
     await createTable<TV>(statId);
@@ -119,14 +60,79 @@ public class SQLInstanceManager(string connectionString, string table_prefix,
     var fieldValues = new DynamicParameters();
     fieldValues.Add("@GangId", gangId);
 
-    if (typeof(TV).IsPrimitive) { fieldValues.Add($"@{statId}", value); } else {
+    if (typeof(TV).IsPrimitive)
+      fieldValues.Add($"@{statId}", value);
+    else
       foreach (var field in fields)
         fieldValues.Add($"@{field.Name}", field.GetValue(value));
-    }
 
     Console.WriteLine(cmd, fieldValues);
     await connection.ExecuteAsync(cmd, fieldValues);
     return true;
+  }
+
+  public async Task<bool> RemoveFromGang(int gangId, string statId) {
+    return await connection.ExecuteAsync(
+      $"DELETE FROM {table_prefix}_{statId} WHERE GangId = @GangId",
+      new { GangId = gangId }) > 0;
+  }
+
+  public void Start(BasePlugin? plugin, bool hotReload) {
+    connection = new MySqlConnection(connectionString);
+
+    connection.Open();
+  }
+
+  virtual protected string GetDBType(Type type) {
+    return type.Name switch {
+      "Int32" => "INT",
+      "String" => "VARCHAR(255)",
+      "Single" => "FLOAT",
+      "Boolean" => "BOOLEAN",
+      "Int64" => "BIGINT",
+      "UInt32" => "INT UNSIGNED",
+      "UInt64" => "BIGINT UNSIGNED",
+      "Double" => "DOUBLE",
+      "Decimal" => "DECIMAL",
+      "DateTime" => "DATETIME",
+      "TimeSpan" => "TIME",
+      "Byte" => "TINYINT",
+      "SByte" => "TINYINT",
+      "UInt16" => "SMALLINT UNSIGNED",
+      "Int16" => "SMALLINT",
+      "Guid" => "CHAR(36)",
+      "Char" => "CHAR",
+      _ => throw new NotImplementedException($"Unknown type {type.Name}")
+    };
+  }
+
+  private async Task createTable<TV>(string id) {
+    // Get public fields of TV
+    var fields = typeof(TV)
+     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+     .ToList();
+
+    var cmd = testing ?
+      $"CREATE TEMPORARY TABLE IF NOT EXISTS {table_prefix}_{id} (GangId INT NOT NULL PRIMARY KEY, " :
+      $"CREATE TABLE IF NOT EXISTS {table_prefix}_{id} (GangId INT NOT NULL PRIMARY KEY, ";
+
+    if (typeof(TV).IsPrimitive) {
+      cmd += $"{id} {GetDBType(typeof(TV))}";
+      if (Nullable.GetUnderlyingType(typeof(TV)) == null) cmd += " NOT NULL)";
+    } else {
+      foreach (var field in fields) {
+        cmd += $"{field.Name} {GetDBType(field.PropertyType)}";
+        if (Nullable.GetUnderlyingType(field.PropertyType) == null)
+          cmd += " NOT NULL";
+        cmd += ", ";
+      }
+
+      cmd = cmd[..^2] + ")";
+    }
+
+    Console.WriteLine(cmd);
+
+    await connection.ExecuteAsync(cmd);
   }
 
   private string getFieldNames<TV>(string prefix = "") {
@@ -135,11 +141,5 @@ public class SQLInstanceManager(string connectionString, string table_prefix,
      .ToList();
 
     return string.Join(", ", fields.Select(f => $"{prefix}{f.Name}"));
-  }
-
-  public async Task<bool> RemoveFromGang(int gangId, string statId) {
-    return await connection.ExecuteAsync(
-      $"DELETE FROM {table_prefix}_{statId} WHERE GangId = @GangId",
-      new { GangId = gangId }) > 0;
   }
 }

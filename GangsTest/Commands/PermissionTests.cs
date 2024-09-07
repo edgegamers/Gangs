@@ -1,12 +1,13 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
+using GangsTest.Commands.ManagerTests;
 
 namespace GangsTest.Commands;
 
 public class PermissionTests : ManagerTests.ManagerTests {
   [Theory]
-  [ClassData(typeof(ManagerTests.CommandManagerData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Permission_Pass(ICommandManager mgr) {
     mgr.RegisterCommand(Dummy);
     Assert.Equal(CommandResult.SUCCESS,
@@ -14,7 +15,7 @@ public class PermissionTests : ManagerTests.ManagerTests {
   }
 
   [Theory]
-  [ClassData(typeof(ManagerTests.CommandManagerData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Permission_Pass_Flag_Console(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], []));
     Assert.Equal(CommandResult.SUCCESS,
@@ -22,7 +23,7 @@ public class PermissionTests : ManagerTests.ManagerTests {
   }
 
   [Theory]
-  [ClassData(typeof(ManagerTests.CommandManagerData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Permission_Pass_Group_Console(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand([], ["#test/group"]));
     Assert.Equal(CommandResult.SUCCESS,
@@ -30,7 +31,7 @@ public class PermissionTests : ManagerTests.ManagerTests {
   }
 
   [Theory]
-  [ClassData(typeof(ManagerTests.CommandManagerData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Permission_Fail_Flag(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], []));
     Assert.Equal(CommandResult.NO_PERMISSION,
@@ -38,7 +39,7 @@ public class PermissionTests : ManagerTests.ManagerTests {
   }
 
   [Theory]
-  [ClassData(typeof(ManagerTests.CommandManagerData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Permission_Fail_Group(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand([], ["#test/group"]));
     Assert.Equal(CommandResult.NO_PERMISSION,
@@ -46,7 +47,7 @@ public class PermissionTests : ManagerTests.ManagerTests {
   }
 
   [Theory]
-  [ClassData(typeof(ManagerTests.CommandManagerData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Permission_Fail_Both_Flag(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], ["#test/group"]));
     Assert.Equal(CommandResult.NO_PERMISSION,
@@ -54,7 +55,7 @@ public class PermissionTests : ManagerTests.ManagerTests {
   }
 
   [Theory]
-  [ClassData(typeof(ManagerTests.CommandManagerData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Permission_Fail_Both_Group(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], ["#test/group"]));
     Assert.Equal(CommandResult.NO_PERMISSION,
@@ -62,7 +63,7 @@ public class PermissionTests : ManagerTests.ManagerTests {
   }
 
   [Theory]
-  [ClassData(typeof(ManagerTests.CommandManagerData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Permission_Pass_Flag(ICommandManager mgr) {
     var elevatedPlayer = TestPlayer.WithFlags("@test/flag");
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], []));
@@ -71,7 +72,7 @@ public class PermissionTests : ManagerTests.ManagerTests {
   }
 
   [Theory]
-  [ClassData(typeof(ManagerTests.CommandManagerData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Permission_Pass_Group(ICommandManager mgr) {
     var elevatedPlayer = TestPlayer.WithGroups("#test/group");
     mgr.RegisterCommand(new ElevatedCommand([], ["#test/group"]));
@@ -80,7 +81,7 @@ public class PermissionTests : ManagerTests.ManagerTests {
   }
 
   [Theory]
-  [ClassData(typeof(ManagerTests.CommandManagerData))]
+  [ClassData(typeof(CommandManagerData))]
   public async Task Permission_Pass_Both(ICommandManager mgr) {
     var elevatedPlayer =
       TestPlayer.WithFlags("@test/flag").WithGroups("#test/group");

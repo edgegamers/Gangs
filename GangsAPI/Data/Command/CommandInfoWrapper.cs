@@ -4,8 +4,12 @@ namespace GangsAPI.Data.Command;
 
 public class CommandInfoWrapper {
   private readonly string[] args;
-  private readonly int offset;
+
+  public readonly CommandCallingContext CallingContext =
+    CommandCallingContext.Console;
+
   public readonly PlayerWrapper? CallingPlayer;
+  private readonly int offset;
 
   public CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
     params string[] args) {
@@ -15,9 +19,6 @@ public class CommandInfoWrapper {
 
     if (offset == 0 && args.Length > 0) this.args[0] = args[0].ToLower();
   }
-
-  public readonly CommandCallingContext CallingContext =
-    CommandCallingContext.Console;
 
   // public readonly PlayerWrapper? CallingPlayer = executor;
 

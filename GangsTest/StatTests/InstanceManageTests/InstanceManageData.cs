@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Net;
 using GangsAPI;
 using Mock;
 using SQLImpl;
@@ -10,9 +9,8 @@ public class InstanceManageData : IEnumerable<object[]> {
   private readonly IBehavior[] behaviors = [
     new MockInstanceStatManager(),
     new SQLInstanceManager(
-      Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
-      ?? "Host=localhost;User=root;Database=gangs", "gang_inst_stats", "",
-      true),
+      Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
+      ?? "Host=localhost;User=root;Database=gangs", "gang_inst_stats", "", true)
   ];
 
   public InstanceManageData() {

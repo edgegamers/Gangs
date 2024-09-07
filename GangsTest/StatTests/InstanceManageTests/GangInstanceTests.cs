@@ -1,8 +1,6 @@
-﻿using System.Runtime.Serialization;
-using GangsAPI.Data.Gang;
+﻿using GangsAPI.Data.Gang;
 using GangsAPI.Data.Stat;
 using GangsAPI.Services;
-using Mock;
 
 namespace GangsTest.StatTests.InstanceManageTests;
 
@@ -12,52 +10,9 @@ public class InstanceGangTests(IGangManager gangMgr) {
      .GetAwaiter()
      .GetResult() ?? throw new InvalidOperationException();
 
-  private readonly IStat<int> testStat = new TestStatInstance();
   private readonly IStat<Reputation> testReputation = new ReputationStat();
 
-  public class Reputation(int Positive, int negative) : IEquatable<Reputation> {
-    public int Positive { get; } = Positive;
-    public int Negative { get; } = negative;
-
-    public bool Equals(Reputation? other) {
-      if (other is null) return false;
-      if (ReferenceEquals(this, other)) return true;
-      return Positive == other.Positive && Negative == other.Negative;
-    }
-
-    public override bool Equals(object? obj) {
-      if (obj is null) return false;
-      if (ReferenceEquals(this, obj)) return true;
-      if (obj.GetType() != GetType()) return false;
-      return Equals((Reputation)obj);
-    }
-
-    public override int GetHashCode() {
-      return HashCode.Combine(Positive, Negative);
-    }
-  }
-
-  private class ReputationStat : IStat<Reputation> {
-    public string StatId => "reputation";
-    public string Name => "Reputation";
-    public string Description => "The reputation of the gang.";
-
-    public Reputation Value { get; set; } = new(0, 0);
-
-    public IStat<Reputation> Clone() {
-      return new ReputationStat { Value = Value };
-    }
-
-    public bool Equals(IStat? other) {
-      return other is not null && StatId == other.StatId;
-    }
-
-    public bool Equals(IStat<Reputation>? other) {
-      return other is not null && StatId == other.StatId;
-    }
-
-    public override int GetHashCode() { return StatId.GetHashCode(); }
-  }
+  private readonly IStat<int> testStat = new TestStatInstance();
 
   [Theory]
   [ClassData(typeof(InstanceManageData))]
@@ -161,6 +116,50 @@ public class InstanceGangTests(IGangManager gangMgr) {
     Assert.True(await manager.SetForGang(testGang, "foobar", 32L));
     Assert.True(await manager.SetForGang(testGang, "foobar", 32f));
     Assert.True(await manager.SetForGang(testGang, "foobar", 32.0));
+  }
+
+  public class Reputation(int Positive, int negative) : IEquatable<Reputation> {
+    public int Positive { get; } = Positive;
+    public int Negative { get; } = negative;
+
+    public bool Equals(Reputation? other) {
+      if (other is null) return false;
+      if (ReferenceEquals(this, other)) return true;
+      return Positive == other.Positive && Negative == other.Negative;
+    }
+
+    public override bool Equals(object? obj) {
+      if (obj is null) return false;
+      if (ReferenceEquals(this, obj)) return true;
+      if (obj.GetType() != GetType()) return false;
+      return Equals((Reputation)obj);
+    }
+
+    public override int GetHashCode() {
+      return HashCode.Combine(Positive, Negative);
+    }
+  }
+
+  private class ReputationStat : IStat<Reputation> {
+    public string StatId => "reputation";
+    public string Name => "Reputation";
+    public string Description => "The reputation of the gang.";
+
+    public Reputation Value { get; set; } = new(0, 0);
+
+    public IStat<Reputation> Clone() {
+      return new ReputationStat { Value = Value };
+    }
+
+    public bool Equals(IStat? other) {
+      return other is not null && StatId == other.StatId;
+    }
+
+    public bool Equals(IStat<Reputation>? other) {
+      return other is not null && StatId == other.StatId;
+    }
+
+    public override int GetHashCode() { return StatId.GetHashCode(); }
   }
 
   private class TestStatInstance : IStat<int> {
