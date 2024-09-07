@@ -6,6 +6,6 @@ namespace Mock;
 
 public static class MemoryImpl {
   public static void AddMemoryImpl(this IServiceCollection collection) {
-    collection.AddPluginBehavior<IStatManager, MockStatManager>();
+    collection.AddPluginBehavior<IStatManager, Creation>();
   }
 }

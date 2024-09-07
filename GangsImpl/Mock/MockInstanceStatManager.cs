@@ -1,4 +1,6 @@
 ﻿using GangsAPI.Services;
+using GangsAPI.Services.Gang;
+using GangsAPI.Services.Player;
 
 namespace Mock;
 
@@ -23,16 +25,14 @@ public class MockInstanceStatManager : IPlayerStatManager, IGangStatManager {
   private readonly Dictionary<ulong, Dictionary<string, object>>
     cachedPlayerValues = [], backendPlayerValues = [];
 
-  public Task<bool>
-    GetForPlayer<TV>(ulong steam, string statId, out TV? result) {
-    result = default;
+  public Task<(bool, TV?)> GetForPlayer<TV>(ulong steam, string statId) {
     if (!cachedPlayerValues.TryGetValue(steam, out var playerStatMap))
-      return Task.FromResult(false);
+      return Task.FromResult<(bool, TV?)>((false, default));
     if (!playerStatMap.TryGetValue(statId, out var value))
-      return Task.FromResult(false);
-    if (value is not TV v) return Task.FromResult(false);
-    result = v;
-    return Task.FromResult(true);
+      return Task.FromResult<(bool, TV?)>((false, default));
+    return value is not TV val ?
+      Task.FromResult<(bool, TV?)>((false, default)) :
+      Task.FromResult((true, (TV?)val));
   }
 
   public Task<bool> SetForPlayer<TV>(ulong steam, string statId, TV value) {

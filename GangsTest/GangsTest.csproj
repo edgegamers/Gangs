@@ -37,7 +37,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="StatTests\InstanceManageTests\Primitives\"/>
+      <Folder Include="API\Services\Player\" />
     </ItemGroup>
 
 </Project>

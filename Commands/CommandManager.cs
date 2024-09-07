@@ -5,6 +5,7 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
+using GangsAPI.Services.Gang;
 using Mock;
 
 namespace Commands;

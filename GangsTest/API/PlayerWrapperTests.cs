@@ -11,7 +11,7 @@ public class PlayerWrapperTests {
   private static char GROUP_CHAR => PermissionCharacters.GroupPermissionChar;
 
   [Fact]
-  public void PlayerWrapper_Init() {
+  public void Fields_Initialized() {
     Assert.Null(testPlayer.Player);
     Assert.NotNull(testPlayer.Data);
     Assert.True(testPlayer.Data.Identity == testPlayer.Steam.ToString());
@@ -20,7 +20,7 @@ public class PlayerWrapperTests {
   }
 
   [Fact]
-  public void PlayerWrapper_Init_Flags() {
+  public void Flags_Initialized() {
     var player = testPlayer.WithFlags(USER_CHAR + "test/flag");
     Assert.NotNull(player.Data);
     Assert.Single(player.Data.Flags);
@@ -28,21 +28,21 @@ public class PlayerWrapperTests {
   }
 
   [Fact]
-  public void PlayerWrapper_Print_Chat() {
+  public void Output_Chat_Single() {
     testPlayer.PrintToChat("Test Message");
     Assert.Single(testPlayer.ChatOutput);
     Assert.Equal("Test Message", testPlayer.ChatOutput[0]);
   }
 
   [Fact]
-  public void PlayerWrapper_Print_Console() {
+  public void Output_Console_Single() {
     testPlayer.PrintToConsole("Test Message");
     Assert.Single(testPlayer.ConsoleOutput);
     Assert.Equal("Test Message", testPlayer.ConsoleOutput[0]);
   }
 
   [Fact]
-  public void PlayerWrapper_Print_Both() {
+  public void Output_Both_Single() {
     testPlayer.PrintToConsole("Test Message A");
     testPlayer.PrintToChat("Test Message B");
     Assert.Single(testPlayer.ConsoleOutput);
@@ -52,7 +52,7 @@ public class PlayerWrapperTests {
   }
 
   [Fact]
-  public void PlayerWrapper_Chat_Order() {
+  public void Output_Chat_Multi() {
     testPlayer.PrintToChat("Test Message 1");
     testPlayer.PrintToChat("Test Message 2");
     Assert.Equal(2, testPlayer.ChatOutput.Count);
@@ -61,7 +61,7 @@ public class PlayerWrapperTests {
   }
 
   [Fact]
-  public void PlayerWrapper_Console_Order() {
+  public void Output_Console_Multi() {
     testPlayer.PrintToConsole("Test Message 1");
     testPlayer.PrintToConsole("Test Message 2");
     Assert.Equal(2, testPlayer.ConsoleOutput.Count);
@@ -76,7 +76,7 @@ public class PlayerWrapperTests {
   [InlineData("_test/flag")]
   [InlineData("@test")]
   [InlineData("@test/")]
-  public void PlayerWrapper_Init_InvalidFlag(string flag) {
+  public void WithInvalidFlag_Throws(string flag) {
     Assert.ThrowsAny<ArgumentException>(() => testPlayer.WithFlags(flag));
   }
 
@@ -87,33 +87,33 @@ public class PlayerWrapperTests {
   [InlineData("_test/flag")]
   [InlineData("@test")]
   [InlineData("@test/")]
-  public void PlayerWrapper_Test_InvalidFlag(string flag) {
+  public void HasInvalidFlag_Throws(string flag) {
     Assert.ThrowsAny<ArgumentException>(() => testPlayer.HasFlags(flag));
   }
 
   [Fact]
-  public void PlayerWrapper_Perm_Flag() {
+  public void Permission_Pass() {
     var player = testPlayer.WithFlags(USER_CHAR + "test/flag");
     Assert.True(player.HasFlags(USER_CHAR + "test/flag"));
     Assert.False(player.HasFlags(USER_CHAR + "test/other"));
   }
 
   [Fact]
-  public void PlayerWrapper_Perm_FlagChild() {
+  public void Permission_Pass_Child() {
     var player = testPlayer.WithFlags(USER_CHAR + "test/flag");
     Assert.True(player.HasFlags(USER_CHAR + "test/flag"));
     Assert.True(player.HasFlags(USER_CHAR + "test/flag/child"));
   }
 
   [Fact]
-  public void PlayerWrapper_Perm_FlagParent() {
+  public void Permission_Pass_Strict_Child() {
     var player = testPlayer.WithFlags(USER_CHAR + "test/flag/child");
     Assert.False(player.HasFlags(USER_CHAR + "test/flag"));
     Assert.True(player.HasFlags(USER_CHAR + "test/flag/child"));
   }
 
   [Fact]
-  public void PlayerWrapper_Perm_FlagRoot() {
+  public void Permission_Pass_Root() {
     var player = testPlayer.WithFlags(USER_CHAR + "test/root");
     Assert.True(player.HasFlags(USER_CHAR + "test/root"));
     Assert.True(player.HasFlags(USER_CHAR + "test/flag"));
@@ -121,7 +121,7 @@ public class PlayerWrapperTests {
   }
 
   [Fact]
-  public void PlayerWrapper_Perm_FlagRootChild() {
+  public void Permission_Pass_Strict_Root() {
     var player = testPlayer.WithFlags(USER_CHAR + "test/root");
     Assert.True(player.HasFlags(USER_CHAR + "test/root"));
     Assert.True(player.HasFlags(USER_CHAR + "test/flag"));

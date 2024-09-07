@@ -7,7 +7,7 @@ using Mock;
 namespace GenericDB;
 
 public abstract class AbstractDBStatManager(string connectionString,
-  string table = "gang_stats", bool testing = false) : MockStatManager {
+  string table = "gang_stats", bool testing = false) : Creation {
   private DbConnection connection = null!;
   private DbTransaction? transaction;
 
