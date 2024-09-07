@@ -64,13 +64,12 @@ public class SQLInstanceManager(string connectionString, string table_prefix,
   }
 
   public async Task<bool> RemoveFromGang(int gangId, string statId) {
-    var result = await connection.QuerySingleOrDefaultAsync(
-      $"SELECT 1 FROM information_schema.tables WHERE table_name = '{table_prefix}_{statId}'");
-    if (result == null) return false;
-    await connection.ExecuteAsync(
-      $"DELETE FROM {table_prefix}_{statId} WHERE GangId = @GangId",
-      new { GangId = gangId });
-    return true;
+    try {
+      await connection.ExecuteAsync(
+        $"DELETE FROM {table_prefix}_{statId} WHERE GangId = @GangId",
+        new { GangId = gangId });
+      return true;
+    } catch (DbException) { return false; }
   }
 
   public void Start(BasePlugin? plugin, bool hotReload) {
