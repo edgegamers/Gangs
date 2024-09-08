@@ -36,8 +36,4 @@
         <ProjectReference Include="..\Gangs\Gangs.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="API\Services\Player\"/>
-    </ItemGroup>
-
 </Project>

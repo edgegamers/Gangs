@@ -27,9 +27,6 @@ public abstract class AbstractDBStatManager(string connectionString,
         $"CREATE TABLE IF NOT EXISTS {table} (StatId VARCHAR(255) NOT NULL PRIMARY KEY, Name VARCHAR(255) NOT NULL, Description TEXT)";
 
       command.ExecuteNonQuery();
-
-      // TODO: For some reason GitHub CI fails here
-      // LoadStats().GetAwaiter().GetResult();
     } catch (Exception e) {
       transaction?.Rollback();
       throw new InvalidOperationException("Failed initializing the database",
@@ -53,11 +50,9 @@ public abstract class AbstractDBStatManager(string connectionString,
 
   public override async Task<bool> RegisterStat(IStat stat) {
     if (CachedStats.Contains(stat)) return false;
-    var sqlStat = (DBStat)stat;
-    // var command = connection.CreateCommand();
     await connection.ExecuteAsync(
       $"INSERT INTO {table} (StatId, Name, Description) VALUES (@StatId, @Name, @Description)",
-      new { sqlStat.StatId, sqlStat.Name, sqlStat.Description }, transaction);
+      new { stat.StatId, stat.Name, stat.Description }, transaction);
     return CachedStats.Add(stat);
   }
 
@@ -78,7 +73,5 @@ public abstract class AbstractDBStatManager(string connectionString,
     foreach (var stat in result) CachedStats.Add(stat);
   }
 
-  public abstract DbConnection CreateDbConnection(string connectionString);
-
-  // public abstract DbParameter CreateDbParameter(string key, object value);
+  abstract protected DbConnection CreateDbConnection(string connectionString);
 }
