@@ -31,9 +31,13 @@
         <None Remove="Gangs.zip"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="lang\**" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+
     <PropertyGroup>
         <!--Publish Configuration-->
-        <PublishBaseDirectory>$(MSBuildThisFileDirectory)/../build</PublishBaseDirectory>
+        <PublishBaseDirectory>$(MSBuildThisFileDirectory)/../../../build</PublishBaseDirectory>
         <PublishDir>$(PublishBaseDirectory)/Gangs</PublishDir>
 
         <PublishRelease>false</PublishRelease>
