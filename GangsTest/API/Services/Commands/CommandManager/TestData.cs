@@ -10,7 +10,8 @@ public class TestData : IEnumerable<object[]> {
 
   private readonly IBehavior[] behaviors = [
     new MockCommandManager(),
-    new global::Commands.CommandManager(new MockGangManager(playerMgr))
+    new global::Commands.CommandManager(new MockGangManager(playerMgr),
+      Locale.StringLocalizer.Instance)
   ];
 
   public TestData() {

@@ -1,0 +1,5 @@
+﻿{
+  "prefix": "{red}GANGS {darkred}> {grey}",
+  "command.gang.not_in_gang": "%prefix%You are not in a gang. Type {gold}/gang create [name]{grey} to create one.",
+  "generic.player.not_found": "%prefix%Could not find a player using {darkred}{0}{grey}."
+}

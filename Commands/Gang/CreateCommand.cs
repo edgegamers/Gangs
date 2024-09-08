@@ -24,19 +24,19 @@ public class CreateCommand(IGangManager gangs) : ICommand {
 
     if (await gangs.GetGang(executor.Steam) != null) {
       info.ReplySync("You are already in a gang");
-      return CommandResult.FAILURE;
+      return CommandResult.ERROR;
     }
 
     if ((await gangs.GetGangs()).Any(g => g.Name == name)) {
       info.ReplySync($"Gang '{name}' already exists");
-      return CommandResult.FAILURE;
+      return CommandResult.ERROR;
     }
 
     var newGang = await gangs.CreateGang(name, executor.Steam);
 
     if (newGang == null) {
       info.ReplySync("Failed to create gang");
-      return CommandResult.FAILURE;
+      return CommandResult.ERROR;
     }
 
     info.ReplySync($"Gang '{name}' (#{newGang.GangId}) created successfully");

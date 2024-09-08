@@ -16,7 +16,7 @@ public class LogicTests : CommandManager.TestParent {
   [ClassData(typeof(CommandManager.TestData))]
   public async Task Command_Logic_Fail(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
-    Assert.Equal(CommandResult.FAILURE,
+    Assert.Equal(CommandResult.ERROR,
       await mgr.ProcessCommand(TestPlayer, "css_dummy", "barfoo"));
   }
 

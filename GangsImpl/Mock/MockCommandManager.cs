@@ -30,8 +30,8 @@ public class MockCommandManager : ICommandManager {
 
   public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
     CommandInfoWrapper sourceInfo) {
-    if (sourceInfo.ArgCount == 0) return CommandResult.FAILURE;
-    var result = CommandResult.FAILURE;
+    if (sourceInfo.ArgCount == 0) return CommandResult.ERROR;
+    var result = CommandResult.ERROR;
 
     if (!commands.TryGetValue(sourceInfo[0], out var command)) {
       sourceInfo.ReplySync("Unknown command: " + sourceInfo[0]);

@@ -1,13 +1,20 @@
 ﻿using Commands.Gang;
 using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using Microsoft.Extensions.Localization;
+using static GangsAPI.Locale;
 
 namespace Commands;
 
-public class GangCommand(IGangManager gangMgr) : ICommand {
+public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
+  : ICommand {
+  public static readonly string PREFIX =
+    $" {ChatColors.Red}GANGS {ChatColors.DarkRed}> {ChatColors.Grey}";
+
   private readonly Dictionary<string, ICommand> sub = new() {
     // ["delete"] = new DeleteGangCommand(),
     // ["invite"] = new InviteGangCommand(),
@@ -36,15 +43,26 @@ public class GangCommand(IGangManager gangMgr) : ICommand {
     if (executor?.Player != null) {
       info.ReplySync(
         $" {ChatColors.Red}GANGS {ChatColors.DarkRed}> {ChatColors.Grey}SoonTM!");
+      info.ReplySync(PREFIX + "SoonTM!");
       return CommandResult.SUCCESS;
     }
 
-    if (info.ArgCount == 1) return CommandResult.INVALID_ARGS;
+    if (info.ArgCount == 1) {
+      if (executor == null) return CommandResult.PLAYER_ONLY;
+      var gang = await gangMgr.GetGang(executor.Steam);
 
-    if (!sub.TryGetValue(info[1], out var command))
-      // print usage
-      // info.ReplySync("Usage: /css_gang [create|help]");
+      if (gang == null) {
+        info.ReplySync(locale[NOT_IN_GANG.Key()]);
+        return CommandResult.SUCCESS;
+      }
+
+      // Open gang menu
+      return CommandResult.SUCCESS;
+    }
+
+    if (!sub.TryGetValue(info[1], out var command)) {
       return CommandResult.UNKNOWN_COMMAND;
+    }
 
     var newInfo = new CommandInfoWrapper(info, 1);
     return await command.Execute(executor, newInfo);

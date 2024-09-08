@@ -2,15 +2,16 @@
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using Microsoft.Extensions.Localization;
 
 namespace GangsTest.API.Services.Commands.Command.Concrete;
 
-public class GangTests(ICommandManager commands, IGangManager gangMgr)
-  : TestParent(commands, new GangCommand(gangMgr)) {
+public class GangTests(ICommandManager commands, IGangManager gangMgr, IStringLocalizer locale)
+  : TestParent(commands, new GangCommand(gangMgr, locale)) {
   [Fact]
   public async Task Gang_TestBase() {
     Assert.Equal("css_gang", Command.Name);
-    Assert.Equal(CommandResult.INVALID_ARGS,
+    Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, Command.Name));
   }
 

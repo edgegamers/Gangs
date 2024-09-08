@@ -24,7 +24,7 @@ public class TestParent {
 
       return Task.FromResult(info[1] == "foobar" ?
         CommandResult.SUCCESS :
-        CommandResult.FAILURE);
+        CommandResult.ERROR);
     }
   }
 }

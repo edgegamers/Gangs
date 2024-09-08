@@ -10,7 +10,7 @@ public enum CommandResult {
   ///   The command encountered an error or other
   ///   scenario that prevented success
   /// </summary>
-  FAILURE,
+  ERROR,
 
   /// <summary>
   ///   The command was improperly formatted

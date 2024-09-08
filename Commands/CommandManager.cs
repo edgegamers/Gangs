@@ -5,18 +5,19 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using Microsoft.Extensions.Localization;
 using Mock;
 
 namespace Commands;
 
-public class CommandManager(IGangManager gangMgr)
+public class CommandManager(IGangManager gangMgr, IStringLocalizer locale)
   : MockCommandManager, IPluginBehavior {
   private BasePlugin? plugin;
 
   public void Start(BasePlugin? basePlugin, bool hotReload) {
     plugin = basePlugin;
-
-    RegisterCommand(new GangCommand(gangMgr));
+    
+    RegisterCommand(new GangCommand(gangMgr, locale));
   }
 
   public override bool RegisterCommand(ICommand command) {
