@@ -7,12 +7,12 @@ public class LocalFileLocalizerFactory : IStringLocalizerFactory {
   private readonly string path;
 
   public LocalFileLocalizerFactory() {
-    var current = Directory.GetCurrentDirectory().Split("GangsTest")[^2];
-    var parent  = Directory.GetParent(current);
-    if (parent is null)
-      throw new DirectoryNotFoundException("Could not find parent directory");
-    path = Path.Combine(parent.FullName, "Gangs", "lang");
-    Console.WriteLine(path);
+    // Lang folder is in the root of the project
+    // keep moving up until we find it
+    var current = Directory.GetCurrentDirectory();
+    while (!Directory.Exists(Path.Combine(current, "lang")))
+      current = Path.GetFullPath(Path.Combine(current, ".."));
+    path = Path.Combine(current, "lang");
   }
 
   public IStringLocalizer Create(Type resourceSource) {
