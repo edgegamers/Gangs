@@ -14,7 +14,8 @@ using Mock;
 namespace Commands;
 
 public class CommandManager(IGangManager gangMgr,
-  IPlayerStatManager playerStatMgr, IStringLocalizer testLocale)
+  IPlayerStatManager playerStatMgr, IPlayerManager playerMgr,
+  IStringLocalizer testLocale)
   : MockCommandManager(testLocale), IPluginBehavior {
   private BasePlugin? plugin;
   private bool hotReload;
@@ -25,7 +26,7 @@ public class CommandManager(IGangManager gangMgr,
 
     if (basePlugin != null) Locale = basePlugin.Localizer;
 
-    RegisterCommand(new GangCommand(gangMgr, Locale));
+    RegisterCommand(new GangCommand(gangMgr, playerMgr, Locale));
     RegisterCommand(new BalanceCommand(playerStatMgr, Locale));
   }
 

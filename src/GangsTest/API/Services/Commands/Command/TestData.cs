@@ -17,8 +17,8 @@ public class TestData : IEnumerable<object[]> {
     new MockInstanceStatManager();
 
   private readonly IBehavior[] behaviors = [
-    new CreateCommand(manager), new HelpCommand(),
-    new GangCommand(manager, StringLocalizer.Instance),
+    new CreateCommand(manager, StringLocalizer.Instance), new HelpCommand(),
+    new GangCommand(manager, playerMgr, StringLocalizer.Instance),
     new BalanceCommand(statMgr, StringLocalizer.Instance)
   ];
 

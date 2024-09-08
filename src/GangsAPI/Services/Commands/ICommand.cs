@@ -22,9 +22,4 @@ public interface ICommand : IPluginBehavior {
   }
 
   Task<CommandResult> Execute(PlayerWrapper? executor, CommandInfoWrapper info);
-
-  // void PrintUsage(IStringLocalizer localizer, PlayerWrapper? executor) {
-  //   foreach (var use in Usage)
-  //     localizer.Get(MSG.COMMAND_USAGE, $"{Name} {use}");
-  // }
 }

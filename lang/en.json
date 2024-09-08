@@ -7,7 +7,8 @@
   "color.currency": "{gold}",
   "color.target": "{green}",
   "prefix": " {red}GANGS {darkred}> %color.default%",
-  "command.gang.not_in_gang": "%prefix%You are not in a gang. Type %color.blue%/gang create [name]%color.default% to create one.",
+  "command.gang.not_in_gang": "%prefix%You are not in a gang. Type %color.command%/gang create [name]%color.default% to create one.",
+  "command.gang.create.already_exists": "%prefix%The '%color.command%{0}%color.default%' gang already exists.",
   "command.balance": "%prefix%You have %color.currency%{0} %currency.player%{grey}.",
   "command.balance.plural": "%prefix%You have %color.currency%{0} %currency.player.plural%{grey}.",
   "command.balance.none": "%prefix%You have no %currency.player.plural%.",
@@ -29,5 +30,7 @@
   "currency.player": "credit",
   "currency.gang": "%currency.player%",
   "currency.player.plural": "credits",
-  "currency.gang.plural": "%currency.player.plural%"
+  "currency.gang.plural": "%currency.player.plural%",
+  "gang.already_in_gang": "%prefix%You are already in a gang.",
+  "gang.not_in_gang": "%prefix%You are not in a gang."
 }

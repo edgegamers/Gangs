@@ -13,7 +13,7 @@ public interface IGangPlayer {
   /// <summary>
   ///   The cached name of the player.
   /// </summary>
-  string? Name { get; }
+  string? Name { get; set; }
 
   /// <summary>
   ///   The id of the gang that the player is a member of.

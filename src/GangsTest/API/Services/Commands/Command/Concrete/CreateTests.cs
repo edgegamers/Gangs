@@ -1,13 +1,16 @@
 ﻿using Commands.Gang;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using Microsoft.Extensions.Localization;
 
 namespace GangsTest.API.Services.Commands.Command.Concrete;
 
-public class CreateTests(ICommandManager commands, IGangManager gangMgr)
-  : TestParent(commands, new CreateCommand(gangMgr)) {
+public class CreateTests(ICommandManager commands, IGangManager gangMgr,
+  IStringLocalizer locale)
+  : TestParent(commands, new CreateCommand(gangMgr, locale)) {
   private readonly PlayerWrapper player = new((ulong)new Random().NextInt64(),
     "Test Player");
 
@@ -21,7 +24,8 @@ public class CreateTests(ICommandManager commands, IGangManager gangMgr)
   public async Task Create_NoName() {
     Assert.Equal(CommandResult.INVALID_ARGS,
       await Commands.ProcessCommand(player, "create"));
-    Assert.Contains("Please provide a name for the gang", player.ConsoleOutput);
+    Assert.Contains(locale.Get(MSG.COMMAND_USAGE, "create" + Command.Usage[0]),
+      player.ConsoleOutput);
   }
 
   [Fact]
@@ -65,16 +69,7 @@ public class CreateTests(ICommandManager commands, IGangManager gangMgr)
       await Commands.ProcessCommand(player, "create", "foo bar"));
     Assert.Equal(CommandResult.ERROR,
       await Commands.ProcessCommand(player, "create", "bar foo"));
-    Assert.Contains("You are already in a gang", player.ConsoleOutput);
-  }
-
-  [Fact]
-  public async Task Create_Already_Ganged_Uncached() {
-    Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(player, "create", "foo bar"));
-    Assert.Equal(CommandResult.ERROR,
-      await Commands.ProcessCommand(player, "create", "bar foo"));
-    Assert.Contains("You are already in a gang", player.ConsoleOutput);
+    Assert.Contains(locale.Get(MSG.ALREADY_IN_GANG), player.ConsoleOutput);
   }
 
   [Fact]
@@ -85,6 +80,9 @@ public class CreateTests(ICommandManager commands, IGangManager gangMgr)
       await Commands.ProcessCommand(player, "create", "foo bar"));
     Assert.Equal(CommandResult.ERROR,
       await Commands.ProcessCommand(other, "create", "foo bar"));
-    Assert.Contains("Gang 'foo bar' already exists", other.ConsoleOutput);
+    // Assert.Contains("Gang 'foo bar' already exists", other.ConsoleOutput);
+    Assert.Contains(
+      locale.Get(MSG.COMMAND_GANG_CREATE_ALREADY_EXISTS, "foo bar"),
+      other.ConsoleOutput);
   }
 }

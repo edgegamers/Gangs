@@ -1,4 +1,6 @@
 ﻿using Commands.Gang;
+using Commands.Menus;
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
@@ -6,13 +8,14 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Player;
 using Microsoft.Extensions.Localization;
 using static GangsAPI.MSG;
 
 namespace Commands;
 
-public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
-  : ICommand {
+public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
+  IStringLocalizer testLocale) : ICommand {
   private readonly Dictionary<string, ICommand> sub = new() {
     // ["delete"] = new DeleteGangCommand(),
     // ["invite"] = new InviteGangCommand(),
@@ -22,13 +25,14 @@ public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
     // ["promote"] = new PromoteGangCommand(),
     // ["demote"] = new DemoteGangCommand(),
     // ["info"] = new InfoGangCommand()
-    ["create"] = new CreateCommand(gangMgr), ["help"] = new HelpCommand()
+    ["create"] = new CreateCommand(gangMgr, testLocale),
+    ["help"]   = new HelpCommand()
   };
 
-  private IStringLocalizer myLocale = locale;
+  private IStringLocalizer locale = testLocale;
 
   public void Start(BasePlugin? plugin, bool hotReload) {
-    if (plugin != null) myLocale = plugin?.Localizer ?? myLocale;
+    if (plugin != null) locale = plugin?.Localizer ?? locale;
   }
 
   public string Name => "css_gang";
@@ -44,21 +48,21 @@ public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
       throw new InvalidOperationException(
         $"Attempted to execute GangCommand with invalid name: {info[0]}");
 
-    if (executor?.Player != null) {
-      info.ReplySync(myLocale.Get(SOONTM));
-      return CommandResult.SUCCESS;
-    }
-
     if (info.ArgCount == 1) {
       if (executor == null) return CommandResult.PLAYER_ONLY;
       var gang = await gangMgr.GetGang(executor.Steam);
 
       if (gang == null) {
-        info.ReplySync(myLocale[COMMAND_GANG_NOTINGANG.Key()]);
+        info.ReplySync(locale[COMMAND_GANG_NOTINGANG.Key()]);
         return CommandResult.SUCCESS;
       }
 
       // Open gang menu
+      if (executor.Player != null) {
+        var menu = await new GangMenu(gang, playerMgr).Load();
+        await Server.NextFrameAsync(() => menu.Open(executor.Player));
+      }
+
       return CommandResult.SUCCESS;
     }
 

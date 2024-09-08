@@ -1,34 +1,37 @@
-﻿using GangsAPI.Data;
+﻿using GangsAPI;
+using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using Microsoft.Extensions.Localization;
 
 namespace Commands.Gang;
 
 // create [name]
-public class CreateCommand(IGangManager gangs) : ICommand {
+public class CreateCommand(IGangManager gangs, IStringLocalizer locale)
+  : ICommand {
   public string Name => "create";
   public string Description => "Creates a new gang";
-  public string Usage => "[name]";
+  public string[] Usage => ["[name]"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
     if (executor == null) return CommandResult.PLAYER_ONLY;
 
     if (info.ArgCount < 2) {
-      info.ReplySync("Please provide a name for the gang");
+      info.ReplySync(locale.Get(MSG.COMMAND_USAGE, info[0] + "[name]"));
       return CommandResult.INVALID_ARGS;
     }
 
-    var name = string.Join(' ', info.ArgString.Split(" "));
+    var name = string.Join(' ', info.Args.Skip(1));
 
     if (await gangs.GetGang(executor.Steam) != null) {
-      info.ReplySync("You are already in a gang");
+      info.ReplySync(locale.Get(MSG.ALREADY_IN_GANG));
       return CommandResult.ERROR;
     }
 
     if ((await gangs.GetGangs()).Any(g => g.Name == name)) {
-      info.ReplySync($"Gang '{name}' already exists");
+      info.ReplySync(locale.Get(MSG.COMMAND_GANG_CREATE_ALREADY_EXISTS, name));
       return CommandResult.ERROR;
     }
 

@@ -4,6 +4,7 @@ namespace GangsAPI;
 
 public enum MSG {
   COMMAND_GANG_NOTINGANG,
+  COMMAND_GANG_CREATE_ALREADY_EXISTS,
   COMMAND_BALANCE_NONE,
   COMMAND_BALANCE,
   COMMAND_BALANCE_PLURAL,
@@ -33,12 +34,16 @@ public enum MSG {
   COLOR_SPECIAL,
   COLOR_COMMAND,
   COLOR_CURRENCY,
-  COLOR_TARGET, }
+  COLOR_TARGET,
+  ALREADY_IN_GANG,
+  NOT_IN_GANG, }
 
 public static class LocaleExtensions {
   public static string Key(this MSG msg) {
     return msg switch {
-      MSG.COMMAND_GANG_NOTINGANG        => "command.gang.not_in_gang",
+      MSG.COMMAND_GANG_NOTINGANG => "command.gang.not_in_gang",
+      MSG.COMMAND_GANG_CREATE_ALREADY_EXISTS =>
+        "command.gang.create.already_exists",
       MSG.COMMAND_BALANCE_NONE          => "command.balance.none",
       MSG.COMMAND_BALANCE               => "command.balance",
       MSG.COMMAND_BALANCE_OTHER         => "command.balance.other",
@@ -69,7 +74,8 @@ public static class LocaleExtensions {
       MSG.COLOR_COMMAND                 => "color.command",
       MSG.COLOR_CURRENCY                => "color.currency",
       MSG.COLOR_TARGET                  => "color.target",
-
+      MSG.ALREADY_IN_GANG               => "gang.already_in_gang",
+      MSG.NOT_IN_GANG                   => "gang.not_in_gang",
 
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };

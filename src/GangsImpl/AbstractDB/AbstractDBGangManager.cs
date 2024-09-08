@@ -70,14 +70,23 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
 
   public async Task<IGang?> CreateGang(string name, ulong owner) {
     var player = await playerMgr.GetPlayer(owner);
-    if (player == null) return null;
+    if (player == null) {
+      Console.WriteLine(
+        $"Failed to create gang {name}: player {owner} not found");
+      return null;
+    }
+
     if (player.GangId != null)
       throw new InvalidOperationException(
         $"Attempted to create a gang for {owner} who is already in gang {player.GangId}");
     var query = $"INSERT INTO {table} (Name) VALUES (@name)";
     var result =
       await Connection.ExecuteAsync(query, new { name }, Transaction);
-    if (result == 0) return null;
+    if (result == 0) {
+      Console.WriteLine($"Failed to create gang {name}: database returned 0");
+      return null;
+    }
+
     var id = await GetLastId();
     player.GangId = id;
     await playerMgr.UpdatePlayer(player);
