@@ -29,11 +29,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\CS2\Commands\Commands.csproj" />
         <ProjectReference Include="..\GangsImpl\Mock\Mock.csproj"/>
         <ProjectReference Include="..\GangsImpl\SQLite\SQLite.csproj"/>
         <ProjectReference Include="..\GangsImpl\MySQL\MySQL.csproj"/>
         <ProjectReference Include="..\GangsImpl\Stats\Stats.csproj"/>
-        <ProjectReference Include="..\Gangs\Gangs.csproj"/>
+        <ProjectReference Include="..\CS2\Gangs\Gangs.csproj"/>
     </ItemGroup>
 
 </Project>
