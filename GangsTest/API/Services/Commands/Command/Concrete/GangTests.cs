@@ -6,7 +6,8 @@ using Microsoft.Extensions.Localization;
 
 namespace GangsTest.API.Services.Commands.Command.Concrete;
 
-public class GangTests(ICommandManager commands, IGangManager gangMgr, IStringLocalizer locale)
+public class GangTests(ICommandManager commands, IGangManager gangMgr,
+  IStringLocalizer locale)
   : TestParent(commands, new GangCommand(gangMgr, locale)) {
   [Fact]
   public async Task Gang_TestBase() {

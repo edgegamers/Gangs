@@ -37,7 +37,7 @@ public class CommandManager(IGangManager gangMgr, IStringLocalizer locale)
     Server.NextFrameAsync(async () => {
       var result = await ProcessCommand(wrapper, wrappedInfo);
       if (result == CommandResult.PLAYER_ONLY)
-        executor?.PrintToChat(Locale.Get(GangsAPI.MSG.GENERIC_PLAYER_ONLY));
+        executor?.PrintToChat(Locale.Get(MSG.GENERIC_PLAYER_ONLY));
     });
   }
 }

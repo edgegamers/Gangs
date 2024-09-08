@@ -4,6 +4,9 @@ using Microsoft.Extensions.Localization;
 namespace GangsTest.TestLocale;
 
 public class ParityTests(IStringLocalizer localizer) {
+  private readonly IEnumerable<string> localeKeys =
+    Enum.GetValues<MSG>().Select(s => s.Key());
+
   [Theory]
   [ClassData(typeof(LocaleImplData))]
   public void Localize_Exists_FromImpl(string key) {
@@ -16,7 +19,4 @@ public class ParityTests(IStringLocalizer localizer) {
     // Make sure we have an enum whose key is the same as the key in the file
     Assert.Contains(key, localeKeys);
   }
-
-  private readonly IEnumerable<string> localeKeys =
-    Enum.GetValues<GangsAPI.MSG>().Select(s => s.Key());
 }

@@ -1,7 +1,6 @@
 ﻿using GangsAPI.Data.Gang;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
-using MathNet.Numerics.Random;
 
 namespace GangsTest.API.Services.Gang;
 

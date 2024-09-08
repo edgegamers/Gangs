@@ -1,5 +1,4 @@
 ﻿using CounterStrikeSharp.API.Modules.Commands;
-using Microsoft.Extensions.Localization;
 
 namespace GangsAPI.Data.Command;
 

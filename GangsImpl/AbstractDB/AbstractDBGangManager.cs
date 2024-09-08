@@ -4,7 +4,6 @@ using Dapper;
 using GangsAPI.Data.Gang;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
-using Mock;
 
 namespace GenericDB;
 
@@ -13,8 +12,6 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
   : IGangManager {
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
-  public void ClearCache() { }
-  public Task Load() { return Task.CompletedTask; }
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);
@@ -35,14 +32,6 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
       throw new InvalidOperationException("Failed initializing the database",
         e);
     }
-  }
-
-  abstract protected DbConnection CreateDbConnection(string connectionString);
-
-  virtual protected string CreateTableQuery(string tableName, bool inTesting) {
-    return inTesting ?
-      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)" :
-      $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)";
   }
 
   public async Task<IEnumerable<IGang>> GetGangs() {
@@ -79,11 +68,6 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
     return await Connection.ExecuteAsync(query, new { id }, Transaction) > 0;
   }
 
-  virtual protected async Task<int> GetLastId() {
-    return await Connection.ExecuteScalarAsync<int>("SELECT LAST_INSERT_ID()",
-      transaction: Transaction);
-  }
-
   public async Task<IGang?> CreateGang(string name, ulong owner) {
     var player = await playerMgr.GetPlayer(owner);
     if (player == null) return null;
@@ -104,5 +88,21 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
   public void Dispose() {
     Transaction?.Dispose();
     Connection.Dispose();
+  }
+
+  public void ClearCache() { }
+  public Task Load() { return Task.CompletedTask; }
+
+  abstract protected DbConnection CreateDbConnection(string connectionString);
+
+  virtual protected string CreateTableQuery(string tableName, bool inTesting) {
+    return inTesting ?
+      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)" :
+      $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)";
+  }
+
+  virtual protected async Task<int> GetLastId() {
+    return await Connection.ExecuteScalarAsync<int>("SELECT LAST_INSERT_ID()",
+      transaction: Transaction);
   }
 }

@@ -58,13 +58,13 @@ public class MockGangManager(IPlayerManager playerMgr) : IGangManager {
     return gang.Clone() as IGang;
   }
 
+  public virtual void Start(BasePlugin? plugin, bool hotReload) { }
+  public virtual void Dispose() { }
+
   public virtual void ClearCache() { CachedGangs.Clear(); }
 
   public virtual Task Load() {
     CachedGangs.UnionWith(BackendGangs);
     return Task.CompletedTask;
   }
-
-  public virtual void Start(BasePlugin? plugin, bool hotReload) { }
-  public virtual void Dispose() { }
 }

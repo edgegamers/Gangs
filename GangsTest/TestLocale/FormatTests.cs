@@ -1,12 +1,10 @@
 ﻿using System.Text.RegularExpressions;
 using GangsAPI;
 using Microsoft.Extensions.Localization;
-using Xunit.Abstractions;
 
 namespace GangsTest.TestLocale;
 
-public partial class FormatTests(IStringLocalizer localizer,
-  ITestOutputHelper output) {
+public partial class FormatTests(IStringLocalizer localizer) {
   [Fact]
   public void Handles_Formatting() {
     var perm   = "@test/permission";

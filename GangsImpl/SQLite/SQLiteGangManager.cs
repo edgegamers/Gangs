@@ -1,6 +1,5 @@
 using System.Data.Common;
 using Dapper;
-using GangsAPI.Data.Gang;
 using GangsAPI.Services.Player;
 using GenericDB;
 using Microsoft.Data.Sqlite;

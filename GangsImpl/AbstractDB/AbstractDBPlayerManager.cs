@@ -3,7 +3,6 @@ using CounterStrikeSharp.API.Core;
 using Dapper;
 using GangsAPI.Data.Gang;
 using GangsAPI.Services.Player;
-using Mock;
 
 namespace GenericDB;
 
@@ -11,8 +10,6 @@ public abstract class AbstractDBPlayerManager(string connectionString,
   string table = "gang_players", bool testing = false) : IPlayerManager {
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
-  public void ClearCache() { }
-  public Task Load() { return Task.CompletedTask; }
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);
@@ -35,14 +32,6 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     }
   }
 
-  abstract protected DbConnection CreateDbConnection(string connectionString);
-
-  virtual protected string CreateTableQuery(string tableName, bool inTesting) {
-    return inTesting ?
-      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (Steam INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), GangId INT, GangRank INT)" :
-      $"CREATE TABLE IF NOT EXISTS {tableName} (Steam INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), GangId INT, GangRank INT)";
-  }
-
   public void Dispose() {
     Transaction?.Dispose();
     Connection.Dispose();
@@ -58,7 +47,7 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     string? name = null) {
     var existing = await GetPlayer(steamId, false);
     if (existing != null) return existing;
-    var player = new DBPlayer() { Steam = steamId, Name = name };
+    var player = new DBPlayer { Steam = steamId, Name = name };
     var query  = $"INSERT INTO {table} (Steam, Name) VALUES (@Steam, @Name)";
     await Connection.ExecuteAsync(query, player, Transaction);
     return player;
@@ -86,5 +75,16 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     var query = $"DELETE FROM {table} WHERE Steam = @steamId";
     return await Connection.ExecuteAsync(query, new { steamId }, Transaction)
       == 1;
+  }
+
+  public void ClearCache() { }
+  public Task Load() { return Task.CompletedTask; }
+
+  abstract protected DbConnection CreateDbConnection(string connectionString);
+
+  virtual protected string CreateTableQuery(string tableName, bool inTesting) {
+    return inTesting ?
+      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (Steam INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), GangId INT, GangRank INT)" :
+      $"CREATE TABLE IF NOT EXISTS {tableName} (Steam INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), GangId INT, GangRank INT)";
   }
 }

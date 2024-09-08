@@ -4,6 +4,7 @@
 public interface ICacher {
   [Obsolete]
   void ClearCache();
+
   [Obsolete]
   Task Load();
 }
