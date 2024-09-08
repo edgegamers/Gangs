@@ -4,21 +4,16 @@
 name: Nightly
 
 on:
-  workflow_run:
-    workflows: [ Build / Test ]
-    branches: [ "dev", "main" ]
-    types:
-      - completed
   push:
     branches:
       - dev
       - main
     paths:
+      - 'src/**'
       - '.github/workflows/nightly.yml'
 
 jobs:
   build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +36,6 @@ jobs:
         with:
           name: gangs-nightly
           path: build/Gangs
-          # If build didn't put any artifacts in the build folder, consider it an error
           if-no-files-found: error
   post_webhook:
     needs: build
