@@ -10,8 +10,12 @@ public class LocalFileLocalizerFactory : IStringLocalizerFactory {
     // Lang folder is in the root of the project
     // keep moving up until we find it
     var current = Directory.GetCurrentDirectory();
-    while (!Directory.Exists(Path.Combine(current, "lang")))
-      current = Path.GetFullPath(Path.Combine(current, ".."));
+    while (!Directory.Exists(Path.Combine(current, "lang"))) {
+      current = Directory.GetParent(current)?.FullName;
+      if (current == null)
+        throw new DirectoryNotFoundException("Could not find lang folder");
+    }
+
     path = Path.Combine(current, "lang");
   }
 
