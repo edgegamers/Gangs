@@ -54,7 +54,7 @@ public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
       var gang = await gangMgr.GetGang(executor.Steam);
 
       if (gang == null) {
-        info.ReplySync(myLocale[NOT_IN_GANG.Key()]);
+        info.ReplySync(myLocale[COMMAND_GANG_NOTINGANG.Key()]);
         return CommandResult.SUCCESS;
       }
 

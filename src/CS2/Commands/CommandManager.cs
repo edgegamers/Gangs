@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API;
+﻿using Commands.Gang;
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI;
@@ -6,12 +7,14 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Player;
 using Microsoft.Extensions.Localization;
 using Mock;
 
 namespace Commands;
 
-public class CommandManager(IGangManager gangMgr, IStringLocalizer locale)
+public class CommandManager(IGangManager gangMgr,
+  IPlayerStatManager playerStatMgr, IStringLocalizer locale)
   : MockCommandManager(locale), IPluginBehavior {
   private BasePlugin? plugin;
   private bool hotReload;
@@ -21,6 +24,7 @@ public class CommandManager(IGangManager gangMgr, IStringLocalizer locale)
     this.hotReload = hotReload;
 
     RegisterCommand(new GangCommand(gangMgr, Locale));
+    RegisterCommand(new BalanceCommand(playerStatMgr, Locale));
   }
 
   public override bool RegisterCommand(ICommand command) {

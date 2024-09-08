@@ -1,5 +1,6 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using Microsoft.Extensions.Localization;
 
 namespace GangsAPI.Services.Commands;
 
@@ -7,7 +8,7 @@ public interface ICommand : IPluginBehavior {
   string Name { get; }
 
   string? Description => null;
-  string Usage => "";
+  string[] Usage => [];
   string[] RequiredFlags => [];
   string[] RequiredGroups => [];
   string[] Aliases => [Name];
@@ -21,4 +22,9 @@ public interface ICommand : IPluginBehavior {
   }
 
   Task<CommandResult> Execute(PlayerWrapper? executor, CommandInfoWrapper info);
+
+  // void PrintUsage(IStringLocalizer localizer, PlayerWrapper? executor) {
+  //   foreach (var use in Usage)
+  //     localizer.Get(MSG.COMMAND_USAGE, $"{Name} {use}");
+  // }
 }

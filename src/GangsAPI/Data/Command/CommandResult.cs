@@ -22,6 +22,7 @@ public enum CommandResult {
   ///   no sufficient arguments
   /// </summary>
   INVALID_ARGS,
+  PRINT_USAGE,
 
   /// <summary>
   ///   The executor of the command did not have

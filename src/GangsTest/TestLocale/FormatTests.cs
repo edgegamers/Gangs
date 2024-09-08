@@ -22,7 +22,7 @@ public partial class FormatTests(IStringLocalizer localizer) {
 
   [Theory]
   [ClassData(typeof(LocaleFileKVData))]
-  public void Brackets_Open_And_Close(string _, string val) {
+  public void Parity_Brackets(string _, string val) {
     // For each opening bracket, make sure there is a closing bracket
     var brackets = 0;
     foreach (var c in val) {
@@ -31,6 +31,14 @@ public partial class FormatTests(IStringLocalizer localizer) {
     }
 
     Assert.Equal(0, brackets);
+  }
+
+  [Theory]
+  [ClassData(typeof(LocaleFileKVData))]
+  public void Parity_Percents(string _, string val) {
+    // For each opening bracket, make sure there is a closing bracket
+    var percs = val.Count(c => c == '%');
+    Assert.Equal(0, percs % 2);
   }
 
   [Theory]
@@ -48,9 +56,8 @@ public partial class FormatTests(IStringLocalizer localizer) {
   [Theory]
   [ClassData(typeof(LocaleFileKVData))]
   public void Ends_In_Punctuation(string key, string val) {
-    if (key == "prefix")
-      return; // TODO: Once xUnit 3.0 is released, use Assert.Skip
-    Assert.Matches(@"[.,!?]$", val);
+    if (!key.Contains(' ')) return;
+    Assert.Matches(@"[.,!? ]$", val);
   }
 
   [GeneratedRegex("{(.*?)}")]

@@ -48,8 +48,17 @@ public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
       result = await command.Execute(executor, sourceInfo);
     });
 
-    if (result == CommandResult.PLAYER_ONLY)
-      sourceInfo.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_ONLY));
+    switch (result) {
+      case CommandResult.PLAYER_ONLY:
+        sourceInfo.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_ONLY));
+        break;
+      case CommandResult.PRINT_USAGE: {
+        foreach (var use in command.Usage)
+          sourceInfo.ReplySync(Locale.Get(MSG.COMMAND_USAGE,
+            $"{command.Name} {use}"));
+        break;
+      }
+    }
 
     return result;
   }
