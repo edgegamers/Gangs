@@ -17,13 +17,17 @@ public class CommandInfoWrapper {
     this.offset   = offset;
     this.args     = args;
 
+    Console.WriteLine($"CommandInfoWrapper: {CallingPlayer} {offset} {args}");
     if (offset == 0 && args.Length > 0) this.args[0] = args[0].ToLower();
   }
 
-  public CommandInfoWrapper(CommandInfo info, int offset = 0) : this(
-    info.CallingPlayer == null ? null : new PlayerWrapper(info.CallingPlayer),
-    offset, new string[info.ArgCount]) {
+  public CommandInfoWrapper(CommandInfo info, int offset = 0) {
+    CallingPlayer = info.CallingPlayer == null ?
+      null :
+      new PlayerWrapper(info.CallingPlayer);
+    this.offset    = offset;
     CallingContext = info.CallingContext;
+    args           = new string[info.ArgCount];
     for (var i = 0; i < info.ArgCount; i++) args[i] = info.GetArg(i);
     if (offset == 0 && info.ArgCount > 0) args[0]   = info.GetArg(0).ToLower();
   }

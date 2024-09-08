@@ -6,6 +6,7 @@ using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Mock;
 
 namespace GangsImpl;
@@ -20,6 +21,5 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection
      .AddPluginBehavior<IPlayerStatManager, MockInstanceStatManager>();
     serviceCollection.RegisterCommands();
-    serviceCollection.AddPluginBehavior<ICommandManager, CommandManager>();
   }
 }

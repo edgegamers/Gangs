@@ -14,14 +14,17 @@ namespace Commands;
 public class CommandManager(IGangManager gangMgr, IStringLocalizer locale)
   : MockCommandManager(locale), IPluginBehavior {
   private BasePlugin? plugin;
+  private bool hotReload;
 
   public void Start(BasePlugin? basePlugin, bool hotReload) {
-    plugin = basePlugin;
+    plugin         = basePlugin;
+    this.hotReload = hotReload;
 
     RegisterCommand(new GangCommand(gangMgr, Locale));
   }
 
   public override bool RegisterCommand(ICommand command) {
+    command.Start(plugin, hotReload);
     var registration = base.RegisterCommand(command);
     if (registration == false) return false;
     foreach (var alias in command.Aliases)

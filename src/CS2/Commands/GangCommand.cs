@@ -1,4 +1,5 @@
 ﻿using Commands.Gang;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
@@ -27,6 +28,13 @@ public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
     ["create"] = new CreateCommand(gangMgr), ["help"] = new HelpCommand()
   };
 
+  private IStringLocalizer myLocale = locale;
+
+  public void Start(BasePlugin? plugin, bool hotReload) {
+    Console.WriteLine("GangCommand loaded with plugin: " + plugin);
+    if (plugin != null) myLocale = plugin?.Localizer ?? myLocale;
+  }
+
   public string Name => "css_gang";
   public string Description => "Master command for gangs";
   public string[] Aliases => ["css_gang", "css_gangs"];
@@ -41,7 +49,7 @@ public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
         $"Attempted to execute GangCommand with invalid name: {info[0]}");
 
     if (executor?.Player != null) {
-      info.ReplySync(locale.Get(SOONTM));
+      info.ReplySync(myLocale.Get(SOONTM));
       return CommandResult.SUCCESS;
     }
 
@@ -50,7 +58,7 @@ public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
       var gang = await gangMgr.GetGang(executor.Steam);
 
       if (gang == null) {
-        info.ReplySync(locale[NOT_IN_GANG.Key()]);
+        info.ReplySync(myLocale[NOT_IN_GANG.Key()]);
         return CommandResult.SUCCESS;
       }
 

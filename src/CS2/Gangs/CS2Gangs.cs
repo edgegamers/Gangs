@@ -2,6 +2,7 @@
 using CounterStrikeSharp.API.Core;
 using GangsAPI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace GangsImpl;
@@ -21,10 +22,13 @@ public class CS2Gangs(IServiceProvider provider) : BasePlugin, IGangPlugin {
     Logger.LogInformation("[Gangs] Loading {Count} extensions",
       extensions.Count);
 
+    // Override the default localizer with our own
+    Localizer = new PluginStringLocalizer(Localizer);
+
     foreach (var ext in extensions) {
       RegisterAllAttributes(ext);
       try {
-        Logger.LogDebug("Loading {@Name}", ext.GetType().FullName);
+        Logger.LogInformation("Loading {@Name}", ext.GetType().FullName);
         ext.Start(this, hotReload);
       } catch (Exception e) {
         Logger.LogError(e, "Failed to load {@Name}", ext.GetType().FullName);
