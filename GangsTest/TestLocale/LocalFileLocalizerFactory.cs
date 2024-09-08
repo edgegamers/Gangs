@@ -1,7 +1,7 @@
 ﻿using CounterStrikeSharp.API.Core.Translations;
 using Microsoft.Extensions.Localization;
 
-namespace GangsTest.Locale;
+namespace GangsTest.TestLocale;
 
 public class LocalFileLocalizerFactory : IStringLocalizerFactory {
   private const string path = @"..\..\..\..\Gangs\lang";

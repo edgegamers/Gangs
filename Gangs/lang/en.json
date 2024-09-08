@@ -1,5 +1,10 @@
 ﻿{
   "prefix": "{red}GANGS {darkred}> {grey}",
   "command.gang.not_in_gang": "%prefix%You are not in a gang. Type {gold}/gang create [name]{grey} to create one.",
-  "generic.player.not_found": "%prefix%Could not find a player using {darkred}{0}{grey}."
+  "generic.player.not_found": "%prefix%Could not find a player using {darkred}{0}{grey}.",
+  "generic.soontm": "%prefix%{grey}SoonTM!",
+  "generic.player.only": "%prefix%{red}Only players can use this.",
+  "generic.no_permission": "%prefix%{red}You do not have permission to use this command.",
+  "generic.no_permission.node": "%prefix%{red}You are missing the {darkred}{0}{red} permission.",
+  "generic.no_permission.rank": "%prefix%{red}You must be {darkred}{0}{red} to use this command."
 }

@@ -1,17 +1,19 @@
-﻿using GangsAPI.Data;
+﻿using GangsAPI;
+using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
+using Microsoft.Extensions.Localization;
 
 namespace GangsTest.API.Services.Commands.CommandManager;
 
-public class PlayerOnlyTests : TestParent {
+public class PlayerOnlyTests(IStringLocalizer locale) : TestParent {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Command_PlayerOnly(ICommandManager mgr) {
     mgr.RegisterCommand(new PlayerOnlyCommand());
     Assert.Equal(CommandResult.PLAYER_ONLY,
       await mgr.ProcessCommand(TestPlayer, "css_player"));
-    Assert.Contains("This command can only be executed by a player",
+    Assert.Contains(locale.Get(MSG.GENERIC_PLAYER_ONLY),
       TestPlayer.ConsoleOutput);
   }
 

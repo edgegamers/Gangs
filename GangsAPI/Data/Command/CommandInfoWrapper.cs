@@ -21,8 +21,6 @@ public class CommandInfoWrapper {
     if (offset == 0 && args.Length > 0) this.args[0] = args[0].ToLower();
   }
 
-  // public readonly PlayerWrapper? CallingPlayer = executor;
-
   public CommandInfoWrapper(CommandInfo info, int offset = 0) : this(
     info.CallingPlayer == null ? null : new PlayerWrapper(info.CallingPlayer),
     offset, new string[info.ArgCount]) {

@@ -6,7 +6,7 @@ using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using Microsoft.Extensions.Localization;
-using static GangsAPI.Locale;
+using static GangsAPI.MSG;
 
 namespace Commands;
 
@@ -41,9 +41,7 @@ public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
         $"Attempted to execute GangCommand with invalid name: {info[0]}");
 
     if (executor?.Player != null) {
-      info.ReplySync(
-        $" {ChatColors.Red}GANGS {ChatColors.DarkRed}> {ChatColors.Grey}SoonTM!");
-      info.ReplySync(PREFIX + "SoonTM!");
+      info.ReplySync(locale.Get(SOONTM));
       return CommandResult.SUCCESS;
     }
 

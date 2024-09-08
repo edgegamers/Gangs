@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Localization;
 
-namespace GangsTest.Locale;
+namespace GangsTest.TestLocale;
 
-public class LocaleKeyValueData : TheoryData<string, string> {
-  public LocaleKeyValueData() {
+public class LocaleFileKVData : TheoryData<string, string> {
+  public LocaleFileKVData() {
     foreach (var localizedString in StringLocalizer.Instance.GetAllStrings())
       Add(localizedString.Name, localizedString);
   }

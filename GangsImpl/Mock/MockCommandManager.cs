@@ -1,12 +1,15 @@
 ﻿using CounterStrikeSharp.API.Modules.Commands;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
+using Microsoft.Extensions.Localization;
 
 namespace Mock;
 
-public class MockCommandManager : ICommandManager {
+public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
   private readonly Dictionary<string, ICommand> commands = new();
+  protected readonly IStringLocalizer Locale = locale;
 
   public virtual bool RegisterCommand(ICommand command) {
     return command.Aliases.All(alias => commands.TryAdd(alias, command));
@@ -46,7 +49,7 @@ public class MockCommandManager : ICommandManager {
     });
 
     if (result == CommandResult.PLAYER_ONLY)
-      sourceInfo.ReplySync("This command can only be executed by a player");
+      sourceInfo.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_ONLY));
 
     return result;
   }

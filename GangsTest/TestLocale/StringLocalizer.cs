@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Localization;
 
-namespace GangsTest.Locale;
+namespace GangsTest.TestLocale;
 
 public partial class StringLocalizer : IStringLocalizer {
   private readonly IStringLocalizer localizer;

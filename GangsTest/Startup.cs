@@ -2,11 +2,12 @@
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
-using GangsTest.Locale;
+using GangsTest.TestLocale;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
 using Mock;
+using StringLocalizer = GangsTest.TestLocale.StringLocalizer;
 
 namespace GangsTest;
 

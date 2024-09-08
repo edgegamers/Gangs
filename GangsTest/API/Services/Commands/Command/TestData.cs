@@ -4,6 +4,7 @@ using Commands.Gang;
 using GangsAPI;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
+using GangsTest.TestLocale;
 using Mock;
 
 namespace GangsTest.API.Services.Commands.Command;
@@ -14,7 +15,7 @@ public class TestData : IEnumerable<object[]> {
 
   private readonly IBehavior[] behaviors = [
     new CreateCommand(manager), new HelpCommand(),
-    new GangCommand(manager, Locale.StringLocalizer.Instance)
+    new GangCommand(manager, StringLocalizer.Instance)
   ];
 
   public TestData() {
