@@ -8,12 +8,9 @@ namespace GangsTest.API.Services.Stat.Instance.Player;
 public class TestData : IEnumerable<object[]> {
   private readonly IPlayerStatManager[] behaviors = [
     new MockInstanceStatManager(),
-    new SQLPlayerInstanceManager(
+    new MySQLPlayerInstanceManager(new MockDBConfig(
       Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
-      ?? "Host=localhost;User=root;Database=gangs", "gang_inst_stats", true),
-    new SQLPlayerInstanceManager(
-      Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
-      ?? "Host=localhost;User=root;Database=gangs", "gang_inst_stats", true)
+      ?? "Host=localhost;User=root;Database=gangs", "gang_inst_test", true)),
   ];
 
   public TestData() {

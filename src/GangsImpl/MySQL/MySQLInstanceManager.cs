@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using GangsAPI.Data;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using GenericDB;
@@ -6,10 +7,9 @@ using MySqlConnector;
 
 namespace SQLImpl;
 
-public class SQLGangInstanceManager(string connectionString,
-  string table_prefix, bool testing = false)
-  : AbstractInstanceManager<int>(connectionString, table_prefix, testing),
-    IGangStatManager {
+public class MySQLGangInstanceManager(IDBConfig config)
+  : AbstractInstanceManager<int>(config.ConnectionString,
+    config.TablePrefix + "_gang_stats", config.Testing), IGangStatManager {
   override protected string PrimaryKey => "GangId";
 
   public Task<(bool, TV?)> GetForGang<TV>(int key, string statId) {
@@ -29,10 +29,9 @@ public class SQLGangInstanceManager(string connectionString,
   }
 }
 
-public class SQLPlayerInstanceManager(string connectionString,
-  string table_prefix, bool testing = false)
-  : AbstractInstanceManager<ulong>(connectionString, table_prefix, testing),
-    IPlayerStatManager {
+public class MySQLPlayerInstanceManager(IDBConfig config)
+  : AbstractInstanceManager<ulong>(config.ConnectionString,
+    config.TablePrefix + "_player_stats", config.Testing), IPlayerStatManager {
   override protected string PrimaryKey => "Steam";
 
   public Task<(bool, TV?)> GetForPlayer<TV>(ulong steam, string statId) {
