@@ -19,20 +19,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="build\**"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <EmbeddedResource Remove="build\**"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="build\**"/>
-        <None Remove="Gangs.zip"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="lang\**" CopyToOutputDirectory="PreserveNewest"/>
+        <Content Include="..\..\..\lang\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lang\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </Content>
     </ItemGroup>
 
     <PropertyGroup>
