@@ -13,9 +13,6 @@ namespace Commands;
 
 public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
   : ICommand {
-  public static readonly string PREFIX =
-    $" {ChatColors.Red}GANGS {ChatColors.DarkRed}> {ChatColors.Grey}";
-
   private readonly Dictionary<string, ICommand> sub = new() {
     // ["delete"] = new DeleteGangCommand(),
     // ["invite"] = new InviteGangCommand(),
@@ -31,7 +28,6 @@ public class GangCommand(IGangManager gangMgr, IStringLocalizer locale)
   private IStringLocalizer myLocale = locale;
 
   public void Start(BasePlugin? plugin, bool hotReload) {
-    Console.WriteLine("GangCommand loaded with plugin: " + plugin);
     if (plugin != null) myLocale = plugin?.Localizer ?? myLocale;
   }
 

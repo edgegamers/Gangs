@@ -16,8 +16,6 @@ public class CommandInfoWrapper {
     CallingPlayer = executor;
     this.offset   = offset;
     this.args     = args;
-
-    Console.WriteLine($"CommandInfoWrapper: {CallingPlayer} {offset} {args}");
     if (offset == 0 && args.Length > 0) this.args[0] = args[0].ToLower();
   }
 
