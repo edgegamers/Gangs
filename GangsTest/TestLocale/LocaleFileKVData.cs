@@ -1,10 +1,14 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using System.Collections;
+using Microsoft.Extensions.Localization;
 
 namespace GangsTest.TestLocale;
 
-public class LocaleFileKVData : TheoryData<string, string> {
-  public LocaleFileKVData() {
-    foreach (var localizedString in StringLocalizer.Instance.GetAllStrings())
-      Add(localizedString.Name, localizedString.Value);
+public class LocaleFileKVData : IEnumerable<object[]> {
+  public IEnumerator<object[]> GetEnumerator() {
+    return StringLocalizer.Instance.GetAllStrings(true)
+     .Select(keyValuePair => (object[]) [keyValuePair.Name, keyValuePair.Value])
+     .GetEnumerator();
   }
+
+  IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 }
