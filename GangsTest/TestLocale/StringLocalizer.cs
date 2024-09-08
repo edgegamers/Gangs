@@ -5,8 +5,8 @@ using Microsoft.Extensions.Localization;
 namespace GangsTest.TestLocale;
 
 public partial class StringLocalizer : IStringLocalizer {
-  public static readonly StringLocalizer Instance =
-    new(new LocalFileLocalizerFactory());
+  public static StringLocalizer Instance
+    => new(new LocalFileLocalizerFactory());
 
   private readonly IStringLocalizer localizer;
 
