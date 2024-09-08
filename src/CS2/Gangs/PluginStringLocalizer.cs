@@ -27,7 +27,10 @@ public partial class PluginStringLocalizer(IStringLocalizer localizer)
       // Check if the key exists
       try {
         var key = match.Groups[0].Value;
-        value = value.Replace(key, localizer[key[1..^1]].Value);
+        value = value.Replace(key,
+          key == "%prefix%" ?
+            this[key[1..^1]].Value :
+            this[key[1..^1]].Value.Trim());
       } catch (NullReferenceException) { }
 
     return new LocalizedString(name, value);

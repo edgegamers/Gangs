@@ -8,15 +8,15 @@ using Microsoft.Extensions.Localization;
 namespace Mock;
 
 public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
-  private readonly Dictionary<string, ICommand> commands = new();
-  protected readonly IStringLocalizer Locale = locale;
+  protected readonly Dictionary<string, ICommand> Commands = new();
+  protected IStringLocalizer Locale = locale;
 
   public virtual bool RegisterCommand(ICommand command) {
-    return command.Aliases.All(alias => commands.TryAdd(alias, command));
+    return command.Aliases.All(alias => Commands.TryAdd(alias, command));
   }
 
   public bool UnregisterCommand(ICommand command) {
-    return command.Aliases.All(alias => commands.Remove(alias));
+    return command.Aliases.All(alias => Commands.Remove(alias));
   }
 
   public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
@@ -31,18 +31,17 @@ public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
     return await ProcessCommand(executor, info);
   }
 
-  public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
-    CommandInfoWrapper sourceInfo) {
+  public virtual async Task<CommandResult> ProcessCommand(
+    PlayerWrapper? executor, CommandInfoWrapper sourceInfo) {
     if (sourceInfo.ArgCount == 0) return CommandResult.ERROR;
     var result = CommandResult.ERROR;
 
-    if (!commands.TryGetValue(sourceInfo[0], out var command)) {
+    if (!Commands.TryGetValue(sourceInfo[0], out var command)) {
       sourceInfo.ReplySync("Unknown command: " + sourceInfo[0]);
       return CommandResult.UNKNOWN_COMMAND;
     }
 
     if (!command.CanExecute(executor)) return CommandResult.NO_PERMISSION;
-
 
     await Task.Run(async () => {
       result = await command.Execute(executor, sourceInfo);
@@ -55,7 +54,7 @@ public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
       case CommandResult.PRINT_USAGE: {
         foreach (var use in command.Usage)
           sourceInfo.ReplySync(Locale.Get(MSG.COMMAND_USAGE,
-            $"{command.Name} {use}"));
+            $"{sourceInfo[0]} {use}"));
         break;
       }
     }

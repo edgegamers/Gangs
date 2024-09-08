@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Core;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Commands.Targeting;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
@@ -12,18 +13,13 @@ using Stats;
 namespace Commands;
 
 public class BalanceCommand(IPlayerStatManager playerMgr,
-  IStringLocalizer testLocalizer) : ICommand {
+  IStringLocalizer localizer) : ICommand {
   public string Name => "css_balance";
 
   public string[] Usage => ["", "<player>", "<player> <amount>"];
   public string[] Aliases => ["css_balance", "css_credit", "css_credits"];
 
-  private string id = new BalanceStat().StatId;
-  private IStringLocalizer localizer = testLocalizer;
-
-  public void Start(BasePlugin? plugin, bool hotReload) {
-    if (plugin != null) localizer = plugin.Localizer;
-  }
+  private readonly string id = new BalanceStat().StatId;
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
@@ -44,38 +40,47 @@ public class BalanceCommand(IPlayerStatManager playerMgr,
       return CommandResult.SUCCESS;
     }
 
+    if (info.ArgCount > 3) return CommandResult.PRINT_USAGE;
+
     // TODO: Add Unit Test Support
     // Would require a mock of some type of Server state
     // for Utilities to wrap around.
-    var target = new Target(info[1]);
-    var result = target.GetTarget(null).Players;
-    if (result.Count != 1) {
-      info.ReplySync(localizer.Get(
-        result.Count > 1 ?
-          MSG.GENERIC_PLAYER_FOUND_MULTIPLE :
-          MSG.GENERIC_PLAYER_NOT_FOUND, info[1]));
-      return CommandResult.INVALID_ARGS;
-    }
+    var            result  = CommandResult.ERROR;
+    PlayerWrapper? subject = null;
+    await Server.NextFrameAsync(() => {
+      var target       = new Target(info[1]);
+      var targetResult = target.GetTarget(null).Players;
+      if (targetResult.Count != 1) {
+        info.ReplySync(localizer.Get(
+          targetResult.Count > 1 ?
+            MSG.GENERIC_PLAYER_FOUND_MULTIPLE :
+            MSG.GENERIC_PLAYER_NOT_FOUND, info[1]));
+        result = CommandResult.INVALID_ARGS;
+        return;
+      }
 
-    var subject = result[0];
+      subject = new PlayerWrapper(targetResult[0]);
+    });
+
+    if (subject == null) return result;
 
     if (info.ArgCount == 2 || !executor.HasFlags("@css/root")) {
       var (success, balance) =
-        await playerMgr.GetForPlayer<int>(subject.SteamID, id);
+        await playerMgr.GetForPlayer<int>(subject.Steam, id);
 
       if (!success) {
-        info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_NONE));
+        info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_OTHER_NONE,
+          subject.Name ?? subject.Steam.ToString()));
         return CommandResult.SUCCESS;
       }
 
       info.ReplySync(localizer.Get(
         balance == 1 ?
           MSG.COMMAND_BALANCE_OTHER :
-          MSG.COMMAND_BALANCE_OTHER_PLURAL, balance));
+          MSG.COMMAND_BALANCE_OTHER_PLURAL,
+        subject.Name ?? subject.Steam.ToString(), balance));
+      return CommandResult.SUCCESS;
     }
-
-
-    if (info.ArgCount != 3) return CommandResult.PRINT_USAGE;
 
     if (!int.TryParse(info[2], out var amount)) {
       info.ReplySync(localizer.Get(MSG.COMMAND_INVALID_PARAM, info[2],
@@ -83,14 +88,14 @@ public class BalanceCommand(IPlayerStatManager playerMgr,
       return CommandResult.INVALID_ARGS;
     }
 
-    var pass = await playerMgr.SetForPlayer(subject.SteamID, id, amount);
+    var pass = await playerMgr.SetForPlayer(subject.Steam, id, amount);
     if (!pass) {
       info.ReplySync(localizer.Get(MSG.GENERIC_ERROR));
       return CommandResult.ERROR;
     }
 
-    info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_SET, subject.PlayerName,
-      amount));
+    info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_SET,
+      subject.Name ?? subject.Steam.ToString(), amount));
     return CommandResult.SUCCESS;
   }
 }

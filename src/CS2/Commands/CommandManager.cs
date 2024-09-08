@@ -14,14 +14,16 @@ using Mock;
 namespace Commands;
 
 public class CommandManager(IGangManager gangMgr,
-  IPlayerStatManager playerStatMgr, IStringLocalizer locale)
-  : MockCommandManager(locale), IPluginBehavior {
+  IPlayerStatManager playerStatMgr, IStringLocalizer testLocale)
+  : MockCommandManager(testLocale), IPluginBehavior {
   private BasePlugin? plugin;
   private bool hotReload;
 
   public void Start(BasePlugin? basePlugin, bool hotReload) {
     plugin         = basePlugin;
     this.hotReload = hotReload;
+
+    if (basePlugin != null) Locale = basePlugin.Localizer;
 
     RegisterCommand(new GangCommand(gangMgr, Locale));
     RegisterCommand(new BalanceCommand(playerStatMgr, Locale));
@@ -44,7 +46,7 @@ public class CommandManager(IGangManager gangMgr,
     Server.NextFrameAsync(async () => {
       var result = await ProcessCommand(wrapper, wrappedInfo);
       if (result == CommandResult.PLAYER_ONLY)
-        executor?.PrintToChat(Locale.Get(MSG.GENERIC_PLAYER_ONLY));
+        wrappedInfo.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_ONLY));
     });
   }
 }

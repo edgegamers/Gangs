@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Admin;
+using CounterStrikeSharp.API.Modules.Entities;
 
 namespace GangsAPI.Data;
 
@@ -71,6 +72,9 @@ public class PlayerWrapper {
   [Pure]
   public bool HasFlags(params string[] flags) {
     if (Data == null) return false;
+
+    if (Player != null)
+      return AdminManager.PlayerHasPermissions(new SteamID(Steam), flags);
 
     foreach (var flag in flags) {
       if (!flag.StartsWith(USER_CHAR))
