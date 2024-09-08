@@ -4,9 +4,16 @@ using Microsoft.Extensions.Localization;
 namespace GangsTest.TestLocale;
 
 public class LocalFileLocalizerFactory : IStringLocalizerFactory {
-  private readonly string path = Path.Combine(
-    Directory.GetCurrentDirectory().Split("Gangs")[0], "Gangs", "Gangs",
-    "lang");
+  private readonly string path;
+
+  public LocalFileLocalizerFactory() {
+    var current = Directory.GetCurrentDirectory().Split("GangsTest")[^2];
+    var parent  = Directory.GetParent(current);
+    if (parent is null)
+      throw new DirectoryNotFoundException("Could not find parent directory");
+    path = Path.Combine(parent.FullName, "Gangs", "lang");
+    Console.WriteLine(path);
+  }
 
   public IStringLocalizer Create(Type resourceSource) {
     return new JsonStringLocalizer(path);
