@@ -3,17 +3,13 @@ name: Build / Test
 on:
   push:
     paths:
-      - 'Gangs*/**'
+      - 'src/**'
       - '.github/workflows/dotnet.yml'
-      - 'Core/**'
-      - 'Commands/**'
       - 'coverage.runsettings'
   pull_request:
     paths:
-      - 'Gangs*/**'
+      - 'src/**'
       - '.github/workflows/dotnet.yml'
-      - 'Core/**'
-      - 'Commands/**'
       - 'coverage.runsettings'
 
 jobs:
@@ -84,16 +80,16 @@ jobs:
       - name: Test with MariaDB
         env:
           DB_GANGS_CONNECTION: "Server=localhost;Port=3307;Database=gangs;User=root"
-        run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
+        run: dotnet test src/GangsTest/GangsTest.csproj --no-build --verbosity normal
       - name: Test with MySQL
         env:
           DB_GANGS_CONNECTION: "Server=localhost;Port=3306;Database=gangs;User=root"
-        run: dotnet test GangsTest/GangsTest.csproj --no-build --verbosity normal
+        run: dotnet test src/GangsTest/GangsTest.csproj --no-build --verbosity normal
       - name: Generate Code Coverage Report
         env:
           DB_GANGS_CONNECTION: "Server=localhost;Port=3306;Database=gangs;User=root"
         if: ${{ matrix.dotnet-version == '9.0.x' }}
-        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage GangsTest/GangsTest.csproj --settings coverage.runsettings
+        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage src/GangsTest/GangsTest.csproj --settings coverage.runsettings
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         if: ${{ matrix.dotnet-version == '9.0.x' }}

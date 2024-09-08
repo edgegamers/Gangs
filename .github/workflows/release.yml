@@ -24,8 +24,8 @@ jobs:
 
       - run: |
           dotnet restore
-          dotnet build Core/Core.csproj --no-restore
-          dotnet publish Core/Core.csproj --no-build --no-restore
+          dotnet build src/CS2/Gangs/Gangs.csproj --no-restore
+          dotnet publish src/CS2/Gangs/Gangs.csproj --no-build --no-restore
 
       - uses: actions/upload-artifact@v4.0.0
         with:

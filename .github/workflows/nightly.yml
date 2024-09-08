@@ -5,9 +5,10 @@ name: Nightly
 
 on:
   workflow_run:
-    workflows: [ "Build / Test" ]
+    workflows: [ Build / Test ]
     branches: [ "dev", "main" ]
-    types: [ "completed" ]
+    types:
+      - completed
   push:
     branches:
       - dev
@@ -17,6 +18,7 @@ on:
 
 jobs:
   build:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,8 +34,8 @@ jobs:
 
       - run: |
           dotnet restore
-          dotnet build Gangs/Gangs.csproj --no-restore
-          dotnet publish Gangs/Gangs.csproj --no-build --no-restore
+          dotnet build src/CS2/Gangs/Gangs.csproj --no-restore
+          dotnet publish src/CS2/Gangs/Gangs.csproj --no-build --no-restore
 
       - uses: actions/upload-artifact@v4.0.0
         with:
