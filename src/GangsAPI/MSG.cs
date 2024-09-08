@@ -81,7 +81,6 @@ public static class LocaleExtensions {
       throw new FormatException(
         $"There was an error formatting {msg.Key()} ({localizer[msg.Key()]})",
         e);
-      return msg.Key();
     }
   }
 }
