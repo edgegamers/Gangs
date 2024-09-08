@@ -19,6 +19,14 @@ public class MockPlayerManager : IPlayerManager {
     return Task.FromResult<IGangPlayer>(player);
   }
 
+  public Task<IEnumerable<IGangPlayer>> GetAllPlayers() {
+    return Task.FromResult<IEnumerable<IGangPlayer>>(players.Values);
+  }
+
+  public Task<IEnumerable<IGangPlayer>> GetMembers(int gangId) {
+    return Task.FromResult(players.Values.Where(p => p.GangId == gangId));
+  }
+
   public Task<bool> UpdatePlayer(IGangPlayer player) {
     if (!players.ContainsKey(player.Steam)) return Task.FromResult(false);
     players[player.Steam] = player;

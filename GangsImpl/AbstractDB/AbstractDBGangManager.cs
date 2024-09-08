@@ -69,6 +69,12 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
   }
 
   public async Task<bool> DeleteGang(int id) {
+    var members = await playerMgr.GetMembers(id);
+    foreach (var member in members) {
+      member.GangId = null;
+      await playerMgr.UpdatePlayer(member);
+    }
+
     var query = $"DELETE FROM {table} WHERE GangId = @id";
     return await Connection.ExecuteAsync(query, new { id }, Transaction) > 0;
   }

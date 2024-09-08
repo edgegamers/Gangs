@@ -31,8 +31,14 @@ public class MockGangManager(IPlayerManager playerMgr) : IGangManager {
     return Task.FromResult(true);
   }
 
-  public virtual Task<bool> DeleteGang(int id) {
-    return Task.FromResult(CachedGangs.RemoveWhere(g => g.GangId == id) > 0);
+  public virtual async Task<bool> DeleteGang(int id) {
+    var members = await PlayerMgr.GetMembers(id);
+    foreach (var member in members) {
+      member.GangId = null;
+      await PlayerMgr.UpdatePlayer(member);
+    }
+
+    return CachedGangs.RemoveWhere(g => g.GangId == id) > 0;
   }
 
   public virtual async Task<IGang?> CreateGang(string name, ulong owner) {
@@ -42,7 +48,9 @@ public class MockGangManager(IPlayerManager playerMgr) : IGangManager {
     var gang   = new MockGang(id, name);
     var player = await PlayerMgr.GetPlayer(owner);
     if (player == null) return null;
-    if (player.GangId != null) return null;
+    if (player.GangId != null)
+      throw new InvalidOperationException(
+        $"Attempted to create a gang for {owner} who is already in gang {player.GangId}");
     player.GangId = id;
     await PlayerMgr.UpdatePlayer(player);
     CachedGangs.Add(gang);

@@ -24,6 +24,14 @@ public interface IPlayerManager : IPluginBehavior {
   /// <returns>The new player.</returns>
   Task<IGangPlayer> CreatePlayer(ulong steamId, string? name = null);
 
+  Task<IEnumerable<IGangPlayer>> GetAllPlayers();
+
+  Task<IEnumerable<IGangPlayer>> GetMembers(int gangId);
+
+  Task<IEnumerable<IGangPlayer>> GetMembers(IGang gang) {
+    return GetMembers(gang.GangId);
+  }
+
   Task<bool> UpdatePlayer(IGangPlayer player);
 
   /// <summary>
