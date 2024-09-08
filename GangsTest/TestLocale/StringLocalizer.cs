@@ -5,7 +5,7 @@ using Microsoft.Extensions.Localization;
 namespace GangsTest.TestLocale;
 
 public partial class StringLocalizer : IStringLocalizer {
-  internal static readonly StringLocalizer Instance =
+  public static readonly StringLocalizer Instance =
     new(new LocalFileLocalizerFactory());
 
   private readonly IStringLocalizer localizer;
