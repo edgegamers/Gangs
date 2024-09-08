@@ -4,7 +4,9 @@ using Microsoft.Extensions.Localization;
 namespace GangsTest.TestLocale;
 
 public class LocalFileLocalizerFactory : IStringLocalizerFactory {
-  private const string path = @"..\..\..\..\Gangs\lang";
+  private readonly string path = Path.Combine(
+    Directory.GetCurrentDirectory().Split("Gangs")[0], "Gangs", "Gangs",
+    "lang");
 
   public IStringLocalizer Create(Type resourceSource) {
     return new JsonStringLocalizer(path);
