@@ -3,12 +3,10 @@ using Microsoft.Extensions.Localization;
 
 namespace GangsTest.TestLocale;
 
-public class LocaleFileKVData : IEnumerable<object[]> {
-  public IEnumerator<object[]> GetEnumerator() {
-    return StringLocalizer.Instance.GetAllStrings(true)
-     .Select(keyValuePair => (object[]) [keyValuePair.Name, keyValuePair.Value])
-     .GetEnumerator();
+public class LocaleFileKVData : TheoryData<string, string> {
+  public LocaleFileKVData() {
+    Add("prefix", "Example Prefix");
+    foreach (var key in StringLocalizer.Instance.GetAllStrings(true))
+      Add(key.Name, key.Value);
   }
-
-  IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 }
