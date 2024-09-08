@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Core.Translations;
+﻿using System.Diagnostics;
+using CounterStrikeSharp.API.Core.Translations;
 using Microsoft.Extensions.Localization;
 
 namespace GangsTest.TestLocale;
@@ -17,6 +18,8 @@ public class LocalFileLocalizerFactory : IStringLocalizerFactory {
     }
 
     path = Path.Combine(current, "lang");
+    Console.WriteLine($"Using lang folder at {path}");
+    Debug.WriteLine($"Using lang folder at {path}");
   }
 
   public IStringLocalizer Create(Type resourceSource) {
