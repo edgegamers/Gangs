@@ -4,7 +4,7 @@ using GangsAPI.Data.Stat;
 
 namespace GangsAPI.Services.Gang;
 
-public interface IGangStatManager : IPluginBehavior, ICacher {
+public interface IGangStatManager : IPluginBehavior {
   Task<(bool, TV?)> GetForGang<TV>(int key, string statId);
   Task<bool> SetForGang<TV>(int gangId, string statId, TV value);
   Task<bool> RemoveFromGang(int gangId, string statId);

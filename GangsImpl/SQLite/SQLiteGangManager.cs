@@ -1,5 +1,6 @@
 using System.Data.Common;
 using Dapper;
+using GangsAPI.Data.Gang;
 using GangsAPI.Services.Player;
 using GenericDB;
 using Microsoft.Data.Sqlite;
@@ -11,8 +12,8 @@ public class SQLiteGangManager(IPlayerManager playerMgr,
   : AbstractDBGangManager(playerMgr, connectionString, table, testing) {
   override protected string CreateTableQuery(string tableName, bool inTesting) {
     return inTesting ?
-      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (GangId INT PRIMARY KEY, Name VARCHAR(255) NOT NULL)" :
-      $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INT PRIMARY KEY, Name VARCHAR(255) NOT NULL)";
+      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (GangId INTEGER PRIMARY KEY, Name VARCHAR(255) NOT NULL)" :
+      $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INTEGER PRIMARY KEY, Name VARCHAR(255) NOT NULL)";
   }
 
   override protected Task<int> GetLastId() {

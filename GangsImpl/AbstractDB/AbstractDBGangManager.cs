@@ -2,6 +2,7 @@
 using CounterStrikeSharp.API.Core;
 using Dapper;
 using GangsAPI.Data.Gang;
+using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Mock;
 
@@ -9,12 +10,13 @@ namespace GenericDB;
 
 public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
   string connectionString, string table = "gang_gangs", bool testing = false)
-  : MockGangManager(playerMgr) {
+  : IGangManager {
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
-  public override void ClearCache() { CachedGangs.Clear(); }
+  public void ClearCache() { }
+  public Task Load() { return Task.CompletedTask; }
 
-  public override void Start(BasePlugin? plugin, bool hotReload) {
+  public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);
 
     Connection.Open();
@@ -43,22 +45,30 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
       $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL)";
   }
 
-  public override async Task Load() {
+  public async Task<IEnumerable<IGang>> GetGangs() {
     var query = $"SELECT * FROM {table}";
-    var gangs = await Connection.QueryAsync<DBGang>(query);
-    foreach (var gang in gangs) CachedGangs.Add(gang);
+    return await Connection.QueryAsync<DBGang>(query, transaction: Transaction);
   }
 
-  public override async Task<bool> UpdateGang(IGang gang) {
-    var result = await base.UpdateGang(gang);
-    var query  = $"UPDATE {table} SET Name = @Name WHERE GangId = @GangId";
-    await Connection.ExecuteAsync(query, new { gang.Name, gang.GangId },
+  public async Task<IGang?> GetGang(int id) {
+    var query = $"SELECT * FROM {table} WHERE GangId = @id";
+    return await Connection.QueryFirstOrDefaultAsync<DBGang>(query, new { id },
       Transaction);
-    return result;
   }
 
-  public override async Task<bool> DeleteGang(int id) {
-    await base.DeleteGang(id);
+  public async Task<IGang?> GetGang(ulong steam) {
+    var player = await playerMgr.GetPlayer(steam);
+    if (player?.GangId == null) return null;
+    return await GetGang(player.GangId.Value);
+  }
+
+  public async Task<bool> UpdateGang(IGang gang) {
+    var query = $"UPDATE {table} SET Name = @Name WHERE GangId = @GangId";
+    return await Connection.ExecuteAsync(query, new { gang.Name, gang.GangId },
+      Transaction) == 1;
+  }
+
+  public async Task<bool> DeleteGang(int id) {
     var query = $"DELETE FROM {table} WHERE GangId = @id";
     return await Connection.ExecuteAsync(query, new { id }, Transaction) > 0;
   }
@@ -68,9 +78,8 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
       transaction: Transaction);
   }
 
-  public override async Task<IGang?> CreateGang(string name, ulong owner) {
-    if (CachedGangs.Any(g => g.Name == name)) return null;
-    var player = await PlayerMgr.GetPlayer(owner);
+  public async Task<IGang?> CreateGang(string name, ulong owner) {
+    var player = await playerMgr.GetPlayer(owner);
     if (player == null) return null;
     if (player.GangId != null)
       throw new InvalidOperationException(
@@ -81,13 +90,12 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
     if (result == 0) return null;
     var id = await GetLastId();
     player.GangId = id;
-    await PlayerMgr.UpdatePlayer(player);
+    await playerMgr.UpdatePlayer(player);
     var gang = new DBGang(id, name);
-    CachedGangs.Add(gang);
     return gang.Clone() as IGang;
   }
 
-  public override void Dispose() {
+  public void Dispose() {
     Transaction?.Dispose();
     Connection.Dispose();
   }

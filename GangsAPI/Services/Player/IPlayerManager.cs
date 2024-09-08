@@ -6,7 +6,7 @@ namespace GangsAPI.Services.Player;
 /// <summary>
 ///   A manager for players. Allows for the retrieval and creation of players.
 /// </summary>
-public interface IPlayerManager : IPluginBehavior, ICacher {
+public interface IPlayerManager : IPluginBehavior {
   /// <summary>
   ///   Gets a player by their SteamID64.
   ///   If the player does not exist, attempts to create them.

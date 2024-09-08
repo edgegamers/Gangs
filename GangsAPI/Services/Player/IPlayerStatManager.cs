@@ -3,7 +3,7 @@ using GangsAPI.Data.Stat;
 
 namespace GangsAPI.Services.Player;
 
-public interface IPlayerStatManager : IPluginBehavior, ICacher {
+public interface IPlayerStatManager : IPluginBehavior {
   Task<(bool, TV?)> GetForPlayer<TV>(ulong steam, string statId);
   Task<bool> SetForPlayer<TV>(ulong steam, string statId, TV value);
   Task<bool> RemoveFromPlayer(ulong steam, string statId);

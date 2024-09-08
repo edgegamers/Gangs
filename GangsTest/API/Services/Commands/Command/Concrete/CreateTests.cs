@@ -72,8 +72,6 @@ public class CreateTests(ICommandManager commands, IGangManager gangMgr)
   public async Task Create_Already_Ganged_Uncached() {
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(player, "create", "foo bar"));
-    gangMgr.ClearCache();
-    await gangMgr.Load();
     Assert.Equal(CommandResult.FAILURE,
       await Commands.ProcessCommand(player, "create", "bar foo"));
     Assert.Contains("You are already in a gang", player.ConsoleOutput);
