@@ -46,8 +46,8 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
 
   virtual protected string CreateTableQuery(string tableName, bool inTesting) {
     return inTesting ?
-      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL, `Rank` INT NOT NULL, Name VARCHAR(255) NOT NULL, Permissions INT NOT NULL, PRIMARY KEY (GangId, Rank))" :
-      $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL, `Rank` INT NOT NULL, Name VARCHAR(255) NOT NULL, Permissions INT NOT NULL, PRIMARY KEY (GangId, Rank))";
+      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL, `Rank` INT NOT NULL, Name VARCHAR(255) NOT NULL, Permissions INT NOT NULL, PRIMARY KEY (GangId, `Rank`))" :
+      $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL, `Rank` INT NOT NULL, Name VARCHAR(255) NOT NULL, Permissions INT NOT NULL, PRIMARY KEY (GangId, `Rank`))";
   }
 
   public async Task<Dictionary<int, IEnumerable<IGangRank>>> GetAllRanks() {
