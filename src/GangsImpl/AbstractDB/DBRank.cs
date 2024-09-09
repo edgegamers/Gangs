@@ -4,7 +4,7 @@ namespace GenericDB;
 
 public class DBRank : IGangRank {
   public int GangId { get; init; }
-  public string Name { get; init; }
+  public required string Name { get; init; }
   public int Rank { get; init; }
   public IGangRank.Permissions Perms { get; init; }
 
