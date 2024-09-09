@@ -3,7 +3,7 @@ using GangsAPI.Services;
 
 namespace GangsTest.API.Services.Rank;
 
-public class RankManagerTests : TestParent {
+public class CreateTests : TestParent {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Create(IRankManager mgr) {

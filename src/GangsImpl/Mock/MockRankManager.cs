@@ -31,11 +31,12 @@ public class MockRankManager : IRankManager {
     IGangRank.Permissions permissions) {
     if (rank < 0) return null;
     var newRank = new MockRank(name, rank, permissions);
-    var addded  = await AddRank(gang, newRank);
-    return addded ? newRank : null;
+    var added   = await AddRank(gang, newRank);
+    return added ? newRank : null;
   }
 
   public Task<bool> DeleteRank(int gang, int rank) {
+    if (rank <= 0) return Task.FromResult(false);
     if (!Ranks.TryGetValue(gang, out var gangRanks))
       return Task.FromResult(false);
     gangRanks = gangRanks.ToList();

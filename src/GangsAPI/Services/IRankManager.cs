@@ -100,6 +100,9 @@ public interface IRankManager : IPluginBehavior {
 
   Task<IEnumerable<IGangRank>> GetRanks(IGang gang) => GetRanks(gang.GangId);
 
+  Task<IEnumerable<IGangRank>> AssignDefaultRanks(IGang gang)
+    => AssignDefaultRanks(gang.GangId);
+
   #endregion
 
   /// <summary>
