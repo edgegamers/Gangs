@@ -5,7 +5,7 @@ namespace Mock;
 public class TestDBConfig : IDBConfig {
   public string ConnectionString { get; } =
     Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
-    ?? "Host=localhost;User=root;Database=gangs";
+    ?? "Host=localhost;User=root;Database=gangs;Pooling=false;";
 
   public string TablePrefix => "gangs_unit_test";
 
