@@ -4,23 +4,32 @@ using GangsAPI.Services.Menu;
 namespace GangsTest.API.Services.Menu;
 
 public abstract class TestParent {
-  protected class TestMenuClass : IMenu {
+  protected readonly IMenuManager MenuManager;
+  protected readonly IMenu TestMenu;
+
+  public TestParent(IMenuManager menuManager) {
+    MenuManager = menuManager;
+    TestMenu    = new TestMenuClass(menuManager);
+
+    MenuManager.Start();
+  }
+
+  protected sealed class TestMenuClass(IMenuManager mgr,
+    string title = "Test Menu Title") : IMenu {
     public Task Open(PlayerWrapper player) {
-      player.PrintToChat("Test Menu Title");
+      player.PrintToChat(title);
       player.PrintToChat("1 | Test Menu Option");
       return Task.CompletedTask;
     }
 
     public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
 
-    public Task OnInput(PlayerWrapper player, int input) {
+    public async Task AcceptInput(PlayerWrapper player, int input) {
       player.PrintToChat($"You pressed {input}");
-      return Task.CompletedTask;
+      if (input == 5) await mgr.CloseMenu(player);
     }
   }
 
-  protected IMenu TestMenu = new TestMenuClass();
-
-  protected PlayerWrapper TestPlayer =
-    new PlayerWrapper((ulong)new Random().NextInt64(), "Test Player");
+  protected readonly PlayerWrapper TestPlayer =
+    new((ulong)new Random().NextInt64(), "Test Player");
 }

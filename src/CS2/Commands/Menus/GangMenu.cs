@@ -19,7 +19,7 @@ public class GangMenu(IGang gang, IPlayerManager playerMgr) : IMenu {
 
   public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
 
-  public Task OnInput(PlayerWrapper player, int input) {
+  public Task AcceptInput(PlayerWrapper player, int input) {
     return Task.CompletedTask;
   }
 }

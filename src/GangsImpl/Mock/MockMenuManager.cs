@@ -27,10 +27,10 @@ public class MockMenuManager : IMenuManager {
     return Task.FromResult(true);
   }
 
-  public Task<bool> OnInput(PlayerWrapper player, int input) {
+  public Task<bool> AcceptInput(PlayerWrapper player, int input) {
     var activeMenu = GetActiveMenu(player);
     if (activeMenu == null) return Task.FromResult(false);
-    activeMenu.OnInput(player, input);
+    activeMenu.AcceptInput(player, input);
     return Task.FromResult(true);
   }
 }

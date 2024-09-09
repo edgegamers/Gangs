@@ -13,7 +13,7 @@ public class CommandBasedMenuManager(ICommandManager cmd) : MockMenuManager {
     public async Task<CommandResult> Execute(PlayerWrapper? executor,
       CommandInfoWrapper info) {
       if (executor == null) return CommandResult.PLAYER_ONLY;
-      await manager.OnInput(executor, index);
+      await manager.AcceptInput(executor, index);
       return CommandResult.SUCCESS;
     }
   }

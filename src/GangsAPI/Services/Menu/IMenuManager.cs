@@ -9,10 +9,10 @@ public interface IMenuManager : IPluginBehavior {
 
   Task<bool> CloseMenu(PlayerWrapper player);
 
-  async Task<bool> OnInput(PlayerWrapper player, int input) {
+  async Task<bool> AcceptInput(PlayerWrapper player, int input) {
     var active = GetActiveMenu(player);
     if (active == null) return false;
-    await active.OnInput(player, input);
+    await active.AcceptInput(player, input);
     return true;
   }
 }
