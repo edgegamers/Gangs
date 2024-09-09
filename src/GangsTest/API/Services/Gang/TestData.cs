@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using GangsAPI;
+using GangsAPI.Services.Gang;
+using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using GangsImpl;
 using Mock;
@@ -8,8 +10,8 @@ using SQLite;
 
 namespace GangsTest.API.Services.Gang;
 
-public class TestData : IEnumerable<object[]> {
-  private readonly IBehavior[] behaviors = [
+public class TestData : TheoryData<IGangManager> {
+  private readonly IGangManager[] behaviors = [
     new MockGangManager(playerMgr),
     new MySQLGangManager(playerMgr,
       new MockDBConfig(
@@ -20,14 +22,15 @@ public class TestData : IEnumerable<object[]> {
   ];
 
   public TestData() {
-    foreach (var behavior in behaviors) behavior.Start();
+    foreach (var behavior in behaviors) {
+      behavior.Start();
+      Add(behavior);
+    }
   }
 
   private static IPlayerManager playerMgr => new MockPlayerManager();
 
-  public IEnumerator<object[]> GetEnumerator() {
+  public new IEnumerator<object[]> GetEnumerator() {
     return behaviors.Select(behavior => (object[]) [behavior]).GetEnumerator();
   }
-
-  IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 }

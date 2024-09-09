@@ -1,33 +1,25 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Menu;
+using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Services.Player;
+using IMenu = GangsAPI.Services.Menu.IMenu;
 
 namespace Commands.Menus;
 
-public class GangMenu : ChatMenu {
-  private readonly IGang gang;
-  private readonly IPlayerManager playerMgr;
-
-  public GangMenu(IGang gang, IPlayerManager playerMgr) : base(
-    $"Gangs - {gang.Name}") {
-    this.gang      = gang;
-    this.playerMgr = playerMgr;
-  }
-
-  public async Task<GangMenu> Load() {
+public class GangMenu(IGang gang, IPlayerManager playerMgr) : IMenu {
+  public async Task Open(PlayerWrapper player) {
     var members = await playerMgr.GetMembers(gang);
-    await Server.NextFrameAsync(()
-      => AddMenuOption($"{members.Count()} Members", MembersOption));
-
-    return this;
+    player.PrintToChat($"{ChatColors.Red}Gangs - {gang.Name}");
+    player.PrintToChat(
+      $"{ChatColors.DarkRed}1 | {ChatColors.Yellow}{members}{ChatColors.LightRed} Members");
   }
 
-  public void MembersOption(CCSPlayerController player, ChatMenuOption option) {
-    Task.Run(async () => {
-      var menu = await new MembersMenu(gang, playerMgr).Load();
-      await Server.NextFrameAsync(() => menu.Open(player));
-    });
+  public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
+
+  public Task OnInput(PlayerWrapper player, int input) {
+    return Task.CompletedTask;
   }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using GangsAPI;
+using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using GangsTest.TestLocale;
 using Mock;
@@ -8,6 +9,7 @@ namespace GangsTest.API.Services.Commands.CommandManager;
 
 public class TestData : IEnumerable<object[]> {
   private static readonly IPlayerManager playerMgr = new MockPlayerManager();
+  private static readonly IMenuManager menuMgr = new MockMenuManager();
 
   private static readonly IPlayerStatManager playerStatMgr =
     new MockInstanceStatManager();
@@ -15,7 +17,7 @@ public class TestData : IEnumerable<object[]> {
   private readonly IBehavior[] behaviors = [
     new MockCommandManager(StringLocalizer.Instance),
     new global::Commands.CommandManager(new MockGangManager(playerMgr),
-      playerStatMgr, playerMgr, StringLocalizer.Instance)
+      playerStatMgr, playerMgr, menuMgr, StringLocalizer.Instance)
   ];
 
   public TestData() {

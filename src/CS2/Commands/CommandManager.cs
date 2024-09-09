@@ -7,6 +7,7 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.Localization;
 using Mock;
@@ -15,7 +16,7 @@ namespace Commands;
 
 public class CommandManager(IGangManager gangMgr,
   IPlayerStatManager playerStatMgr, IPlayerManager playerMgr,
-  IStringLocalizer testLocale)
+  IMenuManager menuMgr, IStringLocalizer testLocale)
   : MockCommandManager(testLocale), IPluginBehavior {
   private BasePlugin? plugin;
   private bool hotReload;
@@ -26,7 +27,7 @@ public class CommandManager(IGangManager gangMgr,
 
     if (basePlugin != null) Locale = basePlugin.Localizer;
 
-    RegisterCommand(new GangCommand(gangMgr, playerMgr, Locale));
+    RegisterCommand(new GangCommand(gangMgr, playerMgr, menuMgr, Locale));
     RegisterCommand(new BalanceCommand(playerStatMgr, Locale));
   }
 

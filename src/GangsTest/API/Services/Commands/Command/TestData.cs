@@ -2,33 +2,33 @@
 using Commands;
 using Commands.Gang;
 using GangsAPI;
+using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using GangsTest.TestLocale;
 using Mock;
 
 namespace GangsTest.API.Services.Commands.Command;
 
-public class TestData : IEnumerable<object[]> {
+public class TestData : TheoryData<ICommand> {
   private static readonly IPlayerManager playerMgr = new MockPlayerManager();
   private static readonly IGangManager manager = new MockGangManager(playerMgr);
+  private static readonly IMenuManager menuMgr = new MockMenuManager();
 
   private static readonly IPlayerStatManager statMgr =
     new MockInstanceStatManager();
 
-  private readonly IBehavior[] behaviors = [
+  private readonly ICommand[] behaviors = [
     new CreateCommand(manager, StringLocalizer.Instance), new HelpCommand(),
-    new GangCommand(manager, playerMgr, StringLocalizer.Instance),
+    new GangCommand(manager, playerMgr, menuMgr, StringLocalizer.Instance),
     new BalanceCommand(statMgr, StringLocalizer.Instance)
   ];
 
   public TestData() {
-    foreach (var behavior in behaviors) behavior.Start();
+    foreach (var behavior in behaviors) {
+      behavior.Start();
+      Add(behavior);
+    }
   }
-
-  public IEnumerator<object[]> GetEnumerator() {
-    return behaviors.Select(behavior => (object[]) [behavior]).GetEnumerator();
-  }
-
-  IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 }
