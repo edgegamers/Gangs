@@ -87,7 +87,7 @@ jobs:
         run: dotnet test src/GangsTest/GangsTest.csproj --no-build --verbosity normal
       - name: Generate Code Coverage Report
         env:
-          DB_GANGS_CONNECTION: "Server=localhost;Port=3306;Database=gangs;User=root"
+          DB_GANGS_CONNECTION: "Server=localhost;Port=3306;Database=gangs;User=root;Pooling=false"
         if: ${{ matrix.dotnet-version == '9.0.x' }}
         run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage src/GangsTest/GangsTest.csproj --settings coverage.runsettings
       - name: Code Coverage Summary Report

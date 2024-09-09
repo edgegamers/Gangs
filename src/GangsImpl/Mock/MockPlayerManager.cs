@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using GangsAPI.Data.Gang;
+﻿using GangsAPI.Data.Gang;
 using GangsAPI.Services.Player;
 
 namespace Mock;

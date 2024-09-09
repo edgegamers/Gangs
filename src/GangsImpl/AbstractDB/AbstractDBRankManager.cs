@@ -1,10 +1,8 @@
 ﻿using System.Data.Common;
 using CounterStrikeSharp.API.Core;
 using Dapper;
-using GangsAPI.Data.Gang;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
-using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 
 namespace GenericDB;
@@ -40,14 +38,6 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
   public void Dispose() {
     Transaction?.Dispose();
     Connection.Dispose();
-  }
-
-  abstract protected DbConnection CreateDbConnection(string connectionString);
-
-  virtual protected string CreateTableQuery(string tableName, bool inTesting) {
-    return inTesting ?
-      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL, `Rank` INT NOT NULL, Name VARCHAR(255) NOT NULL, Permissions INT NOT NULL, PRIMARY KEY (GangId, `Rank`))" :
-      $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL, `Rank` INT NOT NULL, Name VARCHAR(255) NOT NULL, Permissions INT NOT NULL, PRIMARY KEY (GangId, `Rank`))";
   }
 
   public async Task<Dictionary<int, IEnumerable<IGangRank>>> GetAllRanks() {
@@ -141,5 +131,13 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
           new { rank.Name, rank.Perms, gang, rank.Rank }, Transaction) == 1;
       }
     }
+  }
+
+  abstract protected DbConnection CreateDbConnection(string connectionString);
+
+  virtual protected string CreateTableQuery(string tableName, bool inTesting) {
+    return inTesting ?
+      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL, `Rank` INT NOT NULL, Name VARCHAR(255) NOT NULL, Permissions INT NOT NULL, PRIMARY KEY (GangId, `Rank`))" :
+      $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INT NOT NULL, `Rank` INT NOT NULL, Name VARCHAR(255) NOT NULL, Permissions INT NOT NULL, PRIMARY KEY (GangId, `Rank`))";
   }
 }

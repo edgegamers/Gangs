@@ -1,20 +1,19 @@
-﻿using System.Runtime.CompilerServices;
-using GangsAPI.Extensions;
+﻿using GangsAPI.Extensions;
 
 namespace GangsAPI.Permissions;
 
 /// <summary>
-/// Represents a customizable rank that gang owners / admins may dictate.
-/// Ranks are identified by their (gangId, rank) pair, and must be unique.
-/// Rank hierarchy is dictated by rank number, with lower numbers being higher ranks.
-/// (i.e. rank 0 (owner) is higher than rank 1 (admin), which is higher than rank 2 (member))
-/// This means rank 0 **must** be the owner rank, and all ranks must be non-negative.
+///   Represents a customizable rank that gang owners / admins may dictate.
+///   Ranks are identified by their (gangId, rank) pair, and must be unique.
+///   Rank hierarchy is dictated by rank number, with lower numbers being higher ranks.
+///   (i.e. rank 0 (owner) is higher than rank 1 (admin), which is higher than rank 2 (member))
+///   This means rank 0 **must** be the owner rank, and all ranks must be non-negative.
 /// </summary>
 public interface IGangRank : IComparable<IGangRank> {
   [Flags]
   public enum Permissions {
     NONE = 0,
-    
+
     /// <summary>
     ///   The member may invite others to the gang.
     /// </summary>
@@ -71,7 +70,7 @@ public interface IGangRank : IComparable<IGangRank> {
     /// <summary>
     ///   The member may create new ranks for the gang.
     ///   All ranks created must not have a rank higher than
-    ///   the member's current rank. 
+    ///   the member's current rank.
     /// </summary>
     CREATE_RANKS = 1 << 9,
 
@@ -89,15 +88,15 @@ public interface IGangRank : IComparable<IGangRank> {
     OWNER = 1 << 11 | ADMINISTRATOR,
 
     /// <summary>
-    ///  The member may view detailed information of other
-    /// gang members. (Last logged in, kills, etc.)
+    ///   The member may view detailed information of other
+    ///   gang members. (Last logged in, kills, etc.)
     /// </summary>
     VIEW_MEMBERS = 1 << 12,
 
     /// <summary>
-    ///  The member may manage invites to the gang.
+    ///   The member may manage invites to the gang.
     /// </summary>
-    MANAGE_INVITES = 1 << 13 | INVITE_OTHERS,
+    MANAGE_INVITES = 1 << 13 | INVITE_OTHERS
   }
 
   string Name { get; }

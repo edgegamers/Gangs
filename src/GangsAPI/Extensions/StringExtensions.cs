@@ -4,7 +4,7 @@ namespace GangsAPI.Extensions;
 
 public static class StringExtensions {
   /// <summary>
-  /// Converts a given string to Upper Title Case.
+  ///   Converts a given string to Upper Title Case.
   /// </summary>
   /// <param name="str"></param>
   /// <returns></returns>

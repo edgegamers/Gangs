@@ -11,8 +11,8 @@ public class MembersMenu(IGang gang, IPlayerManager playerMgr)
     var members = await playerMgr.GetMembers(gang);
     await Server.NextFrameAsync(() => {
       foreach (var member in members)
-        AddMenuOption(member.Name ?? member.Steam.ToString(),
-          (player, option) => { }, true);
+        AddMenuOption(member.Name ?? member.Steam.ToString(), (_, _) => { },
+          true);
     });
 
     return this;

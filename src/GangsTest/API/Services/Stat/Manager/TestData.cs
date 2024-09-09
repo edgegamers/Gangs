@@ -8,8 +8,7 @@ namespace GangsTest.API.Services.Stat.Manager;
 
 public class TestData : IEnumerable<object[]> {
   private readonly IBehavior[] behaviors = [
-    new MockStatManager(),
-    new MySQLStatManager(new TestDBConfig()),
+    new MockStatManager(), new MySQLStatManager(new TestDBConfig()),
     new SQLiteStatManager("Data Source=:memory:", "gang_unit_test", true)
   ];
 

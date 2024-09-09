@@ -8,8 +8,7 @@ namespace GangsTest.API.Services.Player;
 
 public class TestData : IEnumerable<object[]> {
   private readonly IPlayerManager[] behaviors = [
-    new MockPlayerManager(),
-    new MySQLPlayerManager(new TestDBConfig()),
+    new MockPlayerManager(), new MySQLPlayerManager(new TestDBConfig()),
     new SQLitePlayerManager("Data Source=:memory:", "gang_unit_test", true)
   ];
 
