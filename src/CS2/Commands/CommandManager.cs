@@ -1,5 +1,4 @@
-﻿using Commands.Gang;
-using CounterStrikeSharp.API;
+﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI;
@@ -18,8 +17,8 @@ public class CommandManager(IGangManager gangMgr,
   IPlayerStatManager playerStatMgr, IPlayerManager playerMgr,
   IMenuManager menuMgr, IStringLocalizer testLocale)
   : MockCommandManager(testLocale), IPluginBehavior {
-  private BasePlugin? plugin;
   private bool hotReload;
+  private BasePlugin? plugin;
 
   public void Start(BasePlugin? basePlugin, bool hotReload) {
     plugin         = basePlugin;

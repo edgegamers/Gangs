@@ -7,6 +7,9 @@ public abstract class TestParent {
   protected readonly IMenuManager MenuManager;
   protected readonly IMenu TestMenu;
 
+  protected readonly PlayerWrapper TestPlayer =
+    new((ulong)new Random().NextInt64(), "Test Player");
+
   public TestParent(IMenuManager menuManager) {
     MenuManager = menuManager;
     TestMenu    = new TestMenuClass(menuManager);
@@ -29,7 +32,4 @@ public abstract class TestParent {
       if (input == 5) await mgr.CloseMenu(player);
     }
   }
-
-  protected readonly PlayerWrapper TestPlayer =
-    new((ulong)new Random().NextInt64(), "Test Player");
 }

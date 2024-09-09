@@ -1,6 +1,5 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Data.Command;
-using Microsoft.Extensions.Localization;
 
 namespace GangsAPI.Services.Commands;
 

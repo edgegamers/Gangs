@@ -61,9 +61,11 @@ public interface IGangManager : IPluginBehavior {
   /// </returns>
   Task<IGang?> CreateGang(string name, ulong owner);
 
-  Task<IGang?> CreateGang(string name, IGangPlayer player)
-    => CreateGang(name, player.Steam);
+  Task<IGang?> CreateGang(string name, IGangPlayer player) {
+    return CreateGang(name, player.Steam);
+  }
 
-  Task<IGang?> CreateGang(string name, PlayerWrapper player)
-    => CreateGang(name, player.Steam);
+  Task<IGang?> CreateGang(string name, PlayerWrapper player) {
+    return CreateGang(name, player.Steam);
+  }
 }

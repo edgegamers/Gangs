@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using Microsoft.Extensions.Localization;
-
-namespace GangsTest.TestLocale;
+﻿namespace GangsTest.TestLocale;
 
 public class LocaleFileKVData : TheoryData<string, string> {
   public LocaleFileKVData() {

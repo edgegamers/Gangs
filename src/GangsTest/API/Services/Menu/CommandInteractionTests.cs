@@ -1,6 +1,5 @@
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
-using GangsAPI.Services.Menu;
 using Mock;
 
 namespace GangsTest.API.Services.Menu;

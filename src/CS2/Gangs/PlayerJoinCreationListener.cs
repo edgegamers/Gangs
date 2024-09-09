@@ -9,16 +9,15 @@ namespace GangsImpl;
 public class PlayerJoinCreationListener(IPlayerManager mgr) : IPluginBehavior {
   public void Start(BasePlugin? plugin, bool hotReload) {
     if (!hotReload) return;
-    foreach (var player in Utilities.GetPlayers().Where(p => !p.IsBot)) {
+    foreach (var player in Utilities.GetPlayers().Where(p => !p.IsBot))
       Task.Run(async () => {
         await updatePlayerName(player.SteamID, player.PlayerName);
       });
-    }
   }
 
   [GameEventHandler]
-  public HookResult OnJoin(EventPlayerConnectFull @ev, GameEventInfo info) {
-    var player = @ev.Userid;
+  public HookResult OnJoin(EventPlayerConnectFull ev, GameEventInfo info) {
+    var player = ev.Userid;
     if (player == null || !player.IsValid) return HookResult.Continue;
 
     var steam = player.SteamID;

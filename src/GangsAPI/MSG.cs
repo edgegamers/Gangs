@@ -36,7 +36,8 @@ public enum MSG {
   COLOR_CURRENCY,
   COLOR_TARGET,
   ALREADY_IN_GANG,
-  NOT_IN_GANG, }
+  NOT_IN_GANG
+}
 
 public static class LocaleExtensions {
   public static string Key(this MSG msg) {

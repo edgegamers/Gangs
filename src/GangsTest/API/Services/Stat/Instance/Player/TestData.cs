@@ -10,7 +10,7 @@ public class TestData : IEnumerable<object[]> {
     new MockInstanceStatManager(),
     new MySQLPlayerInstanceManager(new MockDBConfig(
       Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
-      ?? "Host=localhost;User=root;Database=gangs", "gang_inst_test", true)),
+      ?? "Host=localhost;User=root;Database=gangs", "gang_inst_test", true))
   ];
 
   public TestData() {

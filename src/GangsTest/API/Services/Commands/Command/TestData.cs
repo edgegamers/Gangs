@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using Commands;
+﻿using Commands;
 using Commands.Gang;
-using GangsAPI;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;

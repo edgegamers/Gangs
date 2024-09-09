@@ -1,7 +1,5 @@
 ﻿using CounterStrikeSharp.API;
-using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Commands.Targeting;
-using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -14,12 +12,11 @@ namespace Commands;
 
 public class BalanceCommand(IPlayerStatManager playerMgr,
   IStringLocalizer localizer) : ICommand {
+  private readonly string id = new BalanceStat().StatId;
   public string Name => "css_balance";
 
   public string[] Usage => ["", "<player>", "<player> <amount>"];
   public string[] Aliases => ["css_balance", "css_credit", "css_credits"];
-
-  private readonly string id = new BalanceStat().StatId;
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

@@ -17,18 +17,18 @@ public partial class StringLocalizer : IStringLocalizer {
     localizer = factory.Create(string.Empty, assemblyName.FullName);
   }
 
-  public LocalizedString this[string name] => GetString(name);
+  public LocalizedString this[string name] => getString(name);
 
   public LocalizedString this[string name, params object[] arguments]
-    => new(name, string.Format(GetString(name).Value, arguments));
+    => new(name, string.Format(getString(name).Value, arguments));
 
   public IEnumerable<LocalizedString>
     GetAllStrings(bool includeParentCultures) {
     return localizer.GetAllStrings(includeParentCultures)
-     .Select(str => GetString(str.Name));
+     .Select(str => getString(str.Name));
   }
 
-  private LocalizedString GetString(string name) {
+  private LocalizedString getString(string name) {
     // Replace %[key]% with that key's value
     // Eg: if we have a locale key of "prefix", then
     // other locale values can use %prefix% to reference it.
