@@ -63,7 +63,7 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
 
   public async Task<IGangRank?> GetRank(int gang, int rank) {
     return await Connection.QueryFirstOrDefaultAsync<DBRank>(
-      $"SELECT * FROM {table} WHERE GangId = @gang AND Rank = @rank",
+      $"SELECT * FROM {table} WHERE GangId = @gang AND `Rank` = @rank",
       new { gang, rank }, Transaction);
   }
 
@@ -72,7 +72,7 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
     if (await GetRank(gang, rank.Rank) != null) return false;
 
     var query =
-      $"INSERT INTO {table} (GangId, Rank, Name, Permissions) VALUES (@GangId, @Rank, @Name, @Perms)";
+      $"INSERT INTO {table} (GangId, `Rank`, Name, Permissions) VALUES (@GangId, @Rank, @Name, @Perms)";
     return await Connection.ExecuteAsync(query,
         new { GangId = gang, rank.Rank, rank.Name, rank.Perms }, Transaction)
       == 1;
@@ -99,7 +99,7 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
     }
 
     var lowerRank = await Connection.QueryFirstOrDefaultAsync<DBRank>(
-      $"SELECT * FROM {table} WHERE GangId = @GangId AND Rank > @Rank ORDER BY Rank ASC LIMIT 1",
+      $"SELECT * FROM {table} WHERE GangId = @GangId AND `Rank` > @Rank ORDER BY `Rank` ASC LIMIT 1",
       new { GangId = gang, rank }, Transaction);
 
     var members = (await playerMgr.GetMembers(gang))
@@ -116,7 +116,8 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
       await playerMgr.UpdatePlayer(player);
     }
 
-    var query = $"DELETE FROM {table} WHERE GangId = @GangId AND Rank = @Rank";
+    var query =
+      $"DELETE FROM {table} WHERE GangId = @GangId AND `Rank` = @Rank";
 
     return await Connection.ExecuteAsync(query, new { GangId = gang, rank },
       Transaction) == 1;
@@ -135,7 +136,7 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
       default: {
         // Update name and permissions
         var query =
-          $"UPDATE {table} SET Name = @Name, Permissions = @Perms WHERE GangId = @GangId AND Rank = @Rank";
+          $"UPDATE {table} SET Name = @Name, Permissions = @Perms WHERE GangId = @GangId AND `Rank` = @Rank";
         return await Connection.ExecuteAsync(query,
           new { rank.Name, rank.Perms, gang, rank.Rank }, Transaction) == 1;
       }
