@@ -7,4 +7,8 @@ public class MockRank(string name, int rank, IGangRank.Permissions perms)
   public string Name { get; } = name;
   public int Rank { get; } = rank;
   public IGangRank.Permissions Perms { get; } = perms;
+
+  public int CompareTo(IGangRank? other) {
+    return other == null ? 1 : Rank.CompareTo(other.Rank);
+  }
 }

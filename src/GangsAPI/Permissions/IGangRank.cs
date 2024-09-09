@@ -10,9 +10,11 @@ namespace GangsAPI.Permissions;
 /// (i.e. rank 0 (owner) is higher than rank 1 (admin), which is higher than rank 2 (member))
 /// This means rank 0 **must** be the owner rank, and all ranks must be non-negative.
 /// </summary>
-public interface IGangRank {
+public interface IGangRank : IComparable<IGangRank> {
   [Flags]
   public enum Permissions {
+    NONE = 0,
+    
     /// <summary>
     ///   The member may invite others to the gang.
     /// </summary>
@@ -59,18 +61,17 @@ public interface IGangRank {
     MANAGE_PERKS = 1 << 7,
 
     /// <summary>
-    ///   The member may manage the ranks of the gang, regardless
+    ///   The member may manage the ranks (names + perms) of the gang, regardless
     ///   of rank system, the member will not be able to manage
-    ///   their own rank.
+    ///   their own rank, or create other ranks.
+    ///   The member may not grant any permissions that they themselves do not have.
     /// </summary>
     MANAGE_RANKS = 1 << 8,
 
     /// <summary>
     ///   The member may create new ranks for the gang.
     ///   All ranks created must not have a rank higher than
-    ///   the member's current rank. Depending on the rank system,
-    ///   these ranks may also be required to have a rank lower
-    ///   than the member's current rank.
+    ///   the member's current rank. 
     /// </summary>
     CREATE_RANKS = 1 << 9,
 
@@ -96,7 +97,7 @@ public interface IGangRank {
     /// <summary>
     ///  The member may manage invites to the gang.
     /// </summary>
-    MANAGE_INVITES = 1 << 13,
+    MANAGE_INVITES = 1 << 13 | INVITE_OTHERS,
   }
 
   string Name { get; }

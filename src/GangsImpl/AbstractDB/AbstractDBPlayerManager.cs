@@ -71,6 +71,10 @@ public abstract class AbstractDBPlayerManager(string connectionString,
   }
 
   public async Task<bool> UpdatePlayer(IGangPlayer player) {
+    if (player.GangId == null != (player.GangRank == null))
+      throw new InvalidOperationException(
+        "Player must have both GangId and GangRank set or neither set");
+
     var query =
       $"UPDATE {table} SET Name = @Name, GangId = @GangId, GangRank = @GangRank WHERE Steam = @Steam";
     return await Connection.ExecuteAsync(query, player, Transaction) == 1;

@@ -1,4 +1,5 @@
-﻿using GangsAPI.Services.Gang;
+﻿using GangsAPI.Services;
+using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Mock;
 using SQLImpl;
@@ -8,13 +9,10 @@ namespace GangsTest.API.Services.Gang;
 
 public class TestData : TheoryData<IGangManager> {
   private readonly IGangManager[] behaviors = [
-    new MockGangManager(playerMgr),
-    new MySQLGangManager(playerMgr,
-      new MockDBConfig(
-        Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
-        ?? "Host=localhost;User=root;Database=gangs", "gang_unit_test", true)),
-    new SQLiteGangManager(playerMgr, "Data Source=:memory:", "gang_unit_test",
-      true)
+    new MockGangManager(playerMgr, rankMgr),
+    new MySQLGangManager(playerMgr, rankMgr, new TestDBConfig()),
+    new SQLiteGangManager(playerMgr, rankMgr, "Data Source=:memory:",
+      "gang_unit_test", true)
   ];
 
   public TestData() {
@@ -25,6 +23,7 @@ public class TestData : TheoryData<IGangManager> {
   }
 
   private static IPlayerManager playerMgr => new MockPlayerManager();
+  private static IRankManager rankMgr => new MockRankManager(playerMgr);
 
   public new IEnumerator<object[]> GetEnumerator() {
     return behaviors.Select(behavior => (object[]) [behavior]).GetEnumerator();

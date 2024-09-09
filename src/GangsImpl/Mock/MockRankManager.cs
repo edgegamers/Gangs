@@ -1,10 +1,11 @@
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Player;
 
 namespace Mock;
 
-public class MockRankManager : IRankManager {
+public class MockRankManager(IPlayerManager playerMgr) : IRankManager {
   protected readonly Dictionary<int, IEnumerable<IGangRank>> Ranks = new();
 
   public Task<Dictionary<int, IEnumerable<IGangRank>>> GetAllRanks() {
@@ -35,13 +36,57 @@ public class MockRankManager : IRankManager {
     return added ? newRank : null;
   }
 
-  public Task<bool> DeleteRank(int gang, int rank) {
-    if (rank <= 0) return Task.FromResult(false);
-    if (!Ranks.TryGetValue(gang, out var gangRanks))
-      return Task.FromResult(false);
+  // public Task<bool> DeleteRank(int gang, int rank, IRankManager.DeleteStrat strat) { throw new NotImplementedException(); }
+
+  public async Task<bool> DeleteRank(int gang, int rank,
+    IRankManager.DeleteStrat strat) {
+    if (rank <= 0) return false;
+    if (!Ranks.TryGetValue(gang, out var gangRanks)) return false;
+
+    if (strat == IRankManager.DeleteStrat.CANCEL) {
+      var players = await playerMgr.GetMembers(gang);
+      if (players.Any(p => p.GangRank == rank)) return false;
+    }
+
     gangRanks = gangRanks.ToList();
-    if (gangRanks.All(r => r.Rank != rank)) return Task.FromResult(false);
+
+    var sortedRanks = gangRanks.ToList();
+
+    // Sort from highest ranking to lowest
+    sortedRanks.Sort();
+
+    if (gangRanks.All(r => r.Rank != rank)) return false;
+
+    var lowerRank = sortedRanks.FirstOrDefault(r => r.Rank > rank);
+
+    var members = (await playerMgr.GetMembers(gang))
+     .Where(p => p.GangRank == rank)
+     .ToList();
+
+    if (members == null) return false;
+
+    if (strat == IRankManager.DeleteStrat.DEMOTE_FAIL && lowerRank == null
+      && members.Count != 0)
+      return false;
+
+    foreach (var player in members) {
+      player.GangRank = lowerRank?.Rank ?? null;
+      player.GangId   = lowerRank == null ? null : player.GangId;
+      await playerMgr.UpdatePlayer(player);
+    }
+
     Ranks[gang] = gangRanks.Where(r => r.Rank != rank);
+    return true;
+  }
+
+  public Task<bool> DeleteAllRanks(int gang) {
+    if (!Ranks.ContainsKey(gang)) return Task.FromResult(false);
+    Ranks.Remove(gang);
+    return Task.FromResult(true);
+  }
+
+  public Task<bool> UpdateRank(int gang, IGangRank rank) {
+    Ranks[gang] = Ranks[gang].Select(r => r.Rank == rank.Rank ? rank : r);
     return Task.FromResult(true);
   }
 }

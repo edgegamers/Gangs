@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data.Gang;
+﻿using System.Runtime.CompilerServices;
+using GangsAPI.Data.Gang;
 using GangsAPI.Services.Player;
 
 namespace Mock;
@@ -28,6 +29,10 @@ public class MockPlayerManager : IPlayerManager {
   }
 
   public Task<bool> UpdatePlayer(IGangPlayer player) {
+    if (player.GangId == null != (player.GangRank == null))
+      throw new InvalidOperationException(
+        "Player must have both GangId and GangRank set or neither set");
+
     if (!players.ContainsKey(player.Steam)) return Task.FromResult(false);
     players[player.Steam] = player;
     return Task.FromResult(true);

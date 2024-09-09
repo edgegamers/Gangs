@@ -1,4 +1,5 @@
 ﻿using GangsAPI.Data.Gang;
+using GangsAPI.Extensions;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 
@@ -8,9 +9,18 @@ public class CreationTests(IPlayerManager playerMgr) {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Basic(IGangManager mgr) {
-    var dummy = await mgr.CreateGang("foobar", 0);
+    var dummy = await mgr.CreateGang("foobar", new Random().NextUInt());
     Assert.NotNull(dummy);
     Assert.Equal("foobar", dummy.Name);
+  }
+
+  [Theory]
+  [ClassData(typeof(TestData))]
+  public async Task Create_Delete(IGangManager mgr) {
+    var dummy = await mgr.CreateGang("foobar", new Random().NextUInt());
+    Assert.NotNull(dummy);
+    Assert.Equal("foobar", dummy.Name);
+    await mgr.DeleteGang(dummy.GangId);
   }
 
   [Theory]
@@ -78,7 +88,7 @@ public class CreationTests(IPlayerManager playerMgr) {
   public async Task Injection_Test(IGangManager mgr) {
     string[] strings = ["\"\"", "'' OR 1=1 --", "'; DROP TABLE users; --"];
     foreach (var str in strings) {
-      var dummy = await mgr.CreateGang(str, (ulong)new Random().NextInt64());
+      var dummy = await mgr.CreateGang(str, new Random().NextUInt());
       Assert.NotNull(dummy);
       Assert.Equal(str, dummy.Name);
       await mgr.DeleteGang(dummy.GangId);

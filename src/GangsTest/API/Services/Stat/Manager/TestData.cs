@@ -9,9 +9,7 @@ namespace GangsTest.API.Services.Stat.Manager;
 public class TestData : IEnumerable<object[]> {
   private readonly IBehavior[] behaviors = [
     new MockStatManager(),
-    new MySQLStatManager(new MockDBConfig(
-      Environment.GetEnvironmentVariable("DB_GANGS_CONNECTION")
-      ?? "Host=localhost;User=root;Database=gangs", "gang_unit_test", true)),
+    new MySQLStatManager(new TestDBConfig()),
     new SQLiteStatManager("Data Source=:memory:", "gang_unit_test", true)
   ];
 

@@ -1,5 +1,6 @@
 ﻿using Commands;
 using Commands.Gang;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
@@ -11,11 +12,16 @@ namespace GangsTest.API.Services.Commands.Command;
 
 public class TestData : TheoryData<ICommand> {
   private static readonly IPlayerManager playerMgr = new MockPlayerManager();
-  private static readonly IGangManager manager = new MockGangManager(playerMgr);
+
+  private static readonly IGangManager manager =
+    new MockGangManager(playerMgr, rankMgr);
+
   private static readonly IMenuManager menuMgr = new MockMenuManager();
 
   private static readonly IPlayerStatManager statMgr =
     new MockInstanceStatManager();
+
+  private static readonly IRankManager rankMgr = new MockRankManager(playerMgr);
 
   private readonly ICommand[] behaviors = [
     new CreateCommand(manager, StringLocalizer.Instance), new HelpCommand(),

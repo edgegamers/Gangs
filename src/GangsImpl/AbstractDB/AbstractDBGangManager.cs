@@ -2,14 +2,15 @@
 using CounterStrikeSharp.API.Core;
 using Dapper;
 using GangsAPI.Data.Gang;
+using GangsAPI.Services;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 
 namespace GenericDB;
 
 public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
-  string connectionString, string table = "gang_gangs", bool testing = false)
-  : IGangManager {
+  IRankManager rankMgr, string connectionString, string table = "gang_gangs",
+  bool testing = false) : IGangManager {
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
 
@@ -60,9 +61,12 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
   public async Task<bool> DeleteGang(int id) {
     var members = await playerMgr.GetMembers(id);
     foreach (var member in members) {
-      member.GangId = null;
+      member.GangId   = null;
+      member.GangRank = null;
       await playerMgr.UpdatePlayer(member);
     }
+
+    await rankMgr.DeleteAllRanks(id);
 
     var query = $"DELETE FROM {table} WHERE GangId = @id";
     return await Connection.ExecuteAsync(query, new { id }, Transaction) > 0;
@@ -79,6 +83,7 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
     if (player.GangId != null)
       throw new InvalidOperationException(
         $"Attempted to create a gang for {owner} who is already in gang {player.GangId}");
+
     var query = $"INSERT INTO {table} (Name) VALUES (@name)";
     var result =
       await Connection.ExecuteAsync(query, new { name }, Transaction);
@@ -88,7 +93,11 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
     }
 
     var id = await GetLastId();
-    player.GangId = id;
+
+    await rankMgr.AssignDefaultRanks(id);
+
+    player.GangId   = id;
+    player.GangRank = 0;
     await playerMgr.UpdatePlayer(player);
     var gang = new DBGang(id, name);
     return gang.Clone() as IGang;

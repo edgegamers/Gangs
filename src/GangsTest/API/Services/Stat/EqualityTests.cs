@@ -1,6 +1,5 @@
 using GangsAPI.Services;
 using GangsTest.API.Services.Stat.Manager;
-using TestData = GangsTest.API.Services.Rank.TestData;
 
 namespace GangsTest.API.Services.Stat;
 
