@@ -79,11 +79,11 @@ jobs:
         run: dotnet build --no-restore
       - name: Test with MariaDB
         env:
-          DB_GANGS_CONNECTION: "Server=localhost;Port=3307;Database=gangs;User=root"
+          DB_GANGS_CONNECTION: "Server=localhost;Port=3307;Database=gangs;User=root;Pooling=false"
         run: dotnet test src/GangsTest/GangsTest.csproj --no-build --verbosity normal
       - name: Test with MySQL
         env:
-          DB_GANGS_CONNECTION: "Server=localhost;Port=3306;Database=gangs;User=root"
+          DB_GANGS_CONNECTION: "Server=localhost;Port=3306;Database=gangs;User=root;Pooling=false"
         run: dotnet test src/GangsTest/GangsTest.csproj --no-build --verbosity normal
       - name: Generate Code Coverage Report
         env:
