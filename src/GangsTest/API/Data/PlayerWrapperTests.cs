@@ -1,7 +1,7 @@
 ﻿using CounterStrikeSharp.API.Modules.Admin;
 using GangsAPI.Data;
 
-namespace GangsTest.API;
+namespace GangsTest.API.Data;
 
 public class PlayerWrapperTests {
   private readonly PlayerWrapper testPlayer =

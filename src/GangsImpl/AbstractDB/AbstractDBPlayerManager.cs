@@ -14,11 +14,11 @@ public abstract class AbstractDBPlayerManager(string connectionString,
   public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);
 
-    Connection.Open();
-
-    if (testing) Transaction = Connection.BeginTransaction();
-
     try {
+      Connection.Open();
+
+      if (testing) Transaction = Connection.BeginTransaction();
+
       var command = Connection.CreateCommand();
 
       command.Transaction = Transaction;

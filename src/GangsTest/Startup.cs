@@ -21,6 +21,7 @@ public class Startup {
     services.AddScoped<IPlayerStatManager, MockInstanceStatManager>();
     services.AddScoped<ICommandManager, MockCommandManager>();
     services.AddScoped<IMenuManager, MockMenuManager>();
+    services.AddScoped<IRankManager, MockRankManager>();
     services
      .TryAddSingleton<IStringLocalizerFactory, LocalFileLocalizerFactory>();
     services.TryAddTransient(typeof(IStringLocalizer), typeof(StringLocalizer));

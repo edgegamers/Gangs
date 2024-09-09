@@ -21,7 +21,7 @@ public partial class PluginStringLocalizer(IStringLocalizer localizer)
     // Eg: if we have a locale key of "prefix", then
     // other locale values can use %prefix% to reference it.
     var value   = localizer[name].Value;
-    var matches = Percents().Matches(value);
+    var matches = percents().Matches(value);
     foreach (Match match in matches)
       // Check if the key exists
       try {
@@ -35,6 +35,6 @@ public partial class PluginStringLocalizer(IStringLocalizer localizer)
     return new LocalizedString(name, value);
   }
 
-  [GeneratedRegex(@"%.*?%")]
-  private static partial Regex Percents();
+  [GeneratedRegex("%.*?%")]
+  private static partial Regex percents();
 }

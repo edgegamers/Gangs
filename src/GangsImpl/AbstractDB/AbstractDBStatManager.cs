@@ -14,11 +14,11 @@ public abstract class AbstractDBStatManager(string connectionString,
   public override void Start(BasePlugin? plugin, bool hotReload) {
     connection = CreateDbConnection(connectionString);
 
-    connection.Open();
-
-    if (testing) transaction = connection.BeginTransaction();
-
     try {
+      connection.Open();
+
+      if (testing) transaction = connection.BeginTransaction();
+
       var command = connection.CreateCommand();
 
       command.Transaction = transaction;
