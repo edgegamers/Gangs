@@ -41,8 +41,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
       return CommandResult.SUCCESS;
     }
 
-    var perms = await rankMgr.GetRank(gangPlayer.GangId.Value,
-      gangPlayer.GangRank.Value);
+    var perms = await rankMgr.GetRank(gangPlayer);
 
     if (perms == null) {
       info.ReplySync(localizer.Get(MSG.GENERIC_ERROR_INFO, "Rank not found"));

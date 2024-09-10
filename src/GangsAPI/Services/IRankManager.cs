@@ -161,15 +161,30 @@ public interface IRankManager : IPluginBehavior {
     return ranks.Last(r => r.Permissions.HasFlag(perm));
   }
 
+  async Task<(bool, IGangRank?)> CheckRank(IGangPlayer player, Perm perm) {
+    if (player.GangId == null || player.GangRank == null) return (false, null);
+    var required = await GetRankNeeded(player.GangId.Value, perm);
+    var rank     = await GetRank(player);
+    var perms    = rank?.Permissions;
+    if (perms == null) return (false, required);
+    if (perms.Value.HasFlag(perm)) return (true, required);
+    return (false, required);
+  }
+
   #region Aliases
 
   Task<bool> AddRank(IGang gang, IGangRank rank) {
     return AddRank(gang.GangId, rank);
   }
 
-  Task<IGangRank?> GetRank(IGang gang, int rank) {
-    return GetRank(gang.GangId, rank);
+  Task<IGangRank?> GetRank(IGang gang, int rank) => GetRank(gang.GangId, rank);
+
+  Task<IGangRank?> GetRank(IGangPlayer player) {
+    if (player.GangId == null || player.GangRank == null)
+      return Task.FromResult<>(null);
+    return GetRank(player.GangId.Value, player.GangRank.Value);
   }
+
 
   Task<bool> DeleteRank(int gang, IGangRank rank, DeleteStrat strat) {
     return DeleteRank(gang, rank.Rank, strat);

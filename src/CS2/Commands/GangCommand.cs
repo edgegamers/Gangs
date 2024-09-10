@@ -15,8 +15,8 @@ using static GangsAPI.MSG;
 
 namespace Commands;
 
-public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
-  IMenuManager menuMgr, IRankManager rankMgr, IGangStatManager gangStatMgr,
+public class GangCommand(IGangManager gangs, IPlayerManager players,
+  IMenuManager menus, IRankManager ranks, IGangStatManager gangStats,
   ITargeter targeter, IStringLocalizer testLocale) : ICommand {
   private readonly Dictionary<string, ICommand> sub = new() {
     // ["delete"] = new DeleteGangCommand(),
@@ -27,10 +27,11 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
     // ["promote"] = new PromoteGangCommand(),
     // ["demote"] = new DemoteGangCommand(),
     // ["info"] = new InfoGangCommand()
+    ["invites"] =
+      new InvitesCommand(players, ranks, menus, gangs, gangStats, testLocale),
     ["invite"] =
-      new InviteCommand(gangMgr, playerMgr, rankMgr, gangStatMgr, targeter,
-        testLocale),
-    ["create"] = new CreateCommand(gangMgr, testLocale),
+      new InviteCommand(gangs, players, ranks, gangStats, targeter, testLocale),
+    ["create"] = new CreateCommand(gangs, testLocale),
     ["help"]   = new HelpCommand()
   };
 
@@ -55,7 +56,7 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
 
     if (info.ArgCount == 1) {
       if (executor == null) return CommandResult.PLAYER_ONLY;
-      var gang = await gangMgr.GetGang(executor.Steam);
+      var gang = await gangs.GetGang(executor.Steam);
 
       if (gang == null) {
         info.ReplySync(locale[COMMAND_GANG_NOTINGANG.Key()]);
@@ -63,8 +64,8 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
       }
 
       // Open gang menu
-      await menuMgr.OpenMenu(executor,
-        new GangMenu(gang, playerMgr, rankMgr, gangStatMgr, locale));
+      await menus.OpenMenu(executor,
+        new GangMenu(gang, players, ranks, gangStats, locale));
       return CommandResult.SUCCESS;
     }
 
