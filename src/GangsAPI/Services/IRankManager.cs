@@ -181,7 +181,7 @@ public interface IRankManager : IPluginBehavior {
 
   Task<IGangRank?> GetRank(IGangPlayer player) {
     if (player.GangId == null || player.GangRank == null)
-      return Task.FromResult<>(null);
+      return Task.FromResult<IGangRank?>(null);
     return GetRank(player.GangId.Value, player.GangRank.Value);
   }
 
