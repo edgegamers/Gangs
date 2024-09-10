@@ -82,9 +82,10 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
             players.Count > 1 ?
               MSG.GENERIC_PLAYER_FOUND_MULTIPLE :
               MSG.GENERIC_PLAYER_NOT_FOUND, info[1]));
+          return;
         }
 
-        steam = players[0].SteamID;
+        steam = players.FirstOrDefault()?.SteamID;
       });
     }
 

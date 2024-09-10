@@ -2,14 +2,13 @@
 using GangsAPI.Data.Gang;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
-using GangsAPI.Services.Player;
 using Menu;
 using Stats;
 
 namespace Commands.Menus;
 
 public class OutgoingInvitesMenu(IMenuManager menuMgr, IGang gang,
-  IGangStatManager gangStatMgr, IPlayerManager playerMgr)
+  IGangStatManager gangStatMgr)
   : AbstractPagedMenu<InvitationEntry>(menuMgr, NativeSenders.Chat) {
   private readonly InvitationStat invitationStat = new();
 

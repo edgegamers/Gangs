@@ -22,6 +22,24 @@ public class CommandWrapperTests {
   }
 
   [Fact]
+  public void Wrapper_Wrapper() {
+    var info = new CommandInfoWrapper(testPlayer, 0, "a", "b", "c");
+    Assert.Equal(3, info.ArgCount);
+    var wrapped = new CommandInfoWrapper(testPlayer, 1, info.Args);
+    Assert.Equal(2, wrapped.ArgCount);
+    Assert.Equal((string[]) ["b", "c"], wrapped.Args);
+  }
+
+  [Fact]
+  public void Wrapper_Wrapper_Offset() {
+    var info = new CommandInfoWrapper(testPlayer, 1, "a", "b", "c");
+    Assert.Equal(2, info.ArgCount);
+    var wrapped = new CommandInfoWrapper(testPlayer, 1, info.Args);
+    Assert.Equal(1, wrapped.ArgCount);
+    Assert.Equal("c", wrapped[0]);
+  }
+
+  [Fact]
   public void ArgCountAt_Zero() {
     Assert.Equal(1, new CommandInfoWrapper(testPlayer, 0, "test").ArgCount);
   }
@@ -45,36 +63,6 @@ public class CommandWrapperTests {
   public void Offset_ArgCount_One_Params() {
     Assert.Equal(1,
       new CommandInfoWrapper(testPlayer, 1, "test", "ing").ArgCount);
-  }
-
-  [Fact]
-  public void ArgString_IsEmpty() {
-    Assert.Equal("", new CommandInfoWrapper(testPlayer, 0, "test").ArgString);
-  }
-
-  [Fact]
-  public void ArgString_SingleWord() {
-    Assert.Equal("ing",
-      new CommandInfoWrapper(testPlayer, 0, "test ing").ArgString);
-  }
-
-  [Fact]
-  public void ArgString_SingleWord_Params() {
-    Assert.Equal("ing",
-      new CommandInfoWrapper(testPlayer, 0, "test", "ing").ArgString);
-  }
-
-  [Fact]
-  public void ArgString_MultiWord_Params() {
-    Assert.Equal("ing foobar",
-      new CommandInfoWrapper(testPlayer, 0, "test", "ing", "foobar").ArgString);
-  }
-
-  [Fact]
-  public void ArgString_MoreWord_Params() {
-    Assert.Equal("test ing foobar",
-      new CommandInfoWrapper(testPlayer, 0, "test", "ing", "foobar")
-       .GetCommandString);
   }
 
   [Fact]

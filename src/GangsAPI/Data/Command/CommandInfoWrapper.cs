@@ -1,21 +1,20 @@
-﻿using CounterStrikeSharp.API.Modules.Commands;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Modules.Commands;
 
 namespace GangsAPI.Data.Command;
 
 public class CommandInfoWrapper {
   public readonly string[] Args;
 
-  public readonly CommandCallingContext CallingContext =
-    CommandCallingContext.Console;
-
   public readonly PlayerWrapper? CallingPlayer;
   private readonly int offset;
+  private bool isInChat;
 
   public CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
     params string[] args) {
     CallingPlayer = executor;
     this.offset   = offset;
-    Args          = args.Skip(offset - 1).ToArray();
+    Args          = args.Skip(offset).ToArray();
     if (offset == 0 && Args.Length > 0) Args[0] = args[0].ToLower();
   }
 
@@ -23,20 +22,18 @@ public class CommandInfoWrapper {
     CallingPlayer = info.CallingPlayer == null ?
       null :
       new PlayerWrapper(info.CallingPlayer);
-    this.offset    = offset;
-    CallingContext = info.CallingContext;
-    Args           = new string[info.ArgCount];
-    for (var i = offset; i < info.ArgCount; i++)
-      Args[i - offset] = info.GetArg(i);
+    this.offset = offset;
+    isInChat    = info.CallingContext == CommandCallingContext.Chat;
+    Args        = new string[info.ArgCount - offset];
+    for (var i = 0; i < info.ArgCount - offset; i++)
+      Args[i] = info.GetArg(i + offset);
+    if (offset == 0 && Args.Length > 0) Args[0] = Args[0].ToLower();
   }
 
-  public int ArgCount => Args.Length - offset;
-  public string this[int index] => Args[index + offset];
+  public int ArgCount => Args.Length;
+  public string this[int index] => Args[index];
 
-  public string ArgString
-    => string.Join(' ', GetCommandString.Split(' ').Skip(offset + 1));
-
-  public string GetCommandString => string.Join(' ', Args.Skip(offset));
+  public string GetCommandString => string.Join(' ', Args);
 
   public void ReplySync(string message) {
     if (CallingPlayer == null) {
@@ -50,9 +47,9 @@ public class CommandInfoWrapper {
       return;
     }
 
-    if (CallingContext == CommandCallingContext.Console)
-      CallingPlayer.PrintToConsole(message);
-    else
+    if (isInChat)
       CallingPlayer.PrintToChat(message);
+    else
+      CallingPlayer.PrintToConsole(message);
   }
 }

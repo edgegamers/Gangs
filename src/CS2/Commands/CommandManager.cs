@@ -47,10 +47,6 @@ public class CommandManager(IGangManager gangMgr,
     processInternal(CCSPlayerController? executor, CommandInfo info) {
     var wrapper     = executor == null ? null : new PlayerWrapper(executor);
     var wrappedInfo = new CommandInfoWrapper(info);
-    Server.NextFrameAsync(async () => {
-      var result = await ProcessCommand(wrapper, wrappedInfo);
-      if (result == CommandResult.PLAYER_ONLY)
-        wrappedInfo.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_ONLY));
-    });
+    Task.Run(async () => await ProcessCommand(wrapper, wrappedInfo));
   }
 }

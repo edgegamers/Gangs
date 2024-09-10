@@ -29,7 +29,9 @@ public class TestData : TheoryData<ICommand> {
     new CreateCommand(manager, StringLocalizer.Instance), new HelpCommand(),
     new GangCommand(manager, playerMgr, menuMgr, rankMgr, gangStatMgr,
       StringLocalizer.Instance),
-    new BalanceCommand(statMgr, StringLocalizer.Instance)
+    new BalanceCommand(statMgr, StringLocalizer.Instance),
+    new InviteCommand(manager, playerMgr, rankMgr, gangStatMgr,
+      StringLocalizer.Instance),
   ];
 
   public TestData() {
