@@ -40,8 +40,7 @@ public class GangMenu(IGang gang, IPlayerManager playerMgr,
     player.PrintToChat($" {ChatColors.Grey}------------------------");
 
     await addMemberItem(rank, player);
-
-    player.PrintToChat($" ");
+    await addInviteItem(rank, player);
   }
 
   private Task addMemberItem(Perm rank, PlayerWrapper player) {
@@ -60,16 +59,21 @@ public class GangMenu(IGang gang, IPlayerManager playerMgr,
       await gangStatManager.GetForGang<string>(gang, invitationStat.StatId);
     if (!success || invites == null) return;
 
-    player.PrintToChat($"{invites.Length} invites");
-    return;
+    player.PrintToChat($"{invites.Length} Invites");
   }
 
   public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
 
   public async Task AcceptInput(PlayerWrapper player, int input) {
-    if (input == 1) {
-      await menuMgr.OpenMenu(player,
-        new MembersMenu(gang, playerMgr, menuMgr, rankMgr));
+    switch (input) {
+      case 1:
+        await menuMgr.OpenMenu(player,
+          new MembersMenu(gang, playerMgr, menuMgr, rankMgr));
+        break;
+      case 2:
+        await menuMgr.OpenMenu(player,
+          new OutgoingInvitesMenu(menuMgr, gang, gangStatManager, playerMgr));
+        break;
     }
   }
 }

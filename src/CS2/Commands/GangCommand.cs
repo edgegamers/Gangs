@@ -73,6 +73,14 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
       new CommandInfoWrapper(executor, 1, info.Args) {
         CallingContext = info.CallingContext
       };
-    return await command.Execute(executor, newInfo);
+
+    var result = await command.Execute(executor, newInfo);
+    if (result == CommandResult.PRINT_USAGE) {
+      foreach (var use in command.Usage)
+        info.ReplySync(
+          locale.Get(COMMAND_USAGE, $"{Name} {command.Name} {use}"));
+    }
+
+    return result;
   }
 }

@@ -5,6 +5,13 @@ namespace GangsTest.API.Services.Commands.Command;
 public class FieldTests {
   [Theory]
   [ClassData(typeof(TestData))]
+  public void Fields_Name(ICommand cmd) {
+    Assert.NotEmpty(cmd.Name);
+    Assert.DoesNotContain(cmd.Usage, usage => usage.StartsWith(cmd.Name));
+  }
+
+  [Theory]
+  [ClassData(typeof(TestData))]
   public void Fields_Aliases(ICommand cmd) {
     Assert.Contains(cmd.Name, cmd.Aliases);
   }

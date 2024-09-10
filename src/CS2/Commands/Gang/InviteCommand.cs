@@ -22,7 +22,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
 
   public string? Description => "Invites a player to the gang";
 
-  public string[] Usage => ["invite [player/steam]"];
+  public string[] Usage => ["[player/steam]"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

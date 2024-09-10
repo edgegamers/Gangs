@@ -11,7 +11,8 @@ namespace Commands.Menus;
 public class MembersMenu(IGang gang, IPlayerManager playerMgr,
   IMenuManager menuMgr, IRankManager rankMgr)
   : AbstractPagedMenu<(IGangPlayer, IGangRank)>(menuMgr, NativeSenders.Chat) {
-  override protected async Task<List<(IGangPlayer, IGangRank)>> GetItems() {
+  override protected async Task<List<(IGangPlayer, IGangRank)>> GetItems(
+    PlayerWrapper _) {
     var members = (await playerMgr.GetMembers(gang)).ToList();
     var ranks   = await rankMgr.GetRanks(gang.GangId);
 
@@ -27,8 +28,8 @@ public class MembersMenu(IGang gang, IPlayerManager playerMgr,
     return Task.CompletedTask;
   }
 
-  override protected string
-    FormatItem(int index, (IGangPlayer, IGangRank) item) {
+  override protected async Task<string> FormatItem(int index,
+    (IGangPlayer, IGangRank) item) {
     return $"{item.Item2.Name}: {item.Item1.Name}";
   }
 }

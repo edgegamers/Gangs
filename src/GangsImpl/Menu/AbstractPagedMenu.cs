@@ -7,7 +7,7 @@ public abstract class AbstractPagedMenu<T>(IMenuManager menuMgr,
   Func<PlayerWrapper, string, Task> printer, int itemsPerPage = 5)
   : AbstractMenu<T>(menuMgr, printer) {
   public override async Task Open(PlayerWrapper player) {
-    var items = await GetItems();
+    var items = await GetItems(player);
     var totalPages =
       (items.Count + itemsPerPage - 1)
       / itemsPerPage; // Calculate number of pages
@@ -15,7 +15,7 @@ public abstract class AbstractPagedMenu<T>(IMenuManager menuMgr,
   }
 
   public override async Task AcceptInput(PlayerWrapper player, int input) {
-    var items      = await GetItems();
+    var items      = await GetItems(player);
     var totalPages = (items.Count + itemsPerPage - 1) / itemsPerPage;
 
     switch (input) {
@@ -42,21 +42,20 @@ public abstract class AbstractPagedMenu<T>(IMenuManager menuMgr,
   override abstract protected Task HandleItemSelection(PlayerWrapper player,
     List<T> items, int selectedIndex);
 
-  virtual protected Task ShowPage(PlayerWrapper player, List<T> items,
+  virtual protected async Task ShowPage(PlayerWrapper player, List<T> items,
     int currentPage, int totalPages) {
     var startIndex = (currentPage - 1) * itemsPerPage;
     var pageItems  = items.Skip(startIndex).Take(itemsPerPage).ToList();
 
     if (totalPages != 1) player.PrintToChat($"Page {currentPage}/{totalPages}");
     for (var i = 0; i < pageItems.Count; i++) {
-      Printer.Invoke(player, FormatItem(i, pageItems[i]));
+      await Printer.Invoke(player, await FormatItem(i, pageItems[i]));
     }
 
     // Display navigation options
-    if (currentPage > 1) Printer.Invoke(player, "8. Previous Page");
-    if (currentPage < totalPages) Printer.Invoke(player, "9. Next Page");
-    Printer.Invoke(player, "0. Close Menu");
-    return Task.CompletedTask;
+    if (currentPage > 1) await Printer.Invoke(player, "8. Previous Page");
+    if (currentPage < totalPages) await Printer.Invoke(player, "9. Next Page");
+    await Printer.Invoke(player, "0. Close Menu");
   }
 
   private bool HasNextPage(PlayerWrapper player)
