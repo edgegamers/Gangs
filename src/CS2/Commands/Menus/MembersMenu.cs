@@ -28,8 +28,8 @@ public class MembersMenu(IGang gang, IPlayerManager playerMgr,
     return Task.CompletedTask;
   }
 
-  override protected async Task<string> FormatItem(int index,
+  override protected Task<string> FormatItem(int index,
     (IGangPlayer, IGangRank) item) {
-    return $"{item.Item2.Name}: {item.Item1.Name}";
+    return Task.FromResult($"{item.Item2.Name}: {item.Item1.Name}");
   }
 }
