@@ -3,9 +3,9 @@ using GangsAPI.Services.Menu;
 
 namespace Menu;
 
-public abstract class AbstractPagedMenu<T>(IMenuManager menuMgr,
+public abstract class AbstractPagedMenu<T>(IMenuManager menus,
   Func<PlayerWrapper, string, Task> printer, int itemsPerPage = 5)
-  : AbstractMenu<T>(menuMgr, printer) {
+  : AbstractMenu<T>(menus, printer) {
   public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);
     var totalPages =

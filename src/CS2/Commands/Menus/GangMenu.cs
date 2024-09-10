@@ -13,14 +13,14 @@ using IMenu = GangsAPI.Services.Menu.IMenu;
 
 namespace Commands.Menus;
 
-public class GangMenu(IGang gang, IPlayerManager playerMgr,
-  IRankManager rankMgr, IGangStatManager gangStatManager,
+public class GangMenu(IGang gang, IPlayerManager players,
+  IRankManager ranks, IGangStatManager gangStatManager,
   IStringLocalizer localizer) : IMenu {
   private readonly InvitationStat invitationStat = new();
   private IList<IGangPlayer> members = new List<IGangPlayer>();
 
   public async Task Open(PlayerWrapper player) {
-    members = (await playerMgr.GetMembers(gang)).ToList();
+    members = (await players.GetMembers(gang)).ToList();
 
     var member = members.FirstOrDefault(p => p.Steam == player.Steam);
 
@@ -32,7 +32,7 @@ public class GangMenu(IGang gang, IPlayerManager playerMgr,
 
     var rank = member == null ?
       Perm.NONE :
-      (await rankMgr.GetRank(gang.GangId, member.GangRank.Value))!.Permissions;
+      (await ranks.GetRank(gang.GangId, member.GangRank.Value))!.Permissions;
 
     player.PrintToChat(" ");
     player.PrintToChat(

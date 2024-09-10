@@ -4,7 +4,7 @@ using GangsAPI.Services.Player;
 
 namespace GangsTest.API.Services.Gang;
 
-public class FetchTests(IPlayerManager playerMgr) {
+public class FetchTests(IPlayerManager players) {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Gang_Create(IGangManager mgr) {
@@ -21,7 +21,7 @@ public class FetchTests(IPlayerManager playerMgr) {
   [ClassData(typeof(TestData))]
   public async Task Gang_CreateFromGangPlayer(IGangManager mgr) {
     Assert.Empty(await mgr.GetGangs());
-    var player = await playerMgr.CreatePlayer(0);
+    var player = await players.CreatePlayer(0);
     var dummy  = await mgr.CreateGang("foobar", player);
     var gangs  = (await mgr.GetGangs()).ToHashSet();
     Assert.NotNull(dummy);

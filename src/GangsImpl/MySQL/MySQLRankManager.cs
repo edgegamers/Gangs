@@ -6,8 +6,8 @@ using MySqlConnector;
 
 namespace SQLImpl;
 
-public class MySQLRankManager(IPlayerManager playerMgr, IDBConfig config)
-  : AbstractDBRankManager(playerMgr, config.ConnectionString,
+public class MySQLRankManager(IPlayerManager players, IDBConfig config)
+  : AbstractDBRankManager(players, config.ConnectionString,
     config.TablePrefix + "_ranks", config.Testing) {
   override protected DbConnection CreateDbConnection(string connectionString) {
     return new MySqlConnection(connectionString);

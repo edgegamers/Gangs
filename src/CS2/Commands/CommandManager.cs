@@ -14,9 +14,9 @@ using Mock;
 
 namespace Commands;
 
-public class CommandManager(IGangManager gangMgr,
-  IPlayerStatManager playerStatMgr, IPlayerManager playerMgr,
-  IMenuManager menuMgr, IRankManager rankMgr, IGangStatManager gangStatMgr,
+public class CommandManager(IGangManager gangs,
+  IPlayerStatManager playerStats, IPlayerManager players,
+  IMenuManager menus, IRankManager ranks, IGangStatManager gangStats,
   ITargeter targeter, IStringLocalizer testLocale)
   : MockCommandManager(testLocale), IPluginBehavior {
   private bool hotReload;
@@ -28,9 +28,9 @@ public class CommandManager(IGangManager gangMgr,
 
     if (basePlugin != null) Locale = basePlugin.Localizer;
 
-    RegisterCommand(new GangCommand(gangMgr, playerMgr, menuMgr, rankMgr,
-      gangStatMgr, targeter, Locale));
-    RegisterCommand(new BalanceCommand(playerStatMgr, Locale));
+    RegisterCommand(new GangCommand(gangs, players, menus, ranks,
+      gangStats, targeter, Locale));
+    RegisterCommand(new BalanceCommand(playerStats, Locale));
   }
 
   public override bool RegisterCommand(ICommand command) {

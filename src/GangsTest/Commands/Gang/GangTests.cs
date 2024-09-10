@@ -11,11 +11,11 @@ using Microsoft.Extensions.Localization;
 
 namespace GangsTest.Commands.Gang;
 
-public class GangTests(ICommandManager commands, IGangManager gangMgr,
-  IPlayerManager playerMgr, IMenuManager menuMgr, IRankManager rankMgr,
-  IGangStatManager gangStatMgr, ITargeter targer, IStringLocalizer locale)
+public class GangTests(ICommandManager commands, IGangManager gangs,
+  IPlayerManager players, IMenuManager menus, IRankManager ranks,
+  IGangStatManager gangStats, ITargeter targer, IStringLocalizer locale)
   : TestParent(commands,
-    new GangCommand(gangMgr, playerMgr, menuMgr, rankMgr, gangStatMgr, targer,
+    new GangCommand(gangs, players, menus, ranks, gangStats, targer,
       locale)) {
   [Fact]
   public async Task Gang_TestBase() {
@@ -29,7 +29,7 @@ public class GangTests(ICommandManager commands, IGangManager gangMgr,
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, Command.Name, "create",
         "foobar"));
-    Assert.Single(await gangMgr.GetGangs());
+    Assert.Single(await gangs.GetGangs());
   }
 
   [Fact]
@@ -67,18 +67,18 @@ public class GangTests(ICommandManager commands, IGangManager gangMgr,
 
   [Fact]
   public async Task Does_Not_Open_Menu() {
-    Assert.Null(menuMgr.GetActiveMenu(TestPlayer));
+    Assert.Null(menus.GetActiveMenu(TestPlayer));
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, Command.Name));
-    Assert.Null(menuMgr.GetActiveMenu(TestPlayer));
+    Assert.Null(menus.GetActiveMenu(TestPlayer));
   }
 
   [Fact]
   public async Task Opens_Menu() {
-    await gangMgr.CreateGang("Test Gang", TestPlayer);
-    Assert.Null(menuMgr.GetActiveMenu(TestPlayer));
+    await gangs.CreateGang("Test Gang", TestPlayer);
+    Assert.Null(menus.GetActiveMenu(TestPlayer));
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, Command.Name));
-    Assert.NotNull(menuMgr.GetActiveMenu(TestPlayer));
+    Assert.NotNull(menus.GetActiveMenu(TestPlayer));
   }
 }

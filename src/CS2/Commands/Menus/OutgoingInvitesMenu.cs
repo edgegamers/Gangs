@@ -9,15 +9,15 @@ using Stats;
 
 namespace Commands.Menus;
 
-public class OutgoingInvitesMenu(IMenuManager menuMgr, IGang gang,
-  IGangStatManager gangStatMgr, IPlayerManager playerMgr)
-  : AbstractPagedMenu<InvitationEntry>(menuMgr, NativeSenders.Chat) {
+public class OutgoingInvitesMenu(IMenuManager menus, IGang gang,
+  IGangStatManager gangStats, IPlayerManager players)
+  : AbstractPagedMenu<InvitationEntry>(menus, NativeSenders.Chat) {
   private readonly InvitationStat invitationStat = new();
 
   override protected async Task<List<InvitationEntry>>
     GetItems(PlayerWrapper _) {
     var (success, invites) =
-      await gangStatMgr.GetForGang<InvitationData>(gang, invitationStat.StatId);
+      await gangStats.GetForGang<InvitationData>(gang, invitationStat.StatId);
     if (!success || invites == null) return [];
 
     return invites.GetEntries();
@@ -33,8 +33,8 @@ public class OutgoingInvitesMenu(IMenuManager menuMgr, IGang gang,
 
   override protected async Task<string> FormatItem(int index,
     InvitationEntry item) {
-    var invited = await playerMgr.GetPlayer(item.Steam);
-    var inviter = await playerMgr.GetPlayer(item.Inviter);
+    var invited = await players.GetPlayer(item.Steam);
+    var inviter = await players.GetPlayer(item.Inviter);
 
     var invitedName = invited?.Name ?? item.Steam.ToString();
     var inviterName = inviter?.Name ?? item.Inviter.ToString();

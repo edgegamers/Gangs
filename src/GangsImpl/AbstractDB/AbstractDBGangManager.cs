@@ -8,8 +8,8 @@ using GangsAPI.Services.Player;
 
 namespace GenericDB;
 
-public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
-  IRankManager rankMgr, string connectionString, string table = "gang_gangs",
+public abstract class AbstractDBGangManager(IPlayerManager players,
+  IRankManager ranks, string connectionString, string table = "gang_gangs",
   bool testing = false) : IGangManager {
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
@@ -47,7 +47,7 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
   }
 
   public async Task<IGang?> GetGang(ulong steam) {
-    var player = await playerMgr.GetPlayer(steam);
+    var player = await players.GetPlayer(steam);
     if (player?.GangId == null) return null;
     return await GetGang(player.GangId.Value);
   }
@@ -59,21 +59,21 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
   }
 
   public async Task<bool> DeleteGang(int id) {
-    var members = await playerMgr.GetMembers(id);
+    var members = await players.GetMembers(id);
     foreach (var member in members) {
       member.GangId   = null;
       member.GangRank = null;
-      await playerMgr.UpdatePlayer(member);
+      await players.UpdatePlayer(member);
     }
 
-    await rankMgr.DeleteAllRanks(id);
+    await ranks.DeleteAllRanks(id);
 
     var query = $"DELETE FROM {table} WHERE GangId = @id";
     return await Connection.ExecuteAsync(query, new { id }, Transaction) > 0;
   }
 
   public async Task<IGang?> CreateGang(string name, ulong owner) {
-    var player = await playerMgr.GetPlayer(owner);
+    var player = await players.GetPlayer(owner);
     if (player == null) {
       Console.WriteLine(
         $"Failed to create gang {name}: player {owner} not found");
@@ -94,11 +94,11 @@ public abstract class AbstractDBGangManager(IPlayerManager playerMgr,
 
     var id = await GetLastId();
 
-    await rankMgr.AssignDefaultRanks(id);
+    await ranks.AssignDefaultRanks(id);
 
     player.GangId   = id;
     player.GangRank = 0;
-    await playerMgr.UpdatePlayer(player);
+    await players.UpdatePlayer(player);
     var gang = new DBGang(id, name);
     return gang.Clone() as IGang;
   }

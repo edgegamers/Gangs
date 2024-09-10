@@ -5,7 +5,7 @@ using GangsAPI.Services.Player;
 
 namespace GangsTest.API.Services.Gang;
 
-public class CreationTests(IPlayerManager playerMgr) {
+public class CreationTests(IPlayerManager players) {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Basic(IGangManager mgr) {
@@ -26,7 +26,7 @@ public class CreationTests(IPlayerManager playerMgr) {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task From_Player(IGangManager mgr) {
-    var player = await playerMgr.CreatePlayer(0);
+    var player = await players.CreatePlayer(0);
     var dummy  = await mgr.CreateGang("foobar", player);
     Assert.NotNull(dummy);
     Assert.Equal("foobar", dummy.Name);
@@ -71,8 +71,8 @@ public class CreationTests(IPlayerManager playerMgr) {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task From_Player_Multiple(IGangManager mgr) {
-    var player1 = await playerMgr.CreatePlayer((ulong)new Random().NextInt64());
-    var player2 = await playerMgr.CreatePlayer((ulong)new Random().NextInt64());
+    var player1 = await players.CreatePlayer((ulong)new Random().NextInt64());
+    var player2 = await players.CreatePlayer((ulong)new Random().NextInt64());
     var dummy1  = await mgr.CreateGang("foobar", player1);
     var dummy2  = await mgr.CreateGang("barfoo", player2);
     Assert.NotNull(dummy1);

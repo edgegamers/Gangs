@@ -7,9 +7,9 @@ using Microsoft.Data.Sqlite;
 
 namespace SQLite;
 
-public class SQLiteGangManager(IPlayerManager playerMgr, IRankManager rankMgr,
+public class SQLiteGangManager(IPlayerManager players, IRankManager ranks,
   string connectionString, string table = "gang_gangs", bool testing = false)
-  : AbstractDBGangManager(playerMgr, rankMgr, connectionString, table,
+  : AbstractDBGangManager(players, ranks, connectionString, table,
     testing) {
   override protected string CreateTableQuery(string tableName, bool inTesting) {
     return inTesting ?

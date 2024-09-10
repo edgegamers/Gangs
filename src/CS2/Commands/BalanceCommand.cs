@@ -10,7 +10,7 @@ using Stats;
 
 namespace Commands;
 
-public class BalanceCommand(IPlayerStatManager playerMgr,
+public class BalanceCommand(IPlayerStatManager players,
   IStringLocalizer localizer) : ICommand {
   private readonly string id = new BalanceStat().StatId;
   public string Name => "css_balance";
@@ -24,7 +24,7 @@ public class BalanceCommand(IPlayerStatManager playerMgr,
 
     if (info.ArgCount == 1 || !executor.HasFlags("@css/ban")) {
       var (success, balance) =
-        await playerMgr.GetForPlayer<int>(executor.Steam, id);
+        await players.GetForPlayer<int>(executor.Steam, id);
 
       if (!success) {
         info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_NONE));
@@ -63,7 +63,7 @@ public class BalanceCommand(IPlayerStatManager playerMgr,
 
     if (info.ArgCount == 2 || !executor.HasFlags("@css/root")) {
       var (success, balance) =
-        await playerMgr.GetForPlayer<int>(subject.Steam, id);
+        await players.GetForPlayer<int>(subject.Steam, id);
 
       if (!success) {
         info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_OTHER_NONE,
@@ -85,7 +85,7 @@ public class BalanceCommand(IPlayerStatManager playerMgr,
       return CommandResult.INVALID_ARGS;
     }
 
-    var pass = await playerMgr.SetForPlayer(subject.Steam, id, amount);
+    var pass = await players.SetForPlayer(subject.Steam, id, amount);
     if (!pass) {
       info.ReplySync(localizer.Get(MSG.GENERIC_ERROR));
       return CommandResult.ERROR;

@@ -9,9 +9,9 @@ using Microsoft.Extensions.Localization;
 
 namespace GangsTest.Commands.Gang;
 
-public class CreateTests(ICommandManager commands, IGangManager gangMgr,
+public class CreateTests(ICommandManager commands, IGangManager gangs,
   IStringLocalizer locale)
-  : TestParent(commands, new CreateCommand(gangMgr, locale)) {
+  : TestParent(commands, new CreateCommand(gangs, locale)) {
   private readonly PlayerWrapper player = new((ulong)new Random().NextInt64(),
     "Test Player");
 
@@ -31,11 +31,11 @@ public class CreateTests(ICommandManager commands, IGangManager gangMgr,
 
   [Fact]
   public async Task Create_Simple() {
-    var gang = await gangMgr.GetGang(player.Steam);
+    var gang = await gangs.GetGang(player.Steam);
     Assert.Null(gang);
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(player, "create", "foobar"));
-    gang = await gangMgr.GetGang(player.Steam);
+    gang = await gangs.GetGang(player.Steam);
     Assert.NotNull(gang);
     Assert.Equal("foobar", gang.Name);
     Assert.Contains($"Gang 'foobar' (#{gang.GangId}) created successfully",
@@ -44,22 +44,22 @@ public class CreateTests(ICommandManager commands, IGangManager gangMgr,
 
   [Fact]
   public async Task Create_MultiWord() {
-    var gang = await gangMgr.GetGang(player.Steam);
+    var gang = await gangs.GetGang(player.Steam);
     Assert.Null(gang);
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(player, "create", "foo bar"));
-    gang = await gangMgr.GetGang(player.Steam);
+    gang = await gangs.GetGang(player.Steam);
     Assert.NotNull(gang);
     Assert.Equal("foo bar", gang.Name);
   }
 
   [Fact]
   public async Task Create_MultiParam() {
-    var gang = await gangMgr.GetGang(player.Steam);
+    var gang = await gangs.GetGang(player.Steam);
     Assert.Null(gang);
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(player, "create", "foo bar", "baz"));
-    gang = await gangMgr.GetGang(player.Steam);
+    gang = await gangs.GetGang(player.Steam);
     Assert.NotNull(gang);
     Assert.Equal("foo bar baz", gang.Name);
   }

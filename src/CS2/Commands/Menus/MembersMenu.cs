@@ -8,15 +8,15 @@ using Menu;
 
 namespace Commands.Menus;
 
-public class MembersMenu(IGang gang, IPlayerManager playerMgr,
-  IMenuManager menuMgr, IRankManager rankMgr)
-  : AbstractPagedMenu<(IGangPlayer, IGangRank)>(menuMgr, NativeSenders.Chat) {
+public class MembersMenu(IGang gang, IPlayerManager players,
+  IMenuManager menus, IRankManager ranks)
+  : AbstractPagedMenu<(IGangPlayer, IGangRank)>(menus, NativeSenders.Chat) {
   override protected async Task<List<(IGangPlayer, IGangRank)>> GetItems(
     PlayerWrapper _) {
-    var members = (await playerMgr.GetMembers(gang)).ToList();
-    var ranks   = await rankMgr.GetRanks(gang.GangId);
+    var members = (await players.GetMembers(gang)).ToList();
+    var memberRanks   = await ranks.GetRanks(gang.GangId);
 
-    return members.Select(m => (m, ranks.First(r => r.Rank == m.GangRank)))
+    return members.Select(m => (m, memberRanks.First(r => r.Rank == m.GangRank)))
      .ToList();
   }
 

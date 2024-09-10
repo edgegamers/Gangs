@@ -2,7 +2,7 @@
 
 namespace GangsTest.API.Services.Stat.Instance.Player;
 
-public class PushTests(IPlayerManager playerMgr) : TestParent(playerMgr) {
+public class PushTests(IPlayerManager players) : TestParent(players) {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Class(IPlayerStatManager manager) {

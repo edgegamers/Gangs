@@ -3,9 +3,9 @@ using GangsAPI.Services.Menu;
 
 namespace Menu;
 
-public abstract class AbstractMenu<T>(IMenuManager menuMgr,
+public abstract class AbstractMenu<T>(IMenuManager menus,
   Func<PlayerWrapper, string, Task> printer) : IMenu {
-  protected readonly IMenuManager MenuMgr = menuMgr;
+  protected readonly IMenuManager Menus = menus;
   protected readonly Func<PlayerWrapper, string, Task> Printer = printer;
 
   public virtual async Task Open(PlayerWrapper player) {

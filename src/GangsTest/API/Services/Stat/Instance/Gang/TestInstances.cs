@@ -2,7 +2,7 @@
 
 namespace GangsTest.API.Services.Stat.Instance.Gang;
 
-public class GangTests(IGangManager gangMgr) : TestParent(gangMgr) {
+public class GangTests(IGangManager gangs) : TestParent(gangs) {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Instance_Fetch_Unregistered(IGangStatManager manager) {

@@ -10,9 +10,9 @@ using Stats;
 
 namespace GangsTest.Commands;
 
-public class BalanceTests(ICommandManager commands, IPlayerStatManager statMgr,
+public class BalanceTests(ICommandManager commands, IPlayerStatManager stats,
   IStringLocalizer locale) : TestParent(commands,
-  new BalanceCommand(statMgr, StringLocalizer.Instance)) {
+  new BalanceCommand(stats, StringLocalizer.Instance)) {
   private static readonly string STAT_ID = new BalanceStat().StatId;
 
   [Fact]
@@ -26,7 +26,7 @@ public class BalanceTests(ICommandManager commands, IPlayerStatManager statMgr,
 
   [Fact]
   public async Task One() {
-    await statMgr.SetForPlayer(TestPlayer.Steam, STAT_ID, 1);
+    await stats.SetForPlayer(TestPlayer.Steam, STAT_ID, 1);
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, Command.Name));
     Assert.Contains(locale.Get(MSG.COMMAND_BALANCE, 1),
@@ -40,7 +40,7 @@ public class BalanceTests(ICommandManager commands, IPlayerStatManager statMgr,
   [InlineData(-1)]
   [InlineData(-1000)]
   public async Task Multiple(int bal) {
-    await statMgr.SetForPlayer(TestPlayer.Steam, STAT_ID, bal);
+    await stats.SetForPlayer(TestPlayer.Steam, STAT_ID, bal);
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, Command.Name));
     Assert.Contains(locale.Get(MSG.COMMAND_BALANCE_PLURAL, bal),

@@ -4,7 +4,7 @@ using GangsAPI.Services.Player;
 
 namespace Mock;
 
-public class MockRankManager(IPlayerManager playerMgr) : IRankManager {
+public class MockRankManager(IPlayerManager players) : IRankManager {
   protected readonly Dictionary<int, IEnumerable<IGangRank>> Ranks = new();
 
   public Task<Dictionary<int, IEnumerable<IGangRank>>> GetAllRanks() {
@@ -43,8 +43,8 @@ public class MockRankManager(IPlayerManager playerMgr) : IRankManager {
     if (!Ranks.TryGetValue(gang, out var gangRanks)) return false;
 
     if (strat == IRankManager.DeleteStrat.CANCEL) {
-      var players = await playerMgr.GetMembers(gang);
-      if (players.Any(p => p.GangRank == rank)) return false;
+      var playersInRank = await players.GetMembers(gang);
+      if (playersInRank.Any(p => p.GangRank == rank)) return false;
     }
 
     gangRanks = gangRanks.ToList();
@@ -58,7 +58,7 @@ public class MockRankManager(IPlayerManager playerMgr) : IRankManager {
 
     var lowerRank = sortedRanks.FirstOrDefault(r => r.Rank > rank);
 
-    var members = (await playerMgr.GetMembers(gang))
+    var members = (await players.GetMembers(gang))
      .Where(p => p.GangRank == rank)
      .ToList();
 
@@ -71,7 +71,7 @@ public class MockRankManager(IPlayerManager playerMgr) : IRankManager {
     foreach (var player in members) {
       player.GangRank = lowerRank?.Rank ?? null;
       player.GangId   = lowerRank == null ? null : player.GangId;
-      await playerMgr.UpdatePlayer(player);
+      await players.UpdatePlayer(player);
     }
 
     Ranks[gang] = gangRanks.Where(r => r.Rank != rank);

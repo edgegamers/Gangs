@@ -6,10 +6,10 @@ using GangsAPI.Services.Player;
 
 namespace Mock;
 
-public class MockGangManager(IPlayerManager playerMgr, IRankManager rankMgr)
+public class MockGangManager(IPlayerManager players, IRankManager ranks)
   : IGangManager {
   protected readonly HashSet<IGang> CachedGangs = [], BackendGangs = [];
-  protected readonly IPlayerManager PlayerMgr = playerMgr;
+  protected readonly IPlayerManager Players = players;
 
   public Task<IEnumerable<IGang>> GetGangs() {
     return Task.FromResult(CachedGangs.AsEnumerable());
@@ -20,7 +20,7 @@ public class MockGangManager(IPlayerManager playerMgr, IRankManager rankMgr)
   }
 
   public async Task<IGang?> GetGang(ulong steam) {
-    var gangId = (await PlayerMgr.GetPlayer(steam))?.GangId;
+    var gangId = (await Players.GetPlayer(steam))?.GangId;
     return gangId == null ?
       null :
       CachedGangs.FirstOrDefault(g => g.GangId == gangId);
@@ -34,14 +34,14 @@ public class MockGangManager(IPlayerManager playerMgr, IRankManager rankMgr)
   }
 
   public virtual async Task<bool> DeleteGang(int id) {
-    var members = await PlayerMgr.GetMembers(id);
+    var members = await Players.GetMembers(id);
     foreach (var member in members) {
       member.GangId   = null;
       member.GangRank = null;
-      await PlayerMgr.UpdatePlayer(member);
+      await Players.UpdatePlayer(member);
     }
 
-    await rankMgr.DeleteAllRanks(id);
+    await ranks.DeleteAllRanks(id);
 
     return CachedGangs.RemoveWhere(g => g.GangId == id) > 0;
   }
@@ -51,15 +51,15 @@ public class MockGangManager(IPlayerManager playerMgr, IRankManager rankMgr)
     var id = CachedGangs.Count + 1;
     if (CachedGangs.Any(g => g.GangId == id)) return null;
     var gang   = new MockGang(id, name);
-    var player = await PlayerMgr.GetPlayer(owner);
+    var player = await Players.GetPlayer(owner);
     if (player == null) return null;
     if (player.GangId != null)
       throw new InvalidOperationException(
         $"Attempted to create a gang for {owner} who is already in gang {player.GangId}");
-    await rankMgr.AssignDefaultRanks(id);
+    await ranks.AssignDefaultRanks(id);
     player.GangId   = id;
     player.GangRank = 0;
-    await PlayerMgr.UpdatePlayer(player);
+    await Players.UpdatePlayer(player);
     CachedGangs.Add(gang);
     BackendGangs.Add(gang);
     return gang.Clone() as IGang;

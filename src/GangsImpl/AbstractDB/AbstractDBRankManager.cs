@@ -7,7 +7,7 @@ using GangsAPI.Services.Player;
 
 namespace GenericDB;
 
-public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
+public abstract class AbstractDBRankManager(IPlayerManager players,
   string connectionString, string table = "gang_ranks", bool testing = false)
   : IRankManager {
   protected DbConnection Connection = null!;
@@ -84,7 +84,7 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
     // Check if any players have this rank
 
     if (strat == IRankManager.DeleteStrat.CANCEL) {
-      var prePlayerCheck = await playerMgr.GetMembers(gang);
+      var prePlayerCheck = await players.GetMembers(gang);
       if (prePlayerCheck.Any(p => p.GangRank == rank)) return false;
     }
 
@@ -92,7 +92,7 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
       $"SELECT * FROM {table} WHERE GangId = @GangId AND `Rank` > @Rank ORDER BY `Rank` ASC LIMIT 1",
       new { GangId = gang, rank }, Transaction);
 
-    var members = (await playerMgr.GetMembers(gang))
+    var members = (await players.GetMembers(gang))
      .Where(p => p.GangRank == rank)
      .ToList();
 
@@ -103,7 +103,7 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
     foreach (var player in members) {
       player.GangId   = lowerRank?.GangId ?? null;
       player.GangRank = lowerRank?.Rank ?? null;
-      await playerMgr.UpdatePlayer(player);
+      await players.UpdatePlayer(player);
     }
 
     var query =

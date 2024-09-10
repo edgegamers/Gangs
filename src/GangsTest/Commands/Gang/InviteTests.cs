@@ -15,11 +15,11 @@ using Stats;
 
 namespace GangsTest.Commands.Gang;
 
-public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
-  IPlayerManager playerMgr, IRankManager rankMgr, IGangStatManager gangStatMgr,
+public class InviteTests(ICommandManager cmds, IGangManager gangs,
+  IPlayerManager players, IRankManager ranks, IGangStatManager gangStats,
   IServerProvider server, ITargeter targeter, IStringLocalizer localizer)
-  : TestParent(cmdMgr,
-    new InviteCommand(gangMgr, playerMgr, rankMgr, gangStatMgr, targeter,
+  : TestParent(cmds,
+    new InviteCommand(gangs, players, ranks, gangStats, targeter,
       localizer)) {
   private readonly string inviteId = new InvitationStat().StatId;
 
@@ -47,8 +47,8 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
 
   [Fact]
   public async Task Invite_Self() {
-    await playerMgr.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
-    await gangMgr.CreateGang("Test Gang", TestPlayer);
+    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, "invite",
         TestPlayer.Steam.ToString()));
@@ -59,8 +59,8 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
 
   [Fact]
   public async Task Invite_InvalidSteam() {
-    await playerMgr.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
-    await gangMgr.CreateGang("Test Gang", TestPlayer);
+    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, "invite", "123"));
     Assert.Equal([localizer.Get(MSG.GENERIC_STEAM_NOT_FOUND, "123")],
@@ -69,18 +69,18 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
 
   [Fact]
   public async Task Invite_NoPermission() {
-    await playerMgr.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
-    var gang = await gangMgr.CreateGang("Test Gang", TestPlayer);
+    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
 
-    var guest = await playerMgr.CreatePlayer(new Random().NextUInt(), "Guest");
+    var guest = await players.CreatePlayer(new Random().NextUInt(), "Guest");
     guest.GangId   = gang.GangId;
-    guest.GangRank = (await rankMgr.GetJoinRank(gang)).Rank;
-    await playerMgr.UpdatePlayer(guest);
+    guest.GangRank = (await ranks.GetJoinRank(gang)).Rank;
+    await players.UpdatePlayer(guest);
 
     var guestWrapper = new PlayerWrapper(guest);
 
-    var needed = await rankMgr.GetRankNeeded(gang.GangId, Perm.INVITE_OTHERS);
+    var needed = await ranks.GetRankNeeded(gang.GangId, Perm.INVITE_OTHERS);
 
     Assert.NotNull(needed);
 
@@ -92,10 +92,10 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
 
   [Fact]
   public async Task Invite_Offline() {
-    await playerMgr.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
     var toInvite =
-      await playerMgr.CreatePlayer(new Random().NextUInt(), "Invite Me!");
-    var gang = await gangMgr.CreateGang("Test Gang", TestPlayer);
+      await players.CreatePlayer(new Random().NextUInt(), "Invite Me!");
+    var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
 
     Assert.Equal(CommandResult.SUCCESS,
@@ -108,15 +108,15 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
 
   [Fact]
   public async Task Invite_AlreadyInvited() {
-    await playerMgr.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
     var toInvite =
-      await playerMgr.CreatePlayer(new Random().NextUInt(), "Invite Me!");
-    var gang = await gangMgr.CreateGang("Test Gang", TestPlayer);
+      await players.CreatePlayer(new Random().NextUInt(), "Invite Me!");
+    var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
 
     var data = new InvitationData();
     data.AddInvitation(TestPlayer.Steam, toInvite.Steam);
-    await gangStatMgr.SetForGang(gang.GangId, inviteId, data);
+    await gangStats.SetForGang(gang.GangId, inviteId, data);
 
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, "invite",
@@ -128,10 +128,10 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
 
   [Fact]
   public async Task Invite_Twice() {
-    await playerMgr.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
     var toInvite =
-      await playerMgr.CreatePlayer(new Random().NextUInt(), "Invite Me!");
-    var gang = await gangMgr.CreateGang("Test Gang", TestPlayer);
+      await players.CreatePlayer(new Random().NextUInt(), "Invite Me!");
+    var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
     var inviteSuccess = localizer.Get(MSG.COMMAND_INVITE_SUCCESS,
       toInvite.Name!, gang.Name);
@@ -153,12 +153,12 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
 
   [Fact]
   public async Task Invite_Already_In_AGang() {
-    await playerMgr.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
-    var gang = await gangMgr.CreateGang("Test Gang", TestPlayer);
+    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    var gang = await gangs.CreateGang("Test Gang", TestPlayer);
 
     var otherOwner =
-      await playerMgr.CreatePlayer(new Random().NextUInt(), "Other Owner");
-    var otherGang = await gangMgr.CreateGang("Other Gang", otherOwner);
+      await players.CreatePlayer(new Random().NextUInt(), "Other Owner");
+    var otherGang = await gangs.CreateGang("Other Gang", otherOwner);
 
     Assert.NotNull(gang);
     Assert.NotNull(otherGang);
@@ -173,14 +173,14 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
 
   [Fact]
   public async Task Invite_Already_In_YourGang() {
-    await playerMgr.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
-    var gang = await gangMgr.CreateGang("Test Gang", TestPlayer);
+    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
 
-    var guest = await playerMgr.CreatePlayer(new Random().NextUInt(), "Guest");
+    var guest = await players.CreatePlayer(new Random().NextUInt(), "Guest");
     guest.GangId   = gang.GangId;
-    guest.GangRank = (await rankMgr.GetJoinRank(gang)).Rank;
-    await playerMgr.UpdatePlayer(guest);
+    guest.GangRank = (await ranks.GetJoinRank(gang)).Rank;
+    await players.UpdatePlayer(guest);
 
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, "invite",
@@ -191,11 +191,11 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
 
   [Fact]
   public async Task Invite_Online() {
-    await playerMgr.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
-    var gang = await gangMgr.CreateGang("Test Gang", TestPlayer);
+    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
 
-    var guest = await playerMgr.CreatePlayer(new Random().NextUInt(), "Guest");
+    var guest = await players.CreatePlayer(new Random().NextUInt(), "Guest");
     var guestWrapper = new PlayerWrapper(guest);
     await server.AddPlayer(guestWrapper);
 

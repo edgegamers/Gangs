@@ -11,23 +11,23 @@ using Mock;
 namespace GangsTest.API.Services.Commands.CommandManager;
 
 public class TestData : IEnumerable<object[]> {
-  private static readonly IPlayerManager playerMgr = new MockPlayerManager();
-  private static readonly IMenuManager menuMgr = new MockMenuManager();
+  private static readonly IPlayerManager players = new MockPlayerManager();
+  private static readonly IMenuManager menus = new MockMenuManager();
 
-  private static readonly IPlayerStatManager playerStatMgr =
+  private static readonly IPlayerStatManager playerStats =
     new MockInstanceStatManager();
 
-  private static readonly IGangStatManager gangStatMgr =
+  private static readonly IGangStatManager gangStats =
     new MockInstanceStatManager();
 
-  private static readonly IRankManager rankMgr = new MockRankManager(playerMgr);
+  private static readonly IRankManager ranks = new MockRankManager(players);
   private static readonly IServerProvider server = new MockServerProvider();
   private static readonly ITargeter targeter = new MockTargeter(server);
 
   private readonly IBehavior[] behaviors = [
     new MockCommandManager(StringLocalizer.Instance),
-    new global::Commands.CommandManager(new MockGangManager(playerMgr, rankMgr),
-      playerStatMgr, playerMgr, menuMgr, rankMgr, gangStatMgr, targeter,
+    new global::Commands.CommandManager(new MockGangManager(players, ranks),
+      playerStats, players, menus, ranks, gangStats, targeter,
       StringLocalizer.Instance)
   ];
 

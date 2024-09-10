@@ -3,7 +3,7 @@ using GangsAPI.Services.Gang;
 
 namespace GangsTest.API.Services.Stat.Instance.Gang;
 
-public class PushTests(IGangManager gangMgr) : TestParent(gangMgr) {
+public class PushTests(IGangManager gangs) : TestParent(gangs) {
   private readonly IStat<Reputation> testReputation = new ReputationStat();
 
   [Theory]
