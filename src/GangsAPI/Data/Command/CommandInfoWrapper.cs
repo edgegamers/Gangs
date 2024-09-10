@@ -51,11 +51,6 @@ public class CommandInfoWrapper {
       return;
     }
 
-    Server.NextFrame(() => {
-      Server.PrintToChatAll(
-        $"Command {GetCommandString} executed by {CallingPlayer.Name} (Context: {CallingContext})");
-    });
-
     if (CallingContext == CommandCallingContext.Console)
       CallingPlayer.PrintToConsole(message);
     else
