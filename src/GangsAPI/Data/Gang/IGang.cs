@@ -2,12 +2,17 @@
 
 /// <summary>
 ///   Represents an instance of a gang.
+///
+///   Schema:
+///     GangID INT PRIMARY KEY
+///     Name STRING
 /// </summary>
 public interface IGang : IEqualityComparer<IGang>, IEquatable<IGang>,
   ICloneable {
   /// <summary>
   ///   The unique identifier of the gang.
-  ///   All gangs have a unique identifier.
+  ///   All gangs have a unique identifier, and
+  ///   thus equality of gangs is determined by this value.
   /// </summary>
   int GangId { get; }
 

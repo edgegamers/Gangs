@@ -37,6 +37,7 @@ public class PlayerWrapper {
 
   public IReadOnlyList<string> ChatOutput => chatOutput;
   public IReadOnlyList<string> ConsoleOutput => consoleOutput;
+  public IReadOnlyList<string> CenterOutput => centerOutput;
 
   public bool IsValid => Player == null || Player.IsValid;
 

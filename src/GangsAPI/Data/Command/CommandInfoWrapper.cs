@@ -2,22 +2,32 @@
 
 namespace GangsAPI.Data.Command;
 
+/// <summary>
+/// A wrapper for command logic to simplify command handling
+/// The wrapper is responsible for keeping track of who
+/// executed a command, what the parameters were when executing,
+/// and the execution context.
+/// </summary>
 public class CommandInfoWrapper {
+  /// <summary>
+  /// The arguments the command consists of
+  /// </summary>
   public readonly string[] Args;
 
+  /// <summary>
+  /// The player that executed the command
+  /// </summary>
   public readonly PlayerWrapper? CallingPlayer;
-  private readonly int offset;
 
+  /// <summary>
+  /// The calling context of the command
+  /// </summary>
   public CommandCallingContext CallingContext;
 
   public CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
     params string[] args) {
     CallingPlayer = executor;
-    // CallingContext = isChat ?
-    //   CommandCallingContext.Chat :
-    //   CommandCallingContext.Console;
-    this.offset = offset;
-    Args        = args.Skip(offset).ToArray();
+    Args          = args.Skip(offset).ToArray();
     if (offset == 0 && Args.Length > 0) Args[0] = args[0].ToLower();
   }
 
@@ -25,7 +35,6 @@ public class CommandInfoWrapper {
     CallingPlayer = info.CallingPlayer == null ?
       null :
       new PlayerWrapper(info.CallingPlayer);
-    this.offset    = offset;
     CallingContext = info.CallingContext;
     Args           = new string[info.ArgCount - offset];
     for (var i = 0; i < info.ArgCount - offset; i++)
@@ -38,6 +47,11 @@ public class CommandInfoWrapper {
 
   public string GetCommandString => string.Join(' ', Args);
 
+  /// <summary>
+  /// Replies to the player who issued the command to
+  /// the proper channels depending on context
+  /// </summary>
+  /// <param name="message"></param>
   public void ReplySync(string message) {
     if (CallingPlayer == null) {
       Console.WriteLine(message);

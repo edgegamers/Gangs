@@ -1,7 +1,7 @@
 ﻿namespace GangsAPI.Data.Stat;
 
 /// <summary>
-///   Represents a numerical statistic.
+///   Represents a statistic.
 /// </summary>
 public interface IStat : IEquatable<IStat> {
   /// <summary>
@@ -20,11 +20,13 @@ public interface IStat : IEquatable<IStat> {
   string? Description { get; }
 }
 
+/// <summary>
+/// Represents an instance of a statistic.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public interface IStat<T> : IStat, IEquatable<IStat<T>> {
   /// <summary>
   ///   The value of the statistic.
   /// </summary>
   T Value { get; set; }
-
-  IStat<T> Clone();
 }

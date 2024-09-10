@@ -1,11 +1,12 @@
 ﻿using CounterStrikeSharp.API.Modules.Admin;
 using GangsAPI.Data;
+using GangsAPI.Extensions;
 
 namespace GangsTest.API.Data;
 
 public class PlayerWrapperTests {
   private readonly PlayerWrapper testPlayer =
-    new((ulong)new Random().NextInt64(), "Test Player");
+    new(new Random().NextUInt(), "Test Player");
 
   private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
   private static char GROUP_CHAR => PermissionCharacters.GroupPermissionChar;
@@ -30,15 +31,19 @@ public class PlayerWrapperTests {
   [Fact]
   public void Output_Chat_Single() {
     testPlayer.PrintToChat("Test Message");
-    Assert.Single(testPlayer.ChatOutput);
-    Assert.Equal("Test Message", testPlayer.ChatOutput[0]);
+    Assert.Equal(["Test Message"], testPlayer.ChatOutput);
   }
 
   [Fact]
   public void Output_Console_Single() {
     testPlayer.PrintToConsole("Test Message");
-    Assert.Single(testPlayer.ConsoleOutput);
-    Assert.Equal("Test Message", testPlayer.ConsoleOutput[0]);
+    Assert.Equal(["Test Message"], testPlayer.ConsoleOutput);
+  }
+
+  [Fact]
+  public void Output_Center_Single() {
+    testPlayer.PrintToConsole("Test Message");
+    Assert.Equal(["Test Message"], testPlayer.ConsoleOutput);
   }
 
   [Fact]
@@ -47,8 +52,8 @@ public class PlayerWrapperTests {
     testPlayer.PrintToChat("Test Message B");
     Assert.Single(testPlayer.ConsoleOutput);
     Assert.Single(testPlayer.ChatOutput);
-    Assert.Equal("Test Message A", testPlayer.ConsoleOutput[0]);
-    Assert.Equal("Test Message B", testPlayer.ChatOutput[0]);
+    Assert.Equal(["Test Message A"], testPlayer.ConsoleOutput);
+    Assert.Equal(["Test Message B"], testPlayer.ChatOutput);
   }
 
   [Fact]
@@ -56,17 +61,22 @@ public class PlayerWrapperTests {
     testPlayer.PrintToChat("Test Message 1");
     testPlayer.PrintToChat("Test Message 2");
     Assert.Equal(2, testPlayer.ChatOutput.Count);
-    Assert.Equal("Test Message 1", testPlayer.ChatOutput[0]);
-    Assert.Equal("Test Message 2", testPlayer.ChatOutput[1]);
+    Assert.Equal(["Test Message 1", "Test Message 2"], testPlayer.ChatOutput);
   }
 
   [Fact]
   public void Output_Console_Multi() {
     testPlayer.PrintToConsole("Test Message 1");
     testPlayer.PrintToConsole("Test Message 2");
-    Assert.Equal(2, testPlayer.ConsoleOutput.Count);
-    Assert.Equal("Test Message 1", testPlayer.ConsoleOutput[0]);
-    Assert.Equal("Test Message 2", testPlayer.ConsoleOutput[1]);
+    Assert.Equal(["Test Message 1", "Test Message 2"],
+      testPlayer.ConsoleOutput);
+  }
+
+  [Fact]
+  public void Output_Center_Multi() {
+    testPlayer.PrintToCenter("Test Message 1");
+    testPlayer.PrintToCenter("Test Message 2");
+    Assert.Equal(["Test Message 1", "Test Message 2"], testPlayer.CenterOutput);
   }
 
   [Theory]

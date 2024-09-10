@@ -3,5 +3,5 @@
 public interface IDBConfig {
   string ConnectionString { get; }
   string TablePrefix { get; }
-  bool Testing { get; } // TODO: Use environment variables
+  bool Testing { get; }
 }

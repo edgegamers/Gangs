@@ -1,4 +1,5 @@
-﻿using GangsAPI.Services;
+﻿using GangsAPI;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
@@ -14,6 +15,8 @@ namespace GangsTest;
 
 public class Startup {
   public void ConfigureServices(IServiceCollection services) {
+    services.AddScoped<IServerProvider, MockServerProvider>();
+    services.AddScoped<ITargeter, MockTargeter>();
     services.AddScoped<IPlayerManager, MockPlayerManager>();
     services.AddScoped<IGangManager, MockGangManager>();
     services.AddScoped<IStatManager, MockStatManager>();
