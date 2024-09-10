@@ -22,9 +22,9 @@ public class CreateTests(ICommandManager commands, IGangManager gangMgr,
 
   [Fact]
   public async Task Create_NoName() {
-    Assert.Equal(CommandResult.INVALID_ARGS,
+    Assert.Equal(CommandResult.PRINT_USAGE,
       await Commands.ProcessCommand(player, "create"));
-    Assert.Contains(locale.Get(MSG.COMMAND_USAGE, "create" + Command.Usage[0]),
+    Assert.Contains(locale.Get(MSG.COMMAND_USAGE, "create " + Command.Usage[0]),
       player.ConsoleOutput);
   }
 

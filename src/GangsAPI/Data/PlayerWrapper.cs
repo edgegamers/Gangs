@@ -4,6 +4,7 @@ using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Entities;
+using GangsAPI.Data.Gang;
 
 namespace GangsAPI.Data;
 
@@ -31,6 +32,8 @@ public class PlayerWrapper {
 
     Data = new AdminData { Identity = Steam.ToString() };
   }
+
+  public PlayerWrapper(IGangPlayer player) : this(player.Steam, player.Name) { }
 
   public IReadOnlyList<string> ChatOutput => chatOutput;
   public IReadOnlyList<string> ConsoleOutput => consoleOutput;

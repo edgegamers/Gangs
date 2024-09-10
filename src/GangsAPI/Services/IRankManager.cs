@@ -149,10 +149,16 @@ public interface IRankManager : IPluginBehavior {
     return rank?.Name ?? "Owner";
   }
 
+  async Task<IGangRank> GetJoinRank(int gangId) {
+    var ranks = (await GetRanks(gangId)).ToList();
+    ranks.Sort((a, b) => a.Rank.CompareTo(b.Rank));
+    return ranks.Last();
+  }
+
   async Task<IGangRank> GetRankNeeded(int gang, Perm perm) {
     var ranks = (await GetRanks(gang)).ToList();
     ranks.Sort((a, b) => a.Rank.CompareTo(b.Rank));
-    return ranks.First(r => r.Permissions.HasFlag(perm));
+    return ranks.Last(r => r.Permissions.HasFlag(perm));
   }
 
   #region Aliases
@@ -181,6 +187,8 @@ public interface IRankManager : IPluginBehavior {
 
   Task<IGangRank> GetRankNeeded(IGang gang, Perm perm)
     => GetRankNeeded(gang.GangId, perm);
+
+  Task<IGangRank> GetJoinRank(IGang gang) => GetJoinRank(gang.GangId);
 
   #endregion
 }

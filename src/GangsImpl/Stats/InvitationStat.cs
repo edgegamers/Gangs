@@ -19,15 +19,19 @@ public class InvitationData {
   public int MaxAmo { get; init; } = 5;
 
   public List<ulong> GetInvitedSteams() {
-    return InvitedSteams.Split(",").Select(ulong.Parse).ToList();
+    return InvitedSteams == "" ? [] :
+      InvitedSteams.Trim(',').Split(",").Select(ulong.Parse).ToList();
   }
 
   public List<ulong> GetInviterSteams() {
-    return InviterSteams.Split(",").Select(ulong.Parse).ToList();
+    return InviterSteams == "" ? [] :
+      InviterSteams.Trim(',').Split(",").Select(ulong.Parse).ToList();
   }
 
   public List<DateTime> GetDates() {
-    return Dates.Split(",")
+    if (Dates == "") return [];
+    return Dates.Trim(',')
+     .Split(",")
      .Select(ulong.Parse)
      .Select(u => DateTime.UnixEpoch.AddSeconds(u))
      .ToList();

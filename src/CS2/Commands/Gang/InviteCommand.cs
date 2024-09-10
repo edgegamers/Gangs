@@ -54,7 +54,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
       var required =
         await rankMgr.GetRankNeeded(gangPlayer.GangId.Value,
           Perm.INVITE_OTHERS);
-      info.ReplySync(localizer.Get(MSG.GENERIC_NOPERM_RANK, required));
+      info.ReplySync(localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
       return CommandResult.NO_PERMISSION;
     }
 
@@ -93,7 +93,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
     var offlinePlayer = await playerMgr.GetPlayer(steam.Value, false);
     if (offlinePlayer == null) {
       info.ReplySync(localizer.Get(MSG.GENERIC_STEAM_NOT_FOUND, steam));
-      return CommandResult.ERROR;
+      return CommandResult.SUCCESS;
     }
 
     if (invites.GetInvitedSteams().Contains(steam.Value)) {
@@ -106,8 +106,9 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
       info.ReplySync(localizer.Get(
         offlinePlayer.GangId == gangPlayer.GangId ?
           MSG.COMMAND_INVITE_IN_YOUR_GANG :
-          MSG.ALREADY_IN_GANG,
+          MSG.COMMAND_INVITE_ALREADY_IN_GANG,
         offlinePlayer?.Name ?? offlinePlayer!.Steam.ToString()));
+      return CommandResult.SUCCESS;
     }
 
     var gangName = (await gangs.GetGang(gangPlayer.GangId.Value))?.Name;
@@ -120,7 +121,6 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
 
     invites.AddInvitation(executor.Steam, steam.Value);
     await gangStatMgr.SetForGang(gangPlayer.GangId.Value, statId, invites);
-
 
     info.ReplySync(localizer.Get(MSG.COMMAND_INVITE_SUCCESS,
       offlinePlayer?.Name ?? offlinePlayer!.Steam.ToString(), gangName));
