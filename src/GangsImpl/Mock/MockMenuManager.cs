@@ -9,8 +9,8 @@ public class MockMenuManager : IMenuManager {
 
   public virtual void Start(BasePlugin? plugin, bool hotReload) { }
 
-  public IMenu? GetActiveMenu(PlayerWrapper player) {
-    return activeMenus.TryGetValue(player.Steam, out var menu) ? menu : null;
+  public IMenu? GetActiveMenu(ulong steam) {
+    return activeMenus.TryGetValue(steam, out var menu) ? menu : null;
   }
 
   public Task<bool> OpenMenu(PlayerWrapper player, IMenu menu) {
@@ -20,7 +20,7 @@ public class MockMenuManager : IMenuManager {
   }
 
   public Task<bool> CloseMenu(PlayerWrapper player) {
-    var activeMenu = GetActiveMenu(player);
+    var activeMenu = ((IMenuManager)this).GetActiveMenu(player);
     if (activeMenu == null) return Task.FromResult(false);
     activeMenu.Close(player);
     activeMenus.Remove(player.Steam);
@@ -28,7 +28,7 @@ public class MockMenuManager : IMenuManager {
   }
 
   public Task<bool> AcceptInput(PlayerWrapper player, int input) {
-    var activeMenu = GetActiveMenu(player);
+    var activeMenu = ((IMenuManager)this).GetActiveMenu(player);
     if (activeMenu == null) return Task.FromResult(false);
     activeMenu.AcceptInput(player, input);
     return Task.FromResult(true);

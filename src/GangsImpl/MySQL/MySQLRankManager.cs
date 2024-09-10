@@ -8,7 +8,7 @@ namespace SQLImpl;
 
 public class MySQLRankManager(IPlayerManager playerMgr, IDBConfig config)
   : AbstractDBRankManager(playerMgr, config.ConnectionString,
-    config.TablePrefix, config.Testing) {
+    config.TablePrefix + "_ranks", config.Testing) {
   override protected DbConnection CreateDbConnection(string connectionString) {
     return new MySqlConnection(connectionString);
   }

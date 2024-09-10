@@ -9,8 +9,7 @@ public class DeleteTests : TestParent {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Delete(IRankManager mgr, IPlayerManager _) {
-    var rank = await mgr.CreateRank(GangId, "Test Rank", 1,
-      IGangRank.Permissions.KICK_OTHERS);
+    var rank = await mgr.CreateRank(GangId, "Test Rank", 1, Perm.KICK_OTHERS);
     Assert.NotNull(rank);
     Assert.True(await mgr.DeleteRank(GangId, rank.Rank,
       IRankManager.DeleteStrat.CANCEL));
@@ -22,8 +21,7 @@ public class DeleteTests : TestParent {
   [ClassData(typeof(TestData))]
   public async Task Delete_Cancel_Demote(IRankManager mgr,
     IPlayerManager playerMgr) {
-    var rank = await mgr.CreateRank(GangId, "Test Rank", 1,
-      IGangRank.Permissions.KICK_OTHERS);
+    var rank = await mgr.CreateRank(GangId, "Test Rank", 1, Perm.KICK_OTHERS);
     Assert.NotNull(rank);
     var player = await playerMgr.CreatePlayer(new Random().NextUInt(),
       "Test Player");
@@ -49,8 +47,7 @@ public class DeleteTests : TestParent {
   [ClassData(typeof(TestData))]
   public async Task Delete_With_Players_Cancel(IRankManager mgr,
     IPlayerManager playerMgr) {
-    var lowestRank = mgr.CreateRank(GangId, "Lowest Rank", 100,
-      IGangRank.Permissions.NONE);
+    var lowestRank = mgr.CreateRank(GangId, "Lowest Rank", 100, Perm.NONE);
     Assert.NotNull(lowestRank);
 
     var officer =
@@ -70,7 +67,7 @@ public class DeleteTests : TestParent {
   public async Task Delete_With_Players_Kick(IRankManager mgr,
     IPlayerManager playerMgr) {
     var lowestRank = await mgr.CreateRank(GangId, "Lowest Rank", 100,
-      IGangRank.Permissions.NONE);
+      Perm.NONE);
     Assert.NotNull(lowestRank);
 
     var officer =
@@ -89,10 +86,9 @@ public class DeleteTests : TestParent {
   [ClassData(typeof(TestData))]
   public async Task Delete_With_Inferior_Rank(IRankManager mgr,
     IPlayerManager playerMgr) {
-    var highRank = await mgr.CreateRank(GangId, "High Rank", 50,
-      IGangRank.Permissions.NONE);
+    var highRank = await mgr.CreateRank(GangId, "High Rank", 50, Perm.NONE);
     var lowestRank = await mgr.CreateRank(GangId, "Lowest Rank", 100,
-      IGangRank.Permissions.NONE);
+      Perm.NONE);
     Assert.NotNull(highRank);
     Assert.NotNull(lowestRank);
 

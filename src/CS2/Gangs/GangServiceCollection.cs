@@ -29,5 +29,9 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection.RegisterCommands();
 
     serviceCollection.AddPluginBehavior<PlayerJoinCreationListener>();
+    serviceCollection.AddTransient(typeof(Lazy<>), typeof(Lazier<>));
   }
+
+  internal class Lazier<T>(IServiceProvider provider)
+    : Lazy<T>(provider.GetRequiredService<T>) where T : notnull;
 }

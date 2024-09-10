@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using GangsAPI.Services.Commands;
 using GangsAPI.Services.Menu;
+using GangsImpl;
 using GangsTest.TestLocale;
 using Mock;
 
@@ -9,7 +11,8 @@ public class TestData : IEnumerable<object[]> {
   private readonly IMenuManager[] behaviors = [
     new MockMenuManager(),
     new CommandBasedMenuManager(
-      new MockCommandManager(StringLocalizer.Instance))
+      new Lazy<ICommandManager>(
+        new MockCommandManager(StringLocalizer.Instance)))
   ];
 
   public IEnumerator<object[]> GetEnumerator() {

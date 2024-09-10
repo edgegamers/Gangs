@@ -71,7 +71,7 @@ public interface IRankManager : IPluginBehavior {
   /// <param name="permissions"></param>
   /// <returns></returns>
   Task<IGangRank?> CreateRank(int gang, string name, int rank,
-    IGangRank.Permissions permissions);
+    Perm permissions);
 
   /// <summary>
   ///   Deletes a rank from a specific gang.
@@ -115,20 +115,15 @@ public interface IRankManager : IPluginBehavior {
   /// </summary>
   /// <returns></returns>
   async Task<IEnumerable<IGangRank>> AssignDefaultRanks(int gang) {
-    var memberPerms = IGangRank.Permissions.BANK_DEPOSIT
-      | IGangRank.Permissions.VIEW_MEMBERS;
-    var officerPerms = memberPerms | IGangRank.Permissions.INVITE_OTHERS
-      | IGangRank.Permissions.PURCHASE_PERKS
-      | IGangRank.Permissions.BANK_WITHDRAW | IGangRank.Permissions.KICK_OTHERS;
-    var managerPerms = officerPerms | IGangRank.Permissions.MANAGE_PERKS
-      | IGangRank.Permissions.MANAGE_RANKS
-      | IGangRank.Permissions.MANAGE_INVITES
-      | IGangRank.Permissions.PROMOTE_OTHERS
-      | IGangRank.Permissions.DEMOTE_OTHERS;
-    var coOwnerPerms = managerPerms | IGangRank.Permissions.CREATE_RANKS;
+    var memberPerms = Perm.BANK_DEPOSIT | Perm.VIEW_MEMBERS;
+    var officerPerms = memberPerms | Perm.INVITE_OTHERS | Perm.PURCHASE_PERKS
+      | Perm.BANK_WITHDRAW | Perm.KICK_OTHERS;
+    var managerPerms = officerPerms | Perm.MANAGE_PERKS | Perm.MANAGE_RANKS
+      | Perm.MANAGE_INVITES | Perm.PROMOTE_OTHERS | Perm.DEMOTE_OTHERS;
+    var coOwnerPerms = managerPerms | Perm.CREATE_RANKS;
 
     var defaultRanks = new[] {
-      await CreateRank(gang, "Owner", 0, IGangRank.Permissions.OWNER)
+      await CreateRank(gang, "Owner", 0, Perm.OWNER)
       ?? throw new InvalidOperationException("Failed to create owner rank."),
       await CreateRank(gang, "Co-Owner", 10, coOwnerPerms)
       ?? throw new InvalidOperationException("Failed to create co-owner rank."),

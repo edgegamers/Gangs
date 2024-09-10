@@ -1,11 +1,12 @@
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
+using GangsImpl;
 using Mock;
 
 namespace GangsTest.API.Services.Menu;
 
 public class CommandInteractionTests(ICommandManager cmdMgr)
-  : TestParent(new CommandBasedMenuManager(cmdMgr)) {
+  : TestParent(new CommandBasedMenuManager(new Lazy<ICommandManager>(cmdMgr))) {
   [Fact]
   public async Task Command_Interactions() {
     await MenuManager.OpenMenu(TestPlayer, TestMenu);

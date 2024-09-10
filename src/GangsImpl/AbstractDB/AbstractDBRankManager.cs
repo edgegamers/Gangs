@@ -64,14 +64,14 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
     var query =
       $"INSERT INTO {table} (GangId, `Rank`, Name, Permissions) VALUES (@GangId, @Rank, @Name, @Perms)";
     return await Connection.ExecuteAsync(query,
-        new { GangId = gang, rank.Rank, rank.Name, rank.Perms }, Transaction)
+        new { GangId = gang, rank.Rank, rank.Name, Perms = rank.Permissions }, Transaction)
       == 1;
   }
 
   public async Task<IGangRank?> CreateRank(int gang, string name, int rank,
-    IGangRank.Permissions permissions) {
+    Perm perm) {
     var rankObj = new DBRank {
-      GangId = gang, Rank = rank, Name = name, Perms = permissions
+      GangId = gang, Rank = rank, Name = name, Permissions = perm
     };
 
     var success = await AddRank(gang, rankObj);
@@ -121,14 +121,14 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
   public async Task<bool> UpdateRank(int gang, IGangRank rank) {
     switch (rank.Rank) {
       case < 0:
-      case > 0 when rank.Perms.HasFlag(IGangRank.Permissions.OWNER):
+      case > 0 when rank.Permissions.HasFlag(Perm.OWNER):
         return false;
       default: {
         // Update name and permissions
         var query =
           $"UPDATE {table} SET Name = @Name, Permissions = @Perms WHERE GangId = @GangId AND `Rank` = @Rank";
         return await Connection.ExecuteAsync(query,
-          new { rank.Name, rank.Perms, gang, rank.Rank }, Transaction) == 1;
+          new { rank.Name, Perms = rank.Permissions, gang, rank.Rank }, Transaction) == 1;
       }
     }
   }

@@ -28,7 +28,7 @@ public class MockRankManager(IPlayerManager playerMgr) : IRankManager {
   }
 
   public async Task<IGangRank?> CreateRank(int gang, string name, int rank,
-    IGangRank.Permissions permissions) {
+    Perm permissions) {
     if (rank < 0) return null;
     var newRank = new MockRank(name, rank, permissions);
     var added   = await AddRank(gang, newRank);

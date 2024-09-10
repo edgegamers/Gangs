@@ -4,6 +4,7 @@ using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
@@ -15,7 +16,7 @@ namespace Commands;
 
 public class CommandManager(IGangManager gangMgr,
   IPlayerStatManager playerStatMgr, IPlayerManager playerMgr,
-  IMenuManager menuMgr, IStringLocalizer testLocale)
+  IMenuManager menuMgr, IRankManager rankMgr, IStringLocalizer testLocale)
   : MockCommandManager(testLocale), IPluginBehavior {
   private bool hotReload;
   private BasePlugin? plugin;
@@ -26,8 +27,13 @@ public class CommandManager(IGangManager gangMgr,
 
     if (basePlugin != null) Locale = basePlugin.Localizer;
 
-    RegisterCommand(new GangCommand(gangMgr, playerMgr, menuMgr, Locale));
+    RegisterCommand(new GangCommand(gangMgr, playerMgr, menuMgr, rankMgr,
+      Locale));
     RegisterCommand(new BalanceCommand(playerStatMgr, Locale));
+    // basePlugin?.AddCommandListener("css_1", (player, info) => {
+    //   player?.PrintToChat("hi");
+    //   return HookResult.Continue;
+    // });
   }
 
   public override bool RegisterCommand(ICommand command) {

@@ -3,7 +3,9 @@
 namespace GangsAPI.Services.Menu;
 
 public interface IMenuManager : IPluginBehavior {
-  IMenu? GetActiveMenu(PlayerWrapper player);
+  IMenu? GetActiveMenu(PlayerWrapper player) => GetActiveMenu(player.Steam);
+  
+  IMenu? GetActiveMenu(ulong steam);
 
   Task<bool> OpenMenu(PlayerWrapper player, IMenu menu);
 

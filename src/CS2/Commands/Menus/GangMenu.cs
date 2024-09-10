@@ -1,22 +1,76 @@
 ﻿using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
+using GangsAPI.Permissions;
+using GangsAPI.Services;
+using GangsAPI.Services.Gang;
+using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
+using Microsoft.Extensions.Localization;
+using Stats;
 using IMenu = GangsAPI.Services.Menu.IMenu;
 
 namespace Commands.Menus;
 
-public class GangMenu(IGang gang, IPlayerManager playerMgr) : IMenu {
+public class GangMenu(IGang gang, IPlayerManager playerMgr,
+  IRankManager rankMgr, IMenuManager menuMgr, IGangStatManager gangStatManager,
+  IStringLocalizer localizer) : IMenu {
+  private readonly InvitationStat invitationStat = new();
+  private IList<IGangPlayer> members = new List<IGangPlayer>();
+
   public async Task Open(PlayerWrapper player) {
-    var members = await playerMgr.GetMembers(gang);
-    player.PrintToChat($"{ChatColors.Red}Gangs - {gang.Name}");
+    members = (await playerMgr.GetMembers(gang)).ToList();
+
+    var member = members.FirstOrDefault(p => p.Steam == player.Steam);
+
+    if (member is { GangRank: null }) {
+      player.PrintToChat(localizer.Get(MSG.GENERIC_ERROR_INFO,
+        "You do not have an associated rank within this gang"));
+      return;
+    }
+
+    var rank = member == null ?
+      Perm.NONE :
+      (await rankMgr.GetRank(gang.GangId, member.GangRank.Value))!.Permissions;
+
+    player.PrintToChat(" ");
     player.PrintToChat(
-      $"{ChatColors.DarkRed}1 | {ChatColors.Yellow}{members}{ChatColors.LightRed} Members");
+      $" {ChatColors.Red}Gangs {ChatColors.Grey}- {ChatColors.Green}{gang.Name}");
+    player.PrintToChat($" {ChatColors.Grey}------------------------");
+
+    await addMemberItem(rank, player);
+
+
+    player.PrintToChat($" ");
+  }
+
+  private Task addMemberItem(Perm rank, PlayerWrapper player) {
+    var memberPrefix = (rank & Perm.VIEW_MEMBERS) != 0 ?
+      ChatColors.DarkRed + "1" :
+      ChatColors.LightRed + "X";
+    player.PrintToChat(
+      $" {memberPrefix} | {ChatColors.Yellow}{members.Count}{ChatColors.LightRed} Members");
+    return Task.CompletedTask;
+  }
+
+  private async Task addInviteItem(Perm rank, PlayerWrapper player) {
+    if (!rank.HasFlag(Perm.INVITE_OTHERS)) return;
+
+    var (success, invites) =
+      await gangStatManager.GetForGang<string>(gang, invitationStat.StatId);
+    if (!success) return;
+
+    player.PrintToChat($"{invites.Length} invites");
+    return;
   }
 
   public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
 
-  public Task AcceptInput(PlayerWrapper player, int input) {
-    return Task.CompletedTask;
+  public async Task AcceptInput(PlayerWrapper player, int input) {
+    if (input == 1) {
+      await menuMgr.OpenMenu(player,
+        new MembersMenu(gang, playerMgr, menuMgr, rankMgr));
+    }
   }
 }

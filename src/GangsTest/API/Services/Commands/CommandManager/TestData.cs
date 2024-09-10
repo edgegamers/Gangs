@@ -20,7 +20,7 @@ public class TestData : IEnumerable<object[]> {
   private readonly IBehavior[] behaviors = [
     new MockCommandManager(StringLocalizer.Instance),
     new global::Commands.CommandManager(new MockGangManager(playerMgr, rankMgr),
-      playerStatMgr, playerMgr, menuMgr, StringLocalizer.Instance)
+      playerStatMgr, playerMgr, menuMgr, rankMgr, StringLocalizer.Instance)
   ];
 
   public TestData() {

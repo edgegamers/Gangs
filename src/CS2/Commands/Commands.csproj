@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
+        <ProjectReference Include="..\..\GangsImpl\Menu\Menu.csproj" />
         <ProjectReference Include="..\..\GangsImpl\Mock\Mock.csproj"/>
         <ProjectReference Include="..\..\GangsImpl\Stats\Stats.csproj"/>
     </ItemGroup>

@@ -2,11 +2,10 @@ using GangsAPI.Permissions;
 
 namespace Mock;
 
-public class MockRank(string name, int rank, IGangRank.Permissions perms)
-  : IGangRank {
+public class MockRank(string name, int rank, Perm perms) : IGangRank {
   public string Name { get; } = name;
   public int Rank { get; } = rank;
-  public IGangRank.Permissions Perms { get; } = perms;
+  public Perm Permissions { get; } = perms;
 
   public int CompareTo(IGangRank? other) {
     return other == null ? 1 : Rank.CompareTo(other.Rank);
