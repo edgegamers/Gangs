@@ -4,8 +4,10 @@ using GangsAPI.Data;
 using GangsAPI.Extensions;
 using GangsAPI.Services;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
+using Mock;
 using SQLImpl;
 
 namespace GangsImpl;
@@ -15,11 +17,15 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection.AddScoped<IDBConfig, EnvDBConfig>();
     serviceCollection.AddPluginBehavior<IGangManager, MySQLGangManager>();
     serviceCollection.AddPluginBehavior<IPlayerManager, MySQLPlayerManager>();
+    serviceCollection
+     .AddPluginBehavior<IMenuManager, CommandBasedMenuManager>();
     serviceCollection.AddPluginBehavior<IStatManager, MySQLStatManager>();
     serviceCollection
      .AddPluginBehavior<IGangStatManager, MySQLGangInstanceManager>();
     serviceCollection
      .AddPluginBehavior<IPlayerStatManager, MySQLPlayerInstanceManager>();
+    serviceCollection.AddPluginBehavior<IRankManager, MySQLRankManager>();
+
     serviceCollection.RegisterCommands();
 
     serviceCollection.AddPluginBehavior<PlayerJoinCreationListener>();

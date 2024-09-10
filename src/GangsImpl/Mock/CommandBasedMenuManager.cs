@@ -6,7 +6,10 @@ using GangsAPI.Services.Menu;
 
 namespace Mock;
 
-public class CommandBasedMenuManager(ICommandManager cmd) : MockMenuManager {
+public class CommandBasedMenuManager(Lazy<ICommandManager> cmdMgr)
+  : MockMenuManager {
+  private ICommandManager cmd => cmdMgr.Value;
+
   public override void Start(BasePlugin? plugin, bool hotReload) {
     for (var i = 0; i < 10; i++) cmd.RegisterCommand(new DigitCommand(this, i));
   }
