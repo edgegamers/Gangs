@@ -9,6 +9,7 @@ using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
+using GangsAPI.Services.Server;
 using Microsoft.Extensions.Localization;
 using static GangsAPI.MSG;
 
@@ -16,7 +17,7 @@ namespace Commands;
 
 public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
   IMenuManager menuMgr, IRankManager rankMgr, IGangStatManager gangStatMgr,
-  IStringLocalizer testLocale) : ICommand {
+  ITargeter targeter, IStringLocalizer testLocale) : ICommand {
   private readonly Dictionary<string, ICommand> sub = new() {
     // ["delete"] = new DeleteGangCommand(),
     // ["invite"] = new InviteGangCommand(),
@@ -27,7 +28,8 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
     // ["demote"] = new DemoteGangCommand(),
     // ["info"] = new InfoGangCommand()
     ["invite"] =
-      new InviteCommand(gangMgr, playerMgr, rankMgr, gangStatMgr, testLocale),
+      new InviteCommand(gangMgr, playerMgr, rankMgr, gangStatMgr, targeter,
+        testLocale),
     ["create"] = new CreateCommand(gangMgr, testLocale),
     ["help"]   = new HelpCommand()
   };

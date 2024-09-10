@@ -4,9 +4,10 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using GangsTest.API.Services.Commands.Command;
 using Microsoft.Extensions.Localization;
 
-namespace GangsTest.API.Services.Commands.Command.Concrete;
+namespace GangsTest.Commands.Gang;
 
 public class CreateTests(ICommandManager commands, IGangManager gangMgr,
   IStringLocalizer locale)

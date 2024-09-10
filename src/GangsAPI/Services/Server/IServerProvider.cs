@@ -1,6 +1,6 @@
 using GangsAPI.Data;
 
-namespace GangsAPI;
+namespace GangsAPI.Services.Server;
 
 public interface IServerProvider : IPluginBehavior {
   Task<IReadOnlyList<PlayerWrapper>> GetPlayers();

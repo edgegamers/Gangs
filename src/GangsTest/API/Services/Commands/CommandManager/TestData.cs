@@ -4,6 +4,7 @@ using GangsAPI.Services;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
+using GangsAPI.Services.Server;
 using GangsTest.TestLocale;
 using Mock;
 
@@ -20,11 +21,13 @@ public class TestData : IEnumerable<object[]> {
     new MockInstanceStatManager();
 
   private static readonly IRankManager rankMgr = new MockRankManager(playerMgr);
+  private static readonly IServerProvider server = new MockServerProvider();
+  private static readonly ITargeter targeter = new MockTargeter(server);
 
   private readonly IBehavior[] behaviors = [
     new MockCommandManager(StringLocalizer.Instance),
     new global::Commands.CommandManager(new MockGangManager(playerMgr, rankMgr),
-      playerStatMgr, playerMgr, menuMgr, rankMgr, gangStatMgr,
+      playerStatMgr, playerMgr, menuMgr, rankMgr, gangStatMgr, targeter,
       StringLocalizer.Instance)
   ];
 

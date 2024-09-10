@@ -3,11 +3,12 @@ using GangsAPI;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Player;
+using GangsTest.API.Services.Commands.Command;
 using GangsTest.TestLocale;
 using Microsoft.Extensions.Localization;
 using Stats;
 
-namespace GangsTest.API.Services.Commands.Command.Concrete;
+namespace GangsTest.Commands;
 
 public class BalanceTests(ICommandManager commands, IPlayerStatManager statMgr,
   IStringLocalizer locale) : TestParent(commands,

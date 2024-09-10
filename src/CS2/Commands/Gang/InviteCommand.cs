@@ -8,13 +8,14 @@ using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
+using GangsAPI.Services.Server;
 using Microsoft.Extensions.Localization;
 using Stats;
 
 namespace Commands.Gang;
 
 public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
-  IRankManager rankMgr, IGangStatManager gangStatMgr,
+  IRankManager rankMgr, IGangStatManager gangStatMgr, ITargeter targeter,
   IStringLocalizer localizer) : ICommand {
   private readonly string statId = new InvitationStat().StatId;
 
@@ -75,18 +76,8 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
     if (info[1].All(char.IsDigit))
       steam = ulong.Parse(info[1]);
     else
-      await Server.NextFrameAsync(() => {
-        var players = new Target(info[1]).GetTarget(null).Players;
-        if (players.Count != 1) {
-          info.ReplySync(localizer.Get(
-            players.Count > 1 ?
-              MSG.GENERIC_PLAYER_FOUND_MULTIPLE :
-              MSG.GENERIC_PLAYER_NOT_FOUND, info[1]));
-          return;
-        }
-
-        steam = players.FirstOrDefault()?.SteamID;
-      });
+      steam = (await targeter.GetSingleTarget(info[1], out _, executor,
+        localizer))?.Steam;
 
     if (steam == null) return CommandResult.INVALID_ARGS;
 

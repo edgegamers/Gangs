@@ -8,15 +8,19 @@ using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
+using GangsAPI.Services.Server;
+using GangsTest.API.Services.Commands.Command;
 using Microsoft.Extensions.Localization;
 using Stats;
 
-namespace GangsTest.API.Services.Commands.Command.Concrete;
+namespace GangsTest.Commands.Gang;
 
 public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
   IPlayerManager playerMgr, IRankManager rankMgr, IGangStatManager gangStatMgr,
-  IStringLocalizer localizer) : TestParent(cmdMgr,
-  new InviteCommand(gangMgr, playerMgr, rankMgr, gangStatMgr, localizer)) {
+  IServerProvider server, ITargeter targeter, IStringLocalizer localizer)
+  : TestParent(cmdMgr,
+    new InviteCommand(gangMgr, playerMgr, rankMgr, gangStatMgr, targeter,
+      localizer)) {
   private readonly string inviteId = new InvitationStat().StatId;
 
   [Fact]
@@ -182,6 +186,23 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
       await Commands.ProcessCommand(TestPlayer, "invite",
         guest.Steam.ToString()));
     Assert.Equal([localizer.Get(MSG.COMMAND_INVITE_IN_YOUR_GANG, guest.Name!)],
+      TestPlayer.ConsoleOutput);
+  }
+
+  [Fact]
+  public async Task Invite_Online() {
+    await playerMgr.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    var gang = await gangMgr.CreateGang("Test Gang", TestPlayer);
+    Assert.NotNull(gang);
+
+    var guest = await playerMgr.CreatePlayer(new Random().NextUInt(), "Guest");
+    var guestWrapper = new PlayerWrapper(guest);
+    await server.AddPlayer(guestWrapper);
+
+    Assert.Equal(CommandResult.SUCCESS,
+      await Commands.ProcessCommand(TestPlayer, "invite", guest.Name!));
+    Assert.Equal(
+      [localizer.Get(MSG.COMMAND_INVITE_SUCCESS, guest.Name!, gang.Name)],
       TestPlayer.ConsoleOutput);
   }
 }
