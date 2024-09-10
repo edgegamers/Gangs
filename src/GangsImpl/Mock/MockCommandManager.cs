@@ -22,7 +22,7 @@ public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
 
   public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
     params string[] args) {
-    var info = new CommandInfoWrapper(executor, 0, args);
+    var info = new CommandInfoWrapper(executor, args: args);
     return await ProcessCommand(executor, info);
   }
 

@@ -6,15 +6,19 @@ namespace GangsAPI.Data.Command;
 public class CommandInfoWrapper {
   public readonly string[] Args;
 
+  public CommandCallingContext CallingContext;
+
   public readonly PlayerWrapper? CallingPlayer;
   private readonly int offset;
-  private bool isInChat;
 
   public CommandInfoWrapper(PlayerWrapper? executor, int offset = 0,
     params string[] args) {
     CallingPlayer = executor;
-    this.offset   = offset;
-    Args          = args.Skip(offset).ToArray();
+    // CallingContext = isChat ?
+    //   CommandCallingContext.Chat :
+    //   CommandCallingContext.Console;
+    this.offset = offset;
+    Args        = args.Skip(offset).ToArray();
     if (offset == 0 && Args.Length > 0) Args[0] = args[0].ToLower();
   }
 
@@ -22,9 +26,9 @@ public class CommandInfoWrapper {
     CallingPlayer = info.CallingPlayer == null ?
       null :
       new PlayerWrapper(info.CallingPlayer);
-    this.offset = offset;
-    isInChat    = info.CallingContext == CommandCallingContext.Chat;
-    Args        = new string[info.ArgCount - offset];
+    this.offset    = offset;
+    CallingContext = info.CallingContext;
+    Args           = new string[info.ArgCount - offset];
     for (var i = 0; i < info.ArgCount - offset; i++)
       Args[i] = info.GetArg(i + offset);
     if (offset == 0 && Args.Length > 0) Args[0] = Args[0].ToLower();
@@ -47,9 +51,14 @@ public class CommandInfoWrapper {
       return;
     }
 
-    if (isInChat)
-      CallingPlayer.PrintToChat(message);
-    else
+    Server.NextFrame(() => {
+      Server.PrintToChatAll(
+        $"Command {GetCommandString} executed by {CallingPlayer.Name} (Context: {CallingContext})");
+    });
+
+    if (CallingContext == CommandCallingContext.Console)
       CallingPlayer.PrintToConsole(message);
+    else
+      CallingPlayer.PrintToChat(message);
   }
 }

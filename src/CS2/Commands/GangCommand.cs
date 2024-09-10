@@ -69,7 +69,10 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
     if (!sub.TryGetValue(info[1], out var command))
       return CommandResult.UNKNOWN_COMMAND;
 
-    var newInfo = new CommandInfoWrapper(executor, 1, info.Args);
+    var newInfo =
+      new CommandInfoWrapper(executor, 1, info.Args) {
+        CallingContext = info.CallingContext
+      };
     return await command.Execute(executor, newInfo);
   }
 }
