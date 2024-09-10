@@ -3,24 +3,24 @@
 namespace GangsAPI.Data.Command;
 
 /// <summary>
-/// A wrapper for command logic to simplify command handling
-/// The wrapper is responsible for keeping track of who
-/// executed a command, what the parameters were when executing,
-/// and the execution context.
+///   A wrapper for command logic to simplify command handling
+///   The wrapper is responsible for keeping track of who
+///   executed a command, what the parameters were when executing,
+///   and the execution context.
 /// </summary>
 public class CommandInfoWrapper {
   /// <summary>
-  /// The arguments the command consists of
+  ///   The arguments the command consists of
   /// </summary>
   public readonly string[] Args;
 
   /// <summary>
-  /// The player that executed the command
+  ///   The player that executed the command
   /// </summary>
   public readonly PlayerWrapper? CallingPlayer;
 
   /// <summary>
-  /// The calling context of the command
+  ///   The calling context of the command
   /// </summary>
   public CommandCallingContext CallingContext;
 
@@ -48,8 +48,8 @@ public class CommandInfoWrapper {
   public string GetCommandString => string.Join(' ', Args);
 
   /// <summary>
-  /// Replies to the player who issued the command to
-  /// the proper channels depending on context
+  ///   Replies to the player who issued the command to
+  ///   the proper channels depending on context
   /// </summary>
   /// <param name="message"></param>
   public void ReplySync(string message) {

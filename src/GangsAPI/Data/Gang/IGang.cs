@@ -2,10 +2,9 @@
 
 /// <summary>
 ///   Represents an instance of a gang.
-///
 ///   Schema:
-///     GangID INT PRIMARY KEY
-///     Name STRING
+///   GangID INT PRIMARY KEY
+///   Name STRING
 /// </summary>
 public interface IGang : IEqualityComparer<IGang>, IEquatable<IGang>,
   ICloneable {

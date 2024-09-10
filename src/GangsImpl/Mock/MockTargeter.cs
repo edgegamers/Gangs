@@ -33,12 +33,11 @@ public class MockTargeter(IServerProvider server) : ITargeter {
     IStringLocalizer? localizer = null) {
     var matches = GetTarget(query, executor).GetAwaiter().GetResult().ToList();
     matchedMany = matches.Count > 1;
-    if (localizer != null && matches.Count != 1) {
+    if (localizer != null && matches.Count != 1)
       executor?.PrintToChat(localizer.Get(
         matchedMany ?
           MSG.GENERIC_PLAYER_FOUND_MULTIPLE :
           MSG.GENERIC_PLAYER_NOT_FOUND, query));
-    }
 
     return Task.FromResult(matches.Count == 1 ? matches.First() : null);
   }

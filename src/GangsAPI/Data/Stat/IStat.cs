@@ -21,7 +21,7 @@ public interface IStat : IEquatable<IStat> {
 }
 
 /// <summary>
-/// Represents an instance of a statistic.
+///   Represents an instance of a statistic.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public interface IStat<T> : IStat, IEquatable<IStat<T>> {

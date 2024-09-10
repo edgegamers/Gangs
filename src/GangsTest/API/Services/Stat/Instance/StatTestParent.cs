@@ -12,16 +12,16 @@ public class StatTestParent {
 
     public Reputation Value { get; set; } = new(0, 0);
 
-    public IStat<Reputation> Clone() {
-      return new ReputationStat { Value = Value };
-    }
-
     public bool Equals(IStat? other) {
       return other is not null && StatId == other.StatId;
     }
 
     public bool Equals(IStat<Reputation>? other) {
       return other is not null && StatId == other.StatId;
+    }
+
+    public IStat<Reputation> Clone() {
+      return new ReputationStat { Value = Value };
     }
 
     public override int GetHashCode() { return StatId.GetHashCode(); }
@@ -33,8 +33,6 @@ public class StatTestParent {
     public string Description => "A test stat.";
     public int Value { get; set; } = 32;
 
-    public IStat<int> Clone() { return new TestIntStat { Value = Value }; }
-
     public bool Equals(IStat? other) {
       return other is not null && StatId == other.StatId;
     }
@@ -42,6 +40,8 @@ public class StatTestParent {
     public bool Equals(IStat<int>? other) {
       return other is not null && StatId == other.StatId;
     }
+
+    public IStat<int> Clone() { return new TestIntStat { Value = Value }; }
 
     public override int GetHashCode() { return StatId.GetHashCode(); }
   }

@@ -19,10 +19,9 @@ public class CS2Targeter : ITargeter {
 
       result.AddRange(new Target(query).GetTarget(player)
        .Players.Select(p => new PlayerWrapper(p)));
-      if (localizer != null && result.Count == 0) {
+      if (localizer != null && result.Count == 0)
         executor?.PrintToChat(
           localizer.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
-      }
     });
 
     return result;
@@ -34,12 +33,11 @@ public class CS2Targeter : ITargeter {
     var matches = GetTarget(query, executor).GetAwaiter().GetResult().ToList();
     var count   = matches.Count;
     matchedMany = count > 1;
-    if (count != 1 && localizer != null) {
+    if (count != 1 && localizer != null)
       executor?.PrintToChat(localizer.Get(
         matchedMany ?
           MSG.GENERIC_PLAYER_FOUND_MULTIPLE :
           MSG.GENERIC_PLAYER_NOT_FOUND, query));
-    }
 
     return Task.FromResult(matches.Count == 1 ? matches.First() : null);
   }

@@ -1,5 +1,4 @@
-﻿using GangsAPI;
-using GangsAPI.Services;
+﻿using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;

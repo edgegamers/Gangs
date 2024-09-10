@@ -2,31 +2,31 @@
 
 public enum CommandResult {
   /// <summary>
-  /// The **logic** of the command was completed successfully.
-  /// This includes if arguments were invalid (e.g: expected
-  /// a number, but received a string)
+  ///   The **logic** of the command was completed successfully.
+  ///   This includes if arguments were invalid (e.g: expected
+  ///   a number, but received a string)
   /// </summary>
   SUCCESS,
 
   /// <summary>
-  /// The command ran in to an unexpected error
+  ///   The command ran in to an unexpected error
   /// </summary>
   ERROR,
 
   /// <summary>
-  /// The command was improperly formatted or otherwise
-  /// was not recognized by the command handler
+  ///   The command was improperly formatted or otherwise
+  ///   was not recognized by the command handler
   /// </summary>
   UNKNOWN_COMMAND,
 
   /// <summary>
-  /// The command has an invalid number of arguments
+  ///   The command has an invalid number of arguments
   /// </summary>
   INVALID_ARGS,
 
   /// <summary>
-  /// Similar to <see cref="INVALID_ARGS"/>, but prompts
-  /// the Manager to print the usage of the command
+  ///   Similar to <see cref="INVALID_ARGS" />, but prompts
+  ///   the Manager to print the usage of the command
   /// </summary>
   PRINT_USAGE,
 

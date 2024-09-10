@@ -1,10 +1,8 @@
-using CounterStrikeSharp.API.Modules.Commands.Targeting;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Extensions;
 using GangsAPI.Services.Server;
 using Microsoft.Extensions.Localization;
-using Microsoft.VisualStudio.TestPlatform.Common;
 
 namespace GangsTest.API.Services.Server;
 
