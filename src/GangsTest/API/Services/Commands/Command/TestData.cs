@@ -31,7 +31,7 @@ public class TestData : TheoryData<ICommand> {
       StringLocalizer.Instance),
     new BalanceCommand(statMgr, StringLocalizer.Instance),
     new InviteCommand(manager, playerMgr, rankMgr, gangStatMgr,
-      StringLocalizer.Instance),
+      StringLocalizer.Instance)
   ];
 
   public TestData() {

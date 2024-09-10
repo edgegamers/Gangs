@@ -48,9 +48,8 @@ public abstract class AbstractPagedMenu<T>(IMenuManager menuMgr,
     var pageItems  = items.Skip(startIndex).Take(itemsPerPage).ToList();
 
     if (totalPages != 1) player.PrintToChat($"Page {currentPage}/{totalPages}");
-    for (var i = 0; i < pageItems.Count; i++) {
+    for (var i = 0; i < pageItems.Count; i++)
       await Printer.Invoke(player, await FormatItem(i, pageItems[i]));
-    }
 
     // Display navigation options
     if (currentPage > 1) await Printer.Invoke(player, "8. Previous Page");
@@ -58,15 +57,21 @@ public abstract class AbstractPagedMenu<T>(IMenuManager menuMgr,
     await Printer.Invoke(player, "0. Close Menu");
   }
 
-  private bool HasNextPage(PlayerWrapper player)
-    => GetCurrentPage(player) < GetTotalPages(player);
+  private bool HasNextPage(PlayerWrapper player) {
+    return GetCurrentPage(player) < GetTotalPages(player);
+  }
 
-  private bool HasPreviousPage(PlayerWrapper player)
-    => GetCurrentPage(player) > 1;
+  private bool HasPreviousPage(PlayerWrapper player) {
+    return GetCurrentPage(player) > 1;
+  }
 
-  virtual protected int GetCurrentPage(PlayerWrapper player)
-    => 1; // Override this to track pages per player
+  virtual protected int GetCurrentPage(PlayerWrapper player) {
+    return 1;
+    // Override this to track pages per player
+  }
 
-  virtual protected int GetTotalPages(PlayerWrapper player)
-    => 1; // Override this to track pages per player
+  virtual protected int GetTotalPages(PlayerWrapper player) {
+    return 1;
+    // Override this to track pages per player
+  }
 }

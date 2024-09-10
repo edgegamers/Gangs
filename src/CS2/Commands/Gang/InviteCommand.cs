@@ -74,7 +74,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
     ulong? steam = null;
     if (info[1].All(char.IsDigit))
       steam = ulong.Parse(info[1]);
-    else {
+    else
       await Server.NextFrameAsync(() => {
         var players = new Target(info[1]).GetTarget(null).Players;
         if (players.Count != 1) {
@@ -87,7 +87,6 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
 
         steam = players.FirstOrDefault()?.SteamID;
       });
-    }
 
     if (steam == null) return CommandResult.INVALID_ARGS;
 

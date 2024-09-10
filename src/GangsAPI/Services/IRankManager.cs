@@ -185,10 +185,11 @@ public interface IRankManager : IPluginBehavior {
 
   Task<bool> DeleteAllRanks(IGang gang) { return DeleteAllRanks(gang.GangId); }
 
-  Task<IGangRank> GetRankNeeded(IGang gang, Perm perm)
-    => GetRankNeeded(gang.GangId, perm);
+  Task<IGangRank> GetRankNeeded(IGang gang, Perm perm) {
+    return GetRankNeeded(gang.GangId, perm);
+  }
 
-  Task<IGangRank> GetJoinRank(IGang gang) => GetJoinRank(gang.GangId);
+  Task<IGangRank> GetJoinRank(IGang gang) { return GetJoinRank(gang.GangId); }
 
   #endregion
 }

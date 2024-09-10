@@ -17,8 +17,7 @@ public class OutgoingInvitesMenu(IMenuManager menuMgr, IGang gang,
   override protected async Task<List<InvitationEntry>>
     GetItems(PlayerWrapper _) {
     var (success, invites) =
-      (await gangStatMgr.GetForGang<InvitationData>(gang,
-        invitationStat.StatId));
+      await gangStatMgr.GetForGang<InvitationData>(gang, invitationStat.StatId);
     if (!success || invites == null) return [];
 
     return invites.GetEntries();
@@ -41,9 +40,8 @@ public class OutgoingInvitesMenu(IMenuManager menuMgr, IGang gang,
     var inviterName = inviter?.Name ?? item.Inviter.ToString();
     var text        = $"{invitedName} by {inviterName} on {item.Date}";
 
-    if (index == 0) {
+    if (index == 0)
       text = $"{ChatColors.Red} Gang Invitations - {gang.Name}\n" + text;
-    }
 
     return text;
   }

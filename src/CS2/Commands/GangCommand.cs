@@ -62,7 +62,7 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
 
       // Open gang menu
       await menuMgr.OpenMenu(executor,
-        new GangMenu(gang, playerMgr, rankMgr, menuMgr, gangStatMgr, locale));
+        new GangMenu(gang, playerMgr, rankMgr, gangStatMgr, locale));
       return CommandResult.SUCCESS;
     }
 
@@ -75,11 +75,10 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
       };
 
     var result = await command.Execute(executor, newInfo);
-    if (result == CommandResult.PRINT_USAGE) {
+    if (result == CommandResult.PRINT_USAGE)
       foreach (var use in command.Usage)
         info.ReplySync(
           locale.Get(COMMAND_USAGE, $"{Name} {command.Name} {use}"));
-    }
 
     return result;
   }

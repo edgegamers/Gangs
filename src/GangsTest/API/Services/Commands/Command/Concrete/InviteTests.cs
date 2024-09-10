@@ -17,6 +17,8 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
   IPlayerManager playerMgr, IRankManager rankMgr, IGangStatManager gangStatMgr,
   IStringLocalizer localizer) : TestParent(cmdMgr,
   new InviteCommand(gangMgr, playerMgr, rankMgr, gangStatMgr, localizer)) {
+  private readonly string inviteId = new InvitationStat().StatId;
+
   [Fact]
   public async Task Invite_NonPlayer() {
     Assert.Equal(CommandResult.PLAYER_ONLY,
@@ -99,8 +101,6 @@ public class InviteTests(ICommandManager cmdMgr, IGangManager gangMgr,
       [localizer.Get(MSG.COMMAND_INVITE_SUCCESS, toInvite.Name!, gang.Name)],
       TestPlayer.ConsoleOutput);
   }
-
-  private readonly string inviteId = new InvitationStat().StatId;
 
   [Fact]
   public async Task Invite_AlreadyInvited() {

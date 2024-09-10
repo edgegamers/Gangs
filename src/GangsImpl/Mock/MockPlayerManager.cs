@@ -8,7 +8,7 @@ public class MockPlayerManager : IPlayerManager {
 
   public async Task<IGangPlayer?> GetPlayer(ulong steamId, bool create = true) {
     if (players.TryGetValue(steamId, out var player)) return player;
-    return (create ? await CreatePlayer(steamId) : null);
+    return create ? await CreatePlayer(steamId) : null;
   }
 
   public Task<IGangPlayer> CreatePlayer(ulong steamId, string? name = null) {

@@ -1,11 +1,11 @@
-﻿using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Gang;
-using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.Localization;
 using Stats;
@@ -14,7 +14,7 @@ using IMenu = GangsAPI.Services.Menu.IMenu;
 namespace Commands.Menus;
 
 public class GangMenu(IGang gang, IPlayerManager playerMgr,
-  IRankManager rankMgr, IMenuManager menuMgr, IGangStatManager gangStatManager,
+  IRankManager rankMgr, IGangStatManager gangStatManager,
   IStringLocalizer localizer) : IMenu {
   private readonly InvitationStat invitationStat = new();
   private IList<IGangPlayer> members = new List<IGangPlayer>();
@@ -43,6 +43,21 @@ public class GangMenu(IGang gang, IPlayerManager playerMgr,
     await addInviteItem(rank, player);
   }
 
+  public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
+
+  public async Task AcceptInput(PlayerWrapper player, int input) {
+    await Server.NextFrameAsync(() => {
+      switch (input) {
+        case 1:
+          player.Player?.ExecuteClientCommandFromServer("css_gang members");
+          break;
+        case 2:
+          player.Player?.ExecuteClientCommandFromServer("css_gang invites");
+          break;
+      }
+    });
+  }
+
   private Task addMemberItem(Perm rank, PlayerWrapper player) {
     var memberPrefix = (rank & Perm.VIEW_MEMBERS) != 0 ?
       ChatColors.DarkRed + "1" :
@@ -60,18 +75,5 @@ public class GangMenu(IGang gang, IPlayerManager playerMgr,
     if (!success || invites == null) return;
 
     player.PrintToChat($"{invites.Length} Invites");
-  }
-
-  public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
-
-  public async Task AcceptInput(PlayerWrapper player, int input) {
-    switch (input) {
-      case 1:
-        player.Player?.ExecuteClientCommandFromServer("css_gang members");
-        break;
-      case 2:
-        player.Player?.ExecuteClientCommandFromServer("css_gang invites");
-        break;
-    }
   }
 }

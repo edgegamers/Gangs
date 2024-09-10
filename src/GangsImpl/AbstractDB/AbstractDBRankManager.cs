@@ -64,8 +64,8 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
     var query =
       $"INSERT INTO {table} (GangId, `Rank`, Name, Permissions) VALUES (@GangId, @Rank, @Name, @Perms)";
     return await Connection.ExecuteAsync(query,
-        new { GangId = gang, rank.Rank, rank.Name, Perms = rank.Permissions }, Transaction)
-      == 1;
+      new { GangId = gang, rank.Rank, rank.Name, Perms = rank.Permissions },
+      Transaction) == 1;
   }
 
   public async Task<IGangRank?> CreateRank(int gang, string name, int rank,
@@ -128,7 +128,8 @@ public abstract class AbstractDBRankManager(IPlayerManager playerMgr,
         var query =
           $"UPDATE {table} SET Name = @Name, Permissions = @Perms WHERE GangId = @GangId AND `Rank` = @Rank";
         return await Connection.ExecuteAsync(query,
-          new { rank.Name, Perms = rank.Permissions, gang, rank.Rank }, Transaction) == 1;
+          new { rank.Name, Perms = rank.Permissions, gang, rank.Rank },
+          Transaction) == 1;
       }
     }
   }
