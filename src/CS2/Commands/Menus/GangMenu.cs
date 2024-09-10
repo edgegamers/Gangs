@@ -67,12 +67,10 @@ public class GangMenu(IGang gang, IPlayerManager playerMgr,
   public async Task AcceptInput(PlayerWrapper player, int input) {
     switch (input) {
       case 1:
-        await menuMgr.OpenMenu(player,
-          new MembersMenu(gang, playerMgr, menuMgr, rankMgr));
+        player.Player?.ExecuteClientCommandFromServer("css_gang members");
         break;
       case 2:
-        await menuMgr.OpenMenu(player,
-          new OutgoingInvitesMenu(menuMgr, gang, gangStatManager, playerMgr));
+        player.Player?.ExecuteClientCommandFromServer("css_gang invites");
         break;
     }
   }

@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
@@ -38,7 +39,12 @@ public class OutgoingInvitesMenu(IMenuManager menuMgr, IGang gang,
 
     var invitedName = invited?.Name ?? item.Steam.ToString();
     var inviterName = inviter?.Name ?? item.Inviter.ToString();
+    var text        = $"{invitedName} by {inviterName} on {item.Date}";
 
-    return $"{invitedName} by {inviterName} on {item.Date}";
+    if (index == 0) {
+      text = $"{ChatColors.Red} Gang Invitations - {gang.Name}\n" + text;
+    }
+
+    return text;
   }
 }
