@@ -43,9 +43,7 @@ public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
 
     if (!command.CanExecute(executor)) return CommandResult.NO_PERMISSION;
 
-    await Task.Run(async () => {
-      result = await command.Execute(executor, sourceInfo);
-    });
+    result = await command.Execute(executor, sourceInfo);
 
     switch (result) {
       case CommandResult.PLAYER_ONLY:

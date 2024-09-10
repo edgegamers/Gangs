@@ -10,36 +10,27 @@ namespace Commands.Menus;
 
 public class OutgoingInvitesMenu(IMenuManager menuMgr, IGang gang,
   IGangStatManager gangStatMgr, IPlayerManager playerMgr)
-  : AbstractPagedMenu<(string?, ulong)>(menuMgr) {
+  : AbstractPagedMenu<InvitationEntry>(menuMgr, NativeSenders.Chat) {
   private readonly InvitationStat invitationStat = new();
 
-  override protected async Task<List<(string?, ulong)>> GetItems() {
+  override protected async Task<List<InvitationEntry>> GetItems() {
     var (success, invites) =
-      (await gangStatMgr.GetForGang<string>(gang, invitationStat.StatId));
-    if (!success) return [];
+      (await gangStatMgr.GetForGang<InvitationData>(gang,
+        invitationStat.StatId));
+    if (!success || invites == null) return [];
 
-    var steams = new InvitationStat() { Value = invites }.GetAsSteams();
-
-    List<(string?, ulong)> items = [];
-
-    foreach (var steam in steams) {
-      var player = await playerMgr.GetPlayer(steam);
-      if (player is null) continue;
-
-      items.Add((player.Name, steam));
-    }
-
-    return items;
+    return invites.GetEntries();
   }
 
   override protected Task HandleItemSelection(PlayerWrapper player,
-    List<(string?, ulong)> items, int selectedIndex) {
-    var (name, steam) = items[selectedIndex - 1];
-    player.PrintToChat($"{name} - {steam}");
+    List<InvitationEntry> items, int selectedIndex) {
+    var entry = items[selectedIndex];
+    Printer.Invoke(player,
+      $"Invitation sent to {entry.Steam} by {entry.Inviter} on {entry.Date}");
     return Task.CompletedTask;
   }
 
-  override protected string FormatItem(int index, (string?, ulong) item) {
-    return $"{item.Item1 ?? item.Item2.ToString()}";
+  override protected string FormatItem(int index, InvitationEntry item) {
+    return $"[{index + 1}] {item.Steam} by {item.Inviter} on {item.Date}";
   }
 }

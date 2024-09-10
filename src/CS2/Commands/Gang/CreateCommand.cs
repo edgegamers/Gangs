@@ -12,16 +12,13 @@ public class CreateCommand(IGangManager gangs, IStringLocalizer locale)
   : ICommand {
   public string Name => "create";
   public string Description => "Creates a new gang";
-  public string[] Usage => ["[name]"];
+  public string[] Usage => ["create [name]"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
     if (executor == null) return CommandResult.PLAYER_ONLY;
 
-    if (info.ArgCount < 2) {
-      info.ReplySync(locale.Get(MSG.COMMAND_USAGE, info[0] + "[name]"));
-      return CommandResult.INVALID_ARGS;
-    }
+    if (info.ArgCount < 2) return CommandResult.PRINT_USAGE;
 
     var name = string.Join(' ', info.Args.Skip(1));
 

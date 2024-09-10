@@ -26,6 +26,8 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
     // ["promote"] = new PromoteGangCommand(),
     // ["demote"] = new DemoteGangCommand(),
     // ["info"] = new InfoGangCommand()
+    ["invite"] =
+      new InviteCommand(gangMgr, playerMgr, rankMgr, gangStatMgr, testLocale),
     ["create"] = new CreateCommand(gangMgr, testLocale),
     ["help"]   = new HelpCommand()
   };
@@ -67,7 +69,7 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
     if (!sub.TryGetValue(info[1], out var command))
       return CommandResult.UNKNOWN_COMMAND;
 
-    var newInfo = new CommandInfoWrapper(info, 1);
+    var newInfo = new CommandInfoWrapper(executor, 1, info.Args);
     return await command.Execute(executor, newInfo);
   }
 }

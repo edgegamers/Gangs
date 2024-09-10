@@ -4,64 +4,60 @@ using GangsAPI.Services.Menu;
 namespace Menu;
 
 public abstract class AbstractPagedMenu<T>(IMenuManager menuMgr,
-  int itemsPerPage = 5) : IMenu {
-  protected readonly IMenuManager menuMgr = menuMgr;
-  protected readonly int itemsPerPage = itemsPerPage;
-
-  public async Task Open(PlayerWrapper player) {
+  Func<PlayerWrapper, string, Task> printer, int itemsPerPage = 5)
+  : AbstractMenu<T>(menuMgr, printer) {
+  public override async Task Open(PlayerWrapper player) {
     var items = await GetItems();
-    int totalPages =
+    var totalPages =
       (items.Count + itemsPerPage - 1)
       / itemsPerPage; // Calculate number of pages
     await ShowPage(player, items, 1, totalPages);
   }
 
-  public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
-
-  public async Task AcceptInput(PlayerWrapper player, int input) {
+  public override async Task AcceptInput(PlayerWrapper player, int input) {
     var items      = await GetItems();
-    int totalPages = (items.Count + itemsPerPage - 1) / itemsPerPage;
+    var totalPages = (items.Count + itemsPerPage - 1) / itemsPerPage;
 
-    if (input == 0) {
-      await Close(player);
-      return;
+    switch (input) {
+      case 0:
+        await Close(player);
+        return;
+      // Handle page navigation
+      case 9 when HasNextPage(player): {
+        var currentPage = GetCurrentPage(player);
+        await ShowPage(player, items, currentPage + 1, totalPages);
+        break;
+      }
+      case 8 when HasPreviousPage(player): {
+        var currentPage = GetCurrentPage(player);
+        await ShowPage(player, items, currentPage - 1, totalPages);
+        break;
+      }
+      default:
+        await HandleItemSelection(player, items, input);
+        break;
     }
-
-    // Handle page navigation
-    if (input == 9 && HasNextPage(player)) {
-      int currentPage = GetCurrentPage(player);
-      await ShowPage(player, items, currentPage + 1, totalPages);
-    } else if (input == 8 && HasPreviousPage(player)) {
-      int currentPage = GetCurrentPage(player);
-      await ShowPage(player, items, currentPage - 1, totalPages);
-    } else { await HandleItemSelection(player, items, input); }
   }
 
-  // Abstract methods that must be implemented by derived menus
-  abstract protected Task<List<T>> GetItems();
-
-  abstract protected Task HandleItemSelection(PlayerWrapper player,
+  override abstract protected Task HandleItemSelection(PlayerWrapper player,
     List<T> items, int selectedIndex);
 
   virtual protected Task ShowPage(PlayerWrapper player, List<T> items,
     int currentPage, int totalPages) {
-    int startIndex = (currentPage - 1) * itemsPerPage;
+    var startIndex = (currentPage - 1) * itemsPerPage;
     var pageItems  = items.Skip(startIndex).Take(itemsPerPage).ToList();
 
     if (totalPages != 1) player.PrintToChat($"Page {currentPage}/{totalPages}");
-    for (int i = 0; i < pageItems.Count; i++) {
-      player.PrintToChat($"{FormatItem(i, pageItems[i])}");
+    for (var i = 0; i < pageItems.Count; i++) {
+      Printer.Invoke(player, FormatItem(i, pageItems[i]));
     }
 
     // Display navigation options
-    if (currentPage > 1) player.PrintToChat("8. Previous Page");
-    if (currentPage < totalPages) player.PrintToChat("9. Next Page");
-    player.PrintToChat("0. Close Menu");
+    if (currentPage > 1) Printer.Invoke(player, "8. Previous Page");
+    if (currentPage < totalPages) Printer.Invoke(player, "9. Next Page");
+    Printer.Invoke(player, "0. Close Menu");
     return Task.CompletedTask;
   }
-
-  // Utility methods
-  abstract protected string FormatItem(int index, T item);
 
   private bool HasNextPage(PlayerWrapper player)
     => GetCurrentPage(player) < GetTotalPages(player);

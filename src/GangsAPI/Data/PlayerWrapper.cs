@@ -8,7 +8,10 @@ using CounterStrikeSharp.API.Modules.Entities;
 namespace GangsAPI.Data;
 
 public class PlayerWrapper {
-  private readonly List<string> chatOutput = [], consoleOutput = [];
+  private readonly List<string> chatOutput = [],
+    consoleOutput = [],
+    centerOutput = [];
+
   public readonly string? Name;
   public readonly CCSPlayerController? Player;
   public readonly ulong Steam;
@@ -142,6 +145,18 @@ public class PlayerWrapper {
 
     Server.NextFrame(() => {
       if (Player.IsValid) Player.PrintToConsole(message);
+    });
+  }
+
+  public void PrintToCenter(string message) {
+    if (Player == null) {
+      Debug.WriteLine($"{Steam} {Name} received center: {message}");
+      centerOutput.Add(message);
+      return;
+    }
+
+    Server.NextFrame(() => {
+      if (Player.IsValid) Player.PrintToCenter(message);
     });
   }
 }

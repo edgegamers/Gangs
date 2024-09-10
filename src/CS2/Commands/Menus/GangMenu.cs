@@ -41,7 +41,6 @@ public class GangMenu(IGang gang, IPlayerManager playerMgr,
 
     await addMemberItem(rank, player);
 
-
     player.PrintToChat($" ");
   }
 
@@ -59,7 +58,7 @@ public class GangMenu(IGang gang, IPlayerManager playerMgr,
 
     var (success, invites) =
       await gangStatManager.GetForGang<string>(gang, invitationStat.StatId);
-    if (!success) return;
+    if (!success || invites == null) return;
 
     player.PrintToChat($"{invites.Length} invites");
     return;

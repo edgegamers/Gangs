@@ -5,6 +5,12 @@ namespace GangsAPI;
 public enum MSG {
   COMMAND_GANG_NOTINGANG,
   COMMAND_GANG_CREATE_ALREADY_EXISTS,
+  COMMAND_INVITE_MAXINVITES,
+  COMMAND_INVITE_ALREADY_INVITED,
+  COMMAND_INVITE_ALREADY_IN_GANG,
+  COMMAND_INVITE_IN_YOUR_GANG,
+  COMMAND_INVITE_SUCCESS,
+  GENERIC_STEAM_NOT_FOUND,
   COMMAND_BALANCE_NONE,
   COMMAND_BALANCE,
   COMMAND_BALANCE_PLURAL,
@@ -45,6 +51,14 @@ public static class LocaleExtensions {
       MSG.COMMAND_GANG_NOTINGANG => "command.gang.not_in_gang",
       MSG.COMMAND_GANG_CREATE_ALREADY_EXISTS =>
         "command.gang.create.already_exists",
+      MSG.COMMAND_INVITE_MAXINVITES => "command.gang.invite.max_invites",
+      MSG.COMMAND_INVITE_ALREADY_INVITED =>
+        "command.gang.invite.already_invited",
+      MSG.COMMAND_INVITE_ALREADY_IN_GANG =>
+        "command.gang.invite.already_ingang",
+      MSG.COMMAND_INVITE_IN_YOUR_GANG =>
+        "command.gang.invite.already_inyourgang",
+      MSG.COMMAND_INVITE_SUCCESS        => "command.gang.invite.success",
       MSG.COMMAND_BALANCE_NONE          => "command.balance.none",
       MSG.COMMAND_BALANCE               => "command.balance",
       MSG.COMMAND_BALANCE_OTHER         => "command.balance.other",
@@ -58,6 +72,7 @@ public static class LocaleExtensions {
       MSG.GENERIC_PLAYER_NOT_FOUND      => "generic.player.not_found",
       MSG.SOONTM                        => "generic.soontm",
       MSG.GENERIC_PLAYER_ONLY           => "generic.player.only",
+      MSG.GENERIC_STEAM_NOT_FOUND       => "generic.player.steam_not_found",
       MSG.GENERIC_NOPERM                => "generic.no_permission",
       MSG.GENERIC_NOPERM_NODE           => "generic.no_permission.node",
       MSG.GENERIC_NOPERM_RANK           => "generic.no_permission.rank",

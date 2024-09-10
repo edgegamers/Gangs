@@ -11,8 +11,8 @@ namespace GangsTest.API.Services.Commands.Command.Concrete;
 
 public class GangTests(ICommandManager commands, IGangManager gangMgr,
   IPlayerManager playerMgr, IMenuManager menuMgr, IRankManager rankMgr,
-  IStringLocalizer locale) : TestParent(commands,
-  new GangCommand(gangMgr, playerMgr, menuMgr, rankMgr, locale)) {
+  IGangStatManager gangStatMgr, IStringLocalizer locale) : TestParent(commands,
+  new GangCommand(gangMgr, playerMgr, menuMgr, rankMgr, gangStatMgr, locale)) {
   [Fact]
   public async Task Gang_TestBase() {
     Assert.Equal("css_gang", Command.Name);

@@ -149,6 +149,12 @@ public interface IRankManager : IPluginBehavior {
     return rank?.Name ?? "Owner";
   }
 
+  async Task<IGangRank> GetRankNeeded(int gang, Perm perm) {
+    var ranks = (await GetRanks(gang)).ToList();
+    ranks.Sort((a, b) => a.Rank.CompareTo(b.Rank));
+    return ranks.First(r => r.Permissions.HasFlag(perm));
+  }
+
   #region Aliases
 
   Task<bool> AddRank(IGang gang, IGangRank rank) {
@@ -172,6 +178,9 @@ public interface IRankManager : IPluginBehavior {
   }
 
   Task<bool> DeleteAllRanks(IGang gang) { return DeleteAllRanks(gang.GangId); }
+
+  Task<IGangRank> GetRankNeeded(IGang gang, Perm perm)
+    => GetRankNeeded(gang.GangId, perm);
 
   #endregion
 }
