@@ -85,7 +85,7 @@ public interface IRankManager : IPluginBehavior {
   /// </summary>
   /// <param name="gang"></param>
   /// <param name="rank"></param>
-  /// <param name="force"></param>
+  /// <param name="strat"></param>
   /// <returns></returns>
   Task<bool> DeleteRank(int gang, int rank, DeleteStrat strat);
 

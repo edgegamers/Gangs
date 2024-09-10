@@ -19,7 +19,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
 
   public string Name => "invite";
 
-  public string? Description => "Invites a player to the gang";
+  public string Description => "Invites a player to the gang";
 
   public string[] Usage => ["[player/steam]"];
 
@@ -70,7 +70,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
       return CommandResult.ERROR;
     }
 
-    ulong? steam = null;
+    ulong? steam;
     if (info[1].All(char.IsDigit))
       steam = ulong.Parse(info[1]);
     else
@@ -87,7 +87,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
 
     if (invites.GetInvitedSteams().Contains(steam.Value)) {
       info.ReplySync(localizer.Get(MSG.COMMAND_INVITE_ALREADY_INVITED,
-        offlinePlayer?.Name ?? offlinePlayer!.Steam.ToString()));
+        offlinePlayer.Name ?? offlinePlayer.Steam.ToString()));
       return CommandResult.SUCCESS;
     }
 
@@ -96,7 +96,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
         offlinePlayer.GangId == gangPlayer.GangId ?
           MSG.COMMAND_INVITE_IN_YOUR_GANG :
           MSG.COMMAND_INVITE_ALREADY_IN_GANG,
-        offlinePlayer?.Name ?? offlinePlayer!.Steam.ToString()));
+        offlinePlayer.Name ?? offlinePlayer.Steam.ToString()));
       return CommandResult.SUCCESS;
     }
 
@@ -112,7 +112,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager playerMgr,
     await gangStatMgr.SetForGang(gangPlayer.GangId.Value, statId, invites);
 
     info.ReplySync(localizer.Get(MSG.COMMAND_INVITE_SUCCESS,
-      offlinePlayer?.Name ?? offlinePlayer!.Steam.ToString(), gangName));
+      offlinePlayer.Name ?? offlinePlayer.Steam.ToString(), gangName));
     return CommandResult.SUCCESS;
   }
 }

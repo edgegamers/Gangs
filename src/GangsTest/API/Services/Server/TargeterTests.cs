@@ -77,7 +77,7 @@ public class TargeterTests(IStringLocalizer locale) : TestParent {
 
   [Theory]
   [ClassData(typeof(TargeterTestData))]
-  public async Task Multi_Fail_Prints(IServerProvider server,
+  public async Task Multi_Fail_Prints(IServerProvider _,
     ITargeter targeter) {
     await targeter.GetTarget("@all", TestPlayer, locale);
     Assert.Equal([locale.Get(MSG.GENERIC_PLAYER_NOT_FOUND, "@all")],
@@ -86,7 +86,7 @@ public class TargeterTests(IStringLocalizer locale) : TestParent {
 
   [Theory]
   [ClassData(typeof(TargeterTestData))]
-  public async Task Single_Fail_Prints(IServerProvider server,
+  public async Task Single_Fail_Prints(IServerProvider _,
     ITargeter targeter) {
     await targeter.GetSingleTarget("@all", out var _, TestPlayer, locale);
     Assert.Equal([locale.Get(MSG.GENERIC_PLAYER_NOT_FOUND, "@all")],

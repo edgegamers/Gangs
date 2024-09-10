@@ -37,7 +37,7 @@ public class GangCommand(IGangManager gangMgr, IPlayerManager playerMgr,
   private IStringLocalizer locale = testLocale;
 
   public void Start(BasePlugin? plugin, bool hotReload) {
-    if (plugin != null) locale = plugin?.Localizer ?? locale;
+    if (plugin != null) locale = plugin.Localizer ?? locale;
   }
 
   public string Name => "css_gang";
