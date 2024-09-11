@@ -38,19 +38,16 @@ public abstract class AbstractDBPlayerManager(string connectionString,
   }
 
   public async Task<IGangPlayer?> GetPlayer(ulong steamId, bool create = true) {
-    Console.WriteLine("Getting Player");
     var query = $"SELECT * FROM {table} WHERE Steam = @steamId";
     var result = await Connection.QueryFirstOrDefaultAsync<DBPlayer>(query,
       new { steamId }, Transaction);
     if (result != null || !create) return result;
-    Console.WriteLine("Creating Player");
     return await CreatePlayer(steamId);
   }
 
   public async Task<IGangPlayer> CreatePlayer(ulong steamId,
     string? name = null) {
     var existing = await GetPlayer(steamId, false);
-    Console.WriteLine("Existing Player: " + existing);
     if (existing != null) return existing;
     var player = new DBPlayer { Steam = steamId, Name = name };
     var query  = $"INSERT INTO {table} (Steam, Name) VALUES (@Steam, @Name)";
@@ -85,9 +82,6 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     return await Connection.ExecuteAsync(query, new { steamId }, Transaction)
       == 1;
   }
-
-  public void ClearCache() { }
-  public Task Load() { return Task.CompletedTask; }
 
   abstract protected DbConnection CreateDbConnection(string connectionString);
 

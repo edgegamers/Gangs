@@ -7,28 +7,34 @@ using GangsAPI.Data.Gang;
 using GangsAPI.Data.Stat;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 
 namespace Stats.Perk;
 
-public class GangChatPerk : BaseStat<bool>, IGangChatPerk {
+public class GangChatPerk : BasePerk, IGangChatPerk {
   private readonly IGangManager? gangs;
   private readonly IGangStatManager? gangStats;
   private readonly IStringLocalizer? localizer;
   private readonly IPlayerManager? players;
 
-  public GangChatPerk(bool Value) { this.Value = Value; }
+  public GangChatPerk(bool Value) : base(null) { this.Value = Value; }
 
-  public GangChatPerk(IServiceProvider provider) {
+  public GangChatPerk(IServiceProvider provider) : base(provider) {
     gangs     = provider.GetService<IGangManager>();
     gangStats = provider.GetService<IGangStatManager>();
     localizer = provider.GetService<IStringLocalizer>();
     players   = provider.GetService<IPlayerManager>();
   }
 
-  public int Cost => 10000;
+  public override int Cost => 10000;
+
+  public override Task OnPurchase(IGangPlayer player) {
+    return Server.NextFrameAsync(()
+      => Server.PrintToChatAll($"Player {player.Name} purchased gang chat."));
+  }
 
   public override string StatId => "gang_native_chat";
   public override string Name => "Gang Chat";
@@ -48,8 +54,6 @@ public class GangChatPerk : BaseStat<bool>, IGangChatPerk {
       }
     });
   }
-
-  public override IStat<bool> Clone() { return new GangChatPerk(Value); }
 
   [GameEventHandler]
   public HookResult OnChat(EventPlayerChat ev, GameEventInfo _) {
@@ -89,10 +93,10 @@ public class GangChatPerk : BaseStat<bool>, IGangChatPerk {
     return HookResult.Handled;
   }
 
-  public Task OnPurchase(IGangPlayer player) {
-    Server.NextFrame(() => {
-      Server.PrintToChatAll($"Player {player.Name} purchased gang chat.");
-    });
-    return Task.CompletedTask;
+
+  public bool Equals(IStat<bool>? other) {
+    return other is not null && StatId == other.StatId;
   }
+
+  public bool Value { get; set; }
 }

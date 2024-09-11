@@ -18,8 +18,6 @@ public class LocalFileLocalizerFactory : IStringLocalizerFactory {
     }
 
     path = Path.Combine(current, "lang");
-    Console.WriteLine($"Using lang folder at {path}");
-    Debug.WriteLine($"Using lang folder at {path}");
   }
 
   public IStringLocalizer Create(Type resourceSource) {

@@ -27,12 +27,12 @@ public abstract class AbstractMenu<T>(IMenuManager menus,
   }
 
   // Abstract methods that must be implemented by derived menus
-  abstract protected Task<List<T>> GetItems(PlayerWrapper player);
+  abstract protected Task<List<T?>> GetItems(PlayerWrapper player);
 
   abstract protected Task HandleItemSelection(PlayerWrapper player,
-    List<T> items, int selectedIndex);
+    List<T?> items, int selectedIndex);
 
-  virtual protected async Task Show(PlayerWrapper player, List<T> items) {
+  virtual protected async Task Show(PlayerWrapper player, List<T?> items) {
     for (var i = 0; i < items.Count; i++) {
       var str = await FormatItem(i, items[i]);
       foreach (var s in str.Split('\n')) await Printer.Invoke(player, s);
@@ -42,5 +42,5 @@ public abstract class AbstractMenu<T>(IMenuManager menus,
   // abstract protected Task SendItem(PlayerWrapper player, string item);
 
   // Utility methods
-  abstract protected Task<string> FormatItem(int index, T item);
+  abstract protected Task<string> FormatItem(int index, T? item);
 }
