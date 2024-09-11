@@ -6,6 +6,7 @@ using GangsTest.API.Services.Commands.Command;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Stats;
+using Stats.Stat;
 
 namespace GangsTest.Commands;
 

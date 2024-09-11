@@ -1,6 +1,6 @@
 ﻿using GangsAPI.Data.Stat;
 
-namespace Stats;
+namespace Stats.Stat;
 
 public class DescriptionStat : BaseStat<string?> {
   public override string StatId => "gang_native_description";

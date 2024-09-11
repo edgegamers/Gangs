@@ -1,6 +1,6 @@
 using GangsAPI.Data.Stat;
 
-namespace Stats;
+namespace Stats.Stat;
 
 public class BalanceStat : BaseStat<int> {
   public override string StatId => "gang_native_balance";

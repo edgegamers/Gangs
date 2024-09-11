@@ -1,6 +1,6 @@
 ﻿using GangsAPI.Data.Stat;
 
-namespace Stats;
+namespace Stats.Stat;
 
 public abstract class BaseStat : IStat {
   public bool Equals(IStat? other) {

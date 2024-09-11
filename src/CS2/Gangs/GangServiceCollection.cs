@@ -13,6 +13,7 @@ using Microsoft.Extensions.Localization;
 using Mock;
 using SQLImpl;
 using Stats.Perk;
+using StatsTracker;
 
 namespace GangsImpl;
 
@@ -32,7 +33,9 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
      .AddPluginBehavior<IPlayerStatManager, MySQLPlayerInstanceManager>();
     serviceCollection.AddPluginBehavior<IRankManager, MySQLRankManager>();
     serviceCollection.AddPluginBehavior<IPerkManager, PerkManager>();
+
     serviceCollection.RegisterCommands();
+    serviceCollection.RegisterStatsTracker();
 
     serviceCollection.AddPluginBehavior<PlayerJoinCreationListener>();
     serviceCollection

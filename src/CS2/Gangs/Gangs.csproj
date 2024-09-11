@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\StatsTracker\StatsTracker.csproj" />
         <ProjectReference Include="..\Commands\Commands.csproj"/>
         <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
         <ProjectReference Include="..\..\GangsImpl\MySQL\MySQL.csproj"/>

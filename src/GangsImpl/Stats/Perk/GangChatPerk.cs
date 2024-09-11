@@ -7,7 +7,6 @@ using GangsAPI.Data.Gang;
 using GangsAPI.Data.Stat;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
-using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -60,6 +59,12 @@ public class GangChatPerk : BasePerk, IGangChatPerk {
     });
   }
 
+  public bool Equals(IStat<bool>? other) {
+    return other is not null && StatId == other.StatId;
+  }
+
+  public bool Value { get; set; }
+
   [GameEventHandler]
   public HookResult OnChat(EventPlayerChat ev, GameEventInfo _) {
     if (!ev.Text.StartsWith('.')) return HookResult.Continue;
@@ -86,7 +91,7 @@ public class GangChatPerk : BasePerk, IGangChatPerk {
         await gangStats.GetForGang<bool>(gangPlayer.GangId.Value, StatId);
 
       if (!success || !perk) {
-        wrapper.PrintToChat(localizer.Get(MSG.PERK_MISSING, "Gang Chat"));
+        wrapper.PrintToChat(localizer.Get(MSG.PERK_MISSING, Name));
         return;
       }
 
@@ -96,11 +101,4 @@ public class GangChatPerk : BasePerk, IGangChatPerk {
     });
     return HookResult.Handled;
   }
-
-
-  public bool Equals(IStat<bool>? other) {
-    return other is not null && StatId == other.StatId;
-  }
-
-  public bool Value { get; set; }
 }

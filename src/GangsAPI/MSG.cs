@@ -5,6 +5,7 @@ namespace GangsAPI;
 public enum MSG {
   COMMAND_GANG_NOTINGANG,
   COMMAND_GANG_CREATE_ALREADY_EXISTS,
+  COMMAND_GANG_CREATE_SUCCESS,
   COMMAND_INVITE_NONE,
   COMMAND_INVITE_MAXINVITES,
   COMMAND_INVITE_ALREADY_INVITED,
@@ -57,8 +58,9 @@ public static class LocaleExtensions {
       MSG.COMMAND_GANG_NOTINGANG => "command.gang.not_in_gang",
       MSG.COMMAND_GANG_CREATE_ALREADY_EXISTS =>
         "command.gang.create.already_exists",
-      MSG.COMMAND_INVITE_NONE       => "command.gang.invite.none",
-      MSG.COMMAND_INVITE_MAXINVITES => "command.gang.invite.max_invites",
+      MSG.COMMAND_GANG_CREATE_SUCCESS => "command.gang.create.success",
+      MSG.COMMAND_INVITE_NONE         => "command.gang.invite.none",
+      MSG.COMMAND_INVITE_MAXINVITES   => "command.gang.invite.max_invites",
       MSG.COMMAND_INVITE_ALREADY_INVITED =>
         "command.gang.invite.already_invited",
       MSG.COMMAND_INVITE_ALREADY_IN_GANG =>

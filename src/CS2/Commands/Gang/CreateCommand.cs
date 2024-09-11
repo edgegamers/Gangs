@@ -45,7 +45,8 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
       return CommandResult.ERROR;
     }
 
-    info.ReplySync($"Gang '{name}' (#{newGang.GangId}) created successfully");
+    info.ReplySync(locale.Get(MSG.COMMAND_GANG_CREATE_SUCCESS, name,
+      newGang.GangId));
     return CommandResult.SUCCESS;
   }
 }

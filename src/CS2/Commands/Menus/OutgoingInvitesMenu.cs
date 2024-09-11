@@ -7,6 +7,7 @@ using GangsAPI.Services.Player;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Stats;
+using Stats.Stat;
 
 namespace Commands.Menus;
 

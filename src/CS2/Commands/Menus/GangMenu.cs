@@ -10,6 +10,7 @@ using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Stats;
+using Stats.Stat;
 using IMenu = GangsAPI.Services.Menu.IMenu;
 
 namespace Commands.Menus;

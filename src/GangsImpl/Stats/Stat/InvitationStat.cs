@@ -1,6 +1,6 @@
 ﻿using GangsAPI.Data.Stat;
 
-namespace Stats;
+namespace Stats.Stat;
 
 public class InvitationStat : BaseStat<InvitationData> {
   public override string StatId => "gang_invitation";

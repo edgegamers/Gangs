@@ -2,7 +2,7 @@
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 
-namespace GangsTest.API.Services.Commands.Command;
+namespace GangsTest.API.Services.Commands.CommandManager;
 
 public class PermissionTests : CommandManager.TestParent {
   [Theory]
