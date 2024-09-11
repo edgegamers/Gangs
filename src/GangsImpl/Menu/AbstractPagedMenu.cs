@@ -7,7 +7,7 @@ namespace Menu;
 public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   Func<PlayerWrapper, string, Task> printer, int itemsPerPage = 5)
   : AbstractMenu<T>(provider.GetRequiredService<IMenuManager>(), printer) {
-  protected IServiceProvider Provider = provider;
+  protected readonly IServiceProvider Provider = provider;
 
   public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);
@@ -26,12 +26,12 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
         await Close(player);
         return;
       // Handle page navigation
-      case 9 when HasNextPage(player): {
+      case 9 when hasNextPage(player): {
         var currentPage = GetCurrentPage(player);
         await ShowPage(player, items, currentPage + 1, totalPages);
         break;
       }
-      case 8 when HasPreviousPage(player): {
+      case 8 when hasPreviousPage(player): {
         var currentPage = GetCurrentPage(player);
         await ShowPage(player, items, currentPage - 1, totalPages);
         break;
@@ -43,9 +43,9 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   }
 
   override abstract protected Task HandleItemSelection(PlayerWrapper player,
-    List<T> items, int selectedIndex);
+    List<T?> items, int selectedIndex);
 
-  virtual protected async Task ShowPage(PlayerWrapper player, List<T> items,
+  virtual protected async Task ShowPage(PlayerWrapper player, List<T?> items,
     int currentPage, int totalPages) {
     var startIndex = (currentPage - 1) * itemsPerPage;
     var pageItems  = items.Skip(startIndex).Take(itemsPerPage).ToList();
@@ -59,11 +59,11 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     await Printer.Invoke(player, "0. Close Menu");
   }
 
-  private bool HasNextPage(PlayerWrapper player) {
+  private bool hasNextPage(PlayerWrapper player) {
     return GetCurrentPage(player) < GetTotalPages(player);
   }
 
-  private bool HasPreviousPage(PlayerWrapper player) {
+  private bool hasPreviousPage(PlayerWrapper player) {
     return GetCurrentPage(player) > 1;
   }
 

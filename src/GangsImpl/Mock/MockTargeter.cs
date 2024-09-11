@@ -12,7 +12,7 @@ public class MockTargeter(IServerProvider server) : ITargeter {
     var result = query switch {
       "@all" => players,
       "@!me" => players.Where(player => player != executor),
-      "@me" when executor != null => new List<PlayerWrapper> { executor! },
+      "@me" when executor != null => new List<PlayerWrapper> { executor },
       _ when query.All(char.IsDigit) => players.Where(player
         => player.Steam.ToString().Contains(query)),
       _ => players.Where(player

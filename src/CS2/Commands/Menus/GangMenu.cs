@@ -15,9 +15,6 @@ using IMenu = GangsAPI.Services.Menu.IMenu;
 namespace Commands.Menus;
 
 public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
-  private readonly IGangManager gangs =
-    provider.GetRequiredService<IGangManager>();
-
   private readonly IGangStatManager gangStatManager =
     provider.GetRequiredService<IGangStatManager>();
 
@@ -85,7 +82,7 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     return Task.CompletedTask;
   }
 
-  private Task addPerkItem(Perm rank, PlayerWrapper player) {
+  private Task addPerkItem(Perm _, PlayerWrapper player) {
     player.PrintToChat(
       $" {ChatColors.DarkRed}3 {ChatColors.Grey}| {ChatColors.LightRed}Perks");
     return Task.CompletedTask;

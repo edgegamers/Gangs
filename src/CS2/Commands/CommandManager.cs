@@ -16,9 +16,9 @@ public class CommandManager(IServiceProvider provider)
   private bool hotReload;
   private BasePlugin? plugin;
 
-  public void Start(BasePlugin? basePlugin, bool hotReload) {
-    plugin         = basePlugin;
-    this.hotReload = hotReload;
+  public void Start(BasePlugin? basePlugin, bool baseReload) {
+    plugin    = basePlugin;
+    hotReload = baseReload;
 
     if (basePlugin != null) Locale = basePlugin.Localizer;
 

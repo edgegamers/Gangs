@@ -34,7 +34,7 @@ public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
   public virtual async Task<CommandResult> ProcessCommand(
     PlayerWrapper? executor, CommandInfoWrapper sourceInfo) {
     if (sourceInfo.ArgCount == 0) return CommandResult.ERROR;
-    var result = CommandResult.ERROR;
+    CommandResult result;
 
     if (!Commands.TryGetValue(sourceInfo[0], out var command)) {
       sourceInfo.ReplySync("Unknown command: " + sourceInfo[0]);

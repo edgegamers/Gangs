@@ -27,7 +27,7 @@ public class PerksMenu(IServiceProvider provider)
     if (gangPlayer == null) return;
     var menu = await perk.GetMenu(gangPlayer);
     if (menu == null) return;
-    Provider.GetRequiredService<IMenuManager>().OpenMenu(player, menu);
+    await Provider.GetRequiredService<IMenuManager>().OpenMenu(player, menu);
   }
 
   override protected Task<string> FormatItem(int index, IPerk? item) {

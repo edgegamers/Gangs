@@ -13,14 +13,12 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
-  public async Task Open(PlayerWrapper player) {
+  public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);
     await Show(player, items);
   }
 
-  public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
-
-  public async Task AcceptInput(PlayerWrapper player, int input) {
+  public override async Task AcceptInput(PlayerWrapper player, int input) {
     await HandleItemSelection(player, await GetItems(player), input);
   }
 
