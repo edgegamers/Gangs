@@ -26,7 +26,6 @@ public class RoundStatsTracker(IServiceProvider provider) : IPluginBehavior {
     if (player == null || !player.IsValid || player.IsBot)
       return HookResult.Continue;
     var wrapper = new PlayerWrapper(player);
-    Server.PrintToConsole("BEGIN MVP");
     Task.Run(async () => {
       var gangPlayer = await players.GetPlayer(wrapper.Steam);
       if (gangPlayer == null) return;
@@ -39,7 +38,6 @@ public class RoundStatsTracker(IServiceProvider provider) : IPluginBehavior {
 
       await playerStats.SetForPlayer(wrapper, statId, stat);
     });
-    Server.PrintToConsole("END MVP");
     return HookResult.Continue;
   }
 
@@ -47,10 +45,9 @@ public class RoundStatsTracker(IServiceProvider provider) : IPluginBehavior {
   public HookResult OnEnd(EventRoundEnd ev, GameEventInfo info) {
     var winningTeam = (CsTeam)ev.Winner;
 
-    var wrapped = Utilities.GetPlayers().Select(p => new PlayerWrapper(p));
-    Server.PrintToConsole("SELECTED ALL PLAYERS");
-
-    Server.PrintToConsole("BEGIN TASK");
+    var wrapped = Utilities.GetPlayers()
+     .Select(p => new PlayerWrapper(p))
+     .ToList();
     Task.Run(async () => {
       foreach (var wrapper in wrapped) {
         var gangPlayer = await players.GetPlayer(wrapper.Steam);
@@ -65,18 +62,9 @@ public class RoundStatsTracker(IServiceProvider provider) : IPluginBehavior {
         else
           stat.RoundsLost++;
 
-        await Server.NextFrameAsync(()
-          => Server.PrintToConsole(
-            $"Player {wrapper.Name} has {stat.RoundsWon} rounds won and {stat.RoundsLost} rounds lost"));
-
         await playerStats.SetForPlayer(wrapper, statId, stat);
-
-        await Server.NextFrameAsync(()
-          => Server.PrintToConsole(
-            $"Changed player {wrapper.Name} to have {stat.RoundsWon} rounds won and {stat.RoundsLost} rounds lost"));
       }
     });
-    Server.PrintToConsole("END TASK");
     return HookResult.Continue;
   }
 }
