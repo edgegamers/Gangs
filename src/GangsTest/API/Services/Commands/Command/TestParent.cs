@@ -1,6 +1,7 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Extensions;
 using GangsAPI.Services.Commands;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GangsTest.API.Services.Commands.Command;
 
@@ -11,9 +12,9 @@ public abstract class TestParent {
   protected readonly PlayerWrapper TestPlayer =
     new(new Random().NextUInt(), "Test Player");
 
-  protected TestParent(ICommandManager commands, ICommand command) {
-    Commands = commands;
+  protected TestParent(IServiceProvider provider, ICommand command) {
+    Commands = provider.GetRequiredService<ICommandManager>();
     Command  = command;
-    commands.RegisterCommand(command);
+    Commands.RegisterCommand(command);
   }
 }

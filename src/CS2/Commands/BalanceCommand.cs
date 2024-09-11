@@ -5,14 +5,21 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Player;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Stats;
 
 namespace Commands;
 
-public class BalanceCommand(IPlayerStatManager players,
-  IStringLocalizer localizer) : ICommand {
+public class BalanceCommand(IServiceProvider provider) : ICommand {
   private readonly string id = new BalanceStat().StatId;
+
+  private readonly IStringLocalizer localizer =
+    provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IPlayerStatManager playerStats =
+    provider.GetRequiredService<IPlayerStatManager>();
+
   public string Name => "css_balance";
 
   public string[] Usage => ["", "<player>", "<player> <amount>"];
@@ -24,7 +31,7 @@ public class BalanceCommand(IPlayerStatManager players,
 
     if (info.ArgCount == 1 || !executor.HasFlags("@css/ban")) {
       var (success, balance) =
-        await players.GetForPlayer<int>(executor.Steam, id);
+        await playerStats.GetForPlayer<int>(executor.Steam, id);
 
       if (!success) {
         info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_NONE));
@@ -63,7 +70,7 @@ public class BalanceCommand(IPlayerStatManager players,
 
     if (info.ArgCount == 2 || !executor.HasFlags("@css/root")) {
       var (success, balance) =
-        await players.GetForPlayer<int>(subject.Steam, id);
+        await playerStats.GetForPlayer<int>(subject.Steam, id);
 
       if (!success) {
         info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_OTHER_NONE,
@@ -85,7 +92,7 @@ public class BalanceCommand(IPlayerStatManager players,
       return CommandResult.INVALID_ARGS;
     }
 
-    var pass = await players.SetForPlayer(subject.Steam, id, amount);
+    var pass = await playerStats.SetForPlayer(subject.Steam, id, amount);
     if (!pass) {
       info.ReplySync(localizer.Get(MSG.GENERIC_ERROR));
       return CommandResult.ERROR;

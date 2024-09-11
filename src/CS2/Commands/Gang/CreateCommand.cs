@@ -3,13 +3,19 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 
 namespace Commands.Gang;
 
 // create [name]
-public class CreateCommand(IGangManager gangs, IStringLocalizer locale)
-  : ICommand {
+public class CreateCommand(IServiceProvider provider) : ICommand {
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  private readonly IStringLocalizer locale =
+    provider.GetRequiredService<IStringLocalizer>();
+
   public string Name => "create";
   public string Description => "Creates a new gang";
   public string[] Usage => ["[name]"];
@@ -33,9 +39,9 @@ public class CreateCommand(IGangManager gangs, IStringLocalizer locale)
     }
 
     var newGang = await gangs.CreateGang(name, executor.Steam);
-
     if (newGang == null) {
-      info.ReplySync("Failed to create gang");
+      info.ReplySync(locale.Get(MSG.GENERIC_ERROR_INFO,
+        "Failed to create a gang"));
       return CommandResult.ERROR;
     }
 

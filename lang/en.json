@@ -14,6 +14,7 @@
   "command.gang.invite.already_inyourgang": "%prefix%%color.target%{0}%color.default% is in your gang!",
   "command.gang.invite.already_invited": "%prefix%Your gang has already invited %color.target%{0}%color.default%.",
   "command.gang.invite.success": "%prefix%You invited %color.target%{0}%color.default% to %color.special%{1}%color.default%.",
+  "command.gang.invite.none": "%prefix%Your gang has not invited anyone.",
   "command.balance": "%prefix%You have %color.currency%{0} %currency.player%{grey}.",
   "command.balance.plural": "%prefix%You have %color.currency%{0} %currency.player.plural%{grey}.",
   "command.balance.none": "%prefix%You have no %currency.player.plural%.",
@@ -38,5 +39,7 @@
   "currency.player.plural": "credits",
   "currency.gang.plural": "%currency.player.plural%",
   "gang.already_in_gang": "%prefix%You are already in a gang.",
-  "gang.not_in_gang": "%prefix%You are not in a gang."
+  "gang.not_in_gang": "%prefix%You are not in a gang.",
+  "perk.missing": "%prefix%Your gang does not have the %color.special%{0}%color.default% perk.",
+  "perk.gangchat.format": " {darkred}[{red}{0}{darkred}] %color.special%{1}%color.default%: %color.default%{2}"
 }

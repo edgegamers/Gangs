@@ -1,42 +1,21 @@
 ﻿using Commands;
 using Commands.Gang;
-using GangsAPI.Services;
 using GangsAPI.Services.Commands;
-using GangsAPI.Services.Gang;
-using GangsAPI.Services.Menu;
-using GangsAPI.Services.Player;
-using GangsAPI.Services.Server;
-using GangsTest.TestLocale;
-using Mock;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GangsTest.API.Services.Commands.Command;
 
 public class TestData : TheoryData<ICommand> {
-  private static readonly IPlayerManager players = new MockPlayerManager();
-  private static readonly IMenuManager menus = new MockMenuManager();
-  private static readonly IRankManager ranks = new MockRankManager(players);
-
-  private static readonly ITargeter targeter =
-    new MockTargeter(new MockServerProvider());
-
-  private static readonly IGangStatManager gangStats =
-    new MockInstanceStatManager();
-
-  private static readonly IPlayerStatManager stats =
-    new MockInstanceStatManager();
-
-
-  private static readonly IGangManager manager =
-    new MockGangManager(players, ranks);
+  private static readonly IServiceCollection services = new ServiceCollection();
 
   private readonly ICommand[] behaviors = [
-    new CreateCommand(manager, StringLocalizer.Instance), new HelpCommand(),
-    new GangCommand(manager, players, menus, ranks, gangStats, targeter,
-      StringLocalizer.Instance),
-    new BalanceCommand(stats, StringLocalizer.Instance),
-    new InviteCommand(manager, players, ranks, gangStats, targeter,
-      StringLocalizer.Instance)
+    new CreateCommand(services.BuildServiceProvider()), new HelpCommand(),
+    new GangCommand(services.BuildServiceProvider()),
+    new BalanceCommand(services.BuildServiceProvider()),
+    new InviteCommand(services.BuildServiceProvider())
   ];
+
+  static TestData() { services.ConfigureServices(); }
 
   public TestData() {
     foreach (var behavior in behaviors) {

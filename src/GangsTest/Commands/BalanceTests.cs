@@ -1,19 +1,23 @@
 ﻿using Commands;
 using GangsAPI;
 using GangsAPI.Data.Command;
-using GangsAPI.Services.Commands;
 using GangsAPI.Services.Player;
 using GangsTest.API.Services.Commands.Command;
-using GangsTest.TestLocale;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Stats;
 
 namespace GangsTest.Commands;
 
-public class BalanceTests(ICommandManager commands, IPlayerStatManager stats,
-  IStringLocalizer locale) : TestParent(commands,
-  new BalanceCommand(stats, StringLocalizer.Instance)) {
+public class BalanceTests(IServiceProvider provider) : TestParent(provider,
+  new BalanceCommand(provider)) {
   private static readonly string STAT_ID = new BalanceStat().StatId;
+
+  private readonly IStringLocalizer locale =
+    provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IPlayerStatManager stats =
+    provider.GetRequiredService<IPlayerStatManager>();
 
   [Fact]
   public async Task None() {

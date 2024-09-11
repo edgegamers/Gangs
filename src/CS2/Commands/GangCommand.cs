@@ -4,38 +4,31 @@ using CounterStrikeSharp.API.Core;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
-using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
-using GangsAPI.Services.Player;
-using GangsAPI.Services.Server;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using static GangsAPI.MSG;
 
 namespace Commands;
 
-public class GangCommand(IGangManager gangs, IPlayerManager players,
-  IMenuManager menus, IRankManager ranks, IGangStatManager gangStats,
-  ITargeter targeter, IStringLocalizer testLocale) : ICommand {
+public class GangCommand(IServiceProvider provider) : ICommand {
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  private readonly IMenuManager menus =
+    provider.GetRequiredService<IMenuManager>();
+
   private readonly Dictionary<string, ICommand> sub = new() {
-    // ["delete"] = new DeleteGangCommand(),
-    // ["invite"] = new InviteGangCommand(),
-    // ["kick"] = new KickGangCommand(),
-    // ["leave"] = new LeaveGangCommand(),ggG
-    // ["list"] = new ListGangCommand(),
-    // ["promote"] = new PromoteGangCommand(),
-    // ["demote"] = new DemoteGangCommand(),
-    // ["info"] = new InfoGangCommand()
-    ["invites"] =
-      new InvitesCommand(players, ranks, menus, gangs, gangStats, testLocale),
-    ["invite"] =
-      new InviteCommand(gangs, players, ranks, gangStats, targeter, testLocale),
-    ["create"] = new CreateCommand(gangs, testLocale),
+    ["perks"]  = new PerksCommand(provider),
+    ["invite"] = new InviteCommand(provider),
+    ["create"] = new CreateCommand(provider),
     ["help"]   = new HelpCommand()
   };
 
-  private IStringLocalizer locale = testLocale;
+  private IStringLocalizer locale =
+    provider.GetRequiredService<IStringLocalizer>();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin != null) locale = plugin.Localizer ?? locale;
@@ -64,8 +57,7 @@ public class GangCommand(IGangManager gangs, IPlayerManager players,
       }
 
       // Open gang menu
-      await menus.OpenMenu(executor,
-        new GangMenu(gang, players, ranks, gangStats, locale));
+      await menus.OpenMenu(executor, new GangMenu(provider, gang));
       return CommandResult.SUCCESS;
     }
 

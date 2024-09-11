@@ -1,11 +1,14 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Services.Menu;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Menu;
 
-public abstract class AbstractPagedMenu<T>(IMenuManager menus,
+public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   Func<PlayerWrapper, string, Task> printer, int itemsPerPage = 5)
-  : AbstractMenu<T>(menus, printer) {
+  : AbstractMenu<T>(provider.GetRequiredService<IMenuManager>(), printer) {
+  protected IServiceProvider Provider = provider;
+
   public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);
     var totalPages =

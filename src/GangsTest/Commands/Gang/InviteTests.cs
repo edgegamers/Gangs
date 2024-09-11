@@ -5,23 +5,37 @@ using GangsAPI.Data.Command;
 using GangsAPI.Extensions;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
-using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using GangsAPI.Services.Server;
 using GangsTest.API.Services.Commands.Command;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Stats;
 
 namespace GangsTest.Commands.Gang;
 
-public class InviteTests(ICommandManager cmds, IGangManager gangs,
-  IPlayerManager players, IRankManager ranks, IGangStatManager gangStats,
-  IServerProvider server, ITargeter targeter, IStringLocalizer localizer)
-  : TestParent(cmds,
-    new InviteCommand(gangs, players, ranks, gangStats, targeter,
-      localizer)) {
+public class InviteTests(IServiceProvider provider)
+  : TestParent(provider, new InviteCommand(provider)) {
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  private readonly IGangStatManager gangStats =
+    provider.GetRequiredService<IGangStatManager>();
+
   private readonly string inviteId = new InvitationStat().StatId;
+
+  private readonly IStringLocalizer localizer =
+    provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
+
+  private readonly IServerProvider server =
+    provider.GetRequiredService<IServerProvider>();
 
   [Fact]
   public async Task Invite_NonPlayer() {

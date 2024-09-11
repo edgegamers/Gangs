@@ -1,22 +1,20 @@
 ﻿using Commands;
 using GangsAPI.Data.Command;
-using GangsAPI.Services;
-using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
-using GangsAPI.Services.Player;
-using GangsAPI.Services.Server;
 using GangsTest.API.Services.Commands.Command;
-using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GangsTest.Commands.Gang;
 
-public class GangTests(ICommandManager commands, IGangManager gangs,
-  IPlayerManager players, IMenuManager menus, IRankManager ranks,
-  IGangStatManager gangStats, ITargeter targer, IStringLocalizer locale)
-  : TestParent(commands,
-    new GangCommand(gangs, players, menus, ranks, gangStats, targer,
-      locale)) {
+public class GangTests(IServiceProvider provider) : TestParent(provider,
+  new GangCommand(provider)) {
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  private readonly IMenuManager menus =
+    provider.GetRequiredService<IMenuManager>();
+
   [Fact]
   public async Task Gang_TestBase() {
     Assert.Equal("css_gang", Command.Name);

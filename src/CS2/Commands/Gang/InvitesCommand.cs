@@ -8,13 +8,31 @@ using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Stats;
 
 namespace Commands.Gang;
 
-public class InvitesCommand(IPlayerManager players, IRankManager ranks,
-  IMenuManager menus, IGangManager gangs, IGangStatManager gangStats,
-  IStringLocalizer locale) : ICommand {
+public class InvitesCommand(IServiceProvider provider) : ICommand {
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  private readonly IGangStatManager gangStats =
+    provider.GetRequiredService<IGangStatManager>();
+
+  private readonly IStringLocalizer locale =
+    provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IMenuManager menus =
+    provider.GetRequiredService<IMenuManager>();
+
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
+
   public string Name => "invites";
   public string[] Usage => [""];
 
@@ -49,7 +67,17 @@ public class InvitesCommand(IPlayerManager players, IRankManager ranks,
       return CommandResult.ERROR;
     }
 
-    var menu = new OutgoingInvitesMenu(menus, gang, gangStats, players);
+    var (success, gangInvites) =
+      await gangStats.GetForGang<InvitationData>(gang,
+        new InvitationStat().StatId);
+
+    if (!success || gangInvites == null
+      || gangInvites.GetInvitedSteams().Count == 0) {
+      info.ReplySync(locale.Get(MSG.COMMAND_INVITE_NONE));
+      return CommandResult.SUCCESS;
+    }
+
+    var menu = new OutgoingInvitesMenu(provider, gang);
     await menus.OpenMenu(executor, menu);
     return CommandResult.SUCCESS;
   }

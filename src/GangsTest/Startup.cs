@@ -13,8 +13,8 @@ using StringLocalizer = GangsTest.TestLocale.StringLocalizer;
 
 namespace GangsTest;
 
-public class Startup {
-  public void ConfigureServices(IServiceCollection services) {
+public static class Startup {
+  public static void ConfigureServices(this IServiceCollection services) {
     services.AddScoped<IServerProvider, MockServerProvider>();
     services.AddScoped<ITargeter, MockTargeter>();
     services.AddScoped<IPlayerManager, MockPlayerManager>();

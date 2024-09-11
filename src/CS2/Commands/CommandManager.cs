@@ -3,22 +3,16 @@ using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
-using GangsAPI.Services;
 using GangsAPI.Services.Commands;
-using GangsAPI.Services.Gang;
-using GangsAPI.Services.Menu;
-using GangsAPI.Services.Player;
-using GangsAPI.Services.Server;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Mock;
 
 namespace Commands;
 
-public class CommandManager(IGangManager gangs,
-  IPlayerStatManager playerStats, IPlayerManager players,
-  IMenuManager menus, IRankManager ranks, IGangStatManager gangStats,
-  ITargeter targeter, IStringLocalizer testLocale)
-  : MockCommandManager(testLocale), IPluginBehavior {
+public class CommandManager(IServiceProvider provider)
+  : MockCommandManager(provider.GetRequiredService<IStringLocalizer>()),
+    IPluginBehavior {
   private bool hotReload;
   private BasePlugin? plugin;
 
@@ -28,9 +22,9 @@ public class CommandManager(IGangManager gangs,
 
     if (basePlugin != null) Locale = basePlugin.Localizer;
 
-    RegisterCommand(new GangCommand(gangs, players, menus, ranks,
-      gangStats, targeter, Locale));
-    RegisterCommand(new BalanceCommand(playerStats, Locale));
+    // RegisterCommand(new GangCommand(gangs, players, menus, ranks,
+    //   gangStats, targeter, Locale));
+    RegisterCommand(new BalanceCommand(provider));
   }
 
   public override bool RegisterCommand(ICommand command) {

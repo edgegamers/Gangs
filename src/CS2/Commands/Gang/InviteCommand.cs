@@ -7,15 +7,32 @@ using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using GangsAPI.Services.Server;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Stats;
 
 namespace Commands.Gang;
 
-public class InviteCommand(IGangManager gangs, IPlayerManager players,
-  IRankManager ranks, IGangStatManager gangStats, ITargeter targeter,
-  IStringLocalizer localizer) : ICommand {
+public class InviteCommand(IServiceProvider provider) : ICommand {
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  private readonly IGangStatManager gangStats =
+    provider.GetRequiredService<IGangStatManager>();
+
+  private readonly IStringLocalizer localizer =
+    provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
+
   private readonly string statId = new InvitationStat().StatId;
+
+  private readonly ITargeter targeter =
+    provider.GetRequiredService<ITargeter>();
 
   public string Name => "invite";
 
@@ -50,8 +67,7 @@ public class InviteCommand(IGangManager gangs, IPlayerManager players,
 
     if (!perms.Permissions.HasFlag(Perm.INVITE_OTHERS)) {
       var required =
-        await ranks.GetRankNeeded(gangPlayer.GangId.Value,
-          Perm.INVITE_OTHERS);
+        await ranks.GetRankNeeded(gangPlayer.GangId.Value, Perm.INVITE_OTHERS);
       info.ReplySync(localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
       return CommandResult.NO_PERMISSION;
     }

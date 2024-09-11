@@ -2,16 +2,21 @@
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
-using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsTest.API.Services.Commands.Command;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 
 namespace GangsTest.Commands.Gang;
 
-public class CreateTests(ICommandManager commands, IGangManager gangs,
-  IStringLocalizer locale)
-  : TestParent(commands, new CreateCommand(gangs, locale)) {
+public class CreateTests(IServiceProvider provider)
+  : TestParent(provider, new CreateCommand(provider)) {
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  private readonly IStringLocalizer locale =
+    provider.GetRequiredService<IStringLocalizer>();
+
   private readonly PlayerWrapper player = new((ulong)new Random().NextInt64(),
     "Test Player");
 
