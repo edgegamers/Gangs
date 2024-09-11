@@ -35,6 +35,8 @@ public enum MSG {
   PLAYER_CURRENCY_PLURAL,
   GANG_CURRENCY,
   GANG_CURRENCY_PLURAL,
+  GANG_NOT_FOUND,
+  GANG_NOT_FOUND_CLOSEST,
   COLOR_DEFAULT,
   COLOR_EMPHASIS,
   COLOR_NUMBERL,
@@ -98,6 +100,8 @@ public static class LocaleExtensions {
       MSG.NOT_IN_GANG                   => "gang.not_in_gang",
       MSG.PERK_MISSING                  => "perk.missing",
       MSG.GANG_CHAT_FORMAT              => "perk.gangchat.format",
+      MSG.GANG_NOT_FOUND                => "gang.not_found",
+      MSG.GANG_NOT_FOUND_CLOSEST        => "gang.not_found.closest",
 
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };

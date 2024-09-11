@@ -22,8 +22,7 @@ public class CommandManager(IServiceProvider provider)
 
     if (basePlugin != null) Locale = basePlugin.Localizer;
 
-    // RegisterCommand(new GangCommand(gangs, players, menus, ranks,
-    //   gangStats, targeter, Locale));
+    RegisterCommand(new GangCommand(provider));
     RegisterCommand(new BalanceCommand(provider));
   }
 
