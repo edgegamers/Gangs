@@ -8,6 +8,8 @@ using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using GangsAPI.Services.Server;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Localization;
 using Mock;
 using SQLImpl;
 using Stats.Perk;
@@ -29,11 +31,12 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection
      .AddPluginBehavior<IPlayerStatManager, MySQLPlayerInstanceManager>();
     serviceCollection.AddPluginBehavior<IRankManager, MySQLRankManager>();
-    serviceCollection.AddPluginBehavior<IPerkManager, MockPerkManager>();
-
+    serviceCollection.AddPluginBehavior<IPerkManager, PerkManager>();
     serviceCollection.RegisterCommands();
 
     serviceCollection.AddPluginBehavior<PlayerJoinCreationListener>();
+    serviceCollection
+     .TryAddTransient<IStringLocalizer, PluginStringLocalizer>();
     serviceCollection.AddTransient(typeof(Lazy<>), typeof(Lazier<>));
   }
 

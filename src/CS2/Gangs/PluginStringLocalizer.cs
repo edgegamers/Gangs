@@ -1,10 +1,19 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Localization;
 
 namespace GangsImpl;
 
-public partial class PluginStringLocalizer(IStringLocalizer localizer)
-  : IStringLocalizer {
+public partial class PluginStringLocalizer : IStringLocalizer {
+  private readonly IStringLocalizer localizer;
+
+  public PluginStringLocalizer(IStringLocalizerFactory factory) {
+    var type = typeof(PluginStringLocalizer);
+    var assemblyName =
+      new AssemblyName(type.GetTypeInfo().Assembly.FullName ?? string.Empty);
+    localizer = factory.Create(string.Empty, assemblyName.FullName);
+  }
+
   public LocalizedString this[string name] => getString(name);
 
   public LocalizedString this[string name, params object[] arguments]
@@ -26,6 +35,9 @@ public partial class PluginStringLocalizer(IStringLocalizer localizer)
       // Check if the key exists
       try {
         var key = match.Groups[0].Value;
+        // CS# forces a space before a chat color if the entireity
+        // of the strong is a color code. This is undesired
+        // in our case, so we trim the value when we have a prefix.
         value = value.Replace(key,
           key == "%prefix%" ?
             this[key[1..^1]].Value :

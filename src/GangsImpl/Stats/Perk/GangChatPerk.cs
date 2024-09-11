@@ -53,6 +53,7 @@ public class GangChatPerk : BaseStat<bool>, IGangChatPerk {
 
   [GameEventHandler]
   public HookResult OnChat(EventPlayerChat ev, GameEventInfo _) {
+    Server.PrintToChatAll($"Chat: {ev.Text}");
     if (!ev.Text.StartsWith('.')) return HookResult.Continue;
     var player = Utilities.GetPlayerFromUserid(ev.Userid);
     if (player == null || !player.IsValid) return HookResult.Continue;
@@ -88,5 +89,10 @@ public class GangChatPerk : BaseStat<bool>, IGangChatPerk {
     return HookResult.Handled;
   }
 
-  public Task OnPurchase(IGangPlayer player) { return Task.CompletedTask; }
+  public Task OnPurchase(IGangPlayer player) {
+    Server.NextFrame(() => {
+      Server.PrintToChatAll($"Player {player.Name} purchased gang chat.");
+    });
+    return Task.CompletedTask;
+  }
 }

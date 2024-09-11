@@ -22,6 +22,6 @@ public class PerksMenu(IServiceProvider provider)
   }
 
   override protected Task<string> FormatItem(int index, IPerk item) {
-    return Task.FromResult($"{item.Name} - {item.Cost}");
+    return Task.FromResult($"{index} {item.Name} - {item.Cost}");
   }
 }

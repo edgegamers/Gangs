@@ -21,9 +21,6 @@ public class CS2Gangs(IServiceProvider provider) : BasePlugin, IGangPlugin {
     Logger.LogInformation("[Gangs] Loading {Count} extensions",
       extensions.Count);
 
-    // Override the default localizer with our own
-    Localizer = new PluginStringLocalizer(Localizer);
-
     foreach (var ext in extensions) {
       RegisterAllAttributes(ext);
       try {
