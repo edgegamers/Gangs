@@ -9,30 +9,30 @@ using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Stats;
 using Stats.Stat;
 using IMenu = GangsAPI.Services.Menu.IMenu;
 
 namespace Commands.Menus;
 
 public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
-  private readonly InvitationStat invitationStat = new();
-  private IList<IGangPlayer> members = new List<IGangPlayer>();
-
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
+  private readonly IGangStatManager gangStatManager =
+    provider.GetRequiredService<IGangStatManager>();
+
+  private readonly InvitationStat invitationStat = new();
 
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
 
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
-  private readonly IGangStatManager gangStatManager =
-    provider.GetRequiredService<IGangStatManager>();
+  private IList<IGangPlayer> members = new List<IGangPlayer>();
 
   public async Task Open(PlayerWrapper player) {
     members = (await players.GetMembers(gang)).ToList();

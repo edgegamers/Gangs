@@ -9,7 +9,6 @@ using GangsAPI.Services.Player;
 using GangsAPI.Services.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Stats;
 using Stats.Stat;
 
 namespace Commands.Gang;

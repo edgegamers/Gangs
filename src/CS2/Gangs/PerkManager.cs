@@ -1,8 +1,6 @@
 ﻿using CounterStrikeSharp.API.Core;
-using GangsAPI;
 using GangsAPI.Perks;
 using GangsAPI.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Stats.Perk;
 
 namespace GangsImpl;

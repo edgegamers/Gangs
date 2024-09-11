@@ -4,7 +4,6 @@ using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
-using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Stats.Stat;
@@ -12,11 +11,11 @@ using Stats.Stat;
 namespace StatsTracker;
 
 public class RoundStatsTracker(IServiceProvider provider) : IPluginBehavior {
-  private readonly IPlayerStatManager playerStats =
-    provider.GetRequiredService<IPlayerStatManager>();
-
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
+
+  private readonly IPlayerStatManager playerStats =
+    provider.GetRequiredService<IPlayerStatManager>();
 
   private readonly string statId = new RoundStats().StatId;
 

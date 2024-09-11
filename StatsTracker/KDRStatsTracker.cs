@@ -27,7 +27,7 @@ public class KDRStatsTracker(IServiceProvider provider) : IPluginBehavior {
 
     var killer = ev.Attacker;
     var killerWrapper =
-      (killer != null && killer is { IsValid: true, IsBot: false }) ?
+      killer != null && killer is { IsValid: true, IsBot: false } ?
         new PlayerWrapper(killer) :
         null;
 

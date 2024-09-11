@@ -11,13 +11,13 @@ using Stats.Stat;
 namespace StatsTracker;
 
 public class PlaytimeStatsTracker(IServiceProvider provider) : IPluginBehavior {
-  private readonly string statId = new PlaytimeStat().StatId;
-
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
   private readonly IPlayerStatManager playerStats =
     provider.GetRequiredService<IPlayerStatManager>();
+
+  private readonly string statId = new PlaytimeStat().StatId;
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     plugin?.AddTimer(60.0f, increment, TimerFlags.REPEAT);
@@ -28,7 +28,7 @@ public class PlaytimeStatsTracker(IServiceProvider provider) : IPluginBehavior {
      .Where(p => p is { Team: > CsTeam.None, IsBot: false })
      .Select(p => new PlayerWrapper(p))
      .ToList();
-    foreach (var player in playerList) {
+    foreach (var player in playerList)
       Task.Run(async () => {
         var gangPlayer = await players.GetPlayer(player.Steam);
         if (gangPlayer == null) return;
@@ -51,6 +51,5 @@ public class PlaytimeStatsTracker(IServiceProvider provider) : IPluginBehavior {
           (ulong)DateTime.Now.Subtract(DateTime.UnixEpoch).TotalSeconds;
         await playerStats.SetForPlayer(player.Steam, statId, stat);
       });
-    }
   }
 }

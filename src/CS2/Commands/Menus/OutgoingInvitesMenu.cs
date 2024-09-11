@@ -2,21 +2,19 @@
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Services.Gang;
-using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
-using Stats;
 using Stats.Stat;
 
 namespace Commands.Menus;
 
 public class OutgoingInvitesMenu(IServiceProvider provider, IGang gang)
   : AbstractPagedMenu<InvitationEntry>(provider, NativeSenders.Chat) {
-  private readonly InvitationStat invitationStat = new();
-
   private readonly IGangStatManager gangStats =
     provider.GetRequiredService<IGangStatManager>();
+
+  private readonly InvitationStat invitationStat = new();
 
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();

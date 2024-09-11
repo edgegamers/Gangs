@@ -8,7 +8,7 @@ public class RoundStats : BaseStat<RoundData> {
   public override string? Description => "Rounds won, lost and MVPs";
 
   public override IStat<RoundData?> Clone() {
-    return new RoundStats() { Value = Value };
+    return new RoundStats { Value = Value };
   }
 }
 

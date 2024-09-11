@@ -8,7 +8,7 @@ public class KDRStat : BaseStat<KDRData> {
   public override string? Description => "Kill-Death Ratio";
 
   public override IStat<KDRData?> Clone() {
-    return new KDRStat() { Value = Value };
+    return new KDRStat { Value = Value };
   }
 }
 

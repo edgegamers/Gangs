@@ -32,7 +32,7 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
     return Task.FromResult(items);
   }
 
-  override async protected Task HandleItemSelection(PlayerWrapper player,
+  override protected async Task HandleItemSelection(PlayerWrapper player,
     List<string?> items, int selectedIndex) {
     if (selectedIndex == 1) {
       var gangPlayer = await players.GetPlayer(player.Steam);

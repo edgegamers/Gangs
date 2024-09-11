@@ -1,4 +1,3 @@
-using System.Collections;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Stat;
@@ -10,10 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Commands;
 
 public class StatsCommand(IServiceProvider provider) : ICommand {
-  public string Name => "css_stats";
-
   private readonly IPlayerStatManager playerStats =
     provider.GetRequiredService<IPlayerStatManager>();
+
+  public string Name => "css_stats";
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

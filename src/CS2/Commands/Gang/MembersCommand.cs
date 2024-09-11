@@ -2,7 +2,6 @@
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
-using GangsAPI.Data.Gang;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
@@ -14,15 +13,8 @@ using Microsoft.Extensions.Localization;
 namespace Commands.Gang;
 
 public class MembersCommand(IServiceProvider provider) : ICommand {
-  public string Name => "members";
-
-  public string[] Usage => ["", "<gang>"];
-
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
-
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
 
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
@@ -30,8 +22,15 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
   private readonly IMenuManager menus =
     provider.GetRequiredService<IMenuManager>();
 
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
   private readonly ITargeter targeter =
     provider.GetRequiredService<ITargeter>();
+
+  public string Name => "members";
+
+  public string[] Usage => ["", "<gang>"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

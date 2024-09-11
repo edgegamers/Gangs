@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using CounterStrikeSharp.API.Core.Translations;
+﻿using CounterStrikeSharp.API.Core.Translations;
 using Microsoft.Extensions.Localization;
 
 namespace GangsTest.TestLocale;

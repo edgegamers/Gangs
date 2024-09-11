@@ -3,9 +3,9 @@ using GangsAPI.Services.Commands;
 
 namespace GangsTest.API.Services.Commands.CommandManager;
 
-public class LogicTests : CommandManager.TestParent {
+public class LogicTests : TestParent {
   [Theory]
-  [ClassData(typeof(CommandManager.TestData))]
+  [ClassData(typeof(TestData))]
   public async Task Command_Logic(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.Equal(CommandResult.SUCCESS,
@@ -13,7 +13,7 @@ public class LogicTests : CommandManager.TestParent {
   }
 
   [Theory]
-  [ClassData(typeof(CommandManager.TestData))]
+  [ClassData(typeof(TestData))]
   public async Task Command_Logic_Fail(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.Equal(CommandResult.ERROR,
@@ -21,7 +21,7 @@ public class LogicTests : CommandManager.TestParent {
   }
 
   [Theory]
-  [ClassData(typeof(CommandManager.TestData))]
+  [ClassData(typeof(TestData))]
   public async Task Command_CaseInsensitive(ICommandManager mgr) {
     mgr.RegisterCommand(Dummy);
     Assert.Equal(CommandResult.SUCCESS,
@@ -29,7 +29,7 @@ public class LogicTests : CommandManager.TestParent {
   }
 
   [Theory]
-  [ClassData(typeof(CommandManager.TestData))]
+  [ClassData(typeof(TestData))]
   public async Task Command_CaseInsensitive2(ICommandManager mgr) {
     mgr.RegisterCommand(Dummy);
     Assert.Equal(CommandResult.SUCCESS,
