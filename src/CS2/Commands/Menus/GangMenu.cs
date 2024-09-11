@@ -50,11 +50,11 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
 
     player.PrintToChat(" ");
     player.PrintToChat(
-      $" {ChatColors.Red}Gangs {ChatColors.Grey}- {ChatColors.Green}{gang.Name}");
-    player.PrintToChat($" {ChatColors.Grey}------------------------");
+      $" {ChatColors.DarkRed}!GANGS {ChatColors.Default}- {ChatColors.Grey}{gang.Name}");
 
     await addMemberItem(rank, player);
     await addInviteItem(rank, player);
+    await addPerkItem(rank, player);
   }
 
   public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
@@ -68,6 +68,9 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
         case 2:
           player.Player?.ExecuteClientCommandFromServer("css_gang invites");
           break;
+        case 3:
+          player.Player?.ExecuteClientCommandFromServer("css_gang perks");
+          break;
       }
     });
   }
@@ -77,7 +80,13 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
       ChatColors.DarkRed + "1" :
       ChatColors.LightRed + "X";
     player.PrintToChat(
-      $" {memberPrefix} | {ChatColors.Yellow}{members.Count}{ChatColors.LightRed} Members");
+      $" {memberPrefix} {ChatColors.Grey}| {ChatColors.Yellow}{members.Count}{ChatColors.LightRed} Members");
+    return Task.CompletedTask;
+  }
+
+  private Task addPerkItem(Perm rank, PlayerWrapper player) {
+    player.PrintToChat(
+      $" {ChatColors.DarkRed}3 {ChatColors.Grey}| {ChatColors.LightRed}Perks");
     return Task.CompletedTask;
   }
 
@@ -85,9 +94,12 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     if (!rank.HasFlag(Perm.INVITE_OTHERS)) return;
 
     var (success, invites) =
-      await gangStatManager.GetForGang<string>(gang, invitationStat.StatId);
+      await gangStatManager.GetForGang<InvitationData>(gang,
+        invitationStat.StatId);
     if (!success || invites == null) return;
 
-    player.PrintToChat($"{invites.Length} Invites");
+    player.PrintToChat(
+      $" {ChatColors.DarkRed}2 | {ChatColors.Yellow}{invites.GetInvitedSteams().Count}{ChatColors.LightRed} Invite"
+      + (invites.GetInvitedSteams().Count == 1 ? "" : "s"));
   }
 }

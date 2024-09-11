@@ -47,7 +47,9 @@ public class OutgoingInvitesMenu(IServiceProvider provider, IGang gang)
     var text        = $"{invitedName} by {inviterName} on {item.Date}";
 
     if (index == 0)
-      text = $"{ChatColors.Red} Gang Invitations - {gang.Name}\n" + text;
+      text =
+        $" \n {ChatColors.DarkRed}!{ChatColors.Red}GANGS {ChatColors.LightRed}Invites {ChatColors.Grey}{gang.Name}\n"
+        + text;
 
     return text;
   }

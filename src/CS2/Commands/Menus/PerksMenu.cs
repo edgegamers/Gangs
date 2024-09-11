@@ -1,5 +1,6 @@
 using GangsAPI.Data;
 using GangsAPI.Perks;
+using GangsAPI.Services;
 using GangsAPI.Services.Menu;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,8 @@ namespace Commands.Menus;
 public class PerksMenu(IServiceProvider provider)
   : AbstractPagedMenu<IPerk>(provider, NativeSenders.Chat) {
   override protected Task<List<IPerk>> GetItems(PlayerWrapper player) {
-    return Task.FromResult(Provider.GetServices<IPerk>().ToList());
+    return Task.FromResult(Provider.GetRequiredService<IPerkManager>()
+     .Perks.ToList());
   }
 
   override protected Task HandleItemSelection(PlayerWrapper player,

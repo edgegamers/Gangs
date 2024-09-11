@@ -8,6 +8,7 @@ using GangsAPI.Data.Stat;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 
 namespace Stats.Perk;
@@ -20,12 +21,11 @@ public class GangChatPerk : BaseStat<bool>, IGangChatPerk {
 
   public GangChatPerk(bool Value) { this.Value = Value; }
 
-  public GangChatPerk(IPlayerManager players, IGangStatManager gangStats,
-    IGangManager gangs, IStringLocalizer localizer) {
-    this.gangStats = gangStats;
-    this.localizer = localizer;
-    this.gangs     = gangs;
-    this.players   = players;
+  public GangChatPerk(IServiceProvider provider) {
+    gangs     = provider.GetService<IGangManager>();
+    gangStats = provider.GetService<IGangStatManager>();
+    localizer = provider.GetService<IStringLocalizer>();
+    players   = provider.GetService<IPlayerManager>();
   }
 
   public int Cost => 10000;

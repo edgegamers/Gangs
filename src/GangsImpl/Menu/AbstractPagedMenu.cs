@@ -51,8 +51,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     var pageItems  = items.Skip(startIndex).Take(itemsPerPage).ToList();
 
     if (totalPages != 1) player.PrintToChat($"Page {currentPage}/{totalPages}");
-    for (var i = 0; i < pageItems.Count; i++)
-      await Printer.Invoke(player, await FormatItem(i, pageItems[i]));
+    await Show(player, pageItems);
 
     // Display navigation options
     if (currentPage > 1) await Printer.Invoke(player, "8. Previous Page");

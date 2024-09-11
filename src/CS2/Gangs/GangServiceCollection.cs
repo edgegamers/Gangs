@@ -8,7 +8,9 @@ using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using GangsAPI.Services.Server;
 using Microsoft.Extensions.DependencyInjection;
+using Mock;
 using SQLImpl;
+using Stats.Perk;
 
 namespace GangsImpl;
 
@@ -27,6 +29,7 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection
      .AddPluginBehavior<IPlayerStatManager, MySQLPlayerInstanceManager>();
     serviceCollection.AddPluginBehavior<IRankManager, MySQLRankManager>();
+    serviceCollection.AddPluginBehavior<IPerkManager, MockPerkManager>();
 
     serviceCollection.RegisterCommands();
 

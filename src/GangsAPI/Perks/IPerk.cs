@@ -8,4 +8,4 @@ public interface IPerk : IStat {
   Task OnPurchase(IGangPlayer player);
 }
 
-public interface IPerk<T> : IStat<T>, IPluginBehavior { }
+public interface IPerk<T> : IPerk, IStat<T>, IPluginBehavior { }
