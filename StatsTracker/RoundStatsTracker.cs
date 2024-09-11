@@ -23,8 +23,10 @@ public class RoundStatsTracker(IServiceProvider provider) : IPluginBehavior {
   [GameEventHandler]
   public HookResult OnMVP(EventRoundMvp ev, GameEventInfo info) {
     var player = ev.Userid;
-    if (player == null || !player.IsValid) return HookResult.Continue;
+    if (player == null || !player.IsValid || player.IsBot)
+      return HookResult.Continue;
     var wrapper = new PlayerWrapper(player);
+    Server.PrintToConsole("BEGIN MVP");
     Task.Run(async () => {
       var gangPlayer = await players.GetPlayer(wrapper.Steam);
       if (gangPlayer == null) return;
@@ -37,24 +39,18 @@ public class RoundStatsTracker(IServiceProvider provider) : IPluginBehavior {
 
       await playerStats.SetForPlayer(wrapper, statId, stat);
     });
+    Server.PrintToConsole("END MVP");
     return HookResult.Continue;
   }
 
   [GameEventHandler]
   public HookResult OnEnd(EventRoundEnd ev, GameEventInfo info) {
-    // var player = ev.
     var winningTeam = (CsTeam)ev.Winner;
-    var winners = Utilities.GetPlayers()
-     .Where(p => p.Team == winningTeam)
-     .Select(p => new PlayerWrapper(p))
-     .ToList();
-    var losers = Utilities.GetPlayers()
-     .Where(p => p.Team != winningTeam && p.Team > CsTeam.Spectator)
-     .Select(p => new PlayerWrapper(p))
-     .ToList();
 
     var wrapped = Utilities.GetPlayers().Select(p => new PlayerWrapper(p));
+    Server.PrintToConsole("SELECTED ALL PLAYERS");
 
+    Server.PrintToConsole("BEGIN TASK");
     Task.Run(async () => {
       foreach (var wrapper in wrapped) {
         var gangPlayer = await players.GetPlayer(wrapper.Steam);
@@ -64,15 +60,23 @@ public class RoundStatsTracker(IServiceProvider provider) : IPluginBehavior {
 
         stat ??= new RoundData();
 
-        if (winners.Any(p => p.Steam == wrapper.Steam)) {
+        if (wrapper.Team == winningTeam)
           stat.RoundsWon++;
-        } else if (losers.Any(p => p.Steam == wrapper.Steam)) {
+        else
           stat.RoundsLost++;
-        }
+
+        await Server.NextFrameAsync(()
+          => Server.PrintToConsole(
+            $"Player {wrapper.Name} has {stat.RoundsWon} rounds won and {stat.RoundsLost} rounds lost"));
 
         await playerStats.SetForPlayer(wrapper, statId, stat);
+
+        await Server.NextFrameAsync(()
+          => Server.PrintToConsole(
+            $"Changed player {wrapper.Name} to have {stat.RoundsWon} rounds won and {stat.RoundsLost} rounds lost"));
       }
     });
+    Server.PrintToConsole("END TASK");
     return HookResult.Continue;
   }
 }

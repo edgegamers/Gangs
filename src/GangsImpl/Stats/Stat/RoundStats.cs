@@ -13,5 +13,7 @@ public class RoundStats : BaseStat<RoundData> {
 }
 
 public class RoundData {
-  public int RoundsWon, RoundsLost, RoundsMVP;
+  public int RoundsWon { get; set; }
+  public int RoundsLost { get; set; }
+  public int RoundsMVP { get; set; }
 }

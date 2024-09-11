@@ -43,7 +43,8 @@ public class CreateTests(IServiceProvider provider)
     gang = await gangs.GetGang(player.Steam);
     Assert.NotNull(gang);
     Assert.Equal("foobar", gang.Name);
-    Assert.Contains($"Gang 'foobar' (#{gang.GangId}) created successfully",
+    Assert.Equal(
+      [locale.Get(MSG.COMMAND_GANG_CREATE_SUCCESS, "foobar", gang.GangId)],
       player.ConsoleOutput);
   }
 

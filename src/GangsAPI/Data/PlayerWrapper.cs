@@ -4,6 +4,7 @@ using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Entities;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data.Gang;
 
 namespace GangsAPI.Data;
@@ -17,11 +18,13 @@ public class PlayerWrapper {
   public readonly CCSPlayerController? Player;
   public readonly ulong Steam;
   public AdminData? Data;
+  public CsTeam Team = CsTeam.Spectator;
 
   public PlayerWrapper(CCSPlayerController player) {
     Player = player;
     Steam  = player.SteamID;
     Name   = player.PlayerName;
+    Team   = player.Team;
 
     Data = AdminManager.GetPlayerAdminData(player);
   }

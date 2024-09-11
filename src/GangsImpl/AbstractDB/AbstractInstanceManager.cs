@@ -65,7 +65,6 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       foreach (var field in fields)
         fieldValues.Add($"@{field.Name}", field.GetValue(value));
 
-    Console.WriteLine(cmd, fieldValues);
     await Connection.ExecuteAsync(cmd, fieldValues);
     return true;
   }
@@ -136,8 +135,6 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
 
       cmd = cmd[..^2] + ")";
     }
-
-    Console.WriteLine(cmd);
 
     await Connection.ExecuteAsync(cmd);
   }
