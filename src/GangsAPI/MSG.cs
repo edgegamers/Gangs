@@ -47,6 +47,7 @@ public enum MSG {
   ALREADY_IN_GANG,
   NOT_IN_GANG,
   PERK_MISSING,
+  PERK_PURCHASED,
   GANG_CHAT_FORMAT
 }
 
@@ -99,6 +100,7 @@ public static class LocaleExtensions {
       MSG.ALREADY_IN_GANG               => "gang.already_in_gang",
       MSG.NOT_IN_GANG                   => "gang.not_in_gang",
       MSG.PERK_MISSING                  => "perk.missing",
+      MSG.PERK_PURCHASED                => "perk.purchased",
       MSG.GANG_CHAT_FORMAT              => "perk.gangchat.format",
       MSG.GANG_NOT_FOUND                => "gang.not_found",
       MSG.GANG_NOT_FOUND_CLOSEST        => "gang.not_found.closest",

@@ -43,5 +43,6 @@
   "gang.not_found.closest": "%prefix%Could not find a unique gang using \"%color.special%{0}%color.default%\". Did you mean \"%color.special%{1}%color.default%\"?",
   "gang.not_found": "%prefix%Could not find a gang named \"%color.special%{0}%color.default%\".",
   "perk.missing": "%prefix%Your gang does not have the %color.special%{0}%color.default% perk.",
-  "perk.gangchat.format": " {darkred}[{red}{0}{darkred}] %color.special%{1}%color.default%: %color.default%{2}"
+  "perk.gangchat.format": " {darkred}[{red}{0}{darkred}] %color.special%{1}%color.default%: %color.default%{2}",
+  "perk.purchased": "%color.target%{0}%color.default% purchased the %color.special%{1}%color.default% perk for your gang."
 }

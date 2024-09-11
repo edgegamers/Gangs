@@ -31,33 +31,37 @@ public class GangChatPerk : BasePerk, IGangChatPerk {
 
   public override int Cost => 10000;
 
-  public override Task OnPurchase(IGangPlayer player) {
-    return Server.NextFrameAsync(()
-      => Server.PrintToChatAll($"Player {player.Name} purchased gang chat."));
+  public override async Task OnPurchase(IGangPlayer player) {
+    Value = true;
+    if (player.GangId == null || player.GangRank == null) return;
+    if (gangStats == null || gangs == null || localizer == null) return;
+    await gangStats.SetForGang(player.GangId.Value, this);
+    var gang = await gangs.GetGang(player.GangId.Value);
+    if (gang == null) return;
+    var str = localizer.Get(MSG.PERK_PURCHASED,
+      player.Name ?? player.Steam.ToString(), Name);
+    await ((IGangChatPerk)this).SendGangChat(gang, str);
   }
 
   public override string StatId => "gang_native_chat";
   public override string Name => "Gang Chat";
   public override string Description => "Whether the gang has a chat.";
 
-  public async Task
-    SendGangChat(IGangPlayer player, IGang gang, string message) {
-    if (players == null || player.GangId == null) return;
-    if (localizer == null) return;
-    var members = await players.GetMembers(player.GangId.Value);
+  public async Task SendGangChat(string name, IGang gang, string message) {
+    if (localizer == null || players == null) return;
+    var members = await players.GetMembers(gang);
     await Server.NextFrameAsync(() => {
       foreach (var member in members) {
         var target = Utilities.GetPlayerFromSteamId(member.Steam);
         if (target == null || !target.IsValid) continue;
-        target.PrintToChat(localizer.Get(MSG.GANG_CHAT_FORMAT, gang.Name,
-          player.Name ?? player.Steam.ToString(), message));
+        target.PrintToChat(localizer.Get(MSG.GANG_CHAT_FORMAT, gang.Name, name,
+          message));
       }
     });
   }
 
   [GameEventHandler]
   public HookResult OnChat(EventPlayerChat ev, GameEventInfo _) {
-    Server.PrintToChatAll($"Chat: {ev.Text}");
     if (!ev.Text.StartsWith('.')) return HookResult.Continue;
     var player = Utilities.GetPlayerFromUserid(ev.Userid);
     if (player == null || !player.IsValid) return HookResult.Continue;
@@ -88,7 +92,7 @@ public class GangChatPerk : BasePerk, IGangChatPerk {
 
       var gang = await gangs.GetGang(gangPlayer.GangId.Value);
       if (gang == null) return;
-      await SendGangChat(gangPlayer, gang, message);
+      await ((IGangChatPerk)this).SendGangChat(gangPlayer, gang, message);
     });
     return HookResult.Handled;
   }
