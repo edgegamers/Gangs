@@ -15,6 +15,8 @@ public class PlaytimeStat : BaseStat<PlaytimeData> {
 }
 
 public class PlaytimeData {
-  public int MinutesPlayed { get; set; }
+  public int MinutesT { get; set; }
+  public int MinutesCT { get; set; }
+  public int MinutesSpec { get; set; }
   public ulong LastPlayed { get; set; }
 }

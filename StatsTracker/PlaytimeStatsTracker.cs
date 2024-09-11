@@ -1,6 +1,7 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Timers;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Services.Player;
@@ -24,6 +25,7 @@ public class PlaytimeStatsTracker(IServiceProvider provider) : IPluginBehavior {
 
   private void increment() {
     var playerList = Utilities.GetPlayers()
+     .Where(p => p is { Team: > CsTeam.None, IsBot: false })
      .Select(p => new PlayerWrapper(p))
      .ToList();
     foreach (var player in playerList) {
@@ -33,7 +35,18 @@ public class PlaytimeStatsTracker(IServiceProvider provider) : IPluginBehavior {
         var (_, stat) =
           await playerStats.GetForPlayer<PlaytimeData>(player.Steam, statId);
         stat ??= new PlaytimeData();
-        stat.MinutesPlayed++;
+        switch (player.Team) {
+          case CsTeam.Spectator:
+            stat.MinutesSpec++;
+            break;
+          case CsTeam.Terrorist:
+            stat.MinutesT++;
+            break;
+          case CsTeam.CounterTerrorist:
+            stat.MinutesCT++;
+            break;
+        }
+
         stat.LastPlayed =
           (ulong)DateTime.Now.Subtract(DateTime.UnixEpoch).TotalSeconds;
         await playerStats.SetForPlayer(player.Steam, statId, stat);
