@@ -6,7 +6,7 @@ namespace GangsTest.API.Data;
 
 public class PlayerWrapperTests {
   private readonly PlayerWrapper testPlayer =
-    new(new Random().NextUInt(), "Test Player");
+    new(new Random().NextULong(), "Test Player");
 
   private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
   private static char GROUP_CHAR => PermissionCharacters.GroupPermissionChar;

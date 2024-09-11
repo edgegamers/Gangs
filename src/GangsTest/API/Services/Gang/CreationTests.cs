@@ -9,7 +9,7 @@ public class CreationTests(IPlayerManager players) {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Basic(IGangManager mgr) {
-    var dummy = await mgr.CreateGang("foobar", new Random().NextUInt());
+    var dummy = await mgr.CreateGang("foobar", new Random().NextULong());
     Assert.NotNull(dummy);
     Assert.Equal("foobar", dummy.Name);
   }
@@ -17,7 +17,7 @@ public class CreationTests(IPlayerManager players) {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Create_Delete(IGangManager mgr) {
-    var dummy = await mgr.CreateGang("foobar", new Random().NextUInt());
+    var dummy = await mgr.CreateGang("foobar", new Random().NextULong());
     Assert.NotNull(dummy);
     Assert.Equal("foobar", dummy.Name);
     await mgr.DeleteGang(dummy.GangId);
@@ -88,7 +88,7 @@ public class CreationTests(IPlayerManager players) {
   public async Task Injection_Test(IGangManager mgr) {
     string[] strings = ["\"\"", "'' OR 1=1 --", "'; DROP TABLE users; --"];
     foreach (var str in strings) {
-      var dummy = await mgr.CreateGang(str, new Random().NextUInt());
+      var dummy = await mgr.CreateGang(str, new Random().NextULong());
       Assert.NotNull(dummy);
       Assert.Equal(str, dummy.Name);
       await mgr.DeleteGang(dummy.GangId);

@@ -36,7 +36,7 @@ public class TargeterTests(IStringLocalizer locale) : TestParent {
   public async Task Multi_Other_NotMe(IServerProvider server,
     ITargeter targeter) {
     await server.AddPlayer(TestPlayer);
-    var other = new PlayerWrapper(new Random().NextUInt(), "Other Player");
+    var other = new PlayerWrapper(new Random().NextULong(), "Other Player");
     await server.AddPlayer(other);
     var players = (await targeter.GetTarget("@!me", TestPlayer)).ToList();
     Assert.Equal([other], players);
@@ -47,7 +47,7 @@ public class TargeterTests(IStringLocalizer locale) : TestParent {
   public async Task
     Multi_Other_Name(IServerProvider server, ITargeter targeter) {
     await server.AddPlayer(TestPlayer);
-    var other = new PlayerWrapper(new Random().NextUInt(), "Other Player");
+    var other = new PlayerWrapper(new Random().NextULong(), "Other Player");
     await server.AddPlayer(other);
     var players = (await targeter.GetTarget("Other", TestPlayer)).ToList();
     Assert.Equal([other], players);
@@ -96,7 +96,7 @@ public class TargeterTests(IStringLocalizer locale) : TestParent {
   public async Task Single_FailMulti_Prints(IServerProvider server,
     ITargeter targeter) {
     await server.AddPlayer(TestPlayer);
-    await server.AddPlayer(new PlayerWrapper(new Random().NextUInt(),
+    await server.AddPlayer(new PlayerWrapper(new Random().NextULong(),
       "Other Player"));
     await targeter.GetSingleTarget("@all", out var _, TestPlayer, locale);
     Assert.Equal([locale.Get(MSG.GENERIC_PLAYER_FOUND_MULTIPLE, "@all")],

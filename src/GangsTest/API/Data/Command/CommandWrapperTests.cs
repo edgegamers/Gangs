@@ -6,7 +6,7 @@ namespace GangsTest.API.Data.Command;
 
 public class CommandWrapperTests {
   private readonly PlayerWrapper testPlayer =
-    new(new Random().NextUInt(), "Test Player");
+    new(new Random().NextULong(), "Test Player");
 
   [Fact]
   public void Fields_Initialized() {

@@ -10,7 +10,7 @@ public abstract class TestParent {
   protected readonly ICommandManager Commands;
 
   protected readonly PlayerWrapper TestPlayer =
-    new(new Random().NextUInt(), "Test Player");
+    new(new Random().NextULong(), "Test Player");
 
   protected TestParent(IServiceProvider provider, ICommand command) {
     Commands = provider.GetRequiredService<ICommandManager>();

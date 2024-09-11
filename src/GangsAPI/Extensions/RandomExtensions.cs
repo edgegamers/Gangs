@@ -1,7 +1,7 @@
 namespace GangsAPI.Extensions;
 
 public static class RandomExtensions {
-  public static uint NextUInt(this Random random) {
-    return (uint)random.NextInt64();
+  public static ulong NextULong(this Random random) {
+    return (ulong)random.NextInt64();
   }
 }

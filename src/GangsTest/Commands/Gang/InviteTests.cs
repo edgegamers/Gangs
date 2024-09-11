@@ -88,7 +88,7 @@ public class InviteTests(IServiceProvider provider)
     var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
 
-    var guest = await players.CreatePlayer(new Random().NextUInt(), "Guest");
+    var guest = await players.CreatePlayer(new Random().NextULong(), "Guest");
     guest.GangId   = gang.GangId;
     guest.GangRank = (await ranks.GetJoinRank(gang)).Rank;
     await players.UpdatePlayer(guest);
@@ -109,7 +109,7 @@ public class InviteTests(IServiceProvider provider)
   public async Task Invite_Offline() {
     await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
     var toInvite =
-      await players.CreatePlayer(new Random().NextUInt(), "Invite Me!");
+      await players.CreatePlayer(new Random().NextULong(), "Invite Me!");
     var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
 
@@ -125,7 +125,7 @@ public class InviteTests(IServiceProvider provider)
   public async Task Invite_AlreadyInvited() {
     await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
     var toInvite =
-      await players.CreatePlayer(new Random().NextUInt(), "Invite Me!");
+      await players.CreatePlayer(new Random().NextULong(), "Invite Me!");
     var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
 
@@ -145,7 +145,7 @@ public class InviteTests(IServiceProvider provider)
   public async Task Invite_Twice() {
     await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
     var toInvite =
-      await players.CreatePlayer(new Random().NextUInt(), "Invite Me!");
+      await players.CreatePlayer(new Random().NextULong(), "Invite Me!");
     var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
     var inviteSuccess = localizer.Get(MSG.COMMAND_INVITE_SUCCESS,
@@ -172,7 +172,7 @@ public class InviteTests(IServiceProvider provider)
     var gang = await gangs.CreateGang("Test Gang", TestPlayer);
 
     var otherOwner =
-      await players.CreatePlayer(new Random().NextUInt(), "Other Owner");
+      await players.CreatePlayer(new Random().NextULong(), "Other Owner");
     var otherGang = await gangs.CreateGang("Other Gang", otherOwner);
 
     Assert.NotNull(gang);
@@ -192,7 +192,7 @@ public class InviteTests(IServiceProvider provider)
     var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
 
-    var guest = await players.CreatePlayer(new Random().NextUInt(), "Guest");
+    var guest = await players.CreatePlayer(new Random().NextULong(), "Guest");
     guest.GangId   = gang.GangId;
     guest.GangRank = (await ranks.GetJoinRank(gang)).Rank;
     await players.UpdatePlayer(guest);
@@ -210,7 +210,7 @@ public class InviteTests(IServiceProvider provider)
     var gang = await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.NotNull(gang);
 
-    var guest = await players.CreatePlayer(new Random().NextUInt(), "Guest");
+    var guest = await players.CreatePlayer(new Random().NextULong(), "Guest");
     var guestWrapper = new PlayerWrapper(guest);
     await server.AddPlayer(guestWrapper);
 

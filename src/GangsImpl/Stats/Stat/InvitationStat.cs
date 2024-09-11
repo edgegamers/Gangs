@@ -20,28 +20,37 @@ public class InvitationData {
 
   public List<ulong> GetInvitedSteams() {
     return InvitedSteams == "" ? [] :
-      InvitedSteams.Trim(',').Split(",").Select(ulong.Parse).ToList();
+      InvitedSteams.Trim(',')
+       .Split(",", StringSplitOptions.RemoveEmptyEntries)
+       .Select(ulong.Parse)
+       .ToList();
   }
 
   public List<ulong> GetInviterSteams() {
     return InviterSteams == "" ? [] :
-      InviterSteams.Trim(',').Split(",").Select(ulong.Parse).ToList();
+      InviterSteams.Trim(',')
+       .Split(",", StringSplitOptions.RemoveEmptyEntries)
+       .Select(ulong.Parse)
+       .ToList();
   }
 
   public List<DateTime> GetDates() {
     if (Dates == "") return [];
     return Dates.Trim(',')
-     .Split(",")
-     .Select(ulong.Parse)
+     .Split(",", StringSplitOptions.RemoveEmptyEntries)
+     .Select(double.Parse)
      .Select(u => DateTime.UnixEpoch.AddSeconds(u))
      .ToList();
   }
 
   public InvitationData AddInvitation(ulong inviter, ulong invited) {
     var now = DateTime.Now;
-    InvitedSteams += $"{invited},";
-    InviterSteams += $"{inviter},";
-    Dates         += $"{(ulong)now.Subtract(DateTime.UnixEpoch).TotalSeconds},";
+    InvitedSteams = string.Join(",", GetInvitedSteams().Append(invited));
+    InviterSteams = string.Join(",", GetInviterSteams().Append(inviter));
+    Dates = string.Join(",",
+      GetDates()
+       .Select(s => s.Subtract(DateTime.UnixEpoch).TotalSeconds)
+       .Append((int)now.Subtract(DateTime.UnixEpoch).TotalSeconds));
     return this;
   }
 

@@ -23,7 +23,7 @@ public class DeleteTests : TestParent {
     IPlayerManager players) {
     var rank = await mgr.CreateRank(GangId, "Test Rank", 1, Perm.KICK_OTHERS);
     Assert.NotNull(rank);
-    var player = await players.CreatePlayer(new Random().NextUInt(),
+    var player = await players.CreatePlayer(new Random().NextULong(),
       "Test Player");
     player.GangId   = GangId;
     player.GangRank = rank.Rank;
@@ -51,7 +51,7 @@ public class DeleteTests : TestParent {
     Assert.NotNull(lowestRank);
 
     var officer =
-      await players.CreatePlayer(new Random().NextUInt(), "Test Officer");
+      await players.CreatePlayer(new Random().NextULong(), "Test Officer");
     Assert.NotNull(officer);
     officer.GangId   = GangId;
     officer.GangRank = 100;
@@ -71,7 +71,7 @@ public class DeleteTests : TestParent {
     Assert.NotNull(lowestRank);
 
     var officer =
-      await players.CreatePlayer(new Random().NextUInt(), "Test Officer");
+      await players.CreatePlayer(new Random().NextULong(), "Test Officer");
     Assert.NotNull(officer);
     officer.GangId   = GangId;
     officer.GangRank = lowestRank.Rank;
@@ -93,7 +93,7 @@ public class DeleteTests : TestParent {
     Assert.NotNull(lowestRank);
 
     var officer =
-      await players.CreatePlayer(new Random().NextUInt(), "Test Officer");
+      await players.CreatePlayer(new Random().NextULong(), "Test Officer");
     Assert.NotNull(officer);
     officer.GangId   = GangId;
     officer.GangRank = highRank.Rank;
