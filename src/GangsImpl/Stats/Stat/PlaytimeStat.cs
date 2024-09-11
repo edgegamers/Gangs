@@ -19,4 +19,8 @@ public class PlaytimeData {
   public int MinutesCT { get; set; }
   public int MinutesSpec { get; set; }
   public ulong LastPlayed { get; set; }
+
+  public override string ToString() {
+    return $"T: {MinutesT} CT: {MinutesCT} Spec: {MinutesSpec}";
+  }
 }

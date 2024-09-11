@@ -24,6 +24,7 @@ public class CommandManager(IServiceProvider provider)
 
     RegisterCommand(new GangCommand(provider));
     RegisterCommand(new BalanceCommand(provider));
+    RegisterCommand(new StatsCommand(provider));
   }
 
   public override bool RegisterCommand(ICommand command) {
