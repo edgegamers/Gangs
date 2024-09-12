@@ -40,5 +40,6 @@ public abstract class AbstractMenu<T>(IMenuManager menus,
   }
 
   // Utility methods
-  abstract protected Task<string> FormatItem(PlayerWrapper player, int index, T? item);
+  abstract protected Task<string> FormatItem(PlayerWrapper player, int index,
+    T? item);
 }

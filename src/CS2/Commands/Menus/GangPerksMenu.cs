@@ -18,7 +18,6 @@ public class GangPerksMenu(IServiceProvider provider)
   override protected Task<List<IPerk?>> GetItems(PlayerWrapper player) {
     List<IPerk?> perks =
       Provider.GetRequiredService<IPerkManager>().Perks.ToList()!;
-    perks.Insert(0, null);
     return Task.FromResult(perks.ToList());
   }
 
@@ -67,9 +66,6 @@ public class GangPerksMenu(IServiceProvider provider)
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     IPerk? item) {
-    // return Task.FromResult(item == null ?
-    //   "Title" :
-    //   $"{index} {item.Name} - {item.Cost}")!;
     return Task.FromResult(item == null ? "Title" : $"{index} {item.Name}")!;
   }
 }
