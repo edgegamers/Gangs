@@ -6,7 +6,9 @@ using GangsAPI.Data.Stat;
 using GangsAPI.Extensions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
+using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
+using Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Serilog.Core;
@@ -34,6 +36,8 @@ public class StatsCommand(IServiceProvider provider) : ICommand {
       return CommandResult.ERROR;
     }
 
+    var list = new List<string>();
+
     foreach (var stat in stats) {
       var getForPlayerTyped = getForPlayer.MakeGenericMethod(stat.ValueType);
       dynamic? task =
@@ -50,10 +54,12 @@ public class StatsCommand(IServiceProvider provider) : ICommand {
       object value   = result.Item2;
 
       if (!success || value is null) continue;
-      var str = (value.ToString() ?? $"{stat.Name} {stat.Description}");
-      foreach (var s in str.Split("\n")) info.ReplySync(s);
+      var str = value.ToString() ?? $"{stat.Name} {stat.Description}";
+      list.Add(str);
     }
 
+    var menu = new SimplePagedMenu(provider, list);
+    await provider.GetRequiredService<IMenuManager>().OpenMenu(executor, menu);
     return CommandResult.SUCCESS;
   }
 }

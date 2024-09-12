@@ -6,6 +6,8 @@ public class PlaytimeStat : BaseStat<PlaytimeData> {
 
   public override string Description
     => "Total playtime and last played timestamp.";
+
+  public override PlaytimeData? Value { get; set; }
 }
 
 public class PlaytimeData {

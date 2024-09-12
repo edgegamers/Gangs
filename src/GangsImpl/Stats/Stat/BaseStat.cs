@@ -20,5 +20,5 @@ public abstract class BaseStat<V> : BaseStat, IStat<V?> {
     return other is not null && StatId == other.StatId;
   }
 
-  public V? Value { get; set; }
+  public abstract V? Value { get; set; }
 }

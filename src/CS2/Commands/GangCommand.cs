@@ -33,7 +33,7 @@ public class GangCommand(IServiceProvider provider) : ICommand {
     provider.GetRequiredService<IStringLocalizer>();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
-    if (plugin != null) locale = plugin.Localizer ?? locale;
+    if (plugin != null) locale = plugin.Localizer;
   }
 
   public string Name => "css_gang";

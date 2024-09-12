@@ -6,6 +6,7 @@ public class KDRStat : BaseStat<KDRData> {
   public override string StatId => "gang_native_kdr";
   public override string Name => "KDR";
   public override string? Description => "Kill-Death Ratio";
+  public override KDRData? Value { get; set; }
 }
 
 public class KDRData {

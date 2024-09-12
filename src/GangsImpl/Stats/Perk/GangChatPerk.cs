@@ -15,27 +15,26 @@ using Stats.Stat;
 
 namespace Stats.Perk;
 
-public class GangChatPerk : BasePerk<bool>, IGangChatPerk {
-  private readonly IGangManager? gangs;
-  private readonly IGangStatManager? gangStats;
-  private readonly IStringLocalizer? localizer;
-  private readonly IPlayerManager? players;
+public class GangChatPerk(IServiceProvider provider)
+  : BasePerk<bool>(provider), IGangChatPerk {
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
 
-  public GangChatPerk(bool Value) : base(null) { this.Value = Value; }
+  private readonly IGangStatManager gangStats =
+    provider.GetRequiredService<IGangStatManager>();
 
-  public GangChatPerk(IServiceProvider provider) : base(provider) {
-    gangs     = provider.GetService<IGangManager>();
-    gangStats = provider.GetService<IGangStatManager>();
-    localizer = provider.GetService<IStringLocalizer>();
-    players   = provider.GetService<IPlayerManager>();
-  }
+  private readonly IStringLocalizer localizer =
+    provider.GetRequiredService<IStringLocalizer>();
 
-  public override int Cost => 10000;
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  // Cannot purchase more than once
+  public override int Cost => Value ? -1 : 10000;
 
   public override async Task OnPurchase(IGangPlayer player) {
     Value = true;
     if (player.GangId == null || player.GangRank == null) return;
-    if (gangStats == null || gangs == null || localizer == null) return;
     await gangStats.SetForGang(player.GangId.Value, this);
     var gang = await gangs.GetGang(player.GangId.Value);
     if (gang == null) return;
@@ -51,7 +50,6 @@ public class GangChatPerk : BasePerk<bool>, IGangChatPerk {
     => "Chat with your gang members with $[message]";
 
   public async Task SendGangChat(string name, IGang gang, string message) {
-    if (localizer == null || players == null) return;
     var members = await players.GetMembers(gang);
     await Server.NextFrameAsync(() => {
       foreach (var member in members) {
@@ -63,32 +61,11 @@ public class GangChatPerk : BasePerk<bool>, IGangChatPerk {
     });
   }
 
-  public bool Equals(IStat<bool>? other) {
-    return other is not null && StatId == other.StatId;
-  }
-
-  public bool Value { get; set; }
-
   [GameEventHandler]
   public HookResult OnChat(EventPlayerChat ev, GameEventInfo _) {
     if (!ev.Text.StartsWith('.')) return HookResult.Continue;
     var player = Utilities.GetPlayerFromUserid(ev.Userid);
     if (player == null || !player.IsValid) return HookResult.Continue;
-
-    if (players == null || gangStats == null || gangs == null
-      || localizer == null) {
-      var missings = new List<string>();
-      if (players == null) missings.Add("PlayerManager");
-      if (gangStats == null) missings.Add("GangStatManager");
-      if (gangs == null) missings.Add("GangManager");
-      if (localizer == null) missings.Add("StringLocalizer");
-
-      var missing = "Missing " + string.Join(", ", missings);
-
-      player.PrintToChat(localizer?.Get(MSG.GENERIC_ERROR_INFO, missing)
-        ?? missing);
-      return HookResult.Continue;
-    }
 
     var message = ev.Text[1..];
     var wrapper = new PlayerWrapper(player);
@@ -114,4 +91,6 @@ public class GangChatPerk : BasePerk<bool>, IGangChatPerk {
     });
     return HookResult.Handled;
   }
+
+  public override bool Value { get; set; }
 }

@@ -37,7 +37,7 @@ public class PerksCommand(IServiceProvider provider) : ICommand {
       return CommandResult.SUCCESS;
     }
 
-    await menus.OpenMenu(executor, new PerksMenu(provider));
+    await menus.OpenMenu(executor, new GangPerksMenu(provider));
     return CommandResult.SUCCESS;
   }
 }

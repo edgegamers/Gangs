@@ -4,6 +4,7 @@ public class RoundStats : BaseStat<RoundData> {
   public override string StatId => "gang_native_rounds";
   public override string Name => "Round Stats";
   public override string Description => "Rounds won, lost and MVPs";
+  public override RoundData? Value { get; set; } = new();
 }
 
 public class RoundData {

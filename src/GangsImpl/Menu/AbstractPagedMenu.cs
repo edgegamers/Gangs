@@ -1,6 +1,7 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 
 namespace Menu;
 
@@ -8,6 +9,9 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   Func<PlayerWrapper, string, Task> printer, int itemsPerPage = 5)
   : AbstractMenu<T>(provider.GetRequiredService<IMenuManager>(), printer) {
   protected readonly IServiceProvider Provider = provider;
+
+  protected readonly IStringLocalizer Localizer =
+    provider.GetRequiredService<IStringLocalizer>();
 
   public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);

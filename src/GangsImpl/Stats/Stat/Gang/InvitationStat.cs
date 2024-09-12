@@ -4,6 +4,7 @@ public class InvitationStat : BaseStat<InvitationData> {
   public override string StatId => "gang_invitation";
   public override string Name => "Invitation";
   public override string Description => "Invitations sent or received.";
+  public override InvitationData? Value { get; set; } = new();
 }
 
 public class InvitationData {

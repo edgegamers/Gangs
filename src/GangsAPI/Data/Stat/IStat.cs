@@ -18,7 +18,7 @@ public interface IStat : IEquatable<IStat> {
   ///   A description of the statistic.
   /// </summary>
   string? Description { get; }
-  
+
   Type ValueType { get; }
 }
 
