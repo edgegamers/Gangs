@@ -13,7 +13,8 @@ public class SimplePagedMenu(IServiceProvider provider, List<string> items)
     return Task.CompletedTask;
   }
 
-  override protected Task<string> FormatItem(int index, string? item) {
+  override protected Task<string> FormatItem(PlayerWrapper player, int index,
+    string? item) {
     return Task.FromResult(item ?? "null")!;
   }
 }

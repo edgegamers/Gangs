@@ -22,12 +22,17 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
     await HandleItemSelection(player, await GetItems(player), input);
   }
 
-  override protected Task<List<string?>> GetItems(PlayerWrapper player) {
-    var items = new List<string?> { $"Gang Perk: {perk.Name} ({perk.Cost})" };
+  override protected async Task<List<string?>> GetItems(PlayerWrapper player) {
+    var gangPlayer = await players.GetPlayer(player.Steam);
+
+    if (gangPlayer?.GangId == null || gangPlayer.GangRank == null) return [];
+
+    var cost  = await perk.GetCost(gangPlayer);
+    var items = new List<string?> { $"Gang Perk: {perk.Name} ({cost})" };
     if (perk.Description != null) items.Add(perk.Description);
     items.Add("1. Purchase");
     items.Add("2. Cancel");
-    return Task.FromResult(items);
+    return items;
   }
 
   override protected async Task HandleItemSelection(PlayerWrapper player,
@@ -39,7 +44,8 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
     }
   }
 
-  override protected Task<string> FormatItem(int index, string? item) {
+  override protected Task<string> FormatItem(PlayerWrapper player, int index,
+    string? item) {
     return Task.FromResult(item ?? "");
   }
 }

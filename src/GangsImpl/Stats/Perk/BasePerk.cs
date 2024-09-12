@@ -8,10 +8,10 @@ using Stats.Stat;
 namespace Stats.Perk;
 
 public abstract class BasePerk(IServiceProvider provider) : BaseStat, IPerk {
-  public abstract int GetCost(object value);
+  public abstract Task<int?> GetCost(IGangPlayer player);
   public abstract Task OnPurchase(IGangPlayer player);
 
-  public virtual Task<IMenu?> GetMenu(IGangPlayer player, object value) {
+  public virtual Task<IMenu?> GetMenu(IGangPlayer player) {
     var menu = new BasicPerkMenu(provider, this);
     return Task.FromResult<IMenu>(menu)!;
   }
@@ -24,12 +24,5 @@ public abstract class BasePerk<TV>(IServiceProvider provider)
 
   public bool Equals(IStat<TV>? other) {
     return other is not null && StatId == other.StatId;
-  }
-
-  public override Task<IMenu?> GetMenu(IGangPlayer player, object value) {
-    if (value is not TV match) return Task.FromResult<IMenu?>(null);
-    Value = match;
-    var menu = new BasicPerkMenu(provider, this);
-    return Task.FromResult<IMenu>(menu)!;
   }
 }

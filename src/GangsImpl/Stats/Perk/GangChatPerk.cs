@@ -26,9 +26,6 @@ public class GangChatPerk(IServiceProvider provider)
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
-  // Cannot purchase more than once
-  public override int Cost => Value ? -1 : 10000;
-
   public override string StatId => "gang_native_chat";
   public override string Name => "Gang Chat";
 
@@ -47,6 +44,13 @@ public class GangChatPerk(IServiceProvider provider)
           message));
       }
     });
+  }
+
+  public override async Task<int?> GetCost(IGangPlayer player) {
+    if (player.GangId == null || player.GangRank == null) return null;
+    var (success, perk) =
+      await gangStats.GetForGang<bool>(player.GangId.Value, StatId);
+    return success && perk ? null : 1000;
   }
 
   public override async Task OnPurchase(IGangPlayer player) {
