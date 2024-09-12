@@ -1,5 +1,4 @@
 using GangsAPI.Extensions;
-using Stats.Stat;
 using Stats.Stat.Gang;
 
 namespace GangsTest.Stats.InvitationStat;

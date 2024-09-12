@@ -18,8 +18,8 @@ public abstract class BasePerk(IServiceProvider provider) : BaseStat, IPerk {
 
 public abstract class BasePerk<TV>(IServiceProvider provider)
   : BasePerk(provider), IPerk, IStat<TV> {
-  public abstract TV Value { get; set; }
   public override Type ValueType => typeof(TV);
+  public abstract TV Value { get; set; }
 
   public bool Equals(IStat<TV>? other) {
     return other is not null && StatId == other.StatId;

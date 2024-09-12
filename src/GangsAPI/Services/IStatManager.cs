@@ -1,5 +1,4 @@
-﻿using CounterStrikeSharp.API.Core;
-using GangsAPI.Data.Stat;
+﻿using GangsAPI.Data.Stat;
 
 namespace GangsAPI.Services;
 

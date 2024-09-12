@@ -4,14 +4,11 @@ using CounterStrikeSharp.API.Core.Attributes.Registration;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
-using GangsAPI.Data.Stat;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
-using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Stats.Stat;
 
 namespace Stats.Perk;
 
@@ -32,22 +29,13 @@ public class GangChatPerk(IServiceProvider provider)
   // Cannot purchase more than once
   public override int Cost => Value ? -1 : 10000;
 
-  public override async Task OnPurchase(IGangPlayer player) {
-    Value = true;
-    if (player.GangId == null || player.GangRank == null) return;
-    await gangStats.SetForGang(player.GangId.Value, this);
-    var gang = await gangs.GetGang(player.GangId.Value);
-    if (gang == null) return;
-    var str = localizer.Get(MSG.PERK_PURCHASED,
-      player.Name ?? player.Steam.ToString(), Name);
-    await ((IGangChatPerk)this).SendGangChat(gang, str);
-  }
-
   public override string StatId => "gang_native_chat";
   public override string Name => "Gang Chat";
 
   public override string Description
     => "Chat with your gang members with $[message]";
+
+  public override bool Value { get; set; }
 
   public async Task SendGangChat(string name, IGang gang, string message) {
     var members = await players.GetMembers(gang);
@@ -59,6 +47,17 @@ public class GangChatPerk(IServiceProvider provider)
           message));
       }
     });
+  }
+
+  public override async Task OnPurchase(IGangPlayer player) {
+    Value = true;
+    if (player.GangId == null || player.GangRank == null) return;
+    await gangStats.SetForGang(player.GangId.Value, this);
+    var gang = await gangs.GetGang(player.GangId.Value);
+    if (gang == null) return;
+    var str = localizer.Get(MSG.PERK_PURCHASED,
+      player.Name ?? player.Steam.ToString(), Name);
+    await ((IGangChatPerk)this).SendGangChat(gang, str);
   }
 
   [GameEventHandler]
@@ -91,6 +90,4 @@ public class GangChatPerk(IServiceProvider provider)
     });
     return HookResult.Handled;
   }
-
-  public override bool Value { get; set; }
 }

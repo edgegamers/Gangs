@@ -1,9 +1,6 @@
-using System.Reflection;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
-using GangsAPI.Data.Stat;
-using GangsAPI.Extensions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Menu;
@@ -11,16 +8,15 @@ using GangsAPI.Services.Player;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Serilog.Core;
 
 namespace Commands;
 
 public class StatsCommand(IServiceProvider provider) : ICommand {
-  private readonly IPlayerStatManager playerStats =
-    provider.GetRequiredService<IPlayerStatManager>();
-
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IPlayerStatManager playerStats =
+    provider.GetRequiredService<IPlayerStatManager>();
 
   public string Name => "css_stats";
 

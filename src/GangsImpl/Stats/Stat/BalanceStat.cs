@@ -1,5 +1,3 @@
-using GangsAPI.Data.Stat;
-
 namespace Stats.Stat;
 
 public class BalanceStat : BaseStat<int> {

@@ -5,7 +5,6 @@ using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
-using Stats.Stat;
 using Stats.Stat.Player;
 
 namespace StatsTracker;

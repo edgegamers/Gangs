@@ -4,12 +4,11 @@ using GangsAPI.Data;
 namespace GangsTest.API.Data;
 
 public class PlayerWrapperTests {
-  private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
-  private static char GROUP_CHAR => PermissionCharacters.GroupPermissionChar;
-
   private const string testMessage = "Test Message";
 
   private readonly PlayerWrapper fakePlayer = TestUtil.CreateFakePlayer();
+  private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
+  private static char GROUP_CHAR => PermissionCharacters.GroupPermissionChar;
 
   [Fact]
   public void WithFlags_Initializes_Properly() {

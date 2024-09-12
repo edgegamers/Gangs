@@ -4,11 +4,10 @@ using GangsAPI.Extensions;
 namespace GangsTest;
 
 public class TestUtil {
+  public const string FakePlayerName = "Test Player";
   private static readonly Random Random = new();
 
-  public const string FakePlayerName = "Test Player";
-
   public static PlayerWrapper CreateFakePlayer() {
-    return new(Random.NextULong(), FakePlayerName);
+    return new PlayerWrapper(Random.NextULong(), FakePlayerName);
   }
 }
