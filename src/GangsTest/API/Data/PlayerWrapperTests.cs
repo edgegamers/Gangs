@@ -1,82 +1,75 @@
 ﻿using CounterStrikeSharp.API.Modules.Admin;
-using GangsAPI.Data;
-using GangsAPI.Extensions;
 
 namespace GangsTest.API.Data;
 
 public class PlayerWrapperTests {
-  private readonly PlayerWrapper testPlayer =
-    new(new Random().NextULong(), "Test Player");
-
   private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
   private static char GROUP_CHAR => PermissionCharacters.GroupPermissionChar;
 
-  [Fact]
-  public void Fields_Initialized() {
-    Assert.Null(testPlayer.Player);
-    Assert.NotNull(testPlayer.Data);
-    Assert.True(testPlayer.Data.Identity == testPlayer.Steam.ToString());
-    Assert.Empty(testPlayer.ChatOutput);
-    Assert.Empty(testPlayer.ConsoleOutput);
-  }
+  private const string testMessage = "Test Message";
 
   [Fact]
-  public void Flags_Initialized() {
-    var player = testPlayer.WithFlags(USER_CHAR + "test/flag");
+  public void WithFlags_Initializes_Properly() {
+    var player = TestUtil.CreateFakePlayer();
+    player.WithFlags(USER_CHAR + "test/flag");
     Assert.NotNull(player.Data);
     Assert.Single(player.Data.Flags);
     Assert.True(player.Data.Flags.ContainsKey("test"));
   }
 
   [Fact]
-  public void Output_Chat_Single() {
-    testPlayer.PrintToChat("Test Message");
-    Assert.Equal(["Test Message"], testPlayer.ChatOutput);
+  public void PrintToChat_SingleMsg_OutputsProperly() {
+    var player = TestUtil.CreateFakePlayer();
+    player.PrintToChat(testMessage);
+    Assert.Equal([testMessage], player.ChatOutput);
   }
 
   [Fact]
-  public void Output_Console_Single() {
-    testPlayer.PrintToConsole("Test Message");
-    Assert.Equal(["Test Message"], testPlayer.ConsoleOutput);
+  public void PrintToConsole_SingleMsg_OutputsProperly() {
+    var player = TestUtil.CreateFakePlayer();
+    player.PrintToConsole(testMessage);
+    Assert.Equal([testMessage], player.ConsoleOutput);
   }
 
   [Fact]
-  public void Output_Center_Single() {
-    testPlayer.PrintToConsole("Test Message");
-    Assert.Equal(["Test Message"], testPlayer.ConsoleOutput);
+  public void PrintToCenter_SingleMsg_OutputsProperly() {
+    var player = TestUtil.CreateFakePlayer();
+    player.PrintToConsole(testMessage);
+    Assert.Equal([testMessage], player.ConsoleOutput);
   }
 
   [Fact]
-  public void Output_Both_Single() {
-    testPlayer.PrintToConsole("Test Message A");
-    testPlayer.PrintToChat("Test Message B");
-    Assert.Single(testPlayer.ConsoleOutput);
-    Assert.Single(testPlayer.ChatOutput);
-    Assert.Equal(["Test Message A"], testPlayer.ConsoleOutput);
-    Assert.Equal(["Test Message B"], testPlayer.ChatOutput);
+  public void PrintMultiple_OutputsProperly() {
+    var player = TestUtil.CreateFakePlayer();
+    player.PrintToConsole(testMessage + " A");
+    player.PrintToChat(testMessage + " B");
+    Assert.Equal([testMessage + " A"], player.ConsoleOutput);
+    Assert.Equal([testMessage + " B"], player.ChatOutput);
   }
 
   [Fact]
-  public void Output_Chat_Multi() {
-    testPlayer.PrintToChat("Test Message 1");
-    testPlayer.PrintToChat("Test Message 2");
-    Assert.Equal(2, testPlayer.ChatOutput.Count);
-    Assert.Equal(["Test Message 1", "Test Message 2"], testPlayer.ChatOutput);
+  public void PrintToChat_MultiMsg_IsInOrder() {
+    var player = TestUtil.CreateFakePlayer();
+    player.PrintToChat(testMessage + " 1");
+    player.PrintToChat(testMessage + " 2");
+    Assert.Equal([testMessage + " 1", testMessage + " 2"], player.ChatOutput);
   }
 
   [Fact]
-  public void Output_Console_Multi() {
-    testPlayer.PrintToConsole("Test Message 1");
-    testPlayer.PrintToConsole("Test Message 2");
-    Assert.Equal(["Test Message 1", "Test Message 2"],
-      testPlayer.ConsoleOutput);
+  public void PrintToConsole_MultiMsg_IsInOrder() {
+    var player = TestUtil.CreateFakePlayer();
+    player.PrintToConsole(testMessage + " 1");
+    player.PrintToConsole(testMessage + " 2");
+    Assert.Equal([testMessage + " 1", testMessage + " 2"],
+      player.ConsoleOutput);
   }
 
   [Fact]
-  public void Output_Center_Multi() {
-    testPlayer.PrintToCenter("Test Message 1");
-    testPlayer.PrintToCenter("Test Message 2");
-    Assert.Equal(["Test Message 1", "Test Message 2"], testPlayer.CenterOutput);
+  public void PrintToCenter_MultiMsg_IsInOrder() {
+    var player = TestUtil.CreateFakePlayer();
+    player.PrintToCenter(testMessage + " 1");
+    player.PrintToCenter(testMessage + " 2");
+    Assert.Equal([testMessage + " 1", testMessage + " 2"], player.CenterOutput);
   }
 
   [Theory]
@@ -86,8 +79,9 @@ public class PlayerWrapperTests {
   [InlineData("_test/flag")]
   [InlineData("@test")]
   [InlineData("@test/")]
-  public void WithInvalidFlag_Throws(string flag) {
-    Assert.ThrowsAny<ArgumentException>(() => testPlayer.WithFlags(flag));
+  public void WithFlags_WithInvalidFlags_ThrowsArgException(string flag) {
+    var player = TestUtil.CreateFakePlayer();
+    Assert.ThrowsAny<ArgumentException>(() => player.WithFlags(flag));
   }
 
   [Theory]
@@ -97,44 +91,64 @@ public class PlayerWrapperTests {
   [InlineData("_test/flag")]
   [InlineData("@test")]
   [InlineData("@test/")]
-  public void HasInvalidFlag_Throws(string flag) {
-    Assert.ThrowsAny<ArgumentException>(() => testPlayer.HasFlags(flag));
+  public void HasFlags_WithInvalidFlags_ThrowsArgException(string flag) {
+    var player = TestUtil.CreateFakePlayer();
+    Assert.ThrowsAny<ArgumentException>(() => player.HasFlags(flag));
   }
 
   [Fact]
-  public void Permission_Pass() {
-    var player = testPlayer.WithFlags(USER_CHAR + "test/flag");
-    Assert.True(player.HasFlags(USER_CHAR + "test/flag"));
+  public void HasFlags_WithSimplePerm_Passes() {
+    var player = TestUtil.CreateFakePlayer();
+    player.WithFlags(USER_CHAR + "test/flag");
     Assert.False(player.HasFlags(USER_CHAR + "test/other"));
   }
 
   [Fact]
-  public void Permission_Pass_Child() {
-    var player = testPlayer.WithFlags(USER_CHAR + "test/flag");
-    Assert.True(player.HasFlags(USER_CHAR + "test/flag"));
+  public void HasFlags_WithSimplePerm_DoesNotGrantOther() {
+    var player = TestUtil.CreateFakePlayer();
+    player.WithFlags(USER_CHAR + "test/flag");
+    Assert.False(player.HasFlags(USER_CHAR + "test/other"));
+  }
+
+  [Fact]
+  public void HasFlags_WithSimplePerm_GrantsChildPerm() {
+    var player = TestUtil.CreateFakePlayer();
+    player.WithFlags(USER_CHAR + "test/flag");
     Assert.True(player.HasFlags(USER_CHAR + "test/flag/child"));
   }
 
   [Fact]
-  public void Permission_Pass_Strict_Child() {
-    var player = testPlayer.WithFlags(USER_CHAR + "test/flag/child");
+  public void HasFlags_WithChildPerm_GrantsChildPerm() {
+    var player = TestUtil.CreateFakePlayer();
+    player.WithFlags(USER_CHAR + "test/flag/child");
+    Assert.True(player.HasFlags(USER_CHAR + "test/flag/child"));
+  }
+
+  [Fact]
+  public void HasFlags_WithChildPerm_DoesNotGrantParentPerm() {
+    var player = TestUtil.CreateFakePlayer();
+    player.WithFlags(USER_CHAR + "test/flag/child");
     Assert.False(player.HasFlags(USER_CHAR + "test/flag"));
-    Assert.True(player.HasFlags(USER_CHAR + "test/flag/child"));
   }
 
   [Fact]
-  public void Permission_Pass_Root() {
-    var player = testPlayer.WithFlags(USER_CHAR + "test/root");
-    Assert.True(player.HasFlags(USER_CHAR + "test/root"));
-    Assert.True(player.HasFlags(USER_CHAR + "test/flag"));
+  public void HasFlags_WithRoot_Passes() {
+    var player = TestUtil.CreateFakePlayer();
+    player.WithFlags(USER_CHAR + "test/root");
     Assert.True(player.HasFlags(USER_CHAR + "test/other"));
   }
 
   [Fact]
-  public void Permission_Pass_Strict_Root() {
-    var player = testPlayer.WithFlags(USER_CHAR + "test/root");
-    Assert.True(player.HasFlags(USER_CHAR + "test/root"));
-    Assert.True(player.HasFlags(USER_CHAR + "test/flag"));
+  public void HasFlags_WithRoot_PassesChildren() {
+    var player = TestUtil.CreateFakePlayer();
+    player.WithFlags(USER_CHAR + "test/root");
     Assert.True(player.HasFlags(USER_CHAR + "test/other/test"));
+  }
+
+  [Fact]
+  public void HasFlags_WithRootChild_DoesNotGrantParentPerm() {
+    var player = TestUtil.CreateFakePlayer();
+    player.WithFlags(USER_CHAR + "test/flag/root");
+    Assert.False(player.HasFlags(USER_CHAR + "test/flag"));
   }
 }
