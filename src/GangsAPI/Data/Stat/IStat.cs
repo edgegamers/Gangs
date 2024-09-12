@@ -18,6 +18,8 @@ public interface IStat : IEquatable<IStat> {
   ///   A description of the statistic.
   /// </summary>
   string? Description { get; }
+  
+  Type ValueType { get; }
 }
 
 /// <summary>
@@ -29,4 +31,6 @@ public interface IStat<T> : IStat, IEquatable<IStat<T>> {
   ///   The value of the statistic.
   /// </summary>
   T Value { get; set; }
+
+  Type IStat.ValueType => typeof(T);
 }

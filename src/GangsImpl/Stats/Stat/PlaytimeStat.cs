@@ -8,10 +8,6 @@ public class PlaytimeStat : BaseStat<PlaytimeData> {
 
   public override string Description
     => "Total playtime and last played timestamp.";
-
-  public override IStat<PlaytimeData?> Clone() {
-    return new PlaytimeStat { Value = Value };
-  }
 }
 
 public class PlaytimeData {

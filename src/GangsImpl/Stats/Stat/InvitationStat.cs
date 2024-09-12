@@ -6,10 +6,6 @@ public class InvitationStat : BaseStat<InvitationData> {
   public override string StatId => "gang_invitation";
   public override string Name => "Invitation";
   public override string Description => "Invitations sent or received.";
-
-  public override IStat<InvitationData?> Clone() {
-    return new InvitationStat { Value = Value };
-  }
 }
 
 public class InvitationData {

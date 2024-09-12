@@ -7,13 +7,15 @@ using GangsAPI.Data.Gang;
 using GangsAPI.Data.Stat;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Stats.Stat;
 
 namespace Stats.Perk;
 
-public class GangChatPerk : BasePerk, IGangChatPerk {
+public class GangChatPerk : BasePerk<bool>, IGangChatPerk {
   private readonly IGangManager? gangs;
   private readonly IGangStatManager? gangStats;
   private readonly IStringLocalizer? localizer;

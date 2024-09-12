@@ -10,6 +10,7 @@ using GangsAPI.Services.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
+using Mock;
 using SQLImpl;
 using StatsTracker;
 
@@ -24,7 +25,7 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection.AddPluginBehavior<IPlayerManager, MySQLPlayerManager>();
     serviceCollection
      .AddPluginBehavior<IMenuManager, CommandBasedMenuManager>();
-    serviceCollection.AddPluginBehavior<IStatManager, MySQLStatManager>();
+    serviceCollection.AddPluginBehavior<IStatManager, StatManager>();
     serviceCollection
      .AddPluginBehavior<IGangStatManager, MySQLGangInstanceManager>();
     serviceCollection
