@@ -1,6 +1,4 @@
-﻿using GangsAPI.Data.Stat;
-
-namespace Stats.Stat;
+﻿namespace Stats.Stat.Player;
 
 public class PlaytimeStat : BaseStat<PlaytimeData> {
   public override string StatId => "gang_native_playtime";

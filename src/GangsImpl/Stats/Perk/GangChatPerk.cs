@@ -46,7 +46,9 @@ public class GangChatPerk : BasePerk<bool>, IGangChatPerk {
 
   public override string StatId => "gang_native_chat";
   public override string Name => "Gang Chat";
-  public override string Description => "Whether the gang has a chat.";
+
+  public override string Description
+    => "Chat with your gang members with $[message]";
 
   public async Task SendGangChat(string name, IGang gang, string message) {
     if (localizer == null || players == null) return;
@@ -73,9 +75,18 @@ public class GangChatPerk : BasePerk<bool>, IGangChatPerk {
     var player = Utilities.GetPlayerFromUserid(ev.Userid);
     if (player == null || !player.IsValid) return HookResult.Continue;
 
-    if (players == null || gangStats == null || localizer == null
-      || gangs == null) {
-      player.PrintToChat("Gang chat is not available.");
+    if (players == null || gangStats == null || gangs == null
+      || localizer == null) {
+      var missings = new List<string>();
+      if (players == null) missings.Add("PlayerManager");
+      if (gangStats == null) missings.Add("GangStatManager");
+      if (gangs == null) missings.Add("GangManager");
+      if (localizer == null) missings.Add("StringLocalizer");
+
+      var missing = "Missing " + string.Join(", ", missings);
+
+      player.PrintToChat(localizer?.Get(MSG.GENERIC_ERROR_INFO, missing)
+        ?? missing);
       return HookResult.Continue;
     }
 

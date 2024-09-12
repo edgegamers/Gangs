@@ -1,6 +1,4 @@
-﻿using GangsAPI.Data.Stat;
-
-namespace Stats.Stat;
+﻿namespace Stats.Stat.Gang;
 
 public class CapacityStat : BaseStat<int> {
   public override string StatId => "gang_native_capacity";

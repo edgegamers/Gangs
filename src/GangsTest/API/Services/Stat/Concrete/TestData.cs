@@ -1,6 +1,7 @@
 using System.Collections;
 using GangsAPI.Data.Stat;
 using Stats.Stat;
+using Stats.Stat.Gang;
 
 namespace GangsTest.API.Services.Stat.Concrete;
 

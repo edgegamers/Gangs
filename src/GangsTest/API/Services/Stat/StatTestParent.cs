@@ -1,6 +1,6 @@
 ﻿using GangsAPI.Data.Stat;
 
-namespace GangsTest.API.Services.Stat.Instance;
+namespace GangsTest.API.Services.Stat;
 
 public class StatTestParent {
   protected readonly TestIntStat TestStat = new();

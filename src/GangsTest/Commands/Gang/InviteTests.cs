@@ -12,6 +12,7 @@ using GangsTest.API.Services.Commands.Command;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Stats.Stat;
+using Stats.Stat.Gang;
 
 namespace GangsTest.Commands.Gang;
 
