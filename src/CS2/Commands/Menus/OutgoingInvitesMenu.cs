@@ -36,8 +36,8 @@ public class OutgoingInvitesMenu(IServiceProvider provider, IGang gang)
     return Task.CompletedTask;
   }
 
-  override protected async Task<string> FormatItem(int index,
-    InvitationEntry item) {
+  override protected async Task<string> FormatItem(PlayerWrapper player,
+    int index, InvitationEntry item) {
     var invited = await players.GetPlayer(item.Steam);
     var inviter = await players.GetPlayer(item.Inviter);
 

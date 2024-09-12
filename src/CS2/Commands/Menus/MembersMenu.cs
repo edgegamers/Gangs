@@ -34,7 +34,7 @@ public class MembersMenu(IServiceProvider provider, IGang gang)
     return Task.CompletedTask;
   }
 
-  override protected Task<string> FormatItem(int index,
+  override protected Task<string> FormatItem(PlayerWrapper player, int index,
     (IGangPlayer, IGangRank) item) {
     return Task.FromResult($"{item.Item2.Name}: {item.Item1.Name}");
   }

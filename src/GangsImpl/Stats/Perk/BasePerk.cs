@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data.Gang;
+﻿using CounterStrikeSharp.API;
+using GangsAPI.Data.Gang;
 using GangsAPI.Data.Stat;
 using GangsAPI.Perks;
 using GangsAPI.Services.Menu;
@@ -7,10 +8,10 @@ using Stats.Stat;
 namespace Stats.Perk;
 
 public abstract class BasePerk(IServiceProvider provider) : BaseStat, IPerk {
-  public abstract int Cost { get; }
+  public abstract Task<int?> GetCost(IGangPlayer player);
   public abstract Task OnPurchase(IGangPlayer player);
 
-  public Task<IMenu?> GetMenu(IGangPlayer player, object value) {
+  public virtual Task<IMenu?> GetMenu(IGangPlayer player) {
     var menu = new BasicPerkMenu(provider, this);
     return Task.FromResult<IMenu>(menu)!;
   }

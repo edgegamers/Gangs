@@ -60,14 +60,16 @@ public class GangPerksMenu(IServiceProvider provider)
 
     if (!success || value is null) return;
 
-    var menu = await perk.GetMenu(gangPlayer, value);
+    var menu = await perk.GetMenu(gangPlayer);
     if (menu == null) return;
     await Provider.GetRequiredService<IMenuManager>().OpenMenu(player, menu);
   }
 
-  override protected Task<string> FormatItem(int index, IPerk? item) {
-    return Task.FromResult(item == null ?
-      "Title" :
-      $"{index} {item.Name} - {item.Cost}")!;
+  override protected Task<string> FormatItem(PlayerWrapper player, int index,
+    IPerk? item) {
+    // return Task.FromResult(item == null ?
+    //   "Title" :
+    //   $"{index} {item.Name} - {item.Cost}")!;
+    return Task.FromResult(item == null ? "Title" : $"{index} {item.Name}")!;
   }
 }
