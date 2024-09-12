@@ -5,7 +5,7 @@ using GangsAPI.Services.Menu;
 namespace GangsAPI.Perks;
 
 public interface IPerk : IStat {
-  int Cost { get; }
+  int GetCost(object value);
   Task OnPurchase(IGangPlayer player);
   Task<IMenu?> GetMenu(IGangPlayer player, object value);
 }
