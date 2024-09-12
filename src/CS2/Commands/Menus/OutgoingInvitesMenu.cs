@@ -36,6 +36,14 @@ public class OutgoingInvitesMenu(IServiceProvider provider, IGang gang)
     return Task.CompletedTask;
   }
 
+  override protected Task ShowPage(PlayerWrapper player,
+    List<InvitationEntry> items, int currentPage, int totalPages) {
+    if (currentPage == 0)
+      player.PrintToChat(
+        $"{ChatColors.DarkRed}!{ChatColors.Red}GANGS {ChatColors.LightRed}Invites {ChatColors.Grey}{gang.Name}");
+    return base.ShowPage(player, items, currentPage, totalPages);
+  }
+
   override protected async Task<string> FormatItem(PlayerWrapper player,
     int index, InvitationEntry item) {
     var invited = await players.GetPlayer(item.Steam);
@@ -44,12 +52,6 @@ public class OutgoingInvitesMenu(IServiceProvider provider, IGang gang)
     var invitedName = invited?.Name ?? item.Steam.ToString();
     var inviterName = inviter?.Name ?? item.Inviter.ToString();
     var text        = $"{invitedName} by {inviterName} on {item.Date}";
-
-    if (index == 0)
-      text =
-        $" \n {ChatColors.DarkRed}!{ChatColors.Red}GANGS {ChatColors.LightRed}Invites {ChatColors.Grey}{gang.Name}\n"
-        + text;
-
     return text;
   }
 }

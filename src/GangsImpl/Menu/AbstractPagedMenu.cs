@@ -41,7 +41,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
         break;
       }
       default:
-        await HandleItemSelection(player, items, input);
+        await HandleItemSelection(player, items, input - 1);
         break;
     }
   }
@@ -61,6 +61,13 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     if (currentPage > 1) await Printer.Invoke(player, "8. Previous Page");
     if (currentPage < totalPages) await Printer.Invoke(player, "9. Next Page");
     await Printer.Invoke(player, "0. Close Menu");
+  }
+
+  override protected async Task Show(PlayerWrapper player, List<T?> items) {
+    for (var i = 0; i < items.Count; i++) {
+      var str = FormatItem(player, i + 1, items[i]);
+      foreach (var s in str.Result.Split('\n')) await Printer.Invoke(player, s);
+    }
   }
 
   private bool hasNextPage(PlayerWrapper player) {
