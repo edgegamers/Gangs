@@ -5,12 +5,8 @@ using Stats.Stat.Player;
 
 namespace StatsTracker;
 
-public class StatManager(IServiceProvider provider) : IStatManager {
+public class StatManager : IStatManager {
   public void Start(BasePlugin? plugin, bool hotReload) {
-    // var stats = provider.GetRequiredService<IStatManager>();
-    // stats.RegisterStat<PlaytimeData>(new PlaytimeStat());
-    // stats.RegisterStat(new KDRStat());
-    // stats.RegisterStat(new RoundStats());
     Stats = new List<IStat> {
       new PlaytimeStat(), new KDRStat(), new RoundStats()
     };
