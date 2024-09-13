@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{32D392D5-C80
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menu", "src\GangsImpl\Menu\Menu.csproj", "{8A5BF266-2ABE-4ABA-91A6-680DC31CAF70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatsTracker", "StatsTracker\StatsTracker.csproj", "{B850CFA3-AFE8-4012-8BC2-9A4BC12B9748}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatsTracker", "src\StatsTracker\StatsTracker.csproj", "{B850CFA3-AFE8-4012-8BC2-9A4BC12B9748}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
