@@ -54,8 +54,8 @@ public class GangChatPerk(IServiceProvider provider)
   }
 
   public override async Task OnPurchase(IGangPlayer player) {
-    Value = true;
     if (player.GangId == null || player.GangRank == null) return;
+    Value = true;
     await gangStats.SetForGang(player.GangId.Value, this);
     var gang = await gangs.GetGang(player.GangId.Value);
     if (gang == null) return;

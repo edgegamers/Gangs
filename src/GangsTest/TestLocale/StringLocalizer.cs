@@ -20,7 +20,7 @@ public partial class StringLocalizer : IStringLocalizer {
   public LocalizedString this[string name] => getString(name);
 
   public LocalizedString this[string name, params object[] arguments]
-    => new(name, string.Format(getString(name).Value, arguments));
+    => getString(name, arguments);
 
   public IEnumerable<LocalizedString>
     GetAllStrings(bool includeParentCultures) {
@@ -28,25 +28,73 @@ public partial class StringLocalizer : IStringLocalizer {
      .Select(str => getString(str.Name));
   }
 
-  private LocalizedString getString(string name) {
-    // Replace %[key]% with that key's value
-    // Eg: if we have a locale key of "prefix", then
-    // other locale values can use %prefix% to reference it.
-    var value   = localizer[name].Value;
+  [GeneratedRegex("%.*?%")]
+  private static partial Regex percents();
+
+  [GeneratedRegex(@"\b(\w+)%s%")]
+  private static partial Regex plural();
+
+  private LocalizedString getString(string name, params object[] arguments) {
+    // Get the localized value
+    var value = localizer[name].Value;
+
+    // Replace placeholders like %key% with their respective values
     var matches = percents().Matches(value);
-    foreach (Match match in matches)
-      // Check if the key exists
+    foreach (Match match in matches) {
+      var key        = match.Value;
+      var trimmedKey = key[1..^1]; // Trim % symbols
+
+      // NullReferenceException catch block if key does not exist
       try {
-        var key = match.Groups[0].Value;
+        // CS# forces a space before a chat color if the entireity
+        // of the strong is a color code. This is undesired
+        // in our case, so we trim the value when we have a prefix.
+        var replacement = localizer[trimmedKey].Value;
         value = value.Replace(key,
-          key == "%prefix%" ?
-            this[key[1..^1]].Value :
-            this[key[1..^1]].Value.Trim());
-      } catch (NullReferenceException) { }
+          trimmedKey == "prefix" ? replacement : replacement.Trim());
+      } catch (NullReferenceException) {
+        // Key doesn't exist, move on
+      }
+    }
+
+    // Format with arguments if provided
+    if (arguments.Length > 0) value = string.Format(value, arguments);
+
+    // Handle pluralization
+    value = HandlePluralization(value);
 
     return new LocalizedString(name, value);
   }
 
-  [GeneratedRegex("%.*?%")]
-  private static partial Regex percents();
+  public static string HandlePluralization(string value) {
+    var pluralMatches = plural().Matches(value);
+    foreach (Match match in pluralMatches) {
+      var word   = match.Groups[1].Value.ToLower();
+      var index  = match.Index;
+      var prefix = value[..index].Trim();
+
+      var lastWord = prefix.Split(' ').Last();
+      lastWord = new string(lastWord
+       .Where(c => char.IsLetterOrDigit(c) || c == '-')
+       .ToArray());
+
+      if (int.TryParse(lastWord, out var number))
+        // 1 cookie%s% -> 1 cookie, or 2 cookie%s% -> 2 cookies
+        // Replace %s% based on number value
+        value = value[..index]
+          + value[index..].Replace("%s%", number == 1 ? "" : "s");
+      else
+        // Some cookie%s% -> Some cookies
+        value = value[..index] + value[index..]
+         .Replace("%s%", word.EndsWith('s') ? "" : "s");
+    }
+
+    value = value.Replace("%s%", "s");
+    while (value.Contains("s's", StringComparison.CurrentCultureIgnoreCase)) {
+      var aposIndex = value.IndexOf("s's", StringComparison.OrdinalIgnoreCase);
+      value = value[..(aposIndex + 1)] + "' " + value[(aposIndex + 4)..];
+    }
+
+    return value;
+  }
 }

@@ -12,6 +12,60 @@ public partial class FormatTests(IStringLocalizer localizer) {
     Assert.Contains(perm, result);
   }
 
+  [Fact]
+  public void FileLocalizer_WithPercentPlurals_HandlesSimpleWord() {
+    Assert.EndsWith("s.", localizer.Get(MSG.COMMAND_BALANCE_NONE));
+  }
+
+  [Fact]
+  public void FileLocalizer_WithPercentPlurals_HandlesOne() {
+    var currencyName = localizer.Get(MSG.CURRENCY);
+    Assert.EndsWith(currencyName + ".", localizer.Get(MSG.COMMAND_BALANCE, 1));
+  }
+
+  [Theory]
+  [InlineData("You don't have any credits", "You don't have any credit%s%")]
+  [InlineData("Peanuts", "Peanut%s%")]
+  public void
+    StaticLocalizer_WithPercentPlurals_HandlesPlurals(string translated,
+      string source) {
+    Assert.Equal(translated, StringLocalizer.HandlePluralization(source));
+  }
+
+  [Theory]
+  [InlineData("You have 1 credit", "You have 1 credit%s%")]
+  [InlineData("You have too many credits", "You have too many credits%s%")]
+  public void
+    StaticLocalizer_WithPercentPlurals_HandlesSingles(string translated,
+      string source) {
+    Assert.Equal(translated, StringLocalizer.HandlePluralization(source));
+  }
+
+  [Theory]
+  [InlineData("Player MSWS' balance", "Player MSWS'%s% balance")]
+  [InlineData("Player George's balance", "Player George'%s% balance")]
+  [InlineData("Player MSWS' balance exceeds George's",
+    "Player MSWS'%s% balance exceeds George'%s%")]
+  [InlineData("MSWS' balance == MSWS' balance",
+    "MSWS'%s% balance == MSWS'%s% balance")]
+  public void
+    StaticLocalizer_WithPercentPlurals_HandlesApostrophes(string translated,
+      string source) {
+    Assert.Equal(translated, StringLocalizer.HandlePluralization(source));
+  }
+
+  [Theory]
+  [InlineData(2)]
+  [InlineData(5)]
+  [InlineData(0)]
+  [InlineData(-1)]
+  [InlineData(-5)]
+  public void Localizer_WithPercentPlurals_HandlesMulti(int amo) {
+    var currencyName = localizer.Get(MSG.CURRENCY);
+    Assert.EndsWith(currencyName + "s.",
+      localizer.Get(MSG.COMMAND_BALANCE, amo));
+  }
+
   [Theory]
   [ClassData(typeof(LocaleFileKVData))]
   public void Brackets_Contain_DigitsOnly(string _, string val) {

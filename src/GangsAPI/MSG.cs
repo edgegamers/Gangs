@@ -15,10 +15,8 @@ public enum MSG {
   GENERIC_STEAM_NOT_FOUND,
   COMMAND_BALANCE_NONE,
   COMMAND_BALANCE,
-  COMMAND_BALANCE_PLURAL,
   COMMAND_BALANCE_OTHER_NONE,
   COMMAND_BALANCE_OTHER,
-  COMMAND_BALANCE_OTHER_PLURAL,
   COMMAND_BALANCE_SET,
   COMMAND_USAGE,
   COMMAND_INVALID_PARAM,
@@ -32,10 +30,7 @@ public enum MSG {
   GENERIC_NOPERM_RANK,
   GENERIC_ERROR,
   GENERIC_ERROR_INFO,
-  PLAYER_CURRENCY,
-  PLAYER_CURRENCY_PLURAL,
-  GANG_CURRENCY,
-  GANG_CURRENCY_PLURAL,
+  CURRENCY,
   GANG_NOT_FOUND,
   GANG_NOT_FOUND_CLOSEST,
   COLOR_DEFAULT,
@@ -49,7 +44,15 @@ public enum MSG {
   NOT_IN_GANG,
   PERK_MISSING,
   PERK_PURCHASED,
-  GANG_CHAT_FORMAT
+  GANG_CHAT_FORMAT,
+  ECO_INSUFFICIENT_FUNDS,
+  ECO_INSUFFICIENT_FUNDS_WITH_ITEM,
+  ECO_PURCHASED,
+  ECO_PURCHASED_WITHITEM,
+  ECO_PURCHASED_WITHGANG,
+  ECO_PURCHASED_WITHGANG_ITEM,
+  ECO_PURCHASED_WITHBOTH,
+  ECO_PURCHASED_WITHBOTH_ITEM
 }
 
 public static class LocaleExtensions {
@@ -71,9 +74,7 @@ public static class LocaleExtensions {
       MSG.COMMAND_BALANCE_NONE          => "command.balance.none",
       MSG.COMMAND_BALANCE               => "command.balance",
       MSG.COMMAND_BALANCE_OTHER         => "command.balance.other",
-      MSG.COMMAND_BALANCE_OTHER_PLURAL  => "command.balance.other.plural",
       MSG.COMMAND_BALANCE_OTHER_NONE    => "command.balance.other.none",
-      MSG.COMMAND_BALANCE_PLURAL        => "command.balance.plural",
       MSG.COMMAND_BALANCE_SET           => "command.balance.set",
       MSG.COMMAND_USAGE                 => "command.usage",
       MSG.COMMAND_INVALID_PARAM         => "command.invalid_parameter",
@@ -88,10 +89,7 @@ public static class LocaleExtensions {
       MSG.GENERIC_PLAYER_FOUND_MULTIPLE => "generic.player.found_multiple",
       MSG.GENERIC_ERROR                 => "generic.error",
       MSG.GENERIC_ERROR_INFO            => "generic.error.info",
-      MSG.PLAYER_CURRENCY               => "currency.player",
-      MSG.PLAYER_CURRENCY_PLURAL        => "currency.player.plural",
-      MSG.GANG_CURRENCY                 => "currency.gang",
-      MSG.GANG_CURRENCY_PLURAL          => "currency.gang.plural",
+      MSG.CURRENCY                      => "currency",
       MSG.COLOR_DEFAULT                 => "color.default",
       MSG.COLOR_EMPHASIS                => "color.emph",
       MSG.COLOR_NUMBERL                 => "color.number",
@@ -106,7 +104,15 @@ public static class LocaleExtensions {
       MSG.GANG_CHAT_FORMAT              => "perk.gangchat.format",
       MSG.GANG_NOT_FOUND                => "gang.not_found",
       MSG.GANG_NOT_FOUND_CLOSEST        => "gang.not_found.closest",
-
+      MSG.ECO_INSUFFICIENT_FUNDS        => "eco.insufficient_funds",
+      MSG.ECO_INSUFFICIENT_FUNDS_WITH_ITEM =>
+        "eco.insufficient_funds.with_item",
+      MSG.ECO_PURCHASED => "eco.purchased",
+      MSG.ECO_PURCHASED_WITHITEM => "eco.purchased.with_item",
+      MSG.ECO_PURCHASED_WITHGANG => "eco.purchased.with_gang",
+      MSG.ECO_PURCHASED_WITHGANG_ITEM => "eco.purchased.with_gang.with_item",
+      MSG.ECO_PURCHASED_WITHBOTH => "eco.purchased.with_both",
+      MSG.ECO_PURCHASED_WITHBOTH_ITEM => "eco.purchased.with_both.with_item",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }

@@ -38,9 +38,7 @@ public class BalanceCommand(IServiceProvider provider) : ICommand {
         return CommandResult.SUCCESS;
       }
 
-      info.ReplySync(localizer.Get(
-        balance == 1 ? MSG.COMMAND_BALANCE : MSG.COMMAND_BALANCE_PLURAL,
-        balance));
+      info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE, balance));
       return CommandResult.SUCCESS;
     }
 
@@ -78,10 +76,7 @@ public class BalanceCommand(IServiceProvider provider) : ICommand {
         return CommandResult.SUCCESS;
       }
 
-      info.ReplySync(localizer.Get(
-        balance == 1 ?
-          MSG.COMMAND_BALANCE_OTHER :
-          MSG.COMMAND_BALANCE_OTHER_PLURAL,
+      info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_OTHER,
         subject.Name ?? subject.Steam.ToString(), balance));
       return CommandResult.SUCCESS;
     }

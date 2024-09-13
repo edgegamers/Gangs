@@ -31,6 +31,7 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
      .AddPluginBehavior<IPlayerStatManager, MySQLPlayerInstanceManager>();
     serviceCollection.AddPluginBehavior<IRankManager, MySQLRankManager>();
     serviceCollection.AddPluginBehavior<IPerkManager, PerkManager>();
+    serviceCollection.AddPluginBehavior<IEcoManager, EcoManager>();
 
     serviceCollection.RegisterCommands();
     serviceCollection.RegisterStatsTracker();

@@ -1,10 +1,10 @@
-﻿using CounterStrikeSharp.API;
-using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
+using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +15,9 @@ using IMenu = GangsAPI.Services.Menu.IMenu;
 namespace Commands.Menus;
 
 public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
+  private readonly ICommandManager commands =
+    provider.GetRequiredService<ICommandManager>();
+
   private readonly IGangStatManager gangStatManager =
     provider.GetRequiredService<IGangStatManager>();
 
@@ -58,19 +61,17 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
   public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
 
   public async Task AcceptInput(PlayerWrapper player, int input) {
-    await Server.NextFrameAsync(() => {
-      switch (input) {
-        case 1:
-          player.Player?.ExecuteClientCommandFromServer("css_gang members");
-          break;
-        case 2:
-          player.Player?.ExecuteClientCommandFromServer("css_gang invites");
-          break;
-        case 3:
-          player.Player?.ExecuteClientCommandFromServer("css_gang perks");
-          break;
-      }
-    });
+    switch (input) {
+      case 1:
+        await commands.ProcessCommand(player, "css_gang", "members");
+        break;
+      case 2:
+        await commands.ProcessCommand(player, "css_gang", "invites");
+        break;
+      case 3:
+        await commands.ProcessCommand(player, "css_gang", "perks");
+        break;
+    }
   }
 
   private Task addMemberItem(Perm rank, PlayerWrapper player) {

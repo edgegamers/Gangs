@@ -18,6 +18,7 @@ public abstract class BasePerk(IServiceProvider provider) : BaseStat, IPerk {
 
 public abstract class BasePerk<TV>(IServiceProvider provider)
   : BasePerk(provider), IPerk, IStat<TV> {
+  protected IServiceProvider Provider { get; } = provider;
   public override Type ValueType => typeof(TV);
   public abstract TV Value { get; set; }
 

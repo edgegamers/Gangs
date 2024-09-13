@@ -47,7 +47,7 @@ public class BalanceTests(IServiceProvider provider) : TestParent(provider,
     await stats.SetForPlayer(TestPlayer.Steam, STAT_ID, bal);
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, Command.Name));
-    Assert.Contains(locale.Get(MSG.COMMAND_BALANCE_PLURAL, bal),
+    Assert.Contains(locale.Get(MSG.COMMAND_BALANCE, bal),
       TestPlayer.ConsoleOutput);
   }
 }

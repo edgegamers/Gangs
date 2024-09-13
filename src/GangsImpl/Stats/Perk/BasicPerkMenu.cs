@@ -1,5 +1,6 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Perks;
+using GangsAPI.Services.Commands;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Menu;
@@ -10,6 +11,9 @@ namespace Stats.Perk;
 public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
   : AbstractMenu<string>(provider.GetRequiredService<IMenuManager>(),
     NativeSenders.Chat) {
+  private readonly ICommandManager commands =
+    provider.GetRequiredService<ICommandManager>();
+
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
@@ -27,11 +31,14 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
 
     if (gangPlayer?.GangId == null || gangPlayer.GangRank == null) return [];
 
-    var cost  = await perk.GetCost(gangPlayer);
-    var items = new List<string?> { $"Gang Perk: {perk.Name} ({cost})" };
-    if (perk.Description != null) items.Add(perk.Description);
-    items.Add("1. Purchase");
-    items.Add("2. Cancel");
+    var cost                            = await perk.GetCost(gangPlayer);
+    var title                           = $"Gang Perk: {perk.Name}";
+    var items                           = new List<string?>();
+    if (cost != null) title             += $" ({cost})";
+    if (perk.Description != null) title += $"\n{perk.Description}";
+    items.Add(title);
+    if (cost != null) items.Add("Purchase");
+    items.Add("Cancel");
     return items;
   }
 
@@ -40,12 +47,14 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
     if (selectedIndex == 1) {
       var gangPlayer = await players.GetPlayer(player.Steam);
       if (gangPlayer?.GangId == null || gangPlayer.GangRank == null) return;
-      await perk.OnPurchase(gangPlayer);
+      await commands.ProcessCommand(player, "css_gang", "purchase",
+        perk.StatId);
     }
   }
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     string? item) {
-    return Task.FromResult(item ?? "");
+    if (item == null) return Task.FromResult(" ");
+    return Task.FromResult($"{index}. {item}");
   }
 }
