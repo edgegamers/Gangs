@@ -5,14 +5,24 @@ using GangsAPI.Data.Gang;
 using GangsAPI.Services;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GenericDB;
 
-public abstract class AbstractDBGangManager(IPlayerManager players,
-  IRankManager ranks, string connectionString, string table = "gang_gangs",
-  bool testing = false) : IGangManager {
+public abstract class AbstractDBGangManager(IServiceProvider provider,
+  string connectionString, string table = "gang_gangs", bool testing = false)
+  : IGangManager {
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
+
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
+
+  private readonly IGangStatManager stats =
+    provider.GetRequiredService<IGangStatManager>();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);

@@ -7,9 +7,9 @@ using MySqlConnector;
 
 namespace SQLImpl;
 
-public class MySQLGangManager(IPlayerManager players, IRankManager ranks,
-  IDBConfig config) : AbstractDBGangManager(players, ranks,
-  config.ConnectionString, config.TablePrefix + "_gangs", config.Testing) {
+public class MySQLGangManager(IServiceProvider provider, IDBConfig config)
+  : AbstractDBGangManager(provider, config.ConnectionString,
+    config.TablePrefix + "_gangs", config.Testing) {
   override protected DbConnection CreateDbConnection(string connectionString) {
     return new MySqlConnection(connectionString);
   }

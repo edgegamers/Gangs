@@ -16,5 +16,6 @@ public abstract class TestParent {
     Commands = provider.GetRequiredService<ICommandManager>();
     Command  = command;
     Commands.RegisterCommand(command);
+    Commands.Start();
   }
 }

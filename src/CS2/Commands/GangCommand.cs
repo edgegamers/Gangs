@@ -30,7 +30,7 @@ public class GangCommand(IServiceProvider provider) : ICommand {
     ["purchase"] = new PurchaseCommand(provider),
     ["balance"]  = new Gang.BalanceCommand(provider),
     ["credits"]  = new Gang.BalanceCommand(provider),
-    ["help"]     = new HelpCommand()
+    ["disband"]  = new DisbandCommand(provider),
   };
 
   private IStringLocalizer locale =
@@ -39,6 +39,8 @@ public class GangCommand(IServiceProvider provider) : ICommand {
   public void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin != null) locale = plugin.Localizer;
   }
+
+  public void Start() { sub["help"] = new HelpCommand(provider, sub); }
 
   public string Name => "css_gang";
   public string Description => "Master command for gangs";

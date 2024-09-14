@@ -49,13 +49,14 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   override abstract protected Task HandleItemSelection(PlayerWrapper player,
     List<T> items, int selectedIndex);
 
-  virtual protected async Task ShowPage(PlayerWrapper player, List<T?> items,
+  virtual protected async Task ShowPage(PlayerWrapper player, List<T> items,
     int currentPage, int totalPages) {
     var startIndex = (currentPage - 1) * itemsPerPage;
     var pageItems  = items.Skip(startIndex).Take(itemsPerPage).ToList();
 
     if (totalPages != 1) player.PrintToChat($"Page {currentPage}/{totalPages}");
-    await Show(player, pageItems);
+    await ShowPaged(player, pageItems, currentPage < totalPages,
+      currentPage > 1);
 
     // Display navigation options
     if (currentPage > 1) await Printer.Invoke(player, "8. Previous Page");
@@ -63,10 +64,20 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     await Printer.Invoke(player, "0. Close Menu");
   }
 
-  override protected async Task Show(PlayerWrapper player, List<T> items) {
+  protected virtual async Task ShowPaged(PlayerWrapper player, List<T> items,
+    bool hasNext, bool hasPrev) {
     for (var i = 0; i < items.Count; i++) {
-      var str = FormatItem(player, i + 1, items[i]);
-      foreach (var s in str.Result.Split('\n')) await Printer.Invoke(player, s);
+      var str = await FormatItem(player, i + 1, items[i]);
+      if (i == 0) {
+        str = hasNext switch {
+          true when hasPrev  => $"<- /8  {str}  /9 ->",
+          true               => $"{str}  /9 ->",
+          false when hasPrev => $"<- /8  {str}",
+          _                  => str
+        };
+      }
+
+      foreach (var s in str.Split('\n')) await Printer.Invoke(player, s);
     }
   }
 

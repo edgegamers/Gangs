@@ -17,6 +17,8 @@
   "command.gang.invite.already_invited": "%prefix%Your gang has already invited %color.target%{0}%color.default%.",
   "command.gang.invite.success": "%prefix%You invited %color.target%{0}%color.default% to %color.special%{1}%color.default%.",
   "command.gang.invite.none": "%prefix%Your gang has not invited anyone.",
+  "command.gang.disband.warning": "%prefix%{darkred}WARNING: {red}This action is irreversible.\n{darkred}- {red}All players will be removed from the gang\n{darkred}- {red}All gang perks and statistics will be removed\n%prefix%{red}Type {darkred}/gang disband confirm{red} to confirm.",
+  "command.gang.disbanded": "%prefix%%color.target%{0}%color.gang% disbanded the gang.",
   "command.balance": "%prefix%You have %color.currency%{0} %currency%%s%{grey}.",
   "command.balance.gang": "%prefix%%color.gang%{0}%color.default% has %color.currency%{1} %currency%%s%%color.default%.",
   "command.balance.none": "%prefix%You have no %currency%%s%.",

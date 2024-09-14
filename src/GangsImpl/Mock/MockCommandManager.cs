@@ -15,6 +15,10 @@ public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
     return command.Aliases.All(alias => Commands.TryAdd(alias, command));
   }
 
+  public void Start() {
+    foreach (var command in Commands.Values) command.Start();
+  }
+
   public bool UnregisterCommand(ICommand command) {
     return command.Aliases.All(alias => Commands.Remove(alias));
   }

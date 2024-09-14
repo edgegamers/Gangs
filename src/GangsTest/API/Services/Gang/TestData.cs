@@ -1,6 +1,7 @@
 ﻿using GangsAPI.Services;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
+using Microsoft.Extensions.DependencyInjection;
 using Mock;
 using SQLImpl;
 using SQLite;
@@ -8,11 +9,15 @@ using SQLite;
 namespace GangsTest.API.Services.Gang;
 
 public class TestData : TheoryData<IGangManager> {
+  private static readonly IServiceCollection services = new ServiceCollection();
+
+  static TestData() { services.ConfigureServices(); }
+
   private readonly IGangManager[] behaviors = [
     new MockGangManager(players, ranks),
-    new MySQLGangManager(players, ranks, new TestDBConfig()),
-    new SQLiteGangManager(players, ranks, "Data Source=:memory:",
-      "gang_unit_test", true)
+    new MySQLGangManager(services.BuildServiceProvider(), new TestDBConfig()),
+    new SQLiteGangManager(services.BuildServiceProvider(),
+      "Data Source=:memory:", "gang_unit_test", true)
   ];
 
   public TestData() {
