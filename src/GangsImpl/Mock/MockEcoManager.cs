@@ -20,11 +20,11 @@ public class MockEcoManager(IPlayerStatManager playerStats) : IEcoManager {
     public int Value { get; set; } = 0;
   }
 
-  public Task<bool> CanAfford(PlayerWrapper player, int cost) {
+  public Task<bool> CanAfford(PlayerWrapper player, int cost, bool excludeGangCredits = false) {
     throw new NotImplementedException(); }
 
   public Task<int> TryPurchase(PlayerWrapper player, int balanceDue, bool print = true,
-    string? item = null) {
+    string? item = null, bool excludeGangCredits = false) {
     throw new NotImplementedException();
   }
 
