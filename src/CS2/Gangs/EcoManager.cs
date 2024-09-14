@@ -42,7 +42,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
 
   public async Task<bool> CanAfford(PlayerWrapper player, int cost,
     bool excludeGangCredits = false) {
-    var (total, playerBalance) = await getBalance(player.Steam);
+    var (playerBalance, total) = await getBalance(player.Steam);
     return (excludeGangCredits ? playerBalance : total) >= cost;
   }
 
@@ -141,12 +141,9 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     return balanceRemaining;
   }
 
-  public async Task<int> Grant(ulong steam, int amount, bool print = true,
-    string? reason = null) {
-    var player = await players.GetPlayer(steam)
-      ?? throw new PlayerNotFoundException(steam);
-    var wrapper = new PlayerWrapper(player);
-    var (_, playerBalance) = await getBalance(steam);
+  public async Task<int> Grant(PlayerWrapper player, int amount,
+    bool print = true, string? reason = null) {
+    var (playerBalance, _) = await getBalance(player.Steam);
 
     await playerStats.SetForPlayer(player.Steam, statId,
       playerBalance + amount);
@@ -157,7 +154,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
       MSG.ECO_PLAYER_GIVE_NEGATIVE :
       MSG.ECO_PLAYER_GIVE_POSITIVE;
 
-    wrapper.PrintToChat(localizer.Get(msg, amount, reason ?? "Unknown"));
+    player.PrintToChat(localizer.Get(msg, amount, reason ?? "Unknown"));
     return playerBalance + amount;
   }
 
@@ -185,24 +182,24 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
   }
 
   private async Task<(int, int)> getBalance(ulong steam) {
-    var total = 0;
+    var gangTotal = 0;
     var (success, balance) = await playerStats.GetForPlayer<int>(steam, statId);
-    if (success) total += balance;
-    var playerTotal    = total;
+    if (success) gangTotal += balance;
+    var playerTotal        = gangTotal;
 
     var gangPlayer = await players.GetPlayer(steam)
       ?? throw new PlayerNotFoundException(steam);
 
     if (gangPlayer.GangId == null || gangPlayer.GangRank == null)
-      return (playerTotal, total);
+      return (playerTotal, gangTotal);
     var rank = await ranks.GetRank(gangPlayer);
-    if (rank == null) return (playerTotal, total);
+    if (rank == null) return (playerTotal, gangTotal);
     if (!rank.Permissions.HasFlag(Perm.BANK_WITHDRAW))
-      return (playerTotal, total);
+      return (playerTotal, gangTotal);
     var (gSuccess, gBalance) =
       await gangStats.GetForGang<int>(gangPlayer.GangId.Value, statId);
-    if (gSuccess) total += gBalance;
+    if (gSuccess) gangTotal += gBalance;
 
-    return (playerTotal, total);
+    return (playerTotal, gangTotal);
   }
 }
