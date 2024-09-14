@@ -52,7 +52,7 @@ public class PurchaseCommand(IServiceProvider provider) : ICommand {
     }
 
     var remaining =
-      await eco.TryPurchase(gangPlayer, cost.Value, true, perk.Name);
+      await eco.TryPurchase(executor, cost.Value, true, perk.Name);
     if (remaining < 0) return CommandResult.SUCCESS;
 
     await perk.OnPurchase(gangPlayer);
