@@ -27,6 +27,11 @@ public class MockEcoManager(IPlayerStatManager playerStats) : IEcoManager {
     throw new NotImplementedException();
   }
 
+  public Task<int> Grant(PlayerWrapper player, int amount, bool print = true,
+    string? reason = null) {
+    throw new NotImplementedException();
+  }
+
   public Task<int> Grant(ulong player, int amount, bool print = true, string? reason = null) { throw new NotImplementedException(); }
   public Task<int> Grant(int gangId, int amount, bool print = true, string? reason = null) { throw new NotImplementedException(); }
 }
