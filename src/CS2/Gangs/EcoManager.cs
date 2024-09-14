@@ -77,6 +77,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
 
       balanceDue       -= deductFromGang;
       balanceRemaining -= deductFromGang;
+      gangBalance      -= deductFromGang;
     }
 
     Debug.Assert(balanceDue >= 0,
@@ -88,14 +89,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
       await Grant(player, -balanceDue, print, item);
     }
 
-    balanceRemaining -= balanceDue;
-
     if (!print) return balanceRemaining;
-
-    var playerBankMsg = localizer.Get(MSG.ECO_PLAYER_GIVE_NEGATIVE, balanceDue,
-      item ?? "Unknown");
-
-    player.PrintToChat(playerBankMsg);
 
     if (item == null) {
       switch (usedBank) {
@@ -105,8 +99,8 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
           break;
         case true:
           player.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHGANG,
-            gangBalance - balanceDue));
-          return gangBalance - balanceDue;
+            gangBalance));
+          return gangBalance;
         default: {
           if (usedPlayer)
             player.PrintToChat(localizer.Get(MSG.ECO_PURCHASED,
@@ -125,8 +119,8 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
         break;
       case true:
         player.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHGANG_ITEM, item,
-          gangBalance - balanceDue));
-        return gangBalance - balanceDue;
+          gangBalance));
+        return gangBalance;
       default: {
         if (usedPlayer)
           player.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHITEM, item,
@@ -151,7 +145,8 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
       MSG.ECO_PLAYER_GIVE_NEGATIVE :
       MSG.ECO_PLAYER_GIVE_POSITIVE;
 
-    player.PrintToChat(localizer.Get(msg, amount, reason ?? "Unknown"));
+    player.PrintToChat(
+      localizer.Get(msg, Math.Abs(amount), reason ?? "Unknown"));
     return playerBalance + amount;
   }
 
@@ -170,7 +165,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
       MSG.ECO_GANG_GIVE_NEGATIVE :
       MSG.ECO_GANG_GIVE_POSITIVE;
 
-    var gangBankMsg = localizer.Get(msg, amount, reason ?? "Unknown");
+    var gangBankMsg = localizer.Get(msg, Math.Abs(amount), reason ?? "Unknown");
     if (!print) return balance + amount;
     if (gangChat != null)
       await gangChat.SendGangChat("SHOP", gang, gangBankMsg);

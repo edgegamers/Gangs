@@ -13,7 +13,7 @@ using Microsoft.Extensions.Localization;
 namespace Stats.Perk;
 
 public class GangChatPerk(IServiceProvider provider)
-  : BasePerk<bool>(provider), IGangChatPerk {
+  : BasePerk<bool>(provider), IGangChatPerk, IPluginBehavior {
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
