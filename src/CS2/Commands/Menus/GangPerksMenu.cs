@@ -23,7 +23,6 @@ public class GangPerksMenu(IServiceProvider provider)
   override protected async Task HandleItemSelection(PlayerWrapper player,
     List<IPerk> items, int selectedIndex) {
     var perk = items[selectedIndex];
-    player.PrintToChat($"You selected {perk.Name}");
     var gangPlayer = await Provider.GetRequiredService<IPlayerManager>()
      .GetPlayer(player.Steam);
     if (gangPlayer == null) return;
@@ -50,12 +49,6 @@ public class GangPerksMenu(IServiceProvider provider)
         $"Could not get stat {perk.StatId}"));
       return;
     }
-
-    // var    result  = await task;
-    // bool   success = result.Item1;
-    // object value   = result.Item2;
-    //
-    // if (!success || value is null) return;
 
     var menu = await perk.GetMenu(gangPlayer);
     if (menu == null) return;
