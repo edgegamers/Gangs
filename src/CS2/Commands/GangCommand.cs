@@ -28,8 +28,8 @@ public class GangCommand(IServiceProvider provider) : ICommand {
     ["create"]   = new CreateCommand(provider),
     ["deposit"]  = new DepositCommand(provider),
     ["purchase"] = new PurchaseCommand(provider),
-    ["balance"]  = new BalanceCommand(provider),
-    ["credits"]  = new BalanceCommand(provider),
+    ["balance"]  = new Gang.BalanceCommand(provider),
+    ["credits"]  = new Gang.BalanceCommand(provider),
     ["help"]     = new HelpCommand()
   };
 

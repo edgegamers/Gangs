@@ -49,13 +49,14 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
   public async Task<int> TryPurchase(PlayerWrapper player, int balanceDue,
     bool print = true, string? item = null, bool excludeGangCredits = false) {
     var (playerBalance, totalBalance) = await getBalance(player.Steam);
-    var gangBalance      = totalBalance - playerBalance;
-    var balanceRemaining = totalBalance - balanceDue;
+    var gangBalance = totalBalance - playerBalance;
+    var balanceRemaining = (excludeGangCredits ? playerBalance : totalBalance)
+      - balanceDue;
 
     bool usedBank = false, usedPlayer = false;
     if (balanceRemaining < 0) {
       // Can't afford
-      if (!print) return totalBalance;
+      if (!print) return balanceRemaining;
       if (item == null)
         player.PrintToChat(localizer.Get(MSG.ECO_INSUFFICIENT_FUNDS,
           Math.Abs(balanceRemaining)));
@@ -63,7 +64,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
         player.PrintToChat(localizer.Get(MSG.ECO_INSUFFICIENT_FUNDS_WITH_ITEM,
           Math.Abs(balanceRemaining), item));
 
-      return totalBalance;
+      return balanceRemaining;
     }
 
     var gangPlayer = await players.GetPlayer(player.Steam)
