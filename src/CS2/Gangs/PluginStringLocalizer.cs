@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Text.RegularExpressions;
-using CounterStrikeSharp.API;
 using Microsoft.Extensions.Localization;
 
 namespace GangsImpl;
@@ -68,18 +67,16 @@ public partial class PluginStringLocalizer : IStringLocalizer {
       var index  = match.Index;
       var prefix = value[..index].Trim();
 
-      var lastWord = prefix.Split(' ').Last();
-      lastWord = new string(lastWord
-       .Where(c => char.IsLetterOrDigit(c) || c == '-')
-       .ToArray());
+      var lastWords = prefix.Split(' ')
+       .Select(w
+          => w.Where(c => char.IsLetterOrDigit(c) || c == '-').ToArray());
 
-      if (int.TryParse(lastWord, out var number))
-        // 1 cookie%s% -> 1 cookie, or 2 cookie%s% -> 2 cookies
-        // Replace %s% based on number value
-        value = value[..index]
-          + value[index..].Replace("%s%", number == 1 ? "" : "s");
+      var previousNumber = lastWords.LastOrDefault(w => int.TryParse(w, out _));
+
+      if (previousNumber != null)
+        value = value[..index] + value[index..]
+         .Replace("%s%", int.Parse(previousNumber) == 1 ? "" : "s");
       else
-        // Some cookie%s% -> Some cookies
         value = value[..index] + value[index..]
          .Replace("%s%", word.EndsWith('s') ? "" : "s");
     }
