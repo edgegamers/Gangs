@@ -10,11 +10,11 @@ namespace Commands.Gang;
 
 public class HelpCommand(IServiceProvider provider,
   IDictionary<string, ICommand> sub) : ICommand {
-  public string Name => "help";
-  public string Description => "Displays help for gangs";
-
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
+
+  public string Name => "help";
+  public string Description => "Displays help for gangs";
 
   public Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

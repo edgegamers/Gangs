@@ -95,7 +95,7 @@ public enum Perm {
   /// <summary>
   ///   The member may manage invites to the gang.
   /// </summary>
-  MANAGE_INVITES = 1 << 13 | INVITE_OTHERS,
+  MANAGE_INVITES = 1 << 13 | INVITE_OTHERS
 }
 
 public interface IGangRank : IComparable<IGangRank> {

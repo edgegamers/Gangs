@@ -27,15 +27,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="build\**" />
+        <Compile Remove="build\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Remove="build\**" />
+        <EmbeddedResource Remove="build\**"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="build\**" />
+        <None Remove="build\**"/>
     </ItemGroup>
 
     <PropertyGroup>

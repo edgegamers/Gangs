@@ -30,7 +30,7 @@ public class GangCommand(IServiceProvider provider) : ICommand {
     ["purchase"] = new PurchaseCommand(provider),
     ["balance"]  = new Gang.BalanceCommand(provider),
     ["credits"]  = new Gang.BalanceCommand(provider),
-    ["disband"]  = new DisbandCommand(provider),
+    ["disband"]  = new DisbandCommand(provider)
   };
 
   private IStringLocalizer locale =

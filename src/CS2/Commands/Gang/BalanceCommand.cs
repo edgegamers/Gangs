@@ -12,20 +12,21 @@ using Stats.Stat;
 namespace Commands.Gang;
 
 public class BalanceCommand(IServiceProvider provider) : ICommand {
-  public string Name => "balance";
-  private readonly string id = new BalanceStat().StatId;
-
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
-
-  private readonly IStringLocalizer localizer =
-    provider.GetRequiredService<IStringLocalizer>();
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
 
   private readonly IGangStatManager gangStats =
     provider.GetRequiredService<IGangStatManager>();
 
-  private readonly IGangManager gangs =
-    provider.GetRequiredService<IGangManager>();
+  private readonly string id = new BalanceStat().StatId;
+
+  private readonly IStringLocalizer localizer =
+    provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  public string Name => "balance";
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

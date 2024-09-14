@@ -18,14 +18,14 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
   private readonly ICommandManager commands =
     provider.GetRequiredService<ICommandManager>();
 
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
-
   private readonly IEcoManager economy =
     provider.GetRequiredService<IEcoManager>();
 
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
 
   public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);
@@ -74,8 +74,7 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
   }
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
-    string? item) {
-    if (item == null) return Task.FromResult(" ");
+    string item) {
     return Task.FromResult($"{index}. {item}");
   }
 }

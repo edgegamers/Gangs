@@ -11,9 +11,7 @@ using Microsoft.Extensions.Localization;
 namespace Commands.Gang;
 
 public class PurchaseCommand(IServiceProvider provider) : ICommand {
-  public string Name => "purchase";
-
-  public string[] Usage => ["<item>"];
+  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
@@ -24,7 +22,9 @@ public class PurchaseCommand(IServiceProvider provider) : ICommand {
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
-  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
+  public string Name => "purchase";
+
+  public string[] Usage => ["<item>"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

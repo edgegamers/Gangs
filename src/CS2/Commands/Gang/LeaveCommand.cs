@@ -6,5 +6,9 @@ namespace Commands.Gang;
 
 public class LeaveCommand : ICommand {
   public string Name => "leave";
-  public Task<CommandResult> Execute(PlayerWrapper? executor, CommandInfoWrapper info) { throw new NotImplementedException(); }
+
+  public Task<CommandResult> Execute(PlayerWrapper? executor,
+    CommandInfoWrapper info) {
+    throw new NotImplementedException();
+  }
 }

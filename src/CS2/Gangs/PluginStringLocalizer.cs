@@ -82,9 +82,22 @@ public partial class PluginStringLocalizer : IStringLocalizer {
     }
 
     value = value.Replace("%s%", "s");
-    while (value.Contains("s's", StringComparison.CurrentCultureIgnoreCase)) {
-      var aposIndex = value.IndexOf("s's", StringComparison.OrdinalIgnoreCase);
-      value = value[..(aposIndex + 1)] + "' " + value[(aposIndex + 4)..];
+
+    var trailingIndex = -1;
+
+    // We have to do this chicanery due to supporting colors in the string
+
+    while ((trailingIndex =
+      value.IndexOf("'s", trailingIndex + 1, StringComparison.Ordinal)) != -1) {
+      var startingWordBoundary = value[..trailingIndex].LastIndexOf(' ');
+      var endingWordBoundary = value.IndexOf(' ', trailingIndex + 2);
+      var word = value[(startingWordBoundary + 1)..endingWordBoundary];
+      var filteredWord = word.Where(c => char.IsLetterOrDigit(c) || c == '\'')
+       .ToArray();
+      if (new string(filteredWord).EndsWith("s's",
+        StringComparison.OrdinalIgnoreCase))
+        value = value[..(trailingIndex + 1)] + " "
+          + value[(trailingIndex + 4)..];
     }
 
     return value;

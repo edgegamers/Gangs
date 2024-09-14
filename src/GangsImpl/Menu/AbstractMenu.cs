@@ -1,5 +1,4 @@
 ﻿using GangsAPI.Data;
-using GangsAPI.Perks;
 using GangsAPI.Services.Menu;
 
 namespace Menu;

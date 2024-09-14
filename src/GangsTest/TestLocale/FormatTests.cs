@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using GangsAPI;
-using GangsImpl;
 using Microsoft.Extensions.Localization;
 
 namespace GangsTest.TestLocale;

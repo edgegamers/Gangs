@@ -14,8 +14,8 @@ using Stats.Stat;
 namespace GangsImpl;
 
 public class EcoManager(IServiceProvider provider) : IEcoManager {
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
+  private readonly IGangChatPerk? gangChat =
+    provider.GetService<IGangChatPerk>();
 
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
@@ -26,14 +26,14 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
 
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
   private readonly IPlayerStatManager playerStats =
     provider.GetRequiredService<IPlayerStatManager>();
 
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
-
-  private readonly IGangChatPerk? gangChat =
-    provider.GetService<IGangChatPerk>();
 
   private readonly string statId = new BalanceStat().StatId;
 

@@ -27,8 +27,9 @@ public interface IEcoManager : IPluginBehavior {
     string? reason = null);
 
   Task<int> Grant(IGang gang, int amount, bool print = true,
-    string? reason = null)
-    => Grant(gang.GangId, amount, print, reason);
+    string? reason = null) {
+    return Grant(gang.GangId, amount, print, reason);
+  }
 
   Task<int> Grant(int gangId, int amount, bool print = true,
     string? reason = null);

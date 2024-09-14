@@ -6,5 +6,9 @@ namespace Commands.Gang;
 
 public class GangPromoteCommand : ICommand {
   public string Name => "promote";
-  public Task<CommandResult> Execute(PlayerWrapper? executor, CommandInfoWrapper info) { throw new NotImplementedException(); }
+
+  public Task<CommandResult> Execute(PlayerWrapper? executor,
+    CommandInfoWrapper info) {
+    throw new NotImplementedException();
+  }
 }

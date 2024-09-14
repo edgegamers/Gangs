@@ -50,7 +50,7 @@
   "perk.unpurchasable_withitem": "%prefix%You cannot purchase %color.emph%{0}%color.default%.",
   "perk.not_found": "%prefix%Could not find a perk using \"%color.special%{0}%color.default%\".",
   "eco.insufficient_funds": "%prefix%You need %color.currency%{0}%color.default% more %currency%%s% to purchase this.",
-  "eco.insufficient_funds.with_item": "%prefix%You need %color.currency%{0}%color.default% %currency%%s% more to purchase %color.emph%{1}%color.default%.",
+  "eco.insufficient_funds.with_item": "%prefix%You need %color.currency%{0}%color.default% more %currency%%s% to purchase %color.emph%{1}%color.default%.",
   "eco.purchased": "%prefix%{green}Successfully%color.default% purchased item, you now have %color.currency%{0} %currency%%s%.",
   "eco.purchased.with_item": "%prefix%{green}Successfully%color.default% purchased %color.emph%{0}%color.default%, you now have %color.currency%{1} %currency%%s%%color.default%.",
   "eco.purchased.with_gang": "%prefix%{green}Successfully%color.default% purchased item using gang %currency%%s%, you now have %color.currency%{0} %currency%%s%%color.default%.",

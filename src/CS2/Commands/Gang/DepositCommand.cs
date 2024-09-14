@@ -12,19 +12,19 @@ using Microsoft.Extensions.Localization;
 namespace Commands.Gang;
 
 public class DepositCommand(IServiceProvider provider) : ICommand {
-  public string Name => "deposit";
-  public string[] Usage => ["<amount>"];
-
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
-
   private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
 
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
+
+  public string Name => "deposit";
+  public string[] Usage => ["<amount>"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

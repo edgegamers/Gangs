@@ -1,14 +1,13 @@
 ﻿using CounterStrikeSharp.API.Modules.Utils;
-using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
+using GangsAPI.Exceptions;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using Stats.Stat.Gang;
 using IMenu = GangsAPI.Services.Menu.IMenu;
 
@@ -23,9 +22,6 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
 
   private readonly InvitationStat invitationStat = new();
 
-  private readonly IStringLocalizer localizer =
-    provider.GetRequiredService<IStringLocalizer>();
-
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
@@ -39,11 +35,8 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
 
     var member = members.FirstOrDefault(p => p.Steam == player.Steam);
 
-    if (member is { GangRank: null }) {
-      player.PrintToChat(localizer.Get(MSG.GENERIC_ERROR_INFO,
-        "You do not have an associated rank within this gang"));
-      return;
-    }
+    if (member is { GangRank: null })
+      throw new GangException("no associated rank within gang");
 
     var rank = member == null ?
       Perm.NONE :

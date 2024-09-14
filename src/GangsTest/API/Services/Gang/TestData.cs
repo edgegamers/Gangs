@@ -11,14 +11,14 @@ namespace GangsTest.API.Services.Gang;
 public class TestData : TheoryData<IGangManager> {
   private static readonly IServiceCollection services = new ServiceCollection();
 
-  static TestData() { services.ConfigureServices(); }
-
   private readonly IGangManager[] behaviors = [
     new MockGangManager(players, ranks),
     new MySQLGangManager(services.BuildServiceProvider(), new TestDBConfig()),
     new SQLiteGangManager(services.BuildServiceProvider(),
       "Data Source=:memory:", "gang_unit_test", true)
   ];
+
+  static TestData() { services.ConfigureServices(); }
 
   public TestData() {
     foreach (var behavior in behaviors) {

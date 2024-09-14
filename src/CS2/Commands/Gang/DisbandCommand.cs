@@ -1,8 +1,6 @@
-﻿using CounterStrikeSharp.API.Core;
-using GangsAPI;
+﻿using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
-using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
 using GangsAPI.Perks;
 using GangsAPI.Permissions;
@@ -16,19 +14,19 @@ using Microsoft.Extensions.Localization;
 namespace Commands.Gang;
 
 public class DisbandCommand(IServiceProvider provider) : ICommand {
-  public string Name => "disband";
-
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
 
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
 
-  private readonly IGangManager gangs =
-    provider.GetRequiredService<IGangManager>();
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
 
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
+
+  public string Name => "disband";
 
   public string[] Usage => ["", "confirm"];
 
@@ -70,11 +68,10 @@ public class DisbandCommand(IServiceProvider provider) : ICommand {
     if (info[1] != "confirm") return CommandResult.PRINT_USAGE;
 
     var gangChat = provider.GetService<IGangChatPerk>();
-    if (gangChat != null) {
+    if (gangChat != null)
       await gangChat.SendGangChat(gang,
         localizer.Get(MSG.COMMAND_GANG_DISBANDED,
           executor.Name ?? executor.Steam.ToString()));
-    }
 
     await gangs.DeleteGang(gangPlayer.GangId.Value);
     return CommandResult.SUCCESS;

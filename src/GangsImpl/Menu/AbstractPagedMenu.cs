@@ -64,18 +64,17 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     await Printer.Invoke(player, "0. Close Menu");
   }
 
-  protected virtual async Task ShowPaged(PlayerWrapper player, List<T> items,
+  virtual protected async Task ShowPaged(PlayerWrapper player, List<T> items,
     bool hasNext, bool hasPrev) {
     for (var i = 0; i < items.Count; i++) {
       var str = await FormatItem(player, i + 1, items[i]);
-      if (i == 0) {
+      if (i == 0)
         str = hasNext switch {
           true when hasPrev  => $"<- /8  {str}  /9 ->",
           true               => $"{str}  /9 ->",
           false when hasPrev => $"<- /8  {str}",
           _                  => str
         };
-      }
 
       foreach (var s in str.Split('\n')) await Printer.Invoke(player, s);
     }

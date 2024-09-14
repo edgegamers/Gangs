@@ -1,7 +1,5 @@
 ﻿using System.Data.Common;
 using GangsAPI.Data;
-using GangsAPI.Services;
-using GangsAPI.Services.Player;
 using GenericDB;
 using MySqlConnector;
 

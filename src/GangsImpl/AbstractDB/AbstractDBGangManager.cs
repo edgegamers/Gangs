@@ -12,9 +12,6 @@ namespace GenericDB;
 public abstract class AbstractDBGangManager(IServiceProvider provider,
   string connectionString, string table = "gang_gangs", bool testing = false)
   : IGangManager {
-  protected DbConnection Connection = null!;
-  protected DbTransaction? Transaction;
-
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
@@ -23,6 +20,9 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
 
   private readonly IGangStatManager stats =
     provider.GetRequiredService<IGangStatManager>();
+
+  protected DbConnection Connection = null!;
+  protected DbTransaction? Transaction;
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);
