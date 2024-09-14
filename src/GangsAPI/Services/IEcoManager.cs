@@ -24,10 +24,6 @@ public interface IEcoManager : IPluginBehavior {
     string? item = null, bool excludeGangCredits = false);
 
   Task<int> Grant(PlayerWrapper player, int amount, bool print = true,
-    string? reason = null)
-    => Grant(player.Steam, amount, print, reason);
-
-  Task<int> Grant(ulong player, int amount, bool print = true,
     string? reason = null);
 
   Task<int> Grant(IGang gang, int amount, bool print = true,

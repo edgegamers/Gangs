@@ -1,9 +1,6 @@
 ﻿using System.Diagnostics;
-using CounterStrikeSharp.API;
-using CounterStrikeSharp.API.Core;
 using GangsAPI;
 using GangsAPI.Data;
-using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
 using GangsAPI.Perks;
 using GangsAPI.Permissions;
@@ -88,7 +85,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     // Pull remaining from player
     if (balanceDue > 0) {
       usedPlayer = true;
-      await Grant(player.Steam, -balanceDue, print, item);
+      await Grant(player, -balanceDue, print, item);
     }
 
     balanceRemaining -= balanceDue;

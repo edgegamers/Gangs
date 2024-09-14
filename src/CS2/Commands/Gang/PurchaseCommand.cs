@@ -1,5 +1,4 @@
-﻿using CounterStrikeSharp.API.Core;
-using GangsAPI;
+﻿using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Perks;
