@@ -40,12 +40,14 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
 
   private readonly string statId = new BalanceStat().StatId;
 
-  public async Task<bool> CanAfford(PlayerWrapper player, int cost) {
-    return (await getBalance(player.Steam)).Item2 >= cost;
+  public async Task<bool> CanAfford(PlayerWrapper player, int cost,
+    bool excludeGangCredits = false) {
+    var (total, playerBalance) = await getBalance(player.Steam);
+    return (excludeGangCredits ? playerBalance : total) >= cost;
   }
 
   public async Task<int> TryPurchase(PlayerWrapper player, int balanceDue,
-    bool print = true, string? item = null) {
+    bool print = true, string? item = null, bool excludeGangCredits = false) {
     var (playerBalance, totalBalance) = await getBalance(player.Steam);
     var gangBalance      = totalBalance - playerBalance;
     var balanceRemaining = totalBalance - balanceDue;
@@ -68,10 +70,8 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
       ?? throw new PlayerNotFoundException(player.Steam);
 
     // Pull from gang bank first
-    if (gangPlayer.GangId != null && gangBalance > 0) {
+    if (!excludeGangCredits && gangPlayer.GangId != null && gangBalance > 0) {
       usedBank = true;
-
-
       var deductFromGang = Math.Min(gangBalance, balanceDue);
       await Grant(gangPlayer.GangId.Value, -deductFromGang, print, item);
 

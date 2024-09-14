@@ -31,8 +31,8 @@ public class DepositCommand(IServiceProvider provider) : ICommand {
     if (executor == null) return CommandResult.PLAYER_ONLY;
     if (info.ArgCount != 2) return CommandResult.PRINT_USAGE;
 
-    var gangPlayer = await players.GetPlayer(executor.Steam) ??
-      throw new PlayerNotFoundException(executor.Steam);
+    var gangPlayer = await players.GetPlayer(executor.Steam)
+      ?? throw new PlayerNotFoundException(executor.Steam);
 
     if (gangPlayer.GangId == null) {
       info.ReplySync(localizer.Get(MSG.NOT_IN_GANG));
@@ -55,7 +55,8 @@ public class DepositCommand(IServiceProvider provider) : ICommand {
       return CommandResult.SUCCESS;
     }
 
-    var remaining = await eco.TryPurchase(executor, amount, true, "deposit");
+    var remaining =
+      await eco.TryPurchase(executor, amount, true, "deposit", true);
     if (remaining >= 0)
       await eco.Grant(gangPlayer.GangId.Value, amount, true, "deposit");
 
