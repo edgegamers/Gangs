@@ -31,8 +31,8 @@
   "generic.no_permission": "%prefix%{red}You do not have permission to use this command.",
   "generic.no_permission.node": "%prefix%{red}You are missing the {darkred}{0}{red} permission.",
   "generic.no_permission.rank": "%prefix%{red}You must be {darkred}{0}{red} to use this command.",
-  "generic.error": "%prefix%{darkred}An unknown error occured.",
-  "generic.error.info": "%prefix%%darkred%An error occured: {lightred}{0}{darkred}.",
+  "generic.error": "%prefix%{darkred}[ERROR] {lightred}An unknown error occured.",
+  "generic.error.info": "%prefix%{darkred}[ERROR] {lightred}{0}{darkred}.",
   "currency": "credit",
   "gang.already_in_gang": "%prefix%You are already in a gang.",
   "gang.not_in_gang": "%prefix%You are not in a gang.",
@@ -41,6 +41,9 @@
   "perk.missing": "%prefix%Your gang does not have the %color.special%{0}%color.default% perk.",
   "perk.gangchat.format": " {darkred}[{red}{0}{darkred}] %color.special%{1}%color.default%: %color.default%{2}",
   "perk.purchased": "%color.target%{0}%color.default% purchased the %color.special%{1}%color.default% perk for your gang.",
+  "perk.unpurchasable": "%prefix%You cannot purchase this perk.",
+  "perk.unpurchasable_withitem": "%prefix%You cannot purchase %color.white%{0}%color.default%.",
+  "perk.not_found": "%prefix%Could not find a perk using \"%color.special%{0}%color.default%\".",
   "eco.insufficient_funds": "%prefix%You need %color.currency%{0}%color.default% more %currency%%s% to purchase this.",
   "eco.insufficient_funds.with_item": "%prefix%You need %color.currency%{0}%color.default% more %currency%%s% to purchase %color.emph%{1}%color.default%.",
   "eco.purchased": "%prefix%{green}Successfully%color.default% purchased item, you now have %color.currency%{0} %currency%%s%.",
@@ -48,5 +51,9 @@
   "eco.purchased.with_gang": "%prefix%{green}Successfully%color.default% purchased item using gang %currency%%s%, you now have %color.currency%{0} %currency%%s%.",
   "eco.purchased.with_gang.with_item": "%prefix%{green}Successfully%color.default% purchased %color.emph%{0}%color.default% using gang %currency%%s%, your gang now has %color.currency%{0} %currency%%s%.",
   "eco.purchased.with_both": "%prefix%{green}Successfully%color.default% purchased item (wiping out gang funds), you now have %color.currency%{0} %currency%%s%.",
-  "eco.purchased.with_both.with_item": "%prefix%{green}Successfully%color.default% purchased %color.emph%{0}%color.default% (wiping out gang funds), you now have %color.currency%{1} %currency%%s%."
+  "eco.purchased.with_both.with_item": "%prefix%{green}Successfully%color.default% purchased %color.emph%{0}%color.default% (wiping out gang funds), you now have %color.currency%{1} %currency%%s%.",
+  "eco.player.granted.positive": "%prefix%{green}+{0} %color.currency%%s%{grey}(%color.emph%{1}{grey}).",
+  "eco.player.granted.negative": "%prefix%{red}-{0} %color.currency%%s%{grey}(%color.emph%{1}{grey}).",
+  "eco.gang.granted.positive": " {green}+{0} %color.currency%%s%{grey}(%color.emph%{1}{grey}).",
+  "eco.gang.granted.negative": " {red}-{0} %color.currency%%s%{grey}(%color.emph%{1}{grey})."
 }

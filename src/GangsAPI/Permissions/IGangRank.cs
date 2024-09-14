@@ -78,7 +78,7 @@ public enum Perm {
   /// </summary>
   ADMINISTRATOR = 1 << 10 | INVITE_OTHERS | KICK_OTHERS | BANK_DEPOSIT
     | BANK_WITHDRAW | PROMOTE_OTHERS | DEMOTE_OTHERS | PURCHASE_PERKS
-    | MANAGE_PERKS | MANAGE_RANKS | CREATE_RANKS | VIEW_MEMBERS
+    | MANAGE_PERKS | MANAGE_RANKS | CREATE_RANKS | VIEW_MEMBER_DETAILS
     | MANAGE_INVITES,
 
   /// <summary>
@@ -90,12 +90,12 @@ public enum Perm {
   ///   The member may view detailed information of other
   ///   gang members. (Last logged in, kills, etc.)
   /// </summary>
-  VIEW_MEMBERS = 1 << 12,
+  VIEW_MEMBER_DETAILS = 1 << 12,
 
   /// <summary>
   ///   The member may manage invites to the gang.
   /// </summary>
-  MANAGE_INVITES = 1 << 13 | INVITE_OTHERS
+  MANAGE_INVITES = 1 << 13 | INVITE_OTHERS,
 }
 
 public interface IGangRank : IComparable<IGangRank> {
@@ -131,8 +131,8 @@ public static class PermissionExtensions {
         return "Administrator";
       case Perm.OWNER:
         return "Owner";
-      case Perm.VIEW_MEMBERS:
-        return "View Members";
+      case Perm.VIEW_MEMBER_DETAILS:
+        return "View Member Details";
       case Perm.MANAGE_INVITES:
         return "Manage Invites";
       default:

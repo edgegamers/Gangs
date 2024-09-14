@@ -44,6 +44,9 @@ public enum MSG {
   NOT_IN_GANG,
   PERK_MISSING,
   PERK_PURCHASED,
+  PERK_UNPURCHASABLE,
+  PERK_UNPURCHASABLE_WITH_ITEM,
+  PERK_NOT_FOUND,
   GANG_CHAT_FORMAT,
   ECO_INSUFFICIENT_FUNDS,
   ECO_INSUFFICIENT_FUNDS_WITH_ITEM,
@@ -52,7 +55,11 @@ public enum MSG {
   ECO_PURCHASED_WITHGANG,
   ECO_PURCHASED_WITHGANG_ITEM,
   ECO_PURCHASED_WITHBOTH,
-  ECO_PURCHASED_WITHBOTH_ITEM
+  ECO_PURCHASED_WITHBOTH_ITEM,
+  ECO_PLAYER_GIVE_NEGATIVE,
+  ECO_PLAYER_GIVE_POSITIVE,
+  ECO_GANG_GIVE_NEGATIVE,
+  ECO_GANG_GIVE_POSITIVE
 }
 
 public static class LocaleExtensions {
@@ -101,6 +108,9 @@ public static class LocaleExtensions {
       MSG.NOT_IN_GANG                   => "gang.not_in_gang",
       MSG.PERK_MISSING                  => "perk.missing",
       MSG.PERK_PURCHASED                => "perk.purchased",
+      MSG.PERK_UNPURCHASABLE            => "perk.unpurchasable",
+      MSG.PERK_UNPURCHASABLE_WITH_ITEM  => "perk.unpurchasable_withitem",
+      MSG.PERK_NOT_FOUND                => "perk.not_found",
       MSG.GANG_CHAT_FORMAT              => "perk.gangchat.format",
       MSG.GANG_NOT_FOUND                => "gang.not_found",
       MSG.GANG_NOT_FOUND_CLOSEST        => "gang.not_found.closest",
@@ -113,6 +123,10 @@ public static class LocaleExtensions {
       MSG.ECO_PURCHASED_WITHGANG_ITEM => "eco.purchased.with_gang.with_item",
       MSG.ECO_PURCHASED_WITHBOTH => "eco.purchased.with_both",
       MSG.ECO_PURCHASED_WITHBOTH_ITEM => "eco.purchased.with_both.with_item",
+      MSG.ECO_PLAYER_GIVE_NEGATIVE => "eco.player.granted.negative",
+      MSG.ECO_PLAYER_GIVE_POSITIVE => "eco.player.granted.positive",
+      MSG.ECO_GANG_GIVE_NEGATIVE => "eco.gang.granted.negative",
+      MSG.ECO_GANG_GIVE_POSITIVE => "eco.gang.granted.positive",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }

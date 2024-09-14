@@ -2,6 +2,7 @@ using Commands.Menus;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using GangsAPI.Exceptions;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
@@ -25,13 +26,8 @@ public class PerksCommand(IServiceProvider provider) : ICommand {
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
     if (executor == null) return CommandResult.PLAYER_ONLY;
-    var gangPlayer = await players.GetPlayer(executor.Steam);
-    if (gangPlayer == null) {
-      info.ReplySync(
-        locale.Get(MSG.GENERIC_ERROR_INFO, "Gang Player not found"));
-      return CommandResult.ERROR;
-    }
-
+    var gangPlayer = await players.GetPlayer(executor.Steam)
+      ?? throw new PlayerNotFoundException(executor.Steam);
     if (gangPlayer.GangId == null || gangPlayer.GangRank == null) {
       info.ReplySync(locale.Get(MSG.NOT_IN_GANG));
       return CommandResult.SUCCESS;

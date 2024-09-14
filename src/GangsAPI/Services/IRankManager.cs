@@ -115,7 +115,7 @@ public interface IRankManager : IPluginBehavior {
   /// </summary>
   /// <returns></returns>
   async Task<IEnumerable<IGangRank>> AssignDefaultRanks(int gang) {
-    var memberPerms = Perm.BANK_DEPOSIT | Perm.VIEW_MEMBERS;
+    var memberPerms = Perm.BANK_DEPOSIT | Perm.VIEW_MEMBER_DETAILS;
     var officerPerms = memberPerms | Perm.INVITE_OTHERS | Perm.PURCHASE_PERKS
       | Perm.BANK_WITHDRAW | Perm.KICK_OTHERS;
     var managerPerms = officerPerms | Perm.MANAGE_PERKS | Perm.MANAGE_RANKS

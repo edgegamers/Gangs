@@ -21,12 +21,14 @@ public class GangCommand(IServiceProvider provider) : ICommand {
     provider.GetRequiredService<IMenuManager>();
 
   private readonly Dictionary<string, ICommand> sub = new() {
-    ["members"] = new MembersCommand(provider),
-    ["perks"]   = new PerksCommand(provider),
-    ["invites"] = new InvitesCommand(provider),
-    ["invite"]  = new InviteCommand(provider),
-    ["create"]  = new CreateCommand(provider),
-    ["help"]    = new HelpCommand()
+    ["members"]  = new MembersCommand(provider),
+    ["perks"]    = new PerksCommand(provider),
+    ["invites"]  = new InvitesCommand(provider),
+    ["invite"]   = new InviteCommand(provider),
+    ["create"]   = new CreateCommand(provider),
+    ["deposit"]  = new DepositCommand(provider),
+    ["purchase"] = new PurchaseCommand(provider),
+    ["help"]     = new HelpCommand()
   };
 
   private IStringLocalizer locale =

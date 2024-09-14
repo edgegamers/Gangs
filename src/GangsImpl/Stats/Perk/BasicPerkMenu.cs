@@ -1,10 +1,13 @@
-﻿using GangsAPI.Data;
+﻿using GangsAPI;
+using GangsAPI.Data;
 using GangsAPI.Perks;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 
 namespace Stats.Perk;
 
@@ -16,6 +19,12 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
 
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
+
+  private readonly IEcoManager economy =
+    provider.GetRequiredService<IEcoManager>();
+
+  private readonly IStringLocalizer localizer =
+    provider.GetRequiredService<IStringLocalizer>();
 
   public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);
@@ -34,10 +43,13 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
     var cost                            = await perk.GetCost(gangPlayer);
     var title                           = $"Gang Perk: {perk.Name}";
     var items                           = new List<string?>();
-    if (cost != null) title             += $" ({cost})";
     if (perk.Description != null) title += $"\n{perk.Description}";
     items.Add(title);
-    if (cost != null) items.Add("Purchase");
+    if (cost != null) {
+      if (await economy.CanAfford(gangPlayer, cost.Value))
+        items.Add($"Purchase ({cost})");
+    }
+
     items.Add("Cancel");
     return items;
   }
@@ -47,6 +59,12 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
     if (selectedIndex == 1) {
       var gangPlayer = await players.GetPlayer(player.Steam);
       if (gangPlayer?.GangId == null || gangPlayer.GangRank == null) return;
+      if (await perk.GetCost(gangPlayer) == null) {
+        await Printer.Invoke(player,
+          localizer.Get(MSG.PERK_UNPURCHASABLE_WITH_ITEM, perk.Name));
+        return;
+      }
+
       await commands.ProcessCommand(player, "css_gang", "purchase",
         perk.StatId);
     }

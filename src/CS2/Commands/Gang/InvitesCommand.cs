@@ -2,6 +2,7 @@ using Commands.Menus;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using GangsAPI.Exceptions;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
@@ -39,12 +40,8 @@ public class InvitesCommand(IServiceProvider provider) : ICommand {
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
     if (executor == null) return CommandResult.PLAYER_ONLY;
-    var gangPlayer = await players.GetPlayer(executor.Steam);
-    if (gangPlayer == null) {
-      info.ReplySync(
-        locale.Get(MSG.GENERIC_ERROR_INFO, "Gang Player not found"));
-      return CommandResult.ERROR;
-    }
+    var gangPlayer = await players.GetPlayer(executor.Steam)
+      ?? throw new PlayerNotFoundException(executor.Steam);
 
     if (gangPlayer.GangId == null || gangPlayer.GangRank == null) {
       info.ReplySync(locale.Get(MSG.NOT_IN_GANG));
@@ -60,12 +57,8 @@ public class InvitesCommand(IServiceProvider provider) : ICommand {
       return CommandResult.NO_PERMISSION;
     }
 
-    var gang = await gangs.GetGang(gangPlayer.GangId.Value);
-
-    if (gang == null) {
-      info.ReplySync(locale.Get(MSG.GENERIC_ERROR_INFO, "Gang not found"));
-      return CommandResult.ERROR;
-    }
+    var gang = await gangs.GetGang(gangPlayer.GangId.Value)
+      ?? throw new GangNotFoundException(gangPlayer.GangId.Value);
 
     var (success, gangInvites) =
       await gangStats.GetForGang<InvitationData>(gang,

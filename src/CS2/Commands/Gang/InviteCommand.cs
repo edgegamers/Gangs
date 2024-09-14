@@ -1,6 +1,7 @@
 ﻿using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using GangsAPI.Exceptions;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
@@ -45,25 +46,17 @@ public class InviteCommand(IServiceProvider provider) : ICommand {
     if (executor == null) return CommandResult.PLAYER_ONLY;
     if (info.ArgCount != 2) return CommandResult.PRINT_USAGE;
 
-    var gangPlayer = await players.GetPlayer(executor.Steam);
-
-    if (gangPlayer == null) {
-      info.ReplySync(localizer.Get(MSG.GENERIC_ERROR_INFO,
-        "Gang Player not found"));
-      return CommandResult.ERROR;
-    }
+    var gangPlayer = await players.GetPlayer(executor.Steam)
+      ?? throw new PlayerNotFoundException(executor.Steam);
 
     if (gangPlayer.GangId == null || gangPlayer.GangRank == null) {
       info.ReplySync(localizer.Get(MSG.NOT_IN_GANG));
       return CommandResult.SUCCESS;
     }
 
-    var perms = await ranks.GetRank(gangPlayer);
-
-    if (perms == null) {
-      info.ReplySync(localizer.Get(MSG.GENERIC_ERROR_INFO, "Rank not found"));
-      return CommandResult.ERROR;
-    }
+    var perms = await ranks.GetRank(gangPlayer)
+      ?? throw new SufficientRankNotFoundException(gangPlayer.GangId.Value,
+        Perm.INVITE_OTHERS);
 
     if (!perms.Permissions.HasFlag(Perm.INVITE_OTHERS)) {
       var required =

@@ -13,22 +13,24 @@ public interface IEcoManager : IPluginBehavior {
   ///   hypothetical (negative) balance.
   /// </summary>
   /// <param name="player"></param>
-  /// <param name="cost"></param>
+  /// <param name="balanceDue"></param>
   /// <param name="print"></param>
   /// <param name="item"></param>
   /// <returns></returns>
-  Task<int> TryPurchase(IGangPlayer player, int cost, bool print = true,
+  Task<int> TryPurchase(IGangPlayer player, int balanceDue, bool print = true,
     string? item = null);
 
-  Task<int> Grant(IGangPlayer player, int amount, string reason = "") {
-    return Grant(player.Steam, amount, reason);
-  }
+  Task<int> Grant(IGangPlayer player, int amount, bool print = true,
+    string? reason = null)
+    => Grant(player.Steam, amount, print, reason);
 
-  Task<int> Grant(ulong player, int amount, string reason = "");
+  Task<int> Grant(ulong player, int amount, bool print = true,
+    string? reason = null);
 
-  Task<int> Grant(IGang gang, int amount, string reason = "") {
-    return Grant(gang.GangId, amount, reason);
-  }
+  Task<int> Grant(IGang gang, int amount, bool print = true,
+    string? reason = null)
+    => Grant(gang.GangId, amount, print, reason);
 
-  Task<int> Grant(int gangId, int amount, string reason = "");
+  Task<int> Grant(int gangId, int amount, bool print = true,
+    string? reason = null);
 }

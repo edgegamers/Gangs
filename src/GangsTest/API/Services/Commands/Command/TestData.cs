@@ -9,10 +9,16 @@ public class TestData : TheoryData<ICommand> {
   private static readonly IServiceCollection services = new ServiceCollection();
 
   private readonly ICommand[] behaviors = [
-    new CreateCommand(services.BuildServiceProvider()), new HelpCommand(),
-    new GangCommand(services.BuildServiceProvider()),
     new BalanceCommand(services.BuildServiceProvider()),
-    new InviteCommand(services.BuildServiceProvider())
+    new CreateCommand(services.BuildServiceProvider()),
+    new DepositCommand(services.BuildServiceProvider()), new DisbandCommand(),
+    new GangCommand(services.BuildServiceProvider()), new GangDemoteCommand(),
+    new GangPromoteCommand(), new GangStatsCommand(), new HelpCommand(),
+    new InviteCommand(services.BuildServiceProvider()), new KickCommand(),
+    new LeaveCommand(), new ManagePermsCommand(),
+    new MembersCommand(services.BuildServiceProvider()),
+    new PerksCommand(services.BuildServiceProvider()),
+    new PurchaseCommand(services.BuildServiceProvider()),
   ];
 
   static TestData() { services.ConfigureServices(); }

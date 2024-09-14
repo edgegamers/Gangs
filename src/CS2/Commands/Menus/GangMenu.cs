@@ -75,7 +75,7 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
   }
 
   private Task addMemberItem(Perm rank, PlayerWrapper player) {
-    var memberPrefix = (rank & Perm.VIEW_MEMBERS) != 0 ?
+    var memberPrefix = (rank & Perm.VIEW_MEMBER_DETAILS) != 0 ?
       ChatColors.DarkRed + "1" :
       ChatColors.LightRed + "X";
     player.PrintToChat(

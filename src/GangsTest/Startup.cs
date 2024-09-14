@@ -25,6 +25,8 @@ public static class Startup {
     services.AddScoped<ICommandManager, MockCommandManager>();
     services.AddScoped<IMenuManager, MockMenuManager>();
     services.AddScoped<IRankManager, MockRankManager>();
+    services.AddScoped<IPerkManager, MockPerkManager>();
+    services.AddScoped<IEcoManager, MockEcoManager>();
     services
      .TryAddSingleton<IStringLocalizerFactory, LocalFileLocalizerFactory>();
     services.TryAddTransient(typeof(IStringLocalizer), typeof(StringLocalizer));
