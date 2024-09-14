@@ -2,6 +2,7 @@
 using Commands.Gang;
 using GangsAPI.Services.Commands;
 using Microsoft.Extensions.DependencyInjection;
+using BalanceCommand = Commands.BalanceCommand;
 
 namespace GangsTest.API.Services.Commands.Command;
 
@@ -10,6 +11,7 @@ public class TestData : TheoryData<ICommand> {
 
   private readonly ICommand[] behaviors = [
     new BalanceCommand(services.BuildServiceProvider()),
+    new global::Commands.Gang.BalanceCommand(services.BuildServiceProvider()),
     new CreateCommand(services.BuildServiceProvider()),
     new DepositCommand(services.BuildServiceProvider()), new DisbandCommand(),
     new GangCommand(services.BuildServiceProvider()), new GangDemoteCommand(),

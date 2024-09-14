@@ -1,9 +1,10 @@
-﻿using GangsAPI.Data.Gang;
+﻿using GangsAPI.Data;
+using GangsAPI.Data.Gang;
 
 namespace GangsAPI.Services;
 
 public interface IEcoManager : IPluginBehavior {
-  Task<bool> CanAfford(IGangPlayer player, int cost);
+  Task<bool> CanAfford(PlayerWrapper player, int cost);
 
   /// <summary>
   ///   Attempts to purchase an item for the player.
@@ -17,10 +18,10 @@ public interface IEcoManager : IPluginBehavior {
   /// <param name="print"></param>
   /// <param name="item"></param>
   /// <returns></returns>
-  Task<int> TryPurchase(IGangPlayer player, int balanceDue, bool print = true,
+  Task<int> TryPurchase(PlayerWrapper player, int balanceDue, bool print = true,
     string? item = null);
 
-  Task<int> Grant(IGangPlayer player, int amount, bool print = true,
+  Task<int> Grant(PlayerWrapper player, int amount, bool print = true,
     string? reason = null)
     => Grant(player.Steam, amount, print, reason);
 

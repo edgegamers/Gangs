@@ -1,6 +1,7 @@
 ﻿using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using GangsAPI.Exceptions;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
@@ -30,8 +31,8 @@ public class DepositCommand(IServiceProvider provider) : ICommand {
     if (executor == null) return CommandResult.PLAYER_ONLY;
     if (info.ArgCount != 2) return CommandResult.PRINT_USAGE;
 
-    var gangPlayer = await players.GetPlayer(executor.Steam);
-    if (gangPlayer == null) return CommandResult.SUCCESS;
+    var gangPlayer = await players.GetPlayer(executor.Steam) ??
+      throw new PlayerNotFoundException(executor.Steam);
 
     if (gangPlayer.GangId == null) {
       info.ReplySync(localizer.Get(MSG.NOT_IN_GANG));

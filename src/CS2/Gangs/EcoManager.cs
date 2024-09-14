@@ -39,14 +39,13 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
 
   private readonly string statId = new BalanceStat().StatId;
 
-  public async Task<bool> CanAfford(IGangPlayer player, int cost) {
-    return (await getBalance(player)).Item2 >= cost;
+  public async Task<bool> CanAfford(PlayerWrapper player, int cost) {
+    return (await getBalance(player.Steam)).Item2 >= cost;
   }
 
-  public async Task<int> TryPurchase(IGangPlayer player, int balanceDue,
+  public async Task<int> TryPurchase(PlayerWrapper player, int balanceDue,
     bool print = true, string? item = null) {
-    var wrapper = new PlayerWrapper(player);
-    var (playerBalance, totalBalance) = await getBalance(player);
+    var (playerBalance, totalBalance) = await getBalance(player.Steam);
     var gangBalance      = totalBalance - playerBalance;
     var balanceRemaining = totalBalance - balanceDue;
 
@@ -55,22 +54,25 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
       // Can't afford
       if (!print) return totalBalance;
       if (item == null)
-        wrapper.PrintToChat(localizer.Get(MSG.ECO_INSUFFICIENT_FUNDS,
+        player.PrintToChat(localizer.Get(MSG.ECO_INSUFFICIENT_FUNDS,
           Math.Abs(balanceRemaining)));
       else
-        wrapper.PrintToChat(localizer.Get(MSG.ECO_INSUFFICIENT_FUNDS_WITH_ITEM,
+        player.PrintToChat(localizer.Get(MSG.ECO_INSUFFICIENT_FUNDS_WITH_ITEM,
           Math.Abs(balanceRemaining), item));
 
       return totalBalance;
     }
 
+    var gangPlayer = await players.GetPlayer(player.Steam)
+      ?? throw new PlayerNotFoundException(player.Steam);
+
     // Pull from gang bank first
-    if (player.GangId != null && gangBalance > 0) {
+    if (gangPlayer.GangId != null && gangBalance > 0) {
       usedBank = true;
 
 
       var deductFromGang = Math.Min(gangBalance, balanceDue);
-      await Grant(player.GangId.Value, -deductFromGang, print, item);
+      await Grant(gangPlayer.GangId.Value, -deductFromGang, print, item);
 
       if (gangBalance < balanceDue) usedPlayer = true;
 
@@ -94,21 +96,21 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     var playerBankMsg = localizer.Get(MSG.ECO_PLAYER_GIVE_NEGATIVE, balanceDue,
       item ?? "Unknown");
 
-    wrapper.PrintToChat(playerBankMsg);
+    player.PrintToChat(playerBankMsg);
 
     if (item == null) {
       switch (usedBank) {
         case true when usedPlayer:
-          wrapper.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHBOTH,
+          player.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHBOTH,
             balanceRemaining));
           break;
         case true:
-          wrapper.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHGANG,
+          player.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHGANG,
             gangBalance - balanceDue));
           return gangBalance - balanceDue;
         default: {
           if (usedPlayer)
-            wrapper.PrintToChat(localizer.Get(MSG.ECO_PURCHASED,
+            player.PrintToChat(localizer.Get(MSG.ECO_PURCHASED,
               balanceRemaining));
           break;
         }
@@ -119,16 +121,16 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
 
     switch (usedBank) {
       case true when usedPlayer:
-        wrapper.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHBOTH_ITEM, item,
+        player.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHBOTH_ITEM, item,
           balanceRemaining));
         break;
       case true:
-        wrapper.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHGANG_ITEM, item,
+        player.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHGANG_ITEM, item,
           gangBalance - balanceDue));
         return gangBalance - balanceDue;
       default: {
         if (usedPlayer)
-          wrapper.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHITEM, item,
+          player.PrintToChat(localizer.Get(MSG.ECO_PURCHASED_WITHITEM, item,
             balanceRemaining));
         break;
       }
@@ -142,7 +144,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     var player = await players.GetPlayer(steam)
       ?? throw new PlayerNotFoundException(steam);
     var wrapper = new PlayerWrapper(player);
-    var (total, playerBalance) = await getBalance(player);
+    var (_, playerBalance) = await getBalance(steam);
 
     await playerStats.SetForPlayer(player.Steam, statId,
       playerBalance + amount);
@@ -180,21 +182,23 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     return balance + amount;
   }
 
-  private async Task<(int, int)> getBalance(IGangPlayer player) {
+  private async Task<(int, int)> getBalance(ulong steam) {
     var total = 0;
-    var (success, balance) =
-      await playerStats.GetForPlayer<int>(player.Steam, statId);
+    var (success, balance) = await playerStats.GetForPlayer<int>(steam, statId);
     if (success) total += balance;
     var playerTotal    = total;
 
-    if (player.GangId == null || player.GangRank == null)
+    var gangPlayer = await players.GetPlayer(steam)
+      ?? throw new PlayerNotFoundException(steam);
+
+    if (gangPlayer.GangId == null || gangPlayer.GangRank == null)
       return (playerTotal, total);
-    var rank = await ranks.GetRank(player);
+    var rank = await ranks.GetRank(gangPlayer);
     if (rank == null) return (playerTotal, total);
     if (!rank.Permissions.HasFlag(Perm.BANK_WITHDRAW))
       return (playerTotal, total);
     var (gSuccess, gBalance) =
-      await gangStats.GetForGang<int>(player.GangId.Value, statId);
+      await gangStats.GetForGang<int>(gangPlayer.GangId.Value, statId);
     if (gSuccess) total += gBalance;
 
     return (playerTotal, total);
