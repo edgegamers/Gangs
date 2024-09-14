@@ -46,6 +46,7 @@ public partial class PluginStringLocalizer : IStringLocalizer {
         // CS# forces a space before a chat color if the entireity
         // of the strong is a color code. This is undesired
         // in our case, so we trim the value when we have a prefix.
+        if (trimmedKey == "s") continue;
         var replacement = getString(trimmedKey).Value;
         value = value.Replace(key,
           trimmedKey == "prefix" ? replacement : replacement.Trim());
@@ -59,7 +60,6 @@ public partial class PluginStringLocalizer : IStringLocalizer {
 
     // Handle pluralization
     value = HandlePluralization(value);
-
     return new LocalizedString(name, value);
   }
 

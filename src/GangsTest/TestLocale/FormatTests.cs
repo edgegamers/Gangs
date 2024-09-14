@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using GangsAPI;
+using GangsImpl;
 using Microsoft.Extensions.Localization;
 
 namespace GangsTest.TestLocale;
@@ -34,6 +35,8 @@ public partial class FormatTests(IStringLocalizer localizer) {
 
   [Theory]
   [InlineData("You have 1 credit", "You have 1 credit%s%")]
+  [InlineData("You have \a1 credit", "You have \a1 credit%s%")]
+  [InlineData("You have 1 credit.", "You have 1 credit%s%.")]
   [InlineData("You have too many credits", "You have too many credits%s%")]
   public void
     StaticLocalizer_WithPercentPlurals_HandlesSingles(string translated,

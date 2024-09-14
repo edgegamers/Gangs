@@ -5,6 +5,7 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Player;
+using GangsAPI.Services.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Stats.Stat;
@@ -19,6 +20,9 @@ public class BalanceCommand(IServiceProvider provider) : ICommand {
 
   private readonly IPlayerStatManager playerStats =
     provider.GetRequiredService<IPlayerStatManager>();
+
+  private readonly ITargeter targeter =
+    provider.GetRequiredService<ITargeter>();
 
   public string Name => "css_balance";
 
@@ -44,27 +48,10 @@ public class BalanceCommand(IServiceProvider provider) : ICommand {
 
     if (info.ArgCount > 3) return CommandResult.PRINT_USAGE;
 
-    // TODO: Add Unit Test Support
-    // Would require a mock of some type of Server state
-    // for Utilities to wrap around.
-    var            result  = CommandResult.ERROR;
-    PlayerWrapper? subject = null;
-    await Server.NextFrameAsync(() => {
-      var target       = new Target(info[1]);
-      var targetResult = target.GetTarget(null).Players;
-      if (targetResult.Count != 1) {
-        info.ReplySync(localizer.Get(
-          targetResult.Count > 1 ?
-            MSG.GENERIC_PLAYER_FOUND_MULTIPLE :
-            MSG.GENERIC_PLAYER_NOT_FOUND, info[1]));
-        result = CommandResult.INVALID_ARGS;
-        return;
-      }
+    var subject =
+      await targeter.GetSingleTarget(info[1], out _, executor, localizer);
 
-      subject = new PlayerWrapper(targetResult[0]);
-    });
-
-    if (subject == null) return result;
+    if (subject == null) return CommandResult.SUCCESS;
 
     if (info.ArgCount == 2 || !executor.HasFlags("@css/root")) {
       var (success, balance) =
