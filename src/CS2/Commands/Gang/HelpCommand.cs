@@ -18,18 +18,17 @@ public class HelpCommand(IServiceProvider provider,
 
   public Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
-    HashSet<string> sent = new();
+    HashSet<string> sent = [];
 
     foreach (var (name, cmd) in sub) {
       if (!sent.Add(cmd.Name)) continue;
+      var uses = cmd.Usage.Where(use => !string.IsNullOrEmpty(use)).ToList();
+      var useString = uses.Count > 0 ? "(" + string.Join(",", uses) + ")" : "";
       if (cmd.Description != null)
-        info.ReplySync(locale.Get(MSG.COMMAND_USAGE,
-          $"{cmd.Name} - {cmd.Description}"));
+        info.ReplySync(locale.Get(MSG.PREFIX) + ChatColors.Grey
+          + $"{cmd.Name} - {cmd.Description}");
       else
-        info.ReplySync(locale.Get(MSG.COMMAND_USAGE, $"{cmd.Name}"));
-
-      foreach (var use in cmd.Usage)
-        info.ReplySync($" - {ChatColors.Grey}{cmd.Name} {use}");
+        info.ReplySync(locale.Get(MSG.PREFIX) + $"{cmd.Name} {useString}");
     }
 
     return Task.FromResult(CommandResult.SUCCESS);

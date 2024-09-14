@@ -51,11 +51,11 @@ public class GangPerksMenu(IServiceProvider provider)
       return;
     }
 
-    var    result  = await task;
-    bool   success = result.Item1;
-    object value   = result.Item2;
-
-    if (!success || value is null) return;
+    // var    result  = await task;
+    // bool   success = result.Item1;
+    // object value   = result.Item2;
+    //
+    // if (!success || value is null) return;
 
     var menu = await perk.GetMenu(gangPlayer);
     if (menu == null) return;

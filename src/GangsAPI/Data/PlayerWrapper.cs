@@ -139,7 +139,7 @@ public class PlayerWrapper {
     }
 
     Server.NextFrame(() => {
-      if (Player.IsValid) Player.PrintToChat(message);
+      foreach (var s in message.Split('\n')) Player.PrintToChat(s);
     });
   }
 
@@ -151,7 +151,7 @@ public class PlayerWrapper {
     }
 
     Server.NextFrame(() => {
-      if (Player.IsValid) Player.PrintToConsole(message);
+      foreach (var s in message.Split('\n')) Player.PrintToConsole(s);
     });
   }
 

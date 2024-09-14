@@ -1,4 +1,5 @@
-﻿using GangsAPI;
+﻿using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Perks;
 using GangsAPI.Services;
@@ -35,19 +36,21 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
     await HandleItemSelection(player, await GetItems(player), input);
   }
 
-  override protected async Task<List<string?>> GetItems(PlayerWrapper player) {
+  override protected async Task<List<string>> GetItems(PlayerWrapper player) {
     var gangPlayer = await players.GetPlayer(player.Steam);
 
     if (gangPlayer?.GangId == null || gangPlayer.GangRank == null) return [];
 
     var cost                            = await perk.GetCost(gangPlayer);
     var title                           = $"Gang Perk: {perk.Name}";
-    var items                           = new List<string?>();
+    var items                           = new List<string>();
     if (perk.Description != null) title += $"\n{perk.Description}";
     items.Add(title);
     if (cost != null) {
-      if (await economy.CanAfford(player, cost.Value))
-        items.Add($"Purchase ({cost})");
+      var color = await economy.CanAfford(player, cost.Value) ?
+        ChatColors.Green :
+        ChatColors.Red;
+      items.Add($"{color}Purchase ({cost})");
     }
 
     items.Add("Cancel");
@@ -55,7 +58,7 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
   }
 
   override protected async Task HandleItemSelection(PlayerWrapper player,
-    List<string?> items, int selectedIndex) {
+    List<string> items, int selectedIndex) {
     if (selectedIndex == 1) {
       var gangPlayer = await players.GetPlayer(player.Steam);
       if (gangPlayer?.GangId == null || gangPlayer.GangRank == null) return;
