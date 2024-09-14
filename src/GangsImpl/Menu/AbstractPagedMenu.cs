@@ -47,7 +47,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   }
 
   override abstract protected Task HandleItemSelection(PlayerWrapper player,
-    List<T?> items, int selectedIndex);
+    List<T> items, int selectedIndex);
 
   virtual protected async Task ShowPage(PlayerWrapper player, List<T?> items,
     int currentPage, int totalPages) {
@@ -63,7 +63,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     await Printer.Invoke(player, "0. Close Menu");
   }
 
-  override protected async Task Show(PlayerWrapper player, List<T?> items) {
+  override protected async Task Show(PlayerWrapper player, List<T> items) {
     for (var i = 0; i < items.Count; i++) {
       var str = FormatItem(player, i + 1, items[i]);
       foreach (var s in str.Result.Split('\n')) await Printer.Invoke(player, s);

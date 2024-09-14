@@ -45,7 +45,7 @@
   "perk.gangchat.format": " {darkred}[{red}{0}{darkred}] %color.special%{1}%color.default%: %color.default%{2}",
   "perk.purchased": "%color.target%{0}%color.default% purchased the %color.special%{1}%color.default% perk for your gang.",
   "perk.unpurchasable": "%prefix%You cannot purchase this perk.",
-  "perk.unpurchasable_withitem": "%prefix%You cannot purchase %color.white%{0}%color.default%.",
+  "perk.unpurchasable_withitem": "%prefix%You cannot purchase %color.emph%{0}%color.default%.",
   "perk.not_found": "%prefix%Could not find a perk using \"%color.special%{0}%color.default%\".",
   "eco.insufficient_funds": "%prefix%You need %color.currency%{0}%color.default% more %currency%%s% to purchase this.",
   "eco.insufficient_funds.with_item": "%prefix%You need %color.currency%{0}%color.default% more %currency%%s% to purchase %color.emph%{1}%color.default%.",

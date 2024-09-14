@@ -11,20 +11,18 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Commands.Menus;
 
 public class GangPerksMenu(IServiceProvider provider)
-  : AbstractPagedMenu<IPerk?>(provider, NativeSenders.Chat) {
+  : AbstractPagedMenu<IPerk>(provider, NativeSenders.Chat) {
   private readonly IGangStatManager gangStats =
     provider.GetRequiredService<IGangStatManager>();
 
-  override protected Task<List<IPerk?>> GetItems(PlayerWrapper player) {
-    List<IPerk?> perks =
-      Provider.GetRequiredService<IPerkManager>().Perks.ToList()!;
+  override protected Task<List<IPerk>> GetItems(PlayerWrapper player) {
+    var perks = Provider.GetRequiredService<IPerkManager>().Perks.ToList()!;
     return Task.FromResult(perks.ToList());
   }
 
   override protected async Task HandleItemSelection(PlayerWrapper player,
-    List<IPerk?> items, int selectedIndex) {
+    List<IPerk> items, int selectedIndex) {
     var perk = items[selectedIndex];
-    if (perk == null) return;
     player.PrintToChat($"You selected {perk.Name}");
     var gangPlayer = await Provider.GetRequiredService<IPlayerManager>()
      .GetPlayer(player.Steam);
@@ -65,7 +63,7 @@ public class GangPerksMenu(IServiceProvider provider)
   }
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
-    IPerk? item) {
-    return Task.FromResult(item == null ? "Title" : $"{index} {item.Name}")!;
+    IPerk item) {
+    return Task.FromResult($"{index} {item.Name}");
   }
 }
