@@ -41,10 +41,11 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
 
     if (gangPlayer?.GangId == null || gangPlayer.GangRank == null) return [];
 
-    var cost                            = await perk.GetCost(gangPlayer);
-    var title                           = $"Gang Perk: {perk.Name}";
-    var items                           = new List<string>();
-    if (perk.Description != null) title += $"\n{perk.Description}";
+    var cost  = await perk.GetCost(gangPlayer);
+    var title = $"{ChatColors.DarkBlue}Gang Perk: {ChatColors.Blue}{perk.Name}";
+    var items = new List<string>();
+    if (perk.Description != null)
+      title += $"\n{ChatColors.LightBlue}{perk.Description}";
     items.Add(title);
     if (cost != null) {
       var color = await economy.CanAfford(player, cost.Value) ?
@@ -70,11 +71,14 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
 
       await commands.ProcessCommand(player, "css_gang", "purchase",
         perk.StatId);
+      await Close(player);
     }
   }
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     string item) {
-    return Task.FromResult($"{index}. {item}");
+    return Task.FromResult(index == 0 ?
+      item :
+      $"{ChatColors.DarkRed}{index}. {ChatColors.Grey}{item}");
   }
 }

@@ -54,7 +54,7 @@
   "eco.purchased": "%prefix%{green}Successfully%color.default% purchased item, you now have %color.currency%{0} %currency%%s%.",
   "eco.purchased.with_item": "%prefix%{green}Successfully%color.default% purchased %color.emph%{0}%color.default%, you now have %color.currency%{1} %currency%%s%%color.default%.",
   "eco.purchased.with_gang": "%prefix%{green}Successfully%color.default% purchased item using gang %currency%%s%, you now have %color.currency%{0} %currency%%s%%color.default%.",
-  "eco.purchased.with_gang.with_item": "%prefix%{green}Successfully%color.default% purchased %color.emph%{0}%color.default% using gang %currency%%s%, your gang now has %color.currency%{0} %currency%%s%%color.default%.",
+  "eco.purchased.with_gang.with_item": "%prefix%{green}Successfully%color.default% purchased %color.emph%{0}%color.default% using gang %currency%%s%, your gang now has %color.currency%{1} %currency%%s%%color.default%.",
   "eco.purchased.with_both": "%prefix%{green}Successfully%color.default% purchased item (wiping out gang funds), you now have %color.currency%{0} %currency%%s%%color.default%.",
   "eco.purchased.with_both.with_item": "%prefix%{green}Successfully%color.default% purchased %color.emph%{0}%color.default% (wiping out gang funds), you now have %color.currency%{1} %currency%%s%%color.default%.",
   "eco.player.granted.positive": "%prefix%{green}+{0} %color.currency%%currency%%s% %color.emph%(%color.default%{1}%color.emph%)%color.default%.",

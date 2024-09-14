@@ -1,11 +1,10 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Data.Stat;
 using GangsAPI.Services;
-using GangsAPI.Services.Player;
 
 namespace Mock;
 
-public class MockEcoManager(IPlayerStatManager playerStats) : IEcoManager {
+public class MockEcoManager : IEcoManager {
   public Task<bool> CanAfford(PlayerWrapper player, int cost,
     bool excludeGangCredits = false) {
     throw new NotImplementedException();

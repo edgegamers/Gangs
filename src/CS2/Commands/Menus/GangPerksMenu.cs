@@ -1,5 +1,6 @@
 using GangsAPI;
 using GangsAPI.Data;
+using GangsAPI.Exceptions;
 using GangsAPI.Perks;
 using GangsAPI.Services;
 using GangsAPI.Services.Gang;
@@ -16,7 +17,7 @@ public class GangPerksMenu(IServiceProvider provider)
     provider.GetRequiredService<IGangStatManager>();
 
   override protected Task<List<IPerk>> GetItems(PlayerWrapper player) {
-    var perks = Provider.GetRequiredService<IPerkManager>().Perks.ToList()!;
+    var perks = Provider.GetRequiredService<IPerkManager>().Perks.ToList();
     return Task.FromResult(perks.ToList());
   }
 
@@ -25,28 +26,10 @@ public class GangPerksMenu(IServiceProvider provider)
     var perk = items[selectedIndex];
     var gangPlayer = await Provider.GetRequiredService<IPlayerManager>()
      .GetPlayer(player.Steam);
-    if (gangPlayer == null) return;
+    if (gangPlayer == null) throw new PlayerNotFoundException(player.Steam);
 
     if (gangPlayer.GangId == null) {
-      player.PrintToChat("You are not in a gang");
-      return;
-    }
-
-    var getForGang = gangStats.GetType().GetMethod("GetForGang");
-
-    if (getForGang == null) {
-      player.PrintToChat(Localizer.Get(MSG.GENERIC_ERROR_INFO,
-        "Could not find GetForGang"));
-      return;
-    }
-
-    var getForGangTyped = getForGang.MakeGenericMethod(perk.ValueType);
-    dynamic? task = getForGangTyped.Invoke(gangStats,
-      [gangPlayer.GangId.Value, perk.StatId]);
-
-    if (task == null) {
-      player.PrintToChat(Localizer.Get(MSG.GENERIC_ERROR_INFO,
-        $"Could not get stat {perk.StatId}"));
+      player.PrintToChat(Localizer.Get(MSG.NOT_IN_GANG));
       return;
     }
 
