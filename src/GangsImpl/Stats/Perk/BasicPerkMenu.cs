@@ -46,7 +46,7 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
     if (perk.Description != null) title += $"\n{perk.Description}";
     items.Add(title);
     if (cost != null) {
-      if (await economy.CanAfford(gangPlayer, cost.Value))
+      if (await economy.CanAfford(player, cost.Value))
         items.Add($"Purchase ({cost})");
     }
 
