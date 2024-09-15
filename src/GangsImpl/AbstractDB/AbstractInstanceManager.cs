@@ -1,5 +1,6 @@
 ﻿using System.Data.Common;
 using System.Reflection;
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using Dapper;
 using GangsAPI.Extensions;
@@ -93,6 +94,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
   }
 
   virtual protected string GetDBType(Type type) {
+    if (type.IsEnum) return "INT";
     return type.Name switch {
       "Int32" => "INT",
       "String" => "VARCHAR(255)",
@@ -111,24 +113,26 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       "Int16" => "SMALLINT",
       "Guid" => "CHAR(36)",
       "Char" => "CHAR",
-      "Enum" => "INT",
       _ => throw new NotImplementedException($"Unknown type {type.Name}")
     };
   }
 
   private async Task createTable<TV>(string id) {
-    var fields = typeof(TV)
-     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-     .ToList();
-
     var cmd = testing ?
       $"CREATE TEMPORARY TABLE IF NOT EXISTS {table_prefix}_{id} ({PrimaryKey} {primaryTypeString} NOT NULL PRIMARY KEY, " :
       $"CREATE TABLE IF NOT EXISTS {table_prefix}_{id} ({PrimaryKey} {primaryTypeString} NOT NULL PRIMARY KEY, ";
+
+    await Server.NextFrameAsync(() => {
+      Server.PrintToConsole($"cmd temp: {cmd}");
+    });
 
     if (typeof(TV).IsBasicallyPrimitive()) {
       cmd += $"{id} {GetDBType(typeof(TV))}";
       if (Nullable.GetUnderlyingType(typeof(TV)) == null) cmd += " NOT NULL)";
     } else {
+      var fields = typeof(TV)
+       .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+       .ToList();
       foreach (var field in fields) {
         cmd += $"{field.Name} {GetDBType(field.PropertyType)}";
         if (Nullable.GetUnderlyingType(field.PropertyType) == null)

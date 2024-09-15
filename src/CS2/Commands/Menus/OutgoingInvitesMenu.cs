@@ -28,9 +28,6 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
     players   = provider.GetRequiredService<IPlayerManager>();
     gangStats = provider.GetRequiredService<IGangStatManager>();
 
-    Server.NextFrame(() => {
-      Server.PrintToChatAll("Created, fetching door policy...");
-    });
     var (_, policy) = gangStats.GetForGang<DoorPolicy>(gang, doorPolicyId)
      .GetAwaiter()
      .GetResult();
@@ -77,7 +74,7 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
 
   override protected async Task<string> FormatItem(PlayerWrapper player,
     int index, InvitationEntry? item) {
-    if (item == null) return "Current join policy: " + doorPolicy;
+    if (item == null) return "Current door policy: " + doorPolicy;
     var invited = await players.GetPlayer(item.Value.Steam);
     var inviter = await players.GetPlayer(item.Value.Inviter);
 
