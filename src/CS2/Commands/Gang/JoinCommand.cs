@@ -35,7 +35,7 @@ public class JoinCommand(IServiceProvider provider) : ICommand {
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
-  private readonly string doorPolicyId = new DoorPollicyStat().StatId;
+  private readonly string doorPolicyId = new DoorPolicyStat().StatId;
   private readonly string invitationId = new InvitationStat().StatId;
 
   private readonly ICapacityPerk? capacityPerk =

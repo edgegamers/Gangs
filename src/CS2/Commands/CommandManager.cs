@@ -8,8 +8,10 @@ using GangsAPI.Exceptions;
 using GangsAPI.Services.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Mock;
 using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Commands;
 
@@ -47,14 +49,16 @@ public class CommandManager(IServiceProvider provider)
     processInternal(CCSPlayerController? executor, CommandInfo info) {
     var wrapper     = executor == null ? null : new PlayerWrapper(executor);
     var wrappedInfo = new CommandInfoWrapper(info);
-    Task.Run(async () => {
+    var result = Task.Run(async () => {
       try { return await ProcessCommand(wrapper, wrappedInfo); } catch (
         GangException e) {
         var msg = e.Message;
         await Server.NextFrameAsync(() => {
-          provider.GetRequiredService<ILogger>()
-           .Error(e,
-              $"Encountered an error when processing command: \"{wrappedInfo.GetCommandString}\" by {wrapper?.Steam}");
+          provider.GetRequiredService<ILoggerFactory>()
+           .CreateLogger("Gangs")
+           .LogError(e,
+              "Encountered an error when processing command: \"{command}\" by {steam}",
+              wrappedInfo.GetCommandString, wrapper?.Steam);
         });
         wrappedInfo.ReplySync(string.IsNullOrEmpty(msg) ?
           Locale.Get(MSG.GENERIC_ERROR) :

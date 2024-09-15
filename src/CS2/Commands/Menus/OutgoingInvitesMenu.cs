@@ -9,35 +9,64 @@ using Stats.Stat.Gang;
 
 namespace Commands.Menus;
 
-public class OutgoingInvitesMenu(IServiceProvider provider, IGang gang)
-  : AbstractPagedMenu<InvitationEntry>(provider, NativeSenders.Chat) {
-  private readonly IGangStatManager gangStats =
-    provider.GetRequiredService<IGangStatManager>();
+public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
+  private readonly IGangStatManager gangStats;
 
   private readonly InvitationStat invitationStat = new();
 
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
+  private readonly string doorPolicyId = new DoorPolicyStat().StatId;
 
-  override protected async Task<List<InvitationEntry>>
-    GetItems(PlayerWrapper _) {
+  private readonly IPlayerManager players;
+  private readonly IServiceProvider provider;
+  private readonly IGang gang;
+
+  private readonly DoorPolicy doorPolicy;
+
+  public OutgoingInvitesMenu(IServiceProvider provider, IGang gang) : base(
+    provider, NativeSenders.Chat) {
+    this.provider = provider;
+    this.gang     = gang;
+    players       = provider.GetRequiredService<IPlayerManager>();
+    gangStats     = provider.GetRequiredService<IGangStatManager>();
+
+    var (success, policy) = gangStats
+     .GetForGang<DoorPolicyStat>(gang, doorPolicyId)
+     .GetAwaiter()
+     .GetResult();
+
+    if (!success || policy == null) policy = new DoorPolicyStat();
+
+    doorPolicy = policy.Value;
+  }
+
+  override protected async Task<List<InvitationEntry?>> GetItems(
+    PlayerWrapper _) {
+    var results = new List<InvitationEntry?> { null };
     var (success, invites) =
       await gangStats.GetForGang<InvitationData>(gang, invitationStat.StatId);
-    if (!success || invites == null) return [];
+    if (!success || invites == null) return results;
 
-    return invites.GetEntries();
+    var entries = invites.GetEntries();
+    results.AddRange(entries.Select(entry => (InvitationEntry?)entry));
+    return results;
   }
 
   override protected Task HandleItemSelection(PlayerWrapper player,
-    List<InvitationEntry> items, int selectedIndex) {
+    List<InvitationEntry?> items, int selectedIndex) {
     var entry = items[selectedIndex];
+
+    if (entry == null) {
+      // Printer.Invoke(player, "Current join policy: ");
+      return Task.CompletedTask;
+    }
+
     Printer.Invoke(player,
-      $"Invitation sent to {entry.Steam} by {entry.Inviter} on {entry.Date}");
+      $"Invitation sent to {entry.Value.Steam} by {entry.Value.Inviter} on {entry.Value.Date}");
     return Task.CompletedTask;
   }
 
   override protected Task ShowPage(PlayerWrapper player,
-    List<InvitationEntry> items, int currentPage, int totalPages) {
+    List<InvitationEntry?> items, int currentPage, int totalPages) {
     if (currentPage == 0)
       player.PrintToChat(
         $"{ChatColors.DarkRed}!{ChatColors.Red}GANGS {ChatColors.LightRed}Invites {ChatColors.Grey}{gang.Name}");
@@ -45,13 +74,14 @@ public class OutgoingInvitesMenu(IServiceProvider provider, IGang gang)
   }
 
   override protected async Task<string> FormatItem(PlayerWrapper player,
-    int index, InvitationEntry item) {
-    var invited = await players.GetPlayer(item.Steam);
-    var inviter = await players.GetPlayer(item.Inviter);
+    int index, InvitationEntry? item) {
+    if (item == null) return "Current join policy: " + doorPolicy;
+    var invited = await players.GetPlayer(item.Value.Steam);
+    var inviter = await players.GetPlayer(item.Value.Inviter);
 
-    var invitedName = invited?.Name ?? item.Steam.ToString();
-    var inviterName = inviter?.Name ?? item.Inviter.ToString();
-    var text        = $"{invitedName} by {inviterName} on {item.Date}";
+    var invitedName = invited?.Name ?? item.Value.Steam.ToString();
+    var inviterName = inviter?.Name ?? item.Value.Inviter.ToString();
+    var text        = $"{invitedName} by {inviterName} on {item.Value.Date}";
     return text;
   }
 }
