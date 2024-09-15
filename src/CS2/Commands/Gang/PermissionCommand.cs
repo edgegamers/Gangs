@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Commands.Menus;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -8,6 +9,7 @@ using GangsAPI.Perks;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Gang;
@@ -20,14 +22,17 @@ public class PermissionCommand(IServiceProvider provider)
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
+  private readonly IMenuManager menus =
+    provider.GetRequiredService<IMenuManager>();
+
   public override string Name => "permission";
 
   public override string[] Aliases => ["permission", "perm", "perms"];
 
   public override string[] Usage
     => [
-      "listranks", "listperms", "grant <rank> <perm>", "revoke <rank> <perm>",
-      "set <rank> <int>"
+      "listranks", "listperms", "<rank>", "grant <rank> <perm>",
+      "revoke <rank> <perm>", "set <rank> <int>"
     ];
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
@@ -35,24 +40,6 @@ public class PermissionCommand(IServiceProvider provider)
     Debug.Assert(player.GangId != null, "player.GangId != null");
     var executorRank = await ranks.GetRank(player)
       ?? throw new GangException("Player has no rank");
-
-    if (info.ArgCount == 2) {
-      if (info.Args[1]
-       .Equals("listranks", StringComparison.OrdinalIgnoreCase)) {
-        var existing = await ranks.GetRanks(player.GangId.Value);
-        foreach (var r in existing)
-          info.ReplySync($"{r.Rank} {r.Name}: {r.Permissions.Describe()}");
-      }
-
-      if (info.Args[1]
-       .Equals("listperms", StringComparison.OrdinalIgnoreCase)) {
-        foreach (var r in Enum.GetValues<Perm>())
-          info.ReplySync($"{(int)r} {r}");
-      }
-    }
-
-    if (info.ArgCount != 3) return CommandResult.PRINT_USAGE;
-
     var (allowed, required) = await ranks.CheckRank(player, Perm.MANAGE_RANKS);
 
     if (!allowed) {
@@ -60,7 +47,36 @@ public class PermissionCommand(IServiceProvider provider)
       return CommandResult.NO_PERMISSION;
     }
 
-    var rank = await getRank(player, info.Args[1]);
+    if (info.ArgCount == 1) {
+      var lowerRanks = (await ranks.GetRanks(player.GangId.Value)).ToList();
+      lowerRanks = lowerRanks.Where(r => r.Rank > executorRank.Rank).ToList();
+
+      var menu = new PermissionsRankMenu(provider, lowerRanks);
+      await menus.OpenMenu(executor, menu);
+      return CommandResult.SUCCESS;
+    }
+
+    if (info.ArgCount == 2) {
+      if (info.Args[1]
+       .Equals("listranks", StringComparison.OrdinalIgnoreCase)) {
+        var existing = await ranks.GetRanks(player.GangId.Value);
+        foreach (var r in existing)
+          info.ReplySync($"{r.Rank} {r.Name}: {r.Permissions.Describe()}");
+        return CommandResult.SUCCESS;
+      }
+
+      if (info.Args[1]
+       .Equals("listperms", StringComparison.OrdinalIgnoreCase)) {
+        foreach (var r in Enum.GetValues<Perm>())
+          info.ReplySync($"{(int)r} {r}");
+        return CommandResult.SUCCESS;
+      }
+    }
+
+    if (info.ArgCount < 4) return CommandResult.PRINT_USAGE;
+
+
+    var rank = await getRank(player, info.Args[2]);
 
     if (rank == null) {
       info.ReplySync(Localizer.Get(MSG.RANK_NOT_FOUND, info.Args[1]));
@@ -77,18 +93,19 @@ public class PermissionCommand(IServiceProvider provider)
 
 
     Perm toSet;
+    var  query = string.Join(' ', info.Args.Skip(3));
 
-    if (int.TryParse(info.Args[2], out var permInt)) {
+    if (int.TryParse(info.Args[3], out var permInt)) {
       toSet = (Perm)permInt;
-    } else if (!Enum.TryParse(info.Args[2], true, out toSet)) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, info.Args[2],
+    } else if (!Enum.TryParse(query, true, out toSet)) {
+      info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, query,
         "rank or int"));
       return CommandResult.SUCCESS;
     }
 
     string msg;
 
-    switch (info.Args[0].ToLower()) {
+    switch (info.Args[1].ToLower()) {
       case "grant":
         applicator = p => p | rank.Permissions;
         msg        = Localizer.Get(MSG.RANK_MODIFY_GRANT, toSet, rank.Name);
