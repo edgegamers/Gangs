@@ -12,4 +12,6 @@ public interface IMotdPerk : IPerk {
   }
 
   Task<string?> GetMotd(IGang gang) { return GetMotd(gang.GangId); }
+
+  Task<bool> SetMotd(int gangid, string desc, IGangPlayer? player = null);
 }

@@ -30,7 +30,7 @@ public class CapacityPerk(IServiceProvider provider)
 
   // https://www.desmos.com/calculator/ie4owyajay
   private static int getCostFor(int size) {
-    var numerator = 100 * size + Math.Pow(4.9 * size, 4);
+    var numerator = 100 * size + 4.9 * Math.Pow(size, 4);
     return (int)(Math.Ceiling(numerator / 500) * 100);
   }
 

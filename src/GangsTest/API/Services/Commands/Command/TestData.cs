@@ -23,7 +23,8 @@ public class TestData : TheoryData<ICommand> {
     new LeaveCommand(), new ManagePermsCommand(),
     new MembersCommand(services.BuildServiceProvider()),
     new PerksCommand(services.BuildServiceProvider()),
-    new PurchaseCommand(services.BuildServiceProvider())
+    new PurchaseCommand(services.BuildServiceProvider()),
+    new MotdCommand(services.BuildServiceProvider())
   ];
 
   static TestData() { services.ConfigureServices(); }

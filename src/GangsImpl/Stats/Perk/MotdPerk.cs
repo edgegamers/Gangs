@@ -4,6 +4,7 @@ using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 
 namespace Stats.Perk;
 
@@ -28,7 +29,7 @@ public class MotdPerk(IServiceProvider provider)
     if (player.GangId == null || player.GangRank == null) return;
     var (success, desc) =
       await gangStats.GetForGang<string>(player.GangId.Value, StatId);
-    if (!success) desc = "";
+    if (!success) desc = "Use /gang motd <message> to set the MOTD.";
     await gangStats.SetForGang(player.GangId.Value, StatId, desc);
   }
 
@@ -40,7 +41,22 @@ public class MotdPerk(IServiceProvider provider)
     return success ? desc : null;
   }
 
-  public override Task<IMenu?> GetMenu(IGangPlayer player) {
-    return base.GetMenu(player);
+  public async Task<bool> SetMotd(int gangid, string desc,
+    IGangPlayer? player = null) {
+    var (success, _) = await gangStats.GetForGang<string>(gangid, StatId);
+    if (!success) return false;
+
+    await gangStats.SetForGang(gangid, StatId, desc);
+
+    if (player == null) return true;
+    var localizer = Provider.GetService<IStringLocalizer>();
+    var gangChat  = Provider.GetService<IGangChatPerk>();
+    var gang = await (Provider.GetService<IGangManager>()?.GetGang(gangid)
+      ?? Task.FromResult<IGang?>(null));
+    if (localizer == null || gangChat == null || gang == null) return true;
+    await gangChat.SendGangChat(player, gang,
+      localizer.Get(MSG.PERK_MOTD_SET, gang.Name, desc));
+
+    return true;
   }
 }
