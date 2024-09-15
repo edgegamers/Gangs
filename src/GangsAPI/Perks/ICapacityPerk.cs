@@ -3,6 +3,7 @@
 namespace GangsAPI.Perks;
 
 public interface ICapacityPerk : IPerk {
+  int MaxCapacity { get; }
   Task<int> GetCapacity(int gangid);
 
   Task<int> GetCapacity(IGangPlayer player) {
@@ -12,6 +13,4 @@ public interface ICapacityPerk : IPerk {
   }
 
   Task<int> GetCapacity(IGang gang) { return GetCapacity(gang.GangId); }
-
-  int MaxCapacity { get; }
 }

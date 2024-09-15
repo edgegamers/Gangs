@@ -1,6 +1,4 @@
-﻿using CounterStrikeSharp.API;
-using CounterStrikeSharp.API.Core.Commands;
-using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Services.Gang;
@@ -13,16 +11,15 @@ using ICommandManager = GangsAPI.Services.Commands.ICommandManager;
 namespace Commands.Menus;
 
 public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
+  private readonly DoorPolicy doorPolicy;
+
+  private readonly string doorPolicyId = new DoorPolicyStat().StatId;
+  private readonly IGang gang;
   private readonly IGangStatManager gangStats;
 
   private readonly InvitationStat invitationStat = new();
 
-  private readonly string doorPolicyId = new DoorPolicyStat().StatId;
-
   private readonly IPlayerManager players;
-  private readonly IGang gang;
-
-  private readonly DoorPolicy doorPolicy;
 
   public OutgoingInvitesMenu(IServiceProvider provider, IGang gang) : base(
     provider, NativeSenders.Chat) {

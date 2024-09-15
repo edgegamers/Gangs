@@ -14,23 +14,23 @@ using Microsoft.Extensions.Localization;
 namespace Commands.Gang;
 
 public class MotdCommand(IServiceProvider provider) : ICommand {
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  private readonly IStringLocalizer localizer =
+    provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
+
   public string Name => "motd";
 
   public string[] Aliases => ["motd", "description"];
 
   public string[] Usage => ["[motd]"];
-
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
-
-  private readonly IStringLocalizer localizer =
-    provider.GetRequiredService<IStringLocalizer>();
-
-  private readonly IRankManager ranks =
-    provider.GetRequiredService<IRankManager>();
-
-  private readonly IGangManager gangs =
-    provider.GetRequiredService<IGangManager>();
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
@@ -60,7 +60,7 @@ public class MotdCommand(IServiceProvider provider) : ICommand {
     if (rank != 0)
       throw new GangException("Passed rank check but not numerical check");
 
-    if (info.ArgCount == 1) { return CommandResult.PRINT_USAGE; }
+    if (info.ArgCount == 1) return CommandResult.PRINT_USAGE;
 
     var motdManager = provider.GetService<IMotdPerk>();
 

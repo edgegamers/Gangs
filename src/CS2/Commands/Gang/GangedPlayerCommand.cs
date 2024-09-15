@@ -1,5 +1,4 @@
-﻿using CounterStrikeSharp.API.Modules.Commands;
-using GangsAPI;
+﻿using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
@@ -8,26 +7,24 @@ using GangsAPI.Services.Commands;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Serilog.Core;
 
 namespace Commands.Gang;
 
 public abstract class GangedPlayerCommand(IServiceProvider provider)
   : ICommand {
+  protected readonly IStringLocalizer Localizer =
+    provider.GetRequiredService<IStringLocalizer>();
+
+  protected readonly IPlayerManager Players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  protected readonly IServiceProvider Provider = provider;
   public abstract string Name { get; }
   public virtual string? Description => null;
   public virtual string[] RequiredFlags => [];
   public virtual string[] RequiredGroups => [];
   public virtual string[] Aliases => [Name];
   public virtual string[] Usage => [];
-
-  protected readonly IPlayerManager Players =
-    provider.GetRequiredService<IPlayerManager>();
-
-  protected readonly IStringLocalizer Localizer =
-    provider.GetRequiredService<IStringLocalizer>();
-  
-  protected readonly IServiceProvider Provider = provider;
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

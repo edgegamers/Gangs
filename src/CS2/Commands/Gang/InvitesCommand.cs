@@ -11,7 +11,6 @@ using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Stats.Stat.Gang;
 
 namespace Commands.Gang;
 
@@ -59,7 +58,7 @@ public class InvitesCommand(IServiceProvider provider) : ICommand {
 
     var gang = await gangs.GetGang(gangPlayer.GangId.Value)
       ?? throw new GangNotFoundException(gangPlayer.GangId.Value);
-    
+
     var menu = new OutgoingInvitesMenu(provider, gang);
     await menus.OpenMenu(executor, menu);
     return CommandResult.SUCCESS;

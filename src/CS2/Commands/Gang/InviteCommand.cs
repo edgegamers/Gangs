@@ -6,7 +6,6 @@ using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
-using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using GangsAPI.Services.Server;
@@ -19,29 +18,30 @@ namespace Commands.Gang;
 
 public class InviteCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
+  private readonly string gangInviteId = new InvitationStat().StatId;
+
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
   private readonly IGangStatManager gangStats =
     provider.GetRequiredService<IGangStatManager>();
 
-  private readonly IPlayerStatManager playerStats =
-    provider.GetRequiredService<IPlayerStatManager>();
-
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly string playerPendingId = new PendingInvitations().StatId;
 
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
-  private readonly IRankManager ranks =
-    provider.GetRequiredService<IRankManager>();
-
-  private readonly string gangInviteId = new InvitationStat().StatId;
-  private readonly string playerPendingId = new PendingInvitations().StatId;
+  private readonly IPlayerStatManager playerStats =
+    provider.GetRequiredService<IPlayerStatManager>();
 
   private readonly IPlayerTargeter playerTargeter =
     provider.GetRequiredService<IPlayerTargeter>();
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
 
   public override string Name => "invite";
 
@@ -59,18 +59,16 @@ public class InviteCommand(IServiceProvider provider)
       ?? throw new SufficientRankNotFoundException(player.GangId.Value,
         Perm.INVITE_OTHERS);
 
-    if (!perms.Permissions.HasFlag(Perm.INVITE_OTHERS)) {
+    if (!perms.Permissions.HasFlag(Perm.INVITE_OTHERS))
       return await HandleNoPermission(player, info);
-    }
 
     var (success, invites) =
       await gangStats.GetForGang<InvitationData>(player.GangId.Value,
         gangInviteId);
     if (!success || invites == null) invites = new InvitationData();
 
-    if (info[1].Equals("cancel", StringComparison.OrdinalIgnoreCase)) {
+    if (info[1].Equals("cancel", StringComparison.OrdinalIgnoreCase))
       return await HandleCancelInvite(info, player, invites);
-    }
 
     return await HandleInvite(executor, player, info, invites);
   }
@@ -95,10 +93,9 @@ public class InviteCommand(IServiceProvider provider)
     if (!query.All(char.IsDigit))
       steamId = await RemoveInviteByName(info, player, invites, query,
         invitedSteams);
-    else {
+    else
       steamId = await RemoveInviteBySteamId(info, player, invites,
         ulong.Parse(query), query);
-    }
 
     if (steamId == null) return CommandResult.SUCCESS;
     await CancelPendingInvitation(player, steamId.Value);
@@ -137,9 +134,10 @@ public class InviteCommand(IServiceProvider provider)
       Debug.Assert(player.GangId != null, "player.GangId != null");
       await gangStats.SetForGang(player.GangId.Value, gangInviteId, invites);
       info.ReplySync(localizer.Get(MSG.COMMAND_INVITE_CANCELED, name));
-    } else
+    } else {
       throw new GangException(
         $"failed to remove invite which we found via {query}");
+    }
 
 
     return steamId;
@@ -153,9 +151,8 @@ public class InviteCommand(IServiceProvider provider)
       var invitingPlayer = await players.GetPlayer(steamId, false);
       if (invitingPlayer?.Name != null
         && invitingPlayer.Name.Contains(query,
-          StringComparison.OrdinalIgnoreCase)) {
+          StringComparison.OrdinalIgnoreCase))
         invitedNames.Add((steamId, invitingPlayer.Name));
-      }
     }
 
     return invitedNames;
@@ -179,10 +176,10 @@ public class InviteCommand(IServiceProvider provider)
 
   private async Task<ulong?> GetSteamId(CommandInfoWrapper info,
     PlayerWrapper executor) {
-    if (info[1].All(char.IsDigit)) { return ulong.Parse(info[1]); }
+    if (info[1].All(char.IsDigit)) return ulong.Parse(info[1]);
 
-    return (await playerTargeter.GetSingleTarget(info[1], executor,
-      localizer))?.Steam;
+    return (await playerTargeter.GetSingleTarget(info[1], executor, localizer))
+    ?.Steam;
   }
 
   private async Task<CommandResult> ProcessInvite(PlayerWrapper executor,
@@ -236,9 +233,8 @@ public class InviteCommand(IServiceProvider provider)
     var (fetchedPending, pending) =
       await playerStats.GetForPlayer<PendingInvitationData>(steam,
         playerPendingId);
-    if (!fetchedPending || pending == null) {
+    if (!fetchedPending || pending == null)
       pending = new PendingInvitationData();
-    }
 
     Debug.Assert(player.GangId != null, "player.GangId != null");
     pending.AddInvitation(player.GangId.Value);

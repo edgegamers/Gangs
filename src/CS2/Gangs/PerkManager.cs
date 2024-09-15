@@ -1,7 +1,6 @@
 ﻿using CounterStrikeSharp.API.Core;
 using GangsAPI.Perks;
 using GangsAPI.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Stats.Perk;
 
 namespace GangsImpl;
@@ -11,7 +10,7 @@ public class PerkManager(IServiceProvider provider) : IPerkManager {
     Perks = new List<IPerk> {
       new GangChatPerk(provider),
       new MotdPerk(provider),
-      new CapacityPerk(provider),
+      new CapacityPerk(provider)
     };
   }
 

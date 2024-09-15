@@ -74,7 +74,12 @@ public enum MSG {
   ECO_PLAYER_GIVE_NEGATIVE,
   ECO_PLAYER_GIVE_POSITIVE,
   ECO_GANG_GIVE_NEGATIVE,
-  ECO_GANG_GIVE_POSITIVE
+  ECO_GANG_GIVE_POSITIVE,
+  RANK_NOT_FOUND,
+  RANK_CANNOT_EDIT,
+  RANK_MODIFY_GRANT,
+  RANK_MODIFY_REVOKE,
+  RANK_MODIFY_SET
 }
 
 public static class LocaleExtensions {
@@ -157,6 +162,11 @@ public static class LocaleExtensions {
       MSG.ECO_PLAYER_GIVE_POSITIVE => "eco.player.granted.positive",
       MSG.ECO_GANG_GIVE_NEGATIVE => "eco.gang.granted.negative",
       MSG.ECO_GANG_GIVE_POSITIVE => "eco.gang.granted.positive",
+      MSG.RANK_NOT_FOUND => "rank.not_found",
+      MSG.RANK_CANNOT_EDIT => "rank.cannot_edit",
+      MSG.RANK_MODIFY_GRANT => "rank.modify.grant",
+      MSG.RANK_MODIFY_REVOKE => "rank.modify.revoke",
+      MSG.RANK_MODIFY_SET => "rank.modify.set",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }

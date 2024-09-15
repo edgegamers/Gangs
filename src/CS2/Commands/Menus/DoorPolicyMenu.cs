@@ -1,11 +1,6 @@
-﻿using System.Diagnostics;
-using CounterStrikeSharp.API.Core.Commands;
-using GangsAPI.Data;
+﻿using GangsAPI.Data;
 using GangsAPI.Data.Gang;
-using GangsAPI.Exceptions;
-using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
-using GangsAPI.Services.Player;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
 using ICommandManager = GangsAPI.Services.Commands.ICommandManager;
@@ -15,12 +10,12 @@ namespace Commands.Menus;
 public class DoorPolicyMenu(IServiceProvider provider, DoorPolicy active)
   : AbstractMenu<DoorPolicy>(provider.GetRequiredService<IMenuManager>(),
     NativeSenders.Chat) {
+  private readonly ICommandManager commands =
+    provider.GetRequiredService<ICommandManager>();
+
   override protected Task<List<DoorPolicy>> GetItems(PlayerWrapper player) {
     return Task.FromResult(Enum.GetValues<DoorPolicy>().ToList());
   }
-
-  private readonly ICommandManager commands =
-    provider.GetRequiredService<ICommandManager>();
 
   override protected Task HandleItemSelection(PlayerWrapper player,
     List<DoorPolicy> items, int selectedIndex) {

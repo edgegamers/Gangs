@@ -1,6 +1,4 @@
-﻿using GangsAPI.Services.Server;
-
-namespace Stats.Stat.Player;
+﻿namespace Stats.Stat.Player;
 
 public class PendingInvitations : BaseStat<PendingInvitationData> {
   public override string StatId => "pending_invitation";
@@ -17,14 +15,15 @@ public class PendingInvitationData {
      .Select(int.Parse)
      .ToList();
   }
-  
+
   public PendingInvitationData AddInvitation(int gangId) {
     InvitingGangs = string.Join(",", GetInvitingGangs().Append(gangId));
     return this;
   }
-  
+
   public PendingInvitationData RemoveInvitation(int gangId) {
-    InvitingGangs = string.Join(",", GetInvitingGangs().Where(id => id != gangId));
+    InvitingGangs =
+      string.Join(",", GetInvitingGangs().Where(id => id != gangId));
     return this;
   }
 }

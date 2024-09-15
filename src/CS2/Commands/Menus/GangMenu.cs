@@ -1,5 +1,4 @@
-﻿using System.Xml.Serialization;
-using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;

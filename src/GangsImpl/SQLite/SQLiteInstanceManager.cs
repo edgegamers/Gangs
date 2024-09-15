@@ -43,7 +43,8 @@ public class SQLiteGangInstanceManager(string connectionString,
 
     var onDuplicate = string.Join(", ",
       properties.Select(f => $"{f.Name} = @{f.Name}"));
-    if (typeof(TV).IsBasicallyPrimitive()) onDuplicate = $"{statId} = @{statId}";
+    if (typeof(TV).IsBasicallyPrimitive())
+      onDuplicate = $"{statId} = @{statId}";
     return
       $"INSERT INTO {myTablePrefix}_{statId} ({PrimaryKey}, {columns}) VALUES (@{PrimaryKey}, {values}) ON CONFLICT({PrimaryKey}) DO UPDATE SET {onDuplicate}";
   }
@@ -84,7 +85,8 @@ public class SQLitePlayerInstanceManager(string connectionString,
 
     var onDuplicate = string.Join(", ",
       properties.Select(f => $"{f.Name} = @{f.Name}"));
-    if (typeof(TV).IsBasicallyPrimitive()) onDuplicate = $"{statId} = @{statId}";
+    if (typeof(TV).IsBasicallyPrimitive())
+      onDuplicate = $"{statId} = @{statId}";
     return
       $"INSERT INTO {myTablePrefix}_{statId} ({PrimaryKey}, {columns}) VALUES (@{PrimaryKey}, {values}) ON CONFLICT({PrimaryKey}) DO UPDATE SET {onDuplicate}";
   }

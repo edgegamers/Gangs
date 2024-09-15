@@ -8,7 +8,6 @@ using GangsAPI.Exceptions;
 using GangsAPI.Perks;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
-using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,23 +17,23 @@ namespace Commands.Gang;
 
 public class DoorPolicyCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
-  public override string Name => "doorpolicy";
-
-  public override string[] Usage => ["", "[policy]"];
-
-  private readonly IMenuManager menus =
-    provider.GetRequiredService<IMenuManager>();
-
-  private readonly IGangStatManager gangStats =
-    provider.GetRequiredService<IGangStatManager>();
+  private readonly string doorPolicyId = new DoorPolicyStat().StatId;
 
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
+  private readonly IGangStatManager gangStats =
+    provider.GetRequiredService<IGangStatManager>();
+
+  private readonly IMenuManager menus =
+    provider.GetRequiredService<IMenuManager>();
+
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
-  private readonly string doorPolicyId = new DoorPolicyStat().StatId;
+  public override string Name => "doorpolicy";
+
+  public override string[] Usage => ["", "[policy]"];
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

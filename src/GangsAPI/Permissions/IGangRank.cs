@@ -101,7 +101,7 @@ public enum Perm {
 public interface IGangRank : IComparable<IGangRank> {
   string Name { get; }
   int Rank { get; }
-  Perm Permissions { get; }
+  Perm Permissions { get; set; }
 }
 
 public static class PermissionExtensions {

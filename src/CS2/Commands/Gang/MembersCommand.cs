@@ -16,6 +16,9 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
+  private readonly IGangTargeter gangTargeter =
+    provider.GetRequiredService<IGangTargeter>();
+
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
 
@@ -27,9 +30,6 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
 
   private readonly IPlayerTargeter playerTargeter =
     provider.GetRequiredService<IPlayerTargeter>();
-
-  private readonly IGangTargeter gangTargeter =
-    provider.GetRequiredService<IGangTargeter>();
 
   public string Name => "members";
 
@@ -58,8 +58,7 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
       goto foundPlayer;
     }
 
-    var memberPlayer =
-      await playerTargeter.GetSingleTarget(info[1], executor);
+    var memberPlayer = await playerTargeter.GetSingleTarget(info[1], executor);
     if (memberPlayer != null) {
       var gangPlayer = await players.GetPlayer(memberPlayer.Steam);
       if (gangPlayer is { GangId : not null, GangRank: not null }) {

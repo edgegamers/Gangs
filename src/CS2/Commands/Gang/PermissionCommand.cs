@@ -1,22 +1,127 @@
-﻿using GangsAPI.Data;
+﻿using System.Diagnostics;
+using GangsAPI;
+using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
-using GangsAPI.Services.Commands;
+using GangsAPI.Perks;
+using GangsAPI.Permissions;
+using GangsAPI.Services;
+using GangsAPI.Services.Gang;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Gang;
 
 public class PermissionCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
+
   public override string Name => "permission";
 
   public override string[] Aliases => ["permission", "perm", "perms"];
 
   public override string[] Usage
-    => ["grant <rank> <perm>", "revoke <rank> <perm>", "set <rank> <int>"];
+    => [
+      "listranks", "listperms", "grant <rank> <perm>", "revoke <rank> <perm>",
+      "set <rank> <int>"
+    ];
 
-  override protected Task<CommandResult> Execute(PlayerWrapper executor,
+  override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {
-    throw new GangException("Not implemented");
+    Debug.Assert(player.GangId != null, "player.GangId != null");
+    var executorRank = await ranks.GetRank(player)
+      ?? throw new GangException("Player has no rank");
+
+    if (info.ArgCount == 2) {
+      if (info.Args[1]
+       .Equals("listranks", StringComparison.OrdinalIgnoreCase)) {
+        var existing = await ranks.GetRanks(player.GangId.Value);
+        foreach (var r in existing)
+          info.ReplySync($"{r.Rank} {r.Name}: {r.Permissions.Describe()}");
+      }
+
+      if (info.Args[1]
+       .Equals("listperms", StringComparison.OrdinalIgnoreCase)) {
+        foreach (var r in Enum.GetValues<Perm>())
+          info.ReplySync($"{(int)r} {r}");
+      }
+    }
+
+    if (info.ArgCount != 3) return CommandResult.PRINT_USAGE;
+
+    var (allowed, required) = await ranks.CheckRank(player, Perm.MANAGE_RANKS);
+
+    if (!allowed) {
+      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+      return CommandResult.NO_PERMISSION;
+    }
+
+    var rank = await getRank(player, info.Args[1]);
+
+    if (rank == null) {
+      info.ReplySync(Localizer.Get(MSG.RANK_NOT_FOUND, info.Args[1]));
+      return CommandResult.SUCCESS;
+    }
+
+    if (rank.Rank <= executorRank.Rank) {
+      info.ReplySync(Localizer.Get(MSG.RANK_CANNOT_EDIT, rank.Name));
+      return CommandResult.SUCCESS;
+    }
+
+    Func<Perm, Perm> applicator;
+    string           action;
+
+
+    Perm toSet;
+
+    if (int.TryParse(info.Args[2], out var permInt)) {
+      toSet = (Perm)permInt;
+    } else if (!Enum.TryParse(info.Args[2], true, out toSet)) {
+      info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, info.Args[2],
+        "rank or int"));
+      return CommandResult.SUCCESS;
+    }
+
+    string msg;
+
+    switch (info.Args[0].ToLower()) {
+      case "grant":
+        applicator = p => p | rank.Permissions;
+        msg        = Localizer.Get(MSG.RANK_MODIFY_GRANT, toSet, rank.Name);
+        break;
+      case "revoke":
+        applicator = p => p & ~rank.Permissions;
+        msg        = Localizer.Get(MSG.RANK_MODIFY_REVOKE, toSet, rank.Name);
+        break;
+      case "set":
+        applicator = _ => rank.Permissions;
+        msg        = Localizer.Get(MSG.RANK_MODIFY_SET, rank.Name, toSet);
+        break;
+      default:
+        return CommandResult.PRINT_USAGE;
+    }
+
+    rank.Permissions = applicator(toSet);
+    await ranks.UpdateRank(player.GangId.Value, rank);
+
+    var gang = await gangs.GetGang(player.GangId.Value)
+      ?? throw new GangNotFoundException(player.GangId.Value);
+
+    var gangChat = Provider.GetService<IGangChatPerk>();
+    if (gangChat != null) await gangChat.SendGangChat(player, gang, msg);
+    return CommandResult.SUCCESS;
+  }
+
+  private async Task<IGangRank?> getRank(IGangPlayer player, string query) {
+    Debug.Assert(player.GangId != null, "player.GangId != null");
+    if (int.TryParse(query, out var id))
+      return await ranks.GetRank(player.GangId.Value, id);
+    var existing = await ranks.GetRanks(player.GangId.Value);
+    return existing.FirstOrDefault(r
+      => r.Name.Equals(query, StringComparison.OrdinalIgnoreCase));
   }
 }

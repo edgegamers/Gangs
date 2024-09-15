@@ -1,6 +1,4 @@
-﻿using GangsAPI.Data.Gang;
-
-namespace Stats.Stat.Gang;
+﻿namespace Stats.Stat.Gang;
 
 public class InvitationStat : BaseStat<InvitationData> {
   public override string StatId => "gang_invitation";
@@ -11,17 +9,17 @@ public class InvitationStat : BaseStat<InvitationData> {
 
 public class InvitationData {
   /// <summary>
-  /// List of players the gang has invited
+  ///   List of players the gang has invited
   /// </summary>
   public string InvitedSteams { get; set; } = "";
 
   /// <summary>
-  /// Linked list (to InvitedSteams) of players who invited the player
+  ///   Linked list (to InvitedSteams) of players who invited the player
   /// </summary>
   public string InviterSteams { get; set; } = "";
 
   /// <summary>
-  /// Separate list of players who requested to join the gang
+  ///   Separate list of players who requested to join the gang
   /// </summary>
   public string RequestedSteams { get; set; } = "";
 

@@ -17,8 +17,13 @@ using Stats.Stat.Gang;
 namespace Commands.Gang;
 
 public class JoinCommand(IServiceProvider provider) : ICommand {
-  public string Name => "join";
-  public string[] Usage => ["[gang]"];
+  private readonly ICapacityPerk? capacityPerk =
+    provider.GetService<ICapacityPerk>();
+
+  private readonly IGangChatPerk? chatPerk =
+    provider.GetService<IGangChatPerk>();
+
+  private readonly string doorPolicyId = new DoorPolicyStat().StatId;
 
   private readonly IGangStatManager gangStats =
     provider.GetRequiredService<IGangStatManager>();
@@ -26,23 +31,19 @@ public class JoinCommand(IServiceProvider provider) : ICommand {
   private readonly IGangTargeter gangTargeter =
     provider.GetRequiredService<IGangTargeter>();
 
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
+  private readonly string invitationId = new InvitationStat().StatId;
 
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
 
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
-  private readonly string doorPolicyId = new DoorPolicyStat().StatId;
-  private readonly string invitationId = new InvitationStat().StatId;
-
-  private readonly ICapacityPerk? capacityPerk =
-    provider.GetService<ICapacityPerk>();
-
-  private readonly IGangChatPerk? chatPerk =
-    provider.GetService<IGangChatPerk>();
+  public string Name => "join";
+  public string[] Usage => ["[gang]"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

@@ -26,13 +26,13 @@ public class GangChatPerk(IServiceProvider provider)
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
+  public override bool Value { get; set; }
+
   public override string StatId => "gang_native_chat";
   public override string Name => "Gang Chat";
 
   public override string Description
     => "Chat with your gang members with .[message]";
-
-  public override bool Value { get; set; }
 
   public async Task SendGangChat(string name, IGang gang, string message) {
     var members = await players.GetMembers(gang);

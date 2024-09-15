@@ -2,7 +2,6 @@
 using GangsAPI.Data.Gang;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
-using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 
@@ -10,12 +9,13 @@ namespace Stats.Perk;
 
 public class MotdPerk(IServiceProvider provider)
   : BasePerk<string>(provider), IMotdPerk, IPluginBehavior {
+  private readonly IGangStatManager gangStats =
+    provider.GetRequiredService<IGangStatManager>();
+
+  public override string Value { get; set; } = "";
   public override string StatId => "gang_native_motd";
   public override string Name => "MOTD";
   public override string? Description => "The message of the day for the gang.";
-
-  private readonly IGangStatManager gangStats =
-    provider.GetRequiredService<IGangStatManager>();
 
   public override async Task<int?> GetCost(IGangPlayer player) {
     if (player.GangId == null || player.GangRank == null) return null;
@@ -32,8 +32,6 @@ public class MotdPerk(IServiceProvider provider)
     if (!success) desc = "Use /gang motd <message> to set the MOTD.";
     await gangStats.SetForGang(player.GangId.Value, StatId, desc);
   }
-
-  public override string Value { get; set; } = "";
 
   public async Task<string?> GetMotd(int gangid) {
     var (success, desc) = await gangStats.GetForGang<string>(gangid, StatId);

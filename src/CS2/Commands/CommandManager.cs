@@ -10,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Mock;
-using Serilog;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Commands;
 

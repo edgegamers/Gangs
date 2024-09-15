@@ -91,9 +91,8 @@ public class GangCommand(IServiceProvider provider) : ICommand {
       await menu.AcceptInput(executor, index);
     }
 
-    if (!sub.TryGetValue(info[1], out var command)) {
+    if (!sub.TryGetValue(info[1], out var command))
       return CommandResult.UNKNOWN_COMMAND;
-    }
 
     var newInfo =
       new CommandInfoWrapper(executor, 1, info.Args) {

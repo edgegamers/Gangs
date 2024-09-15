@@ -70,5 +70,10 @@
   "eco.player.granted.positive": "%prefix%{green}+{0} %color.currency%%currency%%s% %color.emph%(%color.default%{1}%color.emph%)%color.default%.",
   "eco.player.granted.negative": "%prefix%{red}-{0} %color.currency%%currency%%s% %color.emph%(%color.default%{1}%color.emph%)%color.default%.",
   "eco.gang.granted.positive": " {green}+{0} %color.currency%%currency%%s% %color.emph%(%color.default%{1}%color.emph%)%color.default%.",
-  "eco.gang.granted.negative": " {red}-{0} %color.currency%%currency%%s% %color.emph%(%color.default%{1}%color.emph%)%color.default%."
+  "eco.gang.granted.negative": " {red}-{0} %color.currency%%currency%%s% %color.emph%(%color.default%{1}%color.emph%)%color.default%.",
+  "rank.not_found": "%prefix%Could not find a rank using \"%color.special%{0}%color.default%\".",
+  "rank.cannot_edit": "%prefix%You cannot edit %color.special%{0}%color.default% as they are higher than you.",
+  "rank.modify.grant": "Granted %color.special%{0}%color.default% to %color.target%{1}%color.default%.",
+  "rank.modify.revoke": "Revoked %color.special%{0}%color.default% from %color.target%{1}%color.default%.",
+  "rank.modify.set": "Set %color.target%{0}%color.default%'%s% permissions to %color.special%{1}%color.default%."
 }
