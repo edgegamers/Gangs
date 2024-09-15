@@ -59,17 +59,7 @@ public class InvitesCommand(IServiceProvider provider) : ICommand {
 
     var gang = await gangs.GetGang(gangPlayer.GangId.Value)
       ?? throw new GangNotFoundException(gangPlayer.GangId.Value);
-
-    var (success, gangInvites) =
-      await gangStats.GetForGang<InvitationData>(gang,
-        new InvitationStat().StatId);
-
-    if (!success || gangInvites == null
-      || gangInvites.GetInvitedSteams().Count == 0) {
-      info.ReplySync(locale.Get(MSG.COMMAND_INVITE_NONE));
-      return CommandResult.SUCCESS;
-    }
-
+    
     var menu = new OutgoingInvitesMenu(provider, gang);
     await menus.OpenMenu(executor, menu);
     return CommandResult.SUCCESS;

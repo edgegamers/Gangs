@@ -64,7 +64,7 @@ public class GangCommand(IServiceProvider provider) : ICommand {
       var gang = await gangs.GetGang(executor.Steam);
 
       if (gang == null) {
-        info.ReplySync(locale[COMMAND_GANG_NOTINGANG.Key()]);
+        info.ReplySync(locale.Get(COMMAND_GANG_NOTINGANG));
         return CommandResult.SUCCESS;
       }
 
@@ -73,8 +73,22 @@ public class GangCommand(IServiceProvider provider) : ICommand {
       return CommandResult.SUCCESS;
     }
 
-    if (!sub.TryGetValue(info[1], out var command))
+    if (int.TryParse(info[1], out var index)) {
+      if (executor == null) return CommandResult.PLAYER_ONLY;
+      var gang = await gangs.GetGang(executor.Steam);
+
+      if (gang == null) {
+        info.ReplySync(locale.Get(NOT_IN_GANG));
+        return CommandResult.SUCCESS;
+      }
+
+      var menu = new GangMenu(provider, gang);
+      await menu.AcceptInput(executor, index);
+    }
+
+    if (!sub.TryGetValue(info[1], out var command)) {
       return CommandResult.UNKNOWN_COMMAND;
+    }
 
     var newInfo =
       new CommandInfoWrapper(executor, 1, info.Args) {

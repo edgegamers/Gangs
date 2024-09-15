@@ -17,17 +17,15 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
   private readonly string doorPolicyId = new DoorPolicyStat().StatId;
 
   private readonly IPlayerManager players;
-  private readonly IServiceProvider provider;
   private readonly IGang gang;
 
   private readonly DoorPolicy doorPolicy;
 
   public OutgoingInvitesMenu(IServiceProvider provider, IGang gang) : base(
     provider, NativeSenders.Chat) {
-    this.provider = provider;
-    this.gang     = gang;
-    players       = provider.GetRequiredService<IPlayerManager>();
-    gangStats     = provider.GetRequiredService<IGangStatManager>();
+    this.gang = gang;
+    players   = provider.GetRequiredService<IPlayerManager>();
+    gangStats = provider.GetRequiredService<IGangStatManager>();
 
     var (success, policy) = gangStats
      .GetForGang<DoorPolicyStat>(gang, doorPolicyId)
