@@ -30,7 +30,7 @@ public class GangChatPerk(IServiceProvider provider)
   public override string Name => "Gang Chat";
 
   public override string Description
-    => "Chat with your gang members with $[message]";
+    => "Chat with your gang members with .[message]";
 
   public override bool Value { get; set; }
 
