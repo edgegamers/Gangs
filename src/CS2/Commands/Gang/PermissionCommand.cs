@@ -71,6 +71,16 @@ public class PermissionCommand(IServiceProvider provider)
           info.ReplySync($"{(int)r} {r}");
         return CommandResult.SUCCESS;
       }
+
+      var directEdit = await getRank(player, info.Args[1]);
+      if (directEdit == null) {
+        info.ReplySync(Localizer.Get(MSG.RANK_NOT_FOUND, info.Args[1]));
+        return CommandResult.SUCCESS;
+      }
+
+      var menu = new PermissionsEditMenu(provider, executorRank.Permissions,
+        directEdit.Permissions);
+      await menus.OpenMenu(executor, menu);
     }
 
     if (info.ArgCount < 4) return CommandResult.PRINT_USAGE;

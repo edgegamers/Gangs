@@ -106,38 +106,23 @@ public interface IGangRank : IComparable<IGangRank> {
 
 public static class PermissionExtensions {
   public static string ToFriendlyString(this Perm perms) {
-    switch (perms) {
-      case Perm.INVITE_OTHERS:
-        return "Invite Others";
-      case Perm.KICK_OTHERS:
-        return "Kick Others";
-      case Perm.BANK_DEPOSIT:
-        return "Deposit Money";
-      case Perm.BANK_WITHDRAW:
-        return "Withdraw Money";
-      case Perm.PROMOTE_OTHERS:
-        return "Promote Others";
-      case Perm.DEMOTE_OTHERS:
-        return "Demote Others";
-      case Perm.PURCHASE_PERKS:
-        return "Purchase Perks";
-      case Perm.MANAGE_PERKS:
-        return "Manage Perks";
-      case Perm.MANAGE_RANKS:
-        return "Manage Ranks";
-      case Perm.CREATE_RANKS:
-        return "Create Ranks";
-      case Perm.ADMINISTRATOR:
-        return "Administrator";
-      case Perm.OWNER:
-        return "Owner";
-      case Perm.VIEW_MEMBER_DETAILS:
-        return "View Member Details";
-      case Perm.MANAGE_INVITES:
-        return "Manage Invites";
-      default:
-        return perms.ToString().ToTitleCase();
-    }
+    return perms switch {
+      Perm.INVITE_OTHERS       => "Invite Others",
+      Perm.KICK_OTHERS         => "Kick Others",
+      Perm.BANK_DEPOSIT        => "Deposit Money",
+      Perm.BANK_WITHDRAW       => "Withdraw Money",
+      Perm.PROMOTE_OTHERS      => "Promote Others",
+      Perm.DEMOTE_OTHERS       => "Demote Others",
+      Perm.PURCHASE_PERKS      => "Purchase Perks",
+      Perm.MANAGE_PERKS        => "Manage Perks",
+      Perm.MANAGE_RANKS        => "Manage Ranks",
+      Perm.CREATE_RANKS        => "Create Ranks",
+      Perm.ADMINISTRATOR       => "Administrator",
+      Perm.OWNER               => "Owner",
+      Perm.VIEW_MEMBER_DETAILS => "View Member Details",
+      Perm.MANAGE_INVITES      => "Manage Invites",
+      _                        => perms.ToString().ToTitleCase()
+    };
   }
 
   public static string Describe(this Perm perms) {

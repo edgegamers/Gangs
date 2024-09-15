@@ -14,4 +14,10 @@ public class NativeSenders {
       player.PrintToConsole(message);
       return Task.CompletedTask;
     };
+
+  public static Func<PlayerWrapper, string, Task> Center
+    => (player, message) => {
+      player.PrintToCenter(message);
+      return Task.CompletedTask;
+    };
 }
