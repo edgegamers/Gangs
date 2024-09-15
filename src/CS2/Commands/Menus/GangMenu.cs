@@ -106,8 +106,7 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     var (success, invites) =
       await gangStatManager.GetForGang<InvitationData>(gang,
         invitationStat.StatId);
-    if (!success || invites == null) return;
-
+    if (!success || invites == null) invites = new InvitationData();
     player.PrintToChat(
       $" {ChatColors.DarkRed}2 | {ChatColors.Yellow}{invites.GetInvitedSteams().Count}{ChatColors.LightRed} Invite"
       + (invites.GetInvitedSteams().Count == 1 ? "" : "s"));

@@ -35,6 +35,7 @@ public class GangCommand(IServiceProvider provider) : ICommand {
     ["description"] = new MotdCommand(provider),
     ["promote"]     = new GangPromoteCommand(),
     ["demote"]      = new GangDemoteCommand(),
+    ["doorpolicy"]  = new DoorPolicyCommand(provider),
     ["stats"]       = new GangStatsCommand()
   };
 

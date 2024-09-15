@@ -1,4 +1,5 @@
 ﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core.Commands;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
@@ -7,6 +8,7 @@ using GangsAPI.Services.Player;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Stats.Stat.Gang;
+using ICommandManager = GangsAPI.Services.Commands.ICommandManager;
 
 namespace Commands.Menus;
 
@@ -55,7 +57,8 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
     var entry = items[selectedIndex];
 
     if (entry == null) {
-      // Printer.Invoke(player, "Current join policy: ");
+      Provider.GetRequiredService<ICommandManager>()
+       .ProcessCommand(player, "css_gang", "doorpolicy");
       return Task.CompletedTask;
     }
 
