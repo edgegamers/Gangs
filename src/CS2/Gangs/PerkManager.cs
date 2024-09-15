@@ -1,14 +1,18 @@
 ﻿using CounterStrikeSharp.API.Core;
 using GangsAPI.Perks;
 using GangsAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Stats.Perk;
 
 namespace GangsImpl;
 
 public class PerkManager(IServiceProvider provider) : IPerkManager {
   public void Start(BasePlugin? plugin, bool hotReload) {
-    Perks = new List<IPerk> { new GangChatPerk(provider) };
-    // foreach (var perk in Perks) plugin?.RegisterAllAttributes(perk);
+    Perks = new List<IPerk> {
+      new GangChatPerk(provider),
+      new MotdPerk(provider),
+      new CapacityPerk(provider),
+    };
   }
 
   public IEnumerable<IPerk> Perks { get; private set; } = [];

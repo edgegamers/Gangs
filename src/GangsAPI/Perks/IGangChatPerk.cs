@@ -2,7 +2,7 @@ using GangsAPI.Data.Gang;
 
 namespace GangsAPI.Perks;
 
-public interface IGangChatPerk {
+public interface IGangChatPerk : IPerk {
   Task SendGangChat(IGangPlayer player, IGang gang, string message) {
     return SendGangChat(player.Name ?? player.Steam.ToString(), gang, message);
   }

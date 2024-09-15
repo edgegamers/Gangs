@@ -2,7 +2,7 @@
 
 namespace GangsAPI.Perks;
 
-public interface ICapacityPerk {
+public interface ICapacityPerk : IPerk {
   Task<int> GetCapacity(int gangid);
 
   Task<int> GetCapacity(IGangPlayer player) {

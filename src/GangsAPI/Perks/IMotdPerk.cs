@@ -2,7 +2,7 @@
 
 namespace GangsAPI.Perks;
 
-public interface IMotdPerk {
+public interface IMotdPerk : IPerk {
   Task<string?> GetMotd(int gangid);
 
   Task<string?> GetMotd(IGangPlayer player) {
