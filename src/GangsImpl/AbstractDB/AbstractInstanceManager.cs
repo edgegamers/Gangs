@@ -122,10 +122,6 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       $"CREATE TEMPORARY TABLE IF NOT EXISTS {table_prefix}_{id} ({PrimaryKey} {primaryTypeString} NOT NULL PRIMARY KEY, " :
       $"CREATE TABLE IF NOT EXISTS {table_prefix}_{id} ({PrimaryKey} {primaryTypeString} NOT NULL PRIMARY KEY, ";
 
-    await Server.NextFrameAsync(() => {
-      Server.PrintToConsole($"cmd temp: {cmd}");
-    });
-
     if (typeof(TV).IsBasicallyPrimitive()) {
       cmd += $"{id} {GetDBType(typeof(TV))}";
       if (Nullable.GetUnderlyingType(typeof(TV)) == null) cmd += " NOT NULL)";
