@@ -3,7 +3,7 @@ using Microsoft.Extensions.Localization;
 
 namespace GangsAPI.Services.Server;
 
-public interface ITargeter : IPluginBehavior {
+public interface IPlayerTargeter : IPluginBehavior {
   Task<IEnumerable<PlayerWrapper>> GetTarget(string query,
     PlayerWrapper? executor = null, IStringLocalizer? localizer = null);
 

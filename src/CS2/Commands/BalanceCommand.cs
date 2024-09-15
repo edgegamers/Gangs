@@ -19,8 +19,8 @@ public class BalanceCommand(IServiceProvider provider) : ICommand {
   private readonly IPlayerStatManager playerStats =
     provider.GetRequiredService<IPlayerStatManager>();
 
-  private readonly ITargeter targeter =
-    provider.GetRequiredService<ITargeter>();
+  private readonly IPlayerTargeter playerTargeter =
+    provider.GetRequiredService<IPlayerTargeter>();
 
   public string Name => "css_balance";
 
@@ -47,7 +47,7 @@ public class BalanceCommand(IServiceProvider provider) : ICommand {
     if (info.ArgCount > 3) return CommandResult.PRINT_USAGE;
 
     var subject =
-      await targeter.GetSingleTarget(info[1], out _, executor, localizer);
+      await playerTargeter.GetSingleTarget(info[1], out _, executor, localizer);
 
     if (subject == null) return CommandResult.SUCCESS;
 

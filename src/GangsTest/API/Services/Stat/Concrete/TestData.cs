@@ -12,9 +12,8 @@ public class TestData : IEnumerable<object[]> {
   private static readonly IServiceCollection services = new ServiceCollection();
 
   private readonly IStat[] stats = [
-    new BalanceStat(), new DescriptionStat(),
-    new CapacityPerk(services.BuildServiceProvider()), new InvitationStat(),
-    new KDRStat(), new PlaytimeStat(), new RoundStats()
+    new BalanceStat(), new CapacityPerk(services.BuildServiceProvider()),
+    new InvitationStat(), new KDRStat(), new PlaytimeStat(), new RoundStats()
   ];
 
   static TestData() { services.ConfigureServices(); }

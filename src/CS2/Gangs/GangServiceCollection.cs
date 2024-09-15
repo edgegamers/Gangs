@@ -10,6 +10,7 @@ using GangsAPI.Services.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
+using Mock;
 using SQLImpl;
 using Stats.Perk;
 using StatsTracker;
@@ -20,7 +21,7 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
   public void ConfigureServices(IServiceCollection serviceCollection) {
     serviceCollection.AddScoped<IDBConfig, EnvDBConfig>();
     serviceCollection.AddPluginBehavior<IServerProvider, CS2ServerProvider>();
-    serviceCollection.AddPluginBehavior<ITargeter, CS2Targeter>();
+    serviceCollection.AddPluginBehavior<IPlayerTargeter, Cs2PlayerTargeter>();
     serviceCollection.AddPluginBehavior<IGangManager, MySQLGangManager>();
     serviceCollection.AddPluginBehavior<IPlayerManager, MySQLPlayerManager>();
     serviceCollection
@@ -33,6 +34,7 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection.AddPluginBehavior<IRankManager, MySQLRankManager>();
     serviceCollection.AddPluginBehavior<IPerkManager, PerkManager>();
     serviceCollection.AddPluginBehavior<IEcoManager, EcoManager>();
+    serviceCollection.AddScoped<IGangTargeter, BasicGangTargeter>();
 
     serviceCollection.RegisterCommands();
     serviceCollection.RegisterStatsTracker();

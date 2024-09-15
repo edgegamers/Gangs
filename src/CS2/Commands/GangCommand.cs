@@ -33,6 +33,9 @@ public class GangCommand(IServiceProvider provider) : ICommand {
     ["disband"]     = new DisbandCommand(provider),
     ["motd"]        = new MotdCommand(provider),
     ["description"] = new MotdCommand(provider),
+    ["promote"]     = new GangPromoteCommand(),
+    ["demote"]      = new GangDemoteCommand(),
+    ["stats"]       = new GangStatsCommand()
   };
 
   private IStringLocalizer locale =

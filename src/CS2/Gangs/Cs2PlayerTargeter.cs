@@ -7,7 +7,7 @@ using Microsoft.Extensions.Localization;
 
 namespace GangsImpl;
 
-public class CS2Targeter : ITargeter {
+public class Cs2PlayerTargeter : IPlayerTargeter {
   public async Task<IEnumerable<PlayerWrapper>> GetTarget(string query,
     PlayerWrapper? executor = null, IStringLocalizer? localizer = null) {
     var result = new List<PlayerWrapper>();

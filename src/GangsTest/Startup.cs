@@ -16,7 +16,7 @@ namespace GangsTest;
 public static class Startup {
   public static void ConfigureServices(this IServiceCollection services) {
     services.AddScoped<IServerProvider, MockServerProvider>();
-    services.AddScoped<ITargeter, MockTargeter>();
+    services.AddScoped<IPlayerTargeter, MockPlayerTargeter>();
     services.AddScoped<IPlayerManager, MockPlayerManager>();
     services.AddScoped<IGangManager, MockGangManager>();
     services.AddScoped<IStatManager, MockStatManager>();

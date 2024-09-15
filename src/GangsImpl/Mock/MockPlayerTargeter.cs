@@ -5,7 +5,7 @@ using Microsoft.Extensions.Localization;
 
 namespace Mock;
 
-public class MockTargeter(IServerProvider server) : ITargeter {
+public class MockPlayerTargeter(IServerProvider server) : IPlayerTargeter {
   public async Task<IEnumerable<PlayerWrapper>> GetTarget(string query,
     PlayerWrapper? executor = null, IStringLocalizer? localizer = null) {
     IEnumerable<PlayerWrapper> players = await server.GetPlayers();

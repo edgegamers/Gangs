@@ -25,8 +25,11 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
-  private readonly ITargeter targeter =
-    provider.GetRequiredService<ITargeter>();
+  private readonly IPlayerTargeter playerTargeter =
+    provider.GetRequiredService<IPlayerTargeter>();
+
+  private readonly IGangTargeter gangTargeter =
+    provider.GetRequiredService<IGangTargeter>();
 
   public string Name => "members";
 
@@ -55,7 +58,8 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
       goto foundPlayer;
     }
 
-    var memberPlayer = await targeter.GetSingleTarget(info[1], out _, executor);
+    var memberPlayer =
+      await playerTargeter.GetSingleTarget(info[1], out _, executor);
     if (memberPlayer != null) {
       var gangPlayer = await players.GetPlayer(memberPlayer.Steam);
       if (gangPlayer is { GangId : not null, GangRank: not null }) {
@@ -66,36 +70,12 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
     // Regardless of if an online player was found, if we reached this spot,
     // we did not find a valid gang by player. So, look for a gang by name.
 
-    var existingGangs = (await gangs.GetGangs()).ToList();
+    var foundGang =
+      await gangTargeter.FindGang(string.Join(' ', info.Args.Skip(1)),
+        executor);
 
-    var match = existingGangs.FirstOrDefault(g
-      => g.Name.Equals(info[1], StringComparison.CurrentCultureIgnoreCase));
-
-    if (match != null) {
-      gangId = match.GangId;
-      goto foundPlayer;
-    }
-
-    var matches = existingGangs.Where(g
-        => g.Name.Contains(info[1], StringComparison.CurrentCultureIgnoreCase))
-     .ToList();
-
-    switch (matches.Count) {
-      case 0:
-        info.ReplySync(locale.Get(MSG.GANG_NOT_FOUND, info[1]));
-        return CommandResult.SUCCESS;
-      case 1:
-        gangId = matches.First().GangId;
-        goto foundPlayer;
-      default:
-        var closest = matches
-         .OrderBy(g => CalcLevenshteinDistance(g.Name, info[1]))
-         .First();
-
-        info.ReplySync(locale.Get(MSG.GANG_NOT_FOUND_CLOSEST, closest.Name));
-        return CommandResult.SUCCESS;
-    }
-
+    if (foundGang == null) return CommandResult.SUCCESS;
+    gangId = foundGang.GangId;
 
   foundPlayer:
     var gang = await gangs.GetGang(gangId);
@@ -106,28 +86,5 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
 
     await menus.OpenMenu(executor, new MembersMenu(provider, gang));
     return CommandResult.SUCCESS;
-  }
-
-  private static int CalcLevenshteinDistance(string a, string b) {
-    if (string.IsNullOrEmpty(a) && string.IsNullOrEmpty(b)) return 0;
-    if (string.IsNullOrEmpty(a)) return b.Length;
-    if (string.IsNullOrEmpty(b)) return a.Length;
-
-    var lengthA   = a.Length;
-    var lengthB   = b.Length;
-    var distances = new int[lengthA + 1, lengthB + 1];
-    for (var i = 0; i <= lengthA; distances[i, 0] = i++) { }
-
-    for (var j = 0; j <= lengthB; distances[0, j] = j++) { }
-
-    for (var i = 1; i <= lengthA; i++)
-      for (var j = 1; j <= lengthB; j++) {
-        var cost = b[j - 1] == a[i - 1] ? 0 : 1;
-        distances[i, j] =
-          Math.Min(Math.Min(distances[i - 1, j] + 1, distances[i, j - 1] + 1),
-            distances[i - 1, j - 1] + cost);
-      }
-
-    return distances[lengthA, lengthB];
   }
 }
