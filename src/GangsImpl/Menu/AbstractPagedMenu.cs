@@ -12,18 +12,19 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     provider.GetRequiredService<IStringLocalizer>();
 
   protected readonly IServiceProvider Provider = provider;
+  protected readonly int ItemsPerPage = itemsPerPage;
 
   public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);
     var totalPages =
-      (items.Count + itemsPerPage - 1)
-      / itemsPerPage; // Calculate number of pages
+      (items.Count + ItemsPerPage - 1)
+      / ItemsPerPage; // Calculate number of pages
     await ShowPage(player, items, 1, totalPages);
   }
 
   public override async Task AcceptInput(PlayerWrapper player, int input) {
     var items      = await GetItems(player);
-    var totalPages = (items.Count + itemsPerPage - 1) / itemsPerPage;
+    var totalPages = (items.Count + ItemsPerPage - 1) / ItemsPerPage;
 
     switch (input) {
       case 0:
@@ -51,17 +52,17 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
 
   virtual protected async Task ShowPage(PlayerWrapper player, List<T> items,
     int currentPage, int totalPages) {
-    var startIndex = (currentPage - 1) * itemsPerPage;
-    var pageItems  = items.Skip(startIndex).Take(itemsPerPage).ToList();
+    var startIndex = (currentPage - 1) * ItemsPerPage;
+    var pageItems  = items.Skip(startIndex).Take(ItemsPerPage).ToList();
 
     if (totalPages != 1) player.PrintToChat($"Page {currentPage}/{totalPages}");
     await ShowPaged(player, pageItems, currentPage < totalPages,
       currentPage > 1);
 
     // Display navigation options
-    if (currentPage > 1) await Printer.Invoke(player, "8. Previous Page");
-    if (currentPage < totalPages) await Printer.Invoke(player, "9. Next Page");
-    await Printer.Invoke(player, "0. Close Menu");
+    if (currentPage > 1) await Printer(player, "8. Previous Page");
+    if (currentPage < totalPages) await Printer(player, "9. Next Page");
+    await Printer(player, "0. Close Menu");
   }
 
   virtual protected async Task ShowPaged(PlayerWrapper player, List<T> items,

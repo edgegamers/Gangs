@@ -1,36 +1,65 @@
-﻿using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API.Modules.Timers;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
+using GangsAPI.Data.Gang;
 using GangsAPI.Permissions;
+using GangsAPI.Services;
 using Menu;
+using Microsoft.Extensions.DependencyInjection;
+using Timer = CounterStrikeSharp.API.Modules.Timers.Timer;
 
 namespace Commands.Menus;
 
-public class PermissionsEditMenu(IServiceProvider provider, Perm allowedPerms,
-  Perm currentPerms)
+public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
+  Perm allowedPerms, IGangRank currentRank)
   : AbstractPagedMenu<Perm?>(provider, NativeSenders.Center, 5) {
-  private Perm currentPerm = currentPerms;
+  private Perm currentPerm = currentRank.Permissions;
+
+  private readonly Dictionary<PlayerWrapper, Timer> timers = new();
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
+
+  public override Task Close(PlayerWrapper player) {
+    if (timers.TryGetValue(player, out var timer)) timer.Kill();
+    return Task.CompletedTask;
+  }
 
   override protected Task<List<Perm?>> GetItems(PlayerWrapper player) {
     var perms = Enum.GetValues<Perm>();
-    var list  = new List<Perm?>();
-    foreach (var perm in perms) {
-      if (perm == Perm.NONE) continue;
-      if (allowedPerms.HasFlag(perm)) list.Add(perm);
-    }
+    var list = perms.Where(perm => perm != Perm.NONE)
+     .Where(perm => allowedPerms.HasFlag(perm))
+     .Select(perm => (Perm?)perm)
+     .ToList();
 
     list.Add(null); // Save
     return Task.FromResult(list);
+  }
+
+  override protected Task ShowPage(PlayerWrapper player, List<Perm?> items,
+    int currentPage, int totalPages) {
+    var start = (currentPage - 1) * ItemsPerPage;
+
+    var lines = items.Skip(start)
+     .Take(ItemsPerPage)
+     .Select((p, i) => {
+        var index = start + i + 1;
+        return FormatItem(player, index, p);
+      });
+
+    var text = string.Join("\n", lines);
+
+    timers[player] = new Timer(0.1f, () => Printer(player, text),
+      TimerFlags.REPEAT | TimerFlags.STOP_ON_MAPCHANGE);
+    return Task.CompletedTask;
   }
 
   override protected async Task HandleItemSelection(PlayerWrapper player,
     List<Perm?> items, int selectedIndex) {
     var selected = items[selectedIndex];
     if (selected == null) {
-      // Save
-      var perms = items.Where(p => p != null).Select(p => p.Value).ToArray();
-      var perm = Perm.NONE;
-      foreach (var p in perms) perm |= p;
-      // player.SetData("perms", perm);
+      currentRank.Permissions = currentPerm;
+      await ranks.UpdateRank(gang.GangId, currentRank);
       return;
     }
 

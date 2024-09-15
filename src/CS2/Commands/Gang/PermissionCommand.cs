@@ -41,6 +41,8 @@ public class PermissionCommand(IServiceProvider provider)
     var executorRank = await ranks.GetRank(player)
       ?? throw new GangException("Player has no rank");
     var (allowed, required) = await ranks.CheckRank(player, Perm.MANAGE_RANKS);
+    var gang = await gangs.GetGang(player.GangId.Value)
+      ?? throw new GangNotFoundException(player.GangId.Value);
 
     if (!allowed) {
       info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
@@ -78,8 +80,8 @@ public class PermissionCommand(IServiceProvider provider)
         return CommandResult.SUCCESS;
       }
 
-      var menu = new PermissionsEditMenu(provider, executorRank.Permissions,
-        directEdit.Permissions);
+      var menu = new PermissionsEditMenu(provider, gang,
+        executorRank.Permissions, directEdit);
       await menus.OpenMenu(executor, menu);
     }
 
@@ -99,8 +101,6 @@ public class PermissionCommand(IServiceProvider provider)
     }
 
     Func<Perm, Perm> applicator;
-    string           action;
-
 
     Perm toSet;
     var  query = string.Join(' ', info.Args.Skip(3));
@@ -135,8 +135,6 @@ public class PermissionCommand(IServiceProvider provider)
     rank.Permissions = applicator(toSet);
     await ranks.UpdateRank(player.GangId.Value, rank);
 
-    var gang = await gangs.GetGang(player.GangId.Value)
-      ?? throw new GangNotFoundException(player.GangId.Value);
 
     var gangChat = Provider.GetService<IGangChatPerk>();
     if (gangChat != null) await gangChat.SendGangChat(player, gang, msg);
