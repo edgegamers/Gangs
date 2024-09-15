@@ -21,11 +21,12 @@ public class TestData : TheoryData<ICommand> {
     new HelpCommand(services.BuildServiceProvider(),
       new Dictionary<string, ICommand>()),
     new InviteCommand(services.BuildServiceProvider()), new KickCommand(),
-    new LeaveCommand(), new ManagePermsCommand(),
-    new MembersCommand(services.BuildServiceProvider()),
+    new LeaveCommand(), new MembersCommand(services.BuildServiceProvider()),
     new PerksCommand(services.BuildServiceProvider()),
     new PurchaseCommand(services.BuildServiceProvider()),
-    new MotdCommand(services.BuildServiceProvider())
+    new MotdCommand(services.BuildServiceProvider()),
+    new PermissionCommand(services.BuildServiceProvider()),
+    new RankCommand(services.BuildServiceProvider())
   ];
 
   static TestData() { services.ConfigureServices(); }
