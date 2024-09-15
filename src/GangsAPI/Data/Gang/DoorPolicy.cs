@@ -2,17 +2,17 @@
 
 public enum DoorPolicy {
   /// <summary>
-  /// Anyone can join
+  /// May request to join (or be invited)
   /// </summary>
-  OPEN,
+  REQUEST_ONLY,
 
   /// <summary>
-  /// Must be invited by a member
+  /// Must be invited by a member (cannot request to join)
   /// </summary>
   INVITE_ONLY,
 
   /// <summary>
-  /// May request to join (or be invited)
+  /// Anyone can join
   /// </summary>
-  REQUEST_ONLY
+  OPEN,
 }

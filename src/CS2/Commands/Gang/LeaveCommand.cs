@@ -1,5 +1,6 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using GangsAPI.Exceptions;
 using GangsAPI.Services.Commands;
 
 namespace Commands.Gang;
@@ -9,6 +10,6 @@ public class LeaveCommand : ICommand {
 
   public Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
-    throw new NotImplementedException();
+    throw new GangException("Not implemented");
   }
 }

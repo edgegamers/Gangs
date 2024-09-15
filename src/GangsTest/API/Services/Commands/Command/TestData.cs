@@ -3,6 +3,7 @@ using Commands.Gang;
 using GangsAPI.Services.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using BalanceCommand = Commands.BalanceCommand;
+using StatsCommand = Commands.Gang.StatsCommand;
 
 namespace GangsTest.API.Services.Commands.Command;
 
@@ -15,8 +16,8 @@ public class TestData : TheoryData<ICommand> {
     new CreateCommand(services.BuildServiceProvider()),
     new DepositCommand(services.BuildServiceProvider()),
     new DisbandCommand(services.BuildServiceProvider()),
-    new GangCommand(services.BuildServiceProvider()), new GangDemoteCommand(),
-    new GangPromoteCommand(), new GangStatsCommand(),
+    new GangCommand(services.BuildServiceProvider()), new DemoteCommand(),
+    new PromoteCommand(), new StatsCommand(),
     new HelpCommand(services.BuildServiceProvider(),
       new Dictionary<string, ICommand>()),
     new InviteCommand(services.BuildServiceProvider()), new KickCommand(),

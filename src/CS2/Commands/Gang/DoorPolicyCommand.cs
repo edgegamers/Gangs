@@ -6,6 +6,8 @@ using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
 using GangsAPI.Perks;
+using GangsAPI.Permissions;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
@@ -29,6 +31,9 @@ public class DoorPolicyCommand(IServiceProvider provider)
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
+
   private readonly string doorPolicyId = new DoorPolicyStat().StatId;
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
@@ -39,6 +44,14 @@ public class DoorPolicyCommand(IServiceProvider provider)
       if (!int.TryParse(info.Args[1], out var selectedIndex)) {
         info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, info.Args[1],
           "a number"));
+        return CommandResult.SUCCESS;
+      }
+
+      var (success, required) =
+        await ranks.CheckRank(player, Perm.MANAGE_INVITES);
+
+      if (!success) {
+        info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
         return CommandResult.SUCCESS;
       }
 

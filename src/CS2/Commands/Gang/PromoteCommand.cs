@@ -5,7 +5,7 @@ using GangsAPI.Services.Commands;
 
 namespace Commands.Gang;
 
-public class GangPromoteCommand : ICommand {
+public class PromoteCommand : ICommand {
   public string Name => "promote";
 
   public Task<CommandResult> Execute(PlayerWrapper? executor,

@@ -1,4 +1,5 @@
 using GangsAPI.Data.Gang;
+using GangsAPI.Exceptions;
 using GangsAPI.Permissions;
 using GangsAPI.Services.Player;
 
@@ -161,14 +162,15 @@ public interface IRankManager : IPluginBehavior {
     return ranks.Last(r => r.Permissions.HasFlag(perm));
   }
 
-  async Task<(bool, IGangRank?)> CheckRank(IGangPlayer player, Perm perm) {
-    if (player.GangId == null || player.GangRank == null) return (false, null);
+  async Task<(bool, IGangRank)> CheckRank(IGangPlayer player, Perm perm) {
+    if (player.GangId == null || player.GangRank == null)
+      throw new GangNotFoundException(player);
     var required = await GetRankNeeded(player.GangId.Value, perm);
     var rank     = await GetRank(player);
     var perms    = rank?.Permissions;
-    if (perms == null) return (false, required);
-    if (perms.Value.HasFlag(perm)) return (true, required);
-    return (false, required);
+    return perms == null ?
+      (false, required) :
+      (perms.Value.HasFlag(perm), required);
   }
 
   #region Aliases

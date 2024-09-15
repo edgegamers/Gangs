@@ -1,14 +1,15 @@
 ﻿using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using GangsAPI.Exceptions;
 using GangsAPI.Services.Commands;
 
 namespace Commands.Gang;
 
-public class ManagePermsCommand : ICommand {
-  public string Name => "manageperms";
+public class DemoteCommand : ICommand {
+  public string Name => "demote";
 
   public Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
-    throw new NotImplementedException();
+    throw new GangException("Not implemented");
   }
 }
