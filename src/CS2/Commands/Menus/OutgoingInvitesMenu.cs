@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Services.Gang;
@@ -27,14 +28,17 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
     players   = provider.GetRequiredService<IPlayerManager>();
     gangStats = provider.GetRequiredService<IGangStatManager>();
 
-    var (success, policy) = gangStats
-     .GetForGang<DoorPolicyStat>(gang, doorPolicyId)
+    Server.NextFrame(() => {
+      Server.PrintToChatAll("Created, fetching door policy...");
+    });
+    var (_, policy) = gangStats.GetForGang<DoorPolicy>(gang, doorPolicyId)
      .GetAwaiter()
      .GetResult();
+    Server.NextFrame(() => {
+      Server.PrintToChatAll($"Door policy: {policy}");
+    });
 
-    if (!success || policy == null) policy = new DoorPolicyStat();
-
-    doorPolicy = policy.Value;
+    doorPolicy = policy;
   }
 
   override protected async Task<List<InvitationEntry?>> GetItems(

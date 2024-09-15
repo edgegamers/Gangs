@@ -111,6 +111,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       "Int16" => "SMALLINT",
       "Guid" => "CHAR(36)",
       "Char" => "CHAR",
+      "Enum" => "INT",
       _ => throw new NotImplementedException($"Unknown type {type.Name}")
     };
   }
