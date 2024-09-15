@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Modules.Timers;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
@@ -12,7 +13,7 @@ namespace Commands.Menus;
 
 public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
   Perm allowedPerms, IGangRank currentRank)
-  : AbstractPagedMenu<Perm?>(provider, NativeSenders.Center, 5) {
+  : AbstractPagedMenu<Perm?>(provider, NativeSenders.Center) {
   private Perm currentPerm = currentRank.Permissions;
 
   private readonly Dictionary<PlayerWrapper, Timer> timers = new();
@@ -36,22 +37,33 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
     return Task.FromResult(list);
   }
 
-  override protected Task ShowPage(PlayerWrapper player, List<Perm?> items,
-    int currentPage, int totalPages) {
+  override async protected Task ShowPage(PlayerWrapper player,
+    List<Perm?> items, int currentPage, int totalPages) {
     var start = (currentPage - 1) * ItemsPerPage;
 
-    var lines = items.Skip(start)
+    var lineTasks = items.Skip(start)
      .Take(ItemsPerPage)
-     .Select((p, i) => {
+     .Select(async (p, i) => {
         var index = start + i + 1;
-        return FormatItem(player, index, p);
+        return await FormatItem(player, index, p);
       });
+
+    var lines = await Task.WhenAll(lineTasks);
 
     var text = string.Join("\n", lines);
 
-    timers[player] = new Timer(0.1f, () => Printer(player, text),
-      TimerFlags.REPEAT | TimerFlags.STOP_ON_MAPCHANGE);
-    return Task.CompletedTask;
+    await Close(player);
+
+    await Server.NextFrameAsync(() => {
+      timers[player] = new Timer(0.1f, () => {
+        if (!player.IsValid) {
+          timers[player].Kill();
+          return;
+        }
+
+        Printer(player, text);
+      }, TimerFlags.REPEAT | TimerFlags.STOP_ON_MAPCHANGE);
+    });
   }
 
   override protected async Task HandleItemSelection(PlayerWrapper player,

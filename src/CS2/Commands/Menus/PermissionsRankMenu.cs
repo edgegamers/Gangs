@@ -33,6 +33,9 @@ public class PermissionsRankMenu(IServiceProvider provider,
     var       maxLength  = Convert.ToString(maxPerms, 2).Length;
     var       permString = Convert.ToString(perms, 2).PadLeft(maxLength, '0');
 
-    return Task.FromResult($"{index}. {item.Rank} {permString}");
+    var longestRank = ranks.Max(r => r.Name.Length);
+    var rankPadded  = item.Name.PadRight(longestRank);
+
+    return Task.FromResult($"{index}. {item.Name} ({rankPadded}) {permString}");
   }
 }

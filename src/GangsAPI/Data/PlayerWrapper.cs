@@ -163,7 +163,7 @@ public class PlayerWrapper {
     }
 
     Server.NextFrame(() => {
-      if (Player.IsValid) Player.PrintToCenter(message);
+      if (Player.IsValid) Player.PrintToCenterHtml(message);
     });
   }
 }
