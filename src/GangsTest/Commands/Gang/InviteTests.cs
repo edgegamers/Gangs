@@ -45,6 +45,8 @@ public class InviteTests(IServiceProvider provider)
 
   [Fact]
   public async Task Invite_NoArgument() {
+    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.Equal(CommandResult.PRINT_USAGE,
       await Commands.ProcessCommand(TestPlayer, "invite"));
     Assert.Contains(

@@ -56,7 +56,7 @@ public class TargeterTests(IStringLocalizer locale) : TestParent {
   [Theory]
   [ClassData(typeof(TargeterTestData))]
   public async Task Single_NoPlayers(IServerProvider _, IPlayerTargeter playerTargeter) {
-    Assert.Null(await playerTargeter.GetSingleTarget("@all", out var _, TestPlayer));
+    Assert.Null(await playerTargeter.GetSingleTarget("@all", TestPlayer));
   }
 
   [Theory]
@@ -64,7 +64,7 @@ public class TargeterTests(IStringLocalizer locale) : TestParent {
   public async Task Single_Me_All(IServerProvider server, IPlayerTargeter playerTargeter) {
     await server.AddPlayer(TestPlayer);
     Assert.Equal(TestPlayer,
-      await playerTargeter.GetSingleTarget("@all", out var _, TestPlayer));
+      await playerTargeter.GetSingleTarget("@all", TestPlayer));
   }
 
   [Theory]
@@ -72,7 +72,7 @@ public class TargeterTests(IStringLocalizer locale) : TestParent {
   public async Task Single_Me_Me(IServerProvider server, IPlayerTargeter playerTargeter) {
     await server.AddPlayer(TestPlayer);
     Assert.Equal(TestPlayer,
-      await playerTargeter.GetSingleTarget("@me", out var _, TestPlayer));
+      await playerTargeter.GetSingleTarget("@me", TestPlayer));
   }
 
   [Theory]
@@ -86,7 +86,7 @@ public class TargeterTests(IStringLocalizer locale) : TestParent {
   [Theory]
   [ClassData(typeof(TargeterTestData))]
   public async Task Single_Fail_Prints(IServerProvider _, IPlayerTargeter playerTargeter) {
-    await playerTargeter.GetSingleTarget("@all", out var _, TestPlayer, locale);
+    await playerTargeter.GetSingleTarget("@all", TestPlayer, locale);
     Assert.Equal([locale.Get(MSG.GENERIC_PLAYER_NOT_FOUND, "@all")],
       TestPlayer.ChatOutput);
   }
@@ -98,7 +98,7 @@ public class TargeterTests(IStringLocalizer locale) : TestParent {
     await server.AddPlayer(TestPlayer);
     await server.AddPlayer(new PlayerWrapper(new Random().NextULong(),
       "Other Player"));
-    await playerTargeter.GetSingleTarget("@all", out var _, TestPlayer, locale);
+    await playerTargeter.GetSingleTarget("@all", TestPlayer, locale);
     Assert.Equal([locale.Get(MSG.GENERIC_PLAYER_FOUND_MULTIPLE, "@all")],
       TestPlayer.ChatOutput);
   }

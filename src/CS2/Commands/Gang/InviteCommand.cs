@@ -181,7 +181,7 @@ public class InviteCommand(IServiceProvider provider)
     PlayerWrapper executor) {
     if (info[1].All(char.IsDigit)) { return ulong.Parse(info[1]); }
 
-    return (await playerTargeter.GetSingleTarget(info[1], out _, executor,
+    return (await playerTargeter.GetSingleTarget(info[1], executor,
       localizer))?.Steam;
   }
 
@@ -223,6 +223,11 @@ public class InviteCommand(IServiceProvider provider)
     info.ReplySync(localizer.Get(MSG.COMMAND_INVITE_SUCCESS,
       offlinePlayer.Name ?? offlinePlayer.Steam.ToString(), gangName));
 
+    var onlinePlayer =
+      await playerTargeter.GetSingleTarget(offlinePlayer.Steam.ToString());
+
+    onlinePlayer?.PrintToChat(localizer.Get(MSG.GANG_INVITED,
+      player.Name ?? player.Steam.ToString(), gangName));
     return await AddPendingInvitation(player, offlinePlayer.Steam);
   }
 

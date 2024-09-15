@@ -59,7 +59,7 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
     }
 
     var memberPlayer =
-      await playerTargeter.GetSingleTarget(info[1], out _, executor);
+      await playerTargeter.GetSingleTarget(info[1], executor);
     if (memberPlayer != null) {
       var gangPlayer = await players.GetPlayer(memberPlayer.Steam);
       if (gangPlayer is { GangId : not null, GangRank: not null }) {

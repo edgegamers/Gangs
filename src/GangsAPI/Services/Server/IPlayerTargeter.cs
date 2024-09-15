@@ -7,6 +7,6 @@ public interface IPlayerTargeter : IPluginBehavior {
   Task<IEnumerable<PlayerWrapper>> GetTarget(string query,
     PlayerWrapper? executor = null, IStringLocalizer? localizer = null);
 
-  Task<PlayerWrapper?> GetSingleTarget(string query, out bool matchedMany,
+  Task<PlayerWrapper?> GetSingleTarget(string query,
     PlayerWrapper? executor = null, IStringLocalizer? localizer = null);
 }

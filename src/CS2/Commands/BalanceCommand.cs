@@ -47,7 +47,7 @@ public class BalanceCommand(IServiceProvider provider) : ICommand {
     if (info.ArgCount > 3) return CommandResult.PRINT_USAGE;
 
     var subject =
-      await playerTargeter.GetSingleTarget(info[1], out _, executor, localizer);
+      await playerTargeter.GetSingleTarget(info[1], executor, localizer);
 
     if (subject == null) return CommandResult.SUCCESS;
 

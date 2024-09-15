@@ -45,6 +45,7 @@ public enum MSG {
   GANG_POLICY_INVITE_ACCEPTED,
   GANG_POLICY_REQUEST_SENT,
   GANG_POLICY_REQUEST_ALREADY,
+  GANG_INVITED,
   COLOR_DEFAULT,
   COLOR_EMPHASIS,
   COLOR_NUMBERL,
@@ -142,6 +143,7 @@ public static class LocaleExtensions {
       MSG.GANG_POLICY_REQUEST_SENT      => "gang.policy.request_sent",
       MSG.GANG_POLICY_REQUEST_ALREADY   => "gang.policy.request_already",
       MSG.GANG_POLICY_INVITE_ACCEPTED   => "gang.policy.invite_accepted",
+      MSG.GANG_INVITED                  => "gang.invited",
       MSG.ECO_INSUFFICIENT_FUNDS        => "eco.insufficient_funds",
       MSG.ECO_INSUFFICIENT_FUNDS_WITH_ITEM =>
         "eco.insufficient_funds.with_item",

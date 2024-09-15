@@ -29,10 +29,9 @@ public class MockPlayerTargeter(IServerProvider server) : IPlayerTargeter {
   }
 
   public Task<PlayerWrapper?> GetSingleTarget(string query,
-    out bool matchedMany, PlayerWrapper? executor = null,
-    IStringLocalizer? localizer = null) {
+    PlayerWrapper? executor = null, IStringLocalizer? localizer = null) {
     var matches = GetTarget(query, executor).GetAwaiter().GetResult().ToList();
-    matchedMany = matches.Count > 1;
+    var matchedMany = matches.Count > 1;
     if (localizer != null && matches.Count != 1)
       executor?.PrintToChat(localizer.Get(
         matchedMany ?

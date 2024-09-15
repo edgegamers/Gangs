@@ -28,10 +28,10 @@ public class Cs2PlayerTargeter : IPlayerTargeter {
   }
 
   public Task<PlayerWrapper?> GetSingleTarget(string query,
-    out bool matchedMany, PlayerWrapper? executor = null,
-    IStringLocalizer? localizer = null) {
-    var matches = GetTarget(query, executor).GetAwaiter().GetResult().ToList();
-    var count   = matches.Count;
+    PlayerWrapper? executor = null, IStringLocalizer? localizer = null) {
+    bool matchedMany;
+    var  matches = GetTarget(query, executor).GetAwaiter().GetResult().ToList();
+    var  count   = matches.Count;
     matchedMany = count > 1;
     if (count != 1 && localizer != null)
       executor?.PrintToChat(localizer.Get(
