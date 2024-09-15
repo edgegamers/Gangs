@@ -41,11 +41,12 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
 
     if (gangPlayer?.GangId == null || gangPlayer.GangRank == null) return [];
 
-    var cost  = await perk.GetCost(gangPlayer);
-    var title = $"{ChatColors.DarkBlue}Gang Perk: {ChatColors.Blue}{perk.Name}";
+    var cost = await perk.GetCost(gangPlayer);
+    var title =
+      $" {ChatColors.DarkBlue}Gang Perk: {ChatColors.Blue}{perk.Name}";
     var items = new List<string>();
     if (perk.Description != null)
-      title += $"\n{ChatColors.LightBlue}{perk.Description}";
+      title += $"\n {ChatColors.LightBlue}{perk.Description}";
     items.Add(title);
     if (cost != null) {
       var color = await economy.CanAfford(player, cost.Value) ?
@@ -54,25 +55,26 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
       items.Add($"{color}Purchase ({cost})");
     }
 
-    items.Add("Cancel");
     return items;
   }
 
   override protected async Task HandleItemSelection(PlayerWrapper player,
     List<string> items, int selectedIndex) {
-    if (selectedIndex == 1) {
-      var gangPlayer = await players.GetPlayer(player.Steam);
-      if (gangPlayer?.GangId == null || gangPlayer.GangRank == null) return;
-      if (await perk.GetCost(gangPlayer) == null) {
-        await Printer.Invoke(player,
-          localizer.Get(MSG.PERK_UNPURCHASABLE_WITH_ITEM, perk.Name));
-        return;
-      }
-
-      await commands.ProcessCommand(player, "css_gang", "purchase",
-        perk.StatId);
-      await Close(player);
+    if (items[selectedIndex].Contains("Cancel")) {
+      await Menus.CloseMenu(player);
+      return;
     }
+
+    var gangPlayer = await players.GetPlayer(player.Steam);
+    if (gangPlayer?.GangId == null || gangPlayer.GangRank == null) return;
+    if (await perk.GetCost(gangPlayer) == null) {
+      await Printer.Invoke(player,
+        localizer.Get(MSG.PERK_UNPURCHASABLE_WITH_ITEM, perk.Name));
+      return;
+    }
+
+    await commands.ProcessCommand(player, "css_gang", "purchase", perk.StatId);
+    await Menus.CloseMenu(player);
   }
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,

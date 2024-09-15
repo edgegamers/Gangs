@@ -1,7 +1,9 @@
-﻿using CounterStrikeSharp.API.Modules.Utils;
+﻿using System.Xml.Serialization;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
+using GangsAPI.Perks;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
@@ -43,8 +45,20 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
       (await ranks.GetRank(gang.GangId, member.GangRank.Value))!.Permissions;
 
     player.PrintToChat(" ");
-    player.PrintToChat(
-      $" {ChatColors.DarkRed}!GANGS {ChatColors.Default}- {ChatColors.Grey}{gang.Name}");
+    var title =
+      $" {ChatColors.DarkRed}!GANGS {ChatColors.Default}- {ChatColors.Grey}{gang.Name}";
+
+    var capacity = provider.GetService<ICapacityPerk>();
+
+    if (capacity != null) {
+      var cap = await capacity.GetCapacity(gang);
+      title +=
+        $" {ChatColors.DarkRed}[{ChatColors.Yellow}{members.Count}{ChatColors.Grey}/{ChatColors.Orange}{cap}{ChatColors.DarkRed}]";
+    }
+    
+    
+
+    player.PrintToChat(title);
 
     await addMemberItem(rank, player);
     await addInviteItem(rank, player);

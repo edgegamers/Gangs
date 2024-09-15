@@ -7,5 +7,7 @@ namespace Stats.Perk;
 public static class PerkCollection {
   public static void RegisterPerks(this IServiceCollection provider) {
     provider.AddPluginBehavior<IGangChatPerk, GangChatPerk>();
+    provider.AddPluginBehavior<ICapacityPerk, CapacityPerk>();
+    provider.AddPluginBehavior<IMotdPerk, MotdPerk>();
   }
 }

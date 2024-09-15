@@ -13,7 +13,7 @@ public class TestData : IEnumerable<object[]> {
 
   private readonly IStat[] stats = [
     new BalanceStat(), new DescriptionStat(),
-    new CapacityStat(services.BuildServiceProvider()), new InvitationStat(),
+    new CapacityPerk(services.BuildServiceProvider()), new InvitationStat(),
     new KDRStat(), new PlaytimeStat(), new RoundStats()
   ];
 
