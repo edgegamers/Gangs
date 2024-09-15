@@ -55,7 +55,7 @@ public class MotdPerk(IServiceProvider provider)
       ?? Task.FromResult<IGang?>(null));
     if (localizer == null || gangChat == null || gang == null) return true;
     await gangChat.SendGangChat(player, gang,
-      localizer.Get(MSG.PERK_MOTD_SET, gang.Name, desc));
+      localizer.Get(MSG.GANG_THING_SET, "MOTD", desc));
 
     return true;
   }

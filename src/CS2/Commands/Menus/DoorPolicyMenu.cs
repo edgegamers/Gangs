@@ -1,26 +1,38 @@
-﻿using GangsAPI.Data;
+﻿using System.Diagnostics;
+using CounterStrikeSharp.API.Core.Commands;
+using GangsAPI.Data;
 using GangsAPI.Data.Gang;
+using GangsAPI.Exceptions;
+using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
+using GangsAPI.Services.Player;
 using Menu;
+using Microsoft.Extensions.DependencyInjection;
+using ICommandManager = GangsAPI.Services.Commands.ICommandManager;
 
 namespace Commands.Menus;
 
-public class DoorPolicyMenu(IMenuManager menus,
-  Func<PlayerWrapper, string, Task> printer)
-  : AbstractMenu<DoorPolicy>(menus, printer) {
+public class DoorPolicyMenu(IServiceProvider provider, DoorPolicy active)
+  : AbstractMenu<DoorPolicy>(provider.GetRequiredService<IMenuManager>(),
+    NativeSenders.Chat) {
   override protected Task<List<DoorPolicy>> GetItems(PlayerWrapper player) {
     return Task.FromResult(Enum.GetValues<DoorPolicy>().ToList());
   }
 
+  private readonly ICommandManager commands =
+    provider.GetRequiredService<ICommandManager>();
+
   override protected Task HandleItemSelection(PlayerWrapper player,
     List<DoorPolicy> items, int selectedIndex) {
-    var policy = items[selectedIndex];
-    player.PrintToChat($"You picked door policy: {policy}");
+    commands.ProcessCommand(player, "css_gang", "doorpolicy",
+      (selectedIndex - 1).ToString());
     return Task.CompletedTask;
   }
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     DoorPolicy item) {
-    return Task.FromResult(item.ToString());
+    return Task.FromResult(item == active ?
+      $"*{index + 1}. {item}" :
+      $"{index + 1}. {item}");
   }
 }

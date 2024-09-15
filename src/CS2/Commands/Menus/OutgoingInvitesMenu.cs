@@ -33,9 +33,6 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
     var (_, policy) = gangStats.GetForGang<DoorPolicy>(gang, doorPolicyId)
      .GetAwaiter()
      .GetResult();
-    Server.NextFrame(() => {
-      Server.PrintToChatAll($"Door policy: {policy}");
-    });
 
     doorPolicy = policy;
   }
@@ -57,6 +54,7 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
     var entry = items[selectedIndex];
 
     if (entry == null) {
+      Printer.Invoke(player, $"Opening door policy menu for {gang.Name}");
       Provider.GetRequiredService<ICommandManager>()
        .ProcessCommand(player, "css_gang", "doorpolicy");
       return Task.CompletedTask;
@@ -77,7 +75,7 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
 
   override protected async Task<string> FormatItem(PlayerWrapper player,
     int index, InvitationEntry? item) {
-    if (item == null) return "Current door policy: " + doorPolicy;
+    if (item == null) return $"{index}. Current door policy: {doorPolicy}";
     var invited = await players.GetPlayer(item.Value.Steam);
     var inviter = await players.GetPlayer(item.Value.Inviter);
 

@@ -70,20 +70,13 @@ public class MotdCommand(IServiceProvider provider) : ICommand {
       return CommandResult.ERROR;
     }
 
-    var gang = await gangs.GetGang(gangPlayer.GangId.Value)
-      ?? throw new GangNotFoundException(gangPlayer.GangId.Value);
-
     var motd = string.Join(" ", info.Args.Skip(1));
 
     var result =
       await motdManager.SetMotd(gangPlayer.GangId.Value, motd, gangPlayer);
 
-    if (!result) {
+    if (!result)
       info.ReplySync(localizer.Get(MSG.PERK_MISSING, motdManager.Name));
-      return CommandResult.SUCCESS;
-    }
-
-    info.ReplySync(localizer.Get(MSG.PERK_MOTD_SET, gang.Name, motd));
     return CommandResult.SUCCESS;
   }
 }

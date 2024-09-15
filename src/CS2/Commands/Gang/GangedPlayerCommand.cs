@@ -26,6 +26,8 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
 
   protected readonly IStringLocalizer Localizer =
     provider.GetRequiredService<IStringLocalizer>();
+  
+  protected readonly IServiceProvider Provider = provider;
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
@@ -41,6 +43,6 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
     return await Execute(executor, gangPlayer, info);
   }
 
-  protected abstract Task<CommandResult> Execute(PlayerWrapper executor,
+  abstract protected Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info);
 }
