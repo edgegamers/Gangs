@@ -35,14 +35,15 @@ public class SQLiteGangInstanceManager(string connectionString,
     var columns = GetFieldNames<TV>();
     var values  = GetFieldNames<TV>("@");
 
-    if (typeof(TV).IsPrimitive) {
+    if (typeof(TV).IsPrimitive || typeof(TV) == typeof(string)) {
       columns = statId;
       values  = $"@{statId}";
     }
 
     var onDuplicate = string.Join(", ",
       properties.Select(f => $"{f.Name} = @{f.Name}"));
-    if (typeof(TV).IsPrimitive) onDuplicate = $"{statId} = @{statId}";
+    if (typeof(TV).IsPrimitive || typeof(TV) == typeof(string))
+      onDuplicate = $"{statId} = @{statId}";
     return
       $"INSERT INTO {myTablePrefix}_{statId} ({PrimaryKey}, {columns}) VALUES (@{PrimaryKey}, {values}) ON CONFLICT({PrimaryKey}) DO UPDATE SET {onDuplicate}";
   }
@@ -76,14 +77,15 @@ public class SQLitePlayerInstanceManager(string connectionString,
     var columns = GetFieldNames<TV>();
     var values  = GetFieldNames<TV>("@");
 
-    if (typeof(TV).IsPrimitive) {
+    if (typeof(TV).IsPrimitive || typeof(TV) == typeof(string)) {
       columns = statId;
       values  = $"@{statId}";
     }
 
     var onDuplicate = string.Join(", ",
       properties.Select(f => $"{f.Name} = @{f.Name}"));
-    if (typeof(TV).IsPrimitive) onDuplicate = $"{statId} = @{statId}";
+    if (typeof(TV).IsPrimitive || typeof(TV) == typeof(string))
+      onDuplicate = $"{statId} = @{statId}";
     return
       $"INSERT INTO {myTablePrefix}_{statId} ({PrimaryKey}, {columns}) VALUES (@{PrimaryKey}, {values}) ON CONFLICT({PrimaryKey}) DO UPDATE SET {onDuplicate}";
   }

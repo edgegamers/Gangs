@@ -53,10 +53,14 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     if (capacity != null) {
       var cap = await capacity.GetCapacity(gang);
       title +=
-        $" {ChatColors.DarkRed}[{ChatColors.Yellow}{members.Count}{ChatColors.Grey}/{ChatColors.Orange}{cap}{ChatColors.DarkRed}]";
+        $" {ChatColors.LightRed}[{ChatColors.Yellow}{members.Count}{ChatColors.Grey}/{ChatColors.Orange}{cap}{ChatColors.LightRed}]";
     }
-    
-    
+
+    var desc = provider.GetService<IMotdPerk>();
+    if (desc != null) {
+      var motd                = await desc.GetMotd(gang);
+      if (motd != null) title += $"\n {ChatColors.Grey}{motd}";
+    }
 
     player.PrintToChat(title);
 

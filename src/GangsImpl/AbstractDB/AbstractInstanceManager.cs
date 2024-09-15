@@ -21,7 +21,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       var dynamic = new DynamicParameters();
       dynamic.Add(PrimaryKey, key);
       var result = await Connection.QuerySingleAsync<TV>(
-        $"SELECT {(typeof(TV).IsPrimitive ? statId : GetFieldNames<TV>())} FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
+        $"SELECT {(typeof(TV).IsPrimitive || typeof(TV) == typeof(string) ? statId : GetFieldNames<TV>())} FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamic);
       return (true, result);
     } catch (InvalidOperationException e) {
@@ -35,14 +35,15 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     var columns = GetFieldNames<TV>();
     var values  = GetFieldNames<TV>("@");
 
-    if (typeof(TV).IsPrimitive) {
+    if (typeof(TV).IsPrimitive || typeof(TV) == typeof(string)) {
       columns = statId;
       values  = $"@{statId}";
     }
 
     var onDuplicate = string.Join(", ",
       properties.Select(f => $"{f.Name} = @{f.Name}"));
-    if (typeof(TV).IsPrimitive) onDuplicate = $"{statId} = @{statId}";
+    if ((typeof(TV).IsPrimitive || typeof(TV) == typeof(string)))
+      onDuplicate = $"{statId} = @{statId}";
     return
       $"INSERT INTO {table_prefix}_{statId} ({PrimaryKey}, {columns}) VALUES (@{PrimaryKey}, {values}) ON DUPLICATE KEY UPDATE {onDuplicate}";
   }
@@ -59,7 +60,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     var fieldValues = new DynamicParameters();
     fieldValues.Add("@" + PrimaryKey, key);
 
-    if (typeof(TV).IsPrimitive)
+    if (typeof(TV).IsPrimitive || typeof(TV) == typeof(string))
       fieldValues.Add($"@{statId}", value);
     else
       foreach (var field in fields)
@@ -122,7 +123,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       $"CREATE TEMPORARY TABLE IF NOT EXISTS {table_prefix}_{id} ({PrimaryKey} {primaryTypeString} NOT NULL PRIMARY KEY, " :
       $"CREATE TABLE IF NOT EXISTS {table_prefix}_{id} ({PrimaryKey} {primaryTypeString} NOT NULL PRIMARY KEY, ";
 
-    if (typeof(TV).IsPrimitive) {
+    if (typeof(TV).IsPrimitive || typeof(TV) == typeof(string)) {
       cmd += $"{id} {GetDBType(typeof(TV))}";
       if (Nullable.GetUnderlyingType(typeof(TV)) == null) cmd += " NOT NULL)";
     } else {
