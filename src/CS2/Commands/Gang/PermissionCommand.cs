@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Commands.Menus;
 using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -57,45 +58,47 @@ public class PermissionCommand(IServiceProvider provider)
       return CommandResult.NO_PERMISSION;
     }
 
-    if (info.ArgCount == 1) {
-      var lowerRanks = (await ranks.GetRanks(player.GangId.Value)).ToList();
-      lowerRanks = lowerRanks.Where(r => r.Rank > executorRank.Rank).ToList();
+    switch (info.ArgCount) {
+      case 1: {
+        var lowerRanks = (await ranks.GetRanks(player.GangId.Value)).ToList();
+        lowerRanks = lowerRanks.Where(r => r.Rank > executorRank.Rank).ToList();
 
-      var menu = new PermissionsRankMenu(Provider, lowerRanks);
-      await menus.OpenMenu(executor, menu);
-      return CommandResult.SUCCESS;
-    }
-
-    if (info.ArgCount == 2) {
-      if (info.Args[1]
-       .Equals("listranks", StringComparison.OrdinalIgnoreCase)) {
+        var menu = new PermissionsRankMenu(Provider, lowerRanks);
+        await menus.OpenMenu(executor, menu);
+        return CommandResult.SUCCESS;
+      }
+      case 2 when info.Args[1]
+       .Equals("listranks", StringComparison.OrdinalIgnoreCase): {
         var existing = await ranks.GetRanks(player.GangId.Value);
         foreach (var r in existing)
-          info.ReplySync($"{r.Rank} {r.Name}: {r.Permissions.Describe()}");
+          info.ReplySync(
+            $"{ChatColors.LightRed}{r.Rank} {ChatColors.Green}{r.Name}{ChatColors.Grey}: {r.Permissions.GetChatBitfield()}");
         return CommandResult.SUCCESS;
       }
-
-      if (info.Args[1]
-       .Equals("listperms", StringComparison.OrdinalIgnoreCase)) {
+      case 2 when info.Args[1]
+       .Equals("listperms", StringComparison.OrdinalIgnoreCase): {
         foreach (var r in Enum.GetValues<Perm>())
-          info.ReplySync($"{(int)r} {r}");
+          info.ReplySync(
+            $"{r.GetChatBitfield()} {ChatColors.Green}{r.ToFriendlyString()}");
         return CommandResult.SUCCESS;
       }
+      case 2: {
+        var directEdit = await getRank(executor, player, info.Args[1]);
+        if (directEdit == null) {
+          info.ReplySync(Localizer.Get(MSG.RANK_NOT_FOUND, info.Args[1]));
+          return CommandResult.SUCCESS;
+        }
 
-      var directEdit = await getRank(player, info.Args[1]);
-      if (directEdit == null) {
-        info.ReplySync(Localizer.Get(MSG.RANK_NOT_FOUND, info.Args[1]));
-        return CommandResult.SUCCESS;
+        var menu = new PermissionsEditMenu(Provider, plugin, gang,
+          executorRank.Permissions, directEdit);
+        await menus.OpenMenu(executor, menu);
+        break;
       }
-
-      var menu = new PermissionsEditMenu(Provider, plugin, gang,
-        executorRank.Permissions, directEdit);
-      await menus.OpenMenu(executor, menu);
     }
 
     if (info.ArgCount < 4) return CommandResult.PRINT_USAGE;
 
-    var rank = await getRank(player, info.Args[2]);
+    var rank = await getRank(executor, player, info.Args[2]);
 
     if (rank == null) {
       info.ReplySync(Localizer.Get(MSG.RANK_NOT_FOUND, info.Args[1]));
@@ -147,12 +150,18 @@ public class PermissionCommand(IServiceProvider provider)
     return CommandResult.SUCCESS;
   }
 
-  private async Task<IGangRank?> getRank(IGangPlayer player, string query) {
+  private async Task<IGangRank?> getRank(PlayerWrapper wrapper,
+    IGangPlayer player, string query) {
     Debug.Assert(player.GangId != null, "player.GangId != null");
     if (int.TryParse(query, out var id))
       return await ranks.GetRank(player.GangId.Value, id);
     var existing = await ranks.GetRanks(player.GangId.Value);
-    return existing.FirstOrDefault(r
+    var result = existing.FirstOrDefault(r
       => r.Name.Equals(query, StringComparison.OrdinalIgnoreCase));
+
+    if (result == null)
+      wrapper.PrintToChat(Localizer.Get(MSG.RANK_NOT_FOUND, query));
+
+    return result;
   }
 }

@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI.Data;
 using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -63,7 +64,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     // Display navigation options
     if (currentPage > 1) await Printer(player, "8. Previous Page");
     if (currentPage < totalPages) await Printer(player, "9. Next Page");
-    await Printer(player, "/close. Close Menu");
+    await Printer(player, "0. Close");
 
     CurrentPages[player.Steam] = currentPage;
   }

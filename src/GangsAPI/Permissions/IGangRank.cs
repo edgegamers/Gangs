@@ -1,4 +1,5 @@
-﻿using GangsAPI.Extensions;
+﻿using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI.Extensions;
 
 namespace GangsAPI.Permissions;
 
@@ -147,5 +148,14 @@ public static class PermissionExtensions {
     var last = permissions[^1];
     permissions.RemoveAt(permissions.Count - 1);
     return $"{string.Join(", ", permissions)}, and {last}";
+  }
+
+  public static string GetChatBitfield(this Perm perms) {
+    var maxPerms   = Enum.GetValues<Perm>().Max();
+    var maxLength  = Convert.ToString((int)maxPerms, 2).Length;
+    var permString = Convert.ToString((int)perms, 2).PadLeft(maxLength, '0');
+    permString = permString.Replace("0", ChatColors.Red + "X")
+     .Replace("1", ChatColors.Green + "Y");
+    return permString;
   }
 }

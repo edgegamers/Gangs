@@ -4,6 +4,7 @@ using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
+using GangsAPI.Services.Commands;
 using GangsAPI.Services.Menu;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
     NativeSenders.Center, 6) {
     ranks             = provider.GetRequiredService<IRankManager>();
     menus             = provider.GetRequiredService<IMenuManager>();
+    commands          = provider.GetRequiredService<ICommandManager>();
     this.gang         = gang;
     this.allowedPerms = allowedPerms;
     this.currentRank  = currentRank;
@@ -33,6 +35,7 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
   private readonly IGang gang;
   private readonly Perm allowedPerms;
   private readonly IGangRank currentRank;
+  private readonly ICommandManager commands;
   private readonly BasePlugin plugin;
 
   public override void Dispose() {
@@ -58,8 +61,6 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
      .Where(perm => allowedPerms.HasFlag(perm))
      .Select(perm => (Perm?)perm)
      .ToList();
-
-    list.Add(null); // Save
     return Task.FromResult(list);
   }
 
@@ -69,14 +70,12 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
 
     var lineTasks = items.Skip(start)
      .Take(ItemsPerPage)
-     .Select(async (p, i) => {
-        var index = start + i + 1;
-        return await FormatItem(player, index, p);
-      });
+     .Select(async (p, i) => await FormatItem(player, i - start + 1, p));
 
     var lines = await Task.WhenAll(lineTasks);
 
-    lines = lines.Append("/7 Back, /8 Next, /Close").ToArray();
+    lines = lines.Append("/7 Back, /8 Next, /9 Save").ToArray();
+    lines = lines.Prepend("/0 Cancel").ToArray();
 
     var text = string.Join("<br>", lines);
     activeTexts[player.Steam] = text;
@@ -85,7 +84,6 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
   public async override Task AcceptInput(PlayerWrapper player, int input) {
     var items      = await GetItems(player);
     var totalPages = (items.Count + ItemsPerPage - 1) / ItemsPerPage;
-    player.PrintToChat($"Got input {input}");
 
     switch (input) {
       case 0:
@@ -102,6 +100,11 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
         await ShowPage(player, items, currentPage - 1, totalPages);
         break;
       }
+      case 9:
+        await commands.ProcessCommand(player, "css_gang", "permission", "set",
+          currentRank.Rank.ToString(), ((int)currentPerm).ToString());
+        await Close(player);
+        break;
       default:
         await HandleItemSelection(player, items, input - 1);
         break;

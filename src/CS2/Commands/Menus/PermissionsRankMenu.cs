@@ -27,16 +27,7 @@ public class PermissionsRankMenu(IServiceProvider provider,
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     IGangRank item) {
-    // Convert rank's permissions to a bitfield string
-    var perms = (int)item.Permissions;
-
-    const int maxPerms = (int)Perm.OWNER;
-    var       longestRankName = ranks.Max(r => r.Rank.ToString().Length);
-    var       maxLength = Convert.ToString(maxPerms, 2).Length;
-    var       permString = Convert.ToString(perms, 2).PadLeft(maxLength, '0');
-    permString = permString.Replace("0", ChatColors.Red + "N")
-     .Replace("1", ChatColors.Green + "Y");
-
-    return Task.FromResult($"{permString} {index} ({item.Rank}): {item.Name}");
+    return Task.FromResult(
+      $"{ChatColors.Grey}{index}. {item.Permissions.GetChatBitfield()}{ChatColors.Grey} ({ChatColors.White}{item.Rank}{ChatColors.Grey}): {ChatColors.LightBlue}{item.Name}");
   }
 }
