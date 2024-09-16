@@ -13,7 +13,7 @@ namespace Commands.Menus;
 
 public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
   Perm allowedPerms, IGangRank currentRank)
-  : AbstractPagedMenu<Perm?>(provider, NativeSenders.Center) {
+  : AbstractPagedMenu<Perm?>(provider, NativeSenders.Chat) {
   private Perm currentPerm = currentRank.Permissions;
 
   private readonly Dictionary<PlayerWrapper, Timer> timers = new();
@@ -37,7 +37,7 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
     return Task.FromResult(list);
   }
 
-  override async protected Task ShowPage(PlayerWrapper player,
+  override protected async Task ShowPage(PlayerWrapper player,
     List<Perm?> items, int currentPage, int totalPages) {
     var start = (currentPage - 1) * ItemsPerPage;
 
@@ -49,6 +49,8 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
       });
 
     var lines = await Task.WhenAll(lineTasks);
+
+    lines = lines.Append("/7 Back, /8 Next, 0. Close").ToArray();
 
     var text = string.Join("\n", lines);
 
@@ -86,10 +88,12 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
     Perm? item) {
     if (item == null) return Task.FromResult("Save");
 
-    var color = currentPerm.HasFlag(item.Value) ?
-      ChatColors.Green :
-      ChatColors.Red;
+    var color       = currentPerm.HasFlag(item.Value) ? "#00FF00" : "#FF0000";
+    var coloredHtml = $"<font color=\"{color}\">{item.Value.Describe()}</font>";
+    var result      = $"{index}. {color}{coloredHtml}";
 
-    return Task.FromResult($"{index}. {color}{item.Value.Describe()}");
+    if (index == 1) result = "Editing permissions for " + currentRank.Name;
+
+    return Task.FromResult(result);
   }
 }

@@ -8,7 +8,7 @@ namespace Commands.Menus;
 
 public class PermissionsRankMenu(IServiceProvider provider,
   List<IGangRank> ranks)
-  : AbstractPagedMenu<IGangRank>(provider, NativeSenders.Chat, 5) {
+  : AbstractPagedMenu<IGangRank>(provider, NativeSenders.Chat) {
   override protected Task<List<IGangRank>> GetItems(PlayerWrapper player) {
     return Task.FromResult(ranks);
   }
@@ -29,13 +29,15 @@ public class PermissionsRankMenu(IServiceProvider provider,
     // Convert rank's permissions to a bitfield string
     var perms = (int)item.Permissions;
 
-    const int maxPerms   = (int)Perm.OWNER;
-    var       maxLength  = Convert.ToString(maxPerms, 2).Length;
+    const int maxPerms = (int)Perm.OWNER;
+    var       longestRankName = ranks.Max(r => r.Rank.ToString().Length);
+    var       maxLength = Convert.ToString(maxPerms, 2).Length;
     var       permString = Convert.ToString(perms, 2).PadLeft(maxLength, '0');
 
-    var longestRank = ranks.Max(r => r.Name.Length);
-    var rankPadded  = item.Name.PadRight(longestRank);
+    var rankName    = item.Name.PadRight(longestRankName, ' ');
+    var longestRank = ranks.Max(r => r.Rank.ToString().Length);
+    var rankPadded  = item.Rank.ToString().PadLeft(longestRank, '0');
 
-    return Task.FromResult($"{index}. {item.Name} ({rankPadded}) {permString}");
+    return Task.FromResult($"{index}. {rankName} ({rankPadded}) {permString}");
   }
 }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Localization;
 namespace Menu;
 
 public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
-  Func<PlayerWrapper, string, Task> printer, int itemsPerPage = 8)
+  Func<PlayerWrapper, string, Task> printer, int itemsPerPage = 7)
   : AbstractMenu<T>(provider.GetRequiredService<IMenuManager>(), printer) {
   protected readonly IStringLocalizer Localizer =
     provider.GetRequiredService<IStringLocalizer>();

@@ -131,7 +131,7 @@ public static class PermissionExtensions {
 
     var permissions =
       (from perm in Enum.GetValues<Perm>()
-        where perms.HasFlag(perm)
+        where perms.HasFlag(perm) && perm != Perm.NONE
         select ToFriendlyString(perm)).ToList();
 
     switch (permissions.Count) {
