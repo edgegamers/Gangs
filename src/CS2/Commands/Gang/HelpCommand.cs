@@ -23,7 +23,7 @@ public class HelpCommand(IServiceProvider provider,
     foreach (var (name, cmd) in sub) {
       if (!sent.Add(cmd.Name)) continue;
       var uses = cmd.Usage.Where(use => !string.IsNullOrEmpty(use)).ToList();
-      var useString = uses.Count > 0 ? "(" + string.Join(",", uses) + ")" : "";
+      var useString = uses.Count > 0 ? "(" + string.Join(", ", uses) + ")" : "";
       if (cmd.Description != null)
         info.ReplySync(locale.Get(MSG.PREFIX) + ChatColors.Grey
           + $"{cmd.Name} - {cmd.Description}");
