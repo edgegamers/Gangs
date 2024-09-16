@@ -66,6 +66,8 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     await addMemberItem(rank, player);
     await addInviteItem(rank, player);
     await addPerkItem(rank, player);
+    addPermItem(rank, player);
+    addRankItem(rank, player);
   }
 
   public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
@@ -93,12 +95,6 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     return Task.CompletedTask;
   }
 
-  private Task addPerkItem(Perm _, PlayerWrapper player) {
-    player.PrintToChat(
-      $" {ChatColors.DarkRed}3 {ChatColors.Grey}| {ChatColors.LightRed}Perks");
-    return Task.CompletedTask;
-  }
-
   private async Task addInviteItem(Perm rank, PlayerWrapper player) {
     if (!rank.HasFlag(Perm.INVITE_OTHERS)) return;
 
@@ -109,5 +105,24 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     player.PrintToChat(
       $" {ChatColors.DarkRed}2 | {ChatColors.Yellow}{invites.GetInvitedSteams().Count}{ChatColors.LightRed} Invite"
       + (invites.GetInvitedSteams().Count == 1 ? "" : "s"));
+  }
+
+  private Task addPerkItem(Perm _, PlayerWrapper player) {
+    player.PrintToChat(
+      $" {ChatColors.DarkRed}3 {ChatColors.Grey}| {ChatColors.LightRed}Perks");
+    return Task.CompletedTask;
+  }
+
+
+  private void addPermItem(Perm rank, PlayerWrapper player) {
+    if (!rank.HasFlag(Perm.MANAGE_RANKS)) return;
+    player.PrintToChat(
+      $" {ChatColors.DarkRed}4 {ChatColors.Grey}| {ChatColors.LightRed}Permissions");
+  }
+
+  private void addRankItem(Perm rank, PlayerWrapper player) {
+    if (!rank.HasFlag(Perm.CREATE_RANKS)) return;
+    player.PrintToChat(
+      $" {ChatColors.DarkRed}5 {ChatColors.Grey}| {ChatColors.LightRed}Ranks");
   }
 }

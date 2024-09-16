@@ -55,12 +55,13 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
       items.Add($"{color}Purchase ({cost})");
     }
 
+    items.Add("Close");
     return items;
   }
 
   override protected async Task HandleItemSelection(PlayerWrapper player,
     List<string> items, int selectedIndex) {
-    if (items[selectedIndex].Contains("Cancel")) {
+    if (items[selectedIndex].Contains("Close")) {
       await Menus.CloseMenu(player);
       return;
     }
@@ -81,6 +82,6 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
     string item) {
     return Task.FromResult(index == 0 ?
       item :
-      $"{ChatColors.DarkRed}{index}. {ChatColors.Grey}{item}");
+      $"{index}. {ChatColors.Grey}{item}");
   }
 }

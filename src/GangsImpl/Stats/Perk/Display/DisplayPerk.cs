@@ -1,0 +1,52 @@
+﻿using GangsAPI;
+using GangsAPI.Data.Gang;
+using GangsAPI.Perks;
+using GangsAPI.Services.Gang;
+using GangsAPI.Services.Menu;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Stats.Perk.Display;
+
+public class DisplayPerk(IServiceProvider provider)
+  : BasePerk<DisplayData>(provider), IDisplayPerk {
+  public int ChatCost => 50000;
+  public int ScoreboardCost => 2000;
+  public override string StatId => "display_perk";
+  public override string Name => "Display";
+
+  public override string? Description
+    => "Customize where your gang name shows up";
+
+  private readonly IGangStatManager gangStats =
+    provider.GetRequiredService<IGangStatManager>();
+
+  public override Task<int?> GetCost(IGangPlayer player) {
+    return Task.FromResult<int?>(null);
+  }
+
+  public override Task OnPurchase(IGangPlayer player) {
+    return Task.CompletedTask;
+  }
+
+  public override Task<IMenu?> GetMenu(IGangPlayer player) {
+    var menu = new DisplayPerkMenu(Provider, Value);
+    return Task.FromResult<IMenu?>(menu);
+  }
+
+  public override DisplayData Value { get; set; } = new();
+
+  public async Task<bool> HasChatDisplay(IGang gang) {
+    var (success, data) = await gangStats.GetForGang<DisplayData>(gang, StatId);
+    return success && data is { ChatBought: true };
+  }
+
+  public async Task<bool> HasScoreboardDisplay(IGang gang) {
+    var (success, data) = await gangStats.GetForGang<DisplayData>(gang, StatId);
+    return success && data is { ScoreboardBought: true };
+  }
+}
+
+public class DisplayData {
+  public bool ChatBought { get; set; }
+  public bool ScoreboardBought { get; set; }
+}
