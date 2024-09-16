@@ -31,6 +31,11 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
     return Task.CompletedTask;
   }
 
+  public override void Dispose() {
+    foreach (var timer in timers.Values) timer.Kill();
+    timers.Clear();
+  }
+
   override protected Task<List<Perm?>> GetItems(PlayerWrapper player) {
     var perms = Enum.GetValues<Perm>();
     var list = perms.Where(perm => perm != Perm.NONE)
@@ -59,7 +64,7 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
 
     var text = string.Join("<br>", lines);
     await Server.NextFrameAsync(() => {
-      timers[player] = new Timer(0.1f, () => {
+      timers[player] = new Timer(0.01f, () => {
         if (!player.IsValid) {
           timers[player].Kill();
           return;
@@ -83,7 +88,6 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
       currentPerm &= ~selected.Value;
     } else { currentPerm |= selected.Value; }
 
-    await Close(player);
     await menus.OpenMenu(player, this);
   }
 
@@ -95,7 +99,8 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
     var coloredHtml = $"<font color=\"{color}\">{item.Value.Describe()}</font>";
     var result      = $"{index}. {coloredHtml}";
 
-    if (index == 1) result = "Editing permissions for " + currentRank.Name;
+    if (index == 1)
+      result = "Editing permissions for " + currentRank.Name + "<br>" + result;
 
     return Task.FromResult(result);
   }

@@ -9,6 +9,12 @@ public class MockMenuManager : IMenuManager {
 
   public virtual void Start(BasePlugin? plugin, bool hotReload) { }
 
+  public void Dispose() {
+    foreach (var menu in activeMenus.Values) { menu.Dispose(); }
+
+    activeMenus.Clear();
+  }
+
   public IMenu? GetActiveMenu(ulong steam) {
     return activeMenus.TryGetValue(steam, out var menu) ? menu : null;
   }
