@@ -101,7 +101,7 @@ public class PermissionCommand(IServiceProvider provider)
     var rank = await getRank(executor, player, info.Args[2]);
 
     if (rank == null) {
-      info.ReplySync(Localizer.Get(MSG.RANK_NOT_FOUND, info.Args[1]));
+      info.ReplySync(Localizer.Get(MSG.RANK_NOT_FOUND, info.Args[2]));
       return CommandResult.SUCCESS;
     }
 
@@ -113,7 +113,7 @@ public class PermissionCommand(IServiceProvider provider)
     Func<Perm, Perm> applicator;
 
     Perm toSet;
-    var  query = string.Join(' ', info.Args.Skip(3));
+    var  query = string.Join('_', info.Args.Skip(3)).ToUpper();
 
     if (int.TryParse(info.Args[3], out var permInt)) {
       toSet = (Perm)permInt;
@@ -141,6 +141,8 @@ public class PermissionCommand(IServiceProvider provider)
       default:
         return CommandResult.PRINT_USAGE;
     }
+
+    executor.PrintToChat(msg);
 
     rank.Permissions = applicator(toSet);
     await ranks.UpdateRank(player.GangId.Value, rank);

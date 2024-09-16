@@ -61,52 +61,55 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
      .Where(perm => allowedPerms.HasFlag(perm))
      .Select(perm => (Perm?)perm)
      .ToList();
+    list.Add(null);
     return Task.FromResult(list);
   }
 
   override protected async Task ShowPage(PlayerWrapper player,
     List<Perm?> items, int currentPage, int totalPages) {
-    var start = (currentPage - 1) * ItemsPerPage;
-
-    var lineTasks = items.Skip(start)
-     .Take(ItemsPerPage)
-     .Select(async (p, i) => await FormatItem(player, i - start + 1, p));
+    CurrentPages[player.Steam] = currentPage;
+    var lineTasks =
+      items.Select(async (p, i) => await FormatItem(player, i + 1, p));
 
     var lines = await Task.WhenAll(lineTasks);
-
-    lines = lines.Append("/7 Back, /8 Next, /9 Save").ToArray();
-    lines = lines.Prepend("/0 Cancel").ToArray();
 
     var text = string.Join("<br>", lines);
     activeTexts[player.Steam] = text;
   }
 
-  public async override Task AcceptInput(PlayerWrapper player, int input) {
-    var items      = await GetItems(player);
-    var totalPages = (items.Count + ItemsPerPage - 1) / ItemsPerPage;
+  public override async Task AcceptInput(PlayerWrapper player, int input) {
+    var start      = (GetCurrentPage(player) - 1) * ItemsPerPage;
+    var allItems   = await GetItems(player);
+    var pageItems  = allItems.Skip(start).Take(ItemsPerPage).ToList();
+    var totalPages = (allItems.Count + ItemsPerPage - 1) / ItemsPerPage;
 
+    var currentPage = GetCurrentPage(player);
     switch (input) {
       case 0:
         await Close(player);
         break;
       // Handle page navigation
-      case 8 when HasNextPage(player): {
-        var currentPage = GetCurrentPage(player);
-        await ShowPage(player, items, currentPage + 1, totalPages);
+      case 7 when HasPreviousPage(player): {
+        pageItems = allItems.Skip((currentPage - 2) * ItemsPerPage)
+         .Take(ItemsPerPage)
+         .ToList();
+        await ShowPage(player, pageItems, currentPage - 1, totalPages);
         break;
       }
-      case 7 when HasPreviousPage(player): {
-        var currentPage = GetCurrentPage(player);
-        await ShowPage(player, items, currentPage - 1, totalPages);
+      case 8 when HasNextPage(player): {
+        pageItems = allItems.Skip((currentPage) * ItemsPerPage)
+         .Take(ItemsPerPage)
+         .ToList();
+        await ShowPage(player, pageItems, currentPage + 1, totalPages);
         break;
       }
       case 9:
+        await Close(player);
         await commands.ProcessCommand(player, "css_gang", "permission", "set",
           currentRank.Rank.ToString(), ((int)currentPerm).ToString());
-        await Close(player);
         break;
       default:
-        await HandleItemSelection(player, items, input - 1);
+        await HandleItemSelection(player, pageItems, input - 1);
         break;
     }
   }
@@ -114,7 +117,6 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
   override protected async Task HandleItemSelection(PlayerWrapper player,
     List<Perm?> items, int selectedIndex) {
     var selected = items[selectedIndex];
-    player.PrintToChat($"Selected {selected}");
     if (selected == null) {
       currentRank.Permissions = currentPerm;
       await ranks.UpdateRank(gang.GangId, currentRank);
@@ -125,12 +127,21 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
       currentPerm &= ~selected.Value;
     } else { currentPerm |= selected.Value; }
 
-    await menus.OpenMenu(player, this);
+    await ShowPage(player, items, GetCurrentPage(player),
+      (items.Count + ItemsPerPage - 1) / ItemsPerPage);
   }
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     Perm? item) {
-    if (item == null) return Task.FromResult("9. Save");
+    var hasNextPage = HasNextPage(player);
+    var hasPrevPage = HasPreviousPage(player);
+
+    var footer = "/9 Save";
+
+    if (hasPrevPage) footer =  "&lt;- /7 | " + footer;
+    if (hasNextPage) footer += " | /8 -&gt;";
+
+    if (item == null) return Task.FromResult(footer);
 
     var color       = currentPerm.HasFlag(item.Value) ? "#00FF00" : "#FF0000";
     var coloredHtml = $"<font color=\"{color}\">{item.Value.Describe()}</font>";
@@ -139,6 +150,7 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
     if (index == 1)
       result = "Editing permissions for " + currentRank.Name + "<br>" + result;
 
+    if (index == ItemsPerPage) result += "<br>" + footer;
     return Task.FromResult(result);
   }
 }
