@@ -49,6 +49,8 @@ public class GangCommand(IServiceProvider provider) : ICommand {
   public void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin != null) locale = plugin.Localizer;
     sub["help"] = new HelpCommand(provider, sub);
+
+    foreach (var cmd in sub.Values) cmd.Start(plugin, hotReload);
   }
 
   public string Name => "css_gang";

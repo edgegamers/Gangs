@@ -13,6 +13,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
 
   protected readonly IServiceProvider Provider = provider;
   protected readonly int ItemsPerPage = itemsPerPage;
+  protected readonly Dictionary<ulong, int> CurrentPages = new();
 
   public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);
@@ -31,12 +32,12 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
         await Close(player);
         break;
       // Handle page navigation
-      case 9 when hasNextPage(player): {
+      case 9 when HasNextPage(player): {
         var currentPage = GetCurrentPage(player);
         await ShowPage(player, items, currentPage + 1, totalPages);
         break;
       }
-      case 8 when hasPreviousPage(player): {
+      case 8 when HasPreviousPage(player): {
         var currentPage = GetCurrentPage(player);
         await ShowPage(player, items, currentPage - 1, totalPages);
         break;
@@ -62,7 +63,9 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     // Display navigation options
     if (currentPage > 1) await Printer(player, "8. Previous Page");
     if (currentPage < totalPages) await Printer(player, "9. Next Page");
-    await Printer(player, "0. Close Menu");
+    await Printer(player, "/close. Close Menu");
+
+    CurrentPages[player.Steam] = currentPage;
   }
 
   virtual protected async Task ShowPaged(PlayerWrapper player, List<T> items,
@@ -81,21 +84,20 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     }
   }
 
-  private bool hasNextPage(PlayerWrapper player) {
+  protected bool HasNextPage(PlayerWrapper player) {
     return GetCurrentPage(player) < GetTotalPages(player);
   }
 
-  private bool hasPreviousPage(PlayerWrapper player) {
+  protected bool HasPreviousPage(PlayerWrapper player) {
     return GetCurrentPage(player) > 1;
   }
 
   virtual protected int GetCurrentPage(PlayerWrapper player) {
-    return 1;
-    // Override this to track pages per player
+    return CurrentPages.TryGetValue(player.Steam, out var page) ? page : 1;
   }
 
   virtual protected int GetTotalPages(PlayerWrapper player) {
-    return 1;
-    // Override this to track pages per player
+    return (GetItems(player).GetAwaiter().GetResult().Count + ItemsPerPage - 1)
+      / ItemsPerPage;
   }
 }

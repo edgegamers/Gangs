@@ -13,6 +13,8 @@ public class CommandBasedMenuManager(Lazy<ICommandManager> provider)
     if (plugin == null) {
       for (var i = 0; i < 10; i++)
         provider.Value.RegisterCommand(new DigitCommand(this, i));
+      for (var i = 0; i < 10; i++)
+        provider.Value.RegisterCommand(new CloseCommand(this));
       return;
     }
 
@@ -20,6 +22,8 @@ public class CommandBasedMenuManager(Lazy<ICommandManager> provider)
       var index = i;
       plugin.AddCommandListener($"css_{i}", (p, _) => AcceptInput(p, index));
     }
+
+    plugin.AddCommandListener($"css_close", (p, _) => AcceptInput(p, 0));
   }
 
   private HookResult AcceptInput(CCSPlayerController? player, int index) {
@@ -38,6 +42,17 @@ public class CommandBasedMenuManager(Lazy<ICommandManager> provider)
       CommandInfoWrapper info) {
       if (executor == null) return CommandResult.PLAYER_ONLY;
       await manager.AcceptInput(executor, index);
+      return CommandResult.SUCCESS;
+    }
+  }
+
+  private class CloseCommand(IMenuManager manager) : ICommand {
+    public string Name => $"css_close";
+
+    public async Task<CommandResult> Execute(PlayerWrapper? executor,
+      CommandInfoWrapper info) {
+      if (executor == null) return CommandResult.PLAYER_ONLY;
+      await manager.AcceptInput(executor, 0);
       return CommandResult.SUCCESS;
     }
   }

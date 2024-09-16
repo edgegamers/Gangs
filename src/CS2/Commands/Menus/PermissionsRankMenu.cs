@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI.Data;
 using GangsAPI.Permissions;
 using GangsAPI.Services.Commands;
 using Menu;
@@ -33,11 +34,12 @@ public class PermissionsRankMenu(IServiceProvider provider,
     var       longestRankName = ranks.Max(r => r.Rank.ToString().Length);
     var       maxLength = Convert.ToString(maxPerms, 2).Length;
     var       permString = Convert.ToString(perms, 2).PadLeft(maxLength, '0');
+    permString = permString.Replace("0", ChatColors.Red + "-")
+     .Replace("1", ChatColors.Green + "x");
 
-    var rankName    = item.Name.PadRight(longestRankName, ' ');
     var longestRank = ranks.Max(r => r.Rank.ToString().Length);
     var rankPadded  = item.Rank.ToString().PadLeft(longestRank, '0');
 
-    return Task.FromResult($"{index}. {rankName} ({rankPadded}) {permString}");
+    return Task.FromResult($"{index}. {item.Name} ({rankPadded}) {permString}");
   }
 }

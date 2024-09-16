@@ -22,8 +22,7 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
     this.plugin       = plugin;
     currentPerm       = currentRank.Permissions;
 
-    plugin.RegisterListener<Listeners.OnTick>(sendText);
-    Server.PrintToConsole("Started permissions editor");
+    Server.NextFrame(() => plugin.RegisterListener<Listeners.OnTick>(sendText));
   }
 
   private Perm currentPerm;
@@ -77,15 +76,42 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
 
     var lines = await Task.WhenAll(lineTasks);
 
-    lines = lines.Append("/7 Back, /8 Next, 0. Close").ToArray();
+    lines = lines.Append("/7 Back, /8 Next, /Close").ToArray();
 
     var text = string.Join("<br>", lines);
     activeTexts[player.Steam] = text;
   }
 
+  public async override Task AcceptInput(PlayerWrapper player, int input) {
+    var items      = await GetItems(player);
+    var totalPages = (items.Count + ItemsPerPage - 1) / ItemsPerPage;
+    player.PrintToChat($"Got input {input}");
+
+    switch (input) {
+      case 0:
+        await Close(player);
+        break;
+      // Handle page navigation
+      case 8 when HasNextPage(player): {
+        var currentPage = GetCurrentPage(player);
+        await ShowPage(player, items, currentPage + 1, totalPages);
+        break;
+      }
+      case 7 when HasPreviousPage(player): {
+        var currentPage = GetCurrentPage(player);
+        await ShowPage(player, items, currentPage - 1, totalPages);
+        break;
+      }
+      default:
+        await HandleItemSelection(player, items, input - 1);
+        break;
+    }
+  }
+
   override protected async Task HandleItemSelection(PlayerWrapper player,
     List<Perm?> items, int selectedIndex) {
     var selected = items[selectedIndex];
+    player.PrintToChat($"Selected {selected}");
     if (selected == null) {
       currentRank.Permissions = currentPerm;
       await ranks.UpdateRank(gang.GangId, currentRank);
@@ -101,7 +127,7 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     Perm? item) {
-    if (item == null) return Task.FromResult("Save");
+    if (item == null) return Task.FromResult("9. Save");
 
     var color       = currentPerm.HasFlag(item.Value) ? "#00FF00" : "#FF0000";
     var coloredHtml = $"<font color=\"{color}\">{item.Value.Describe()}</font>";
