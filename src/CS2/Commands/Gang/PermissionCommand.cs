@@ -87,7 +87,6 @@ public class PermissionCommand(IServiceProvider provider)
 
     if (info.ArgCount < 4) return CommandResult.PRINT_USAGE;
 
-
     var rank = await getRank(player, info.Args[2]);
 
     if (rank == null) {
@@ -134,7 +133,6 @@ public class PermissionCommand(IServiceProvider provider)
 
     rank.Permissions = applicator(toSet);
     await ranks.UpdateRank(player.GangId.Value, rank);
-
 
     var gangChat = Provider.GetService<IGangChatPerk>();
     if (gangChat != null) await gangChat.SendGangChat(player, gang, msg);

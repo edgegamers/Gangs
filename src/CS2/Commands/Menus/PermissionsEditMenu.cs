@@ -1,4 +1,5 @@
 ﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
@@ -17,7 +18,7 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
   : AbstractPagedMenu<Perm?>(provider, NativeSenders.Center, 6) {
   private Perm currentPerm = currentRank.Permissions;
 
-  private readonly Dictionary<PlayerWrapper, Timer> timers = new();
+  private readonly Dictionary<ulong, string> activeTexts = new();
 
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
@@ -25,15 +26,22 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
   private readonly IMenuManager menus =
     provider.GetRequiredService<IMenuManager>();
 
+  public override void Start(BasePlugin? plugin, bool hotReload) {
+    Server.PrintToConsole("Started permissions editor");
+    plugin?.RegisterListener<Listeners.OnTick>(sendText);
+  }
+
   public override Task Close(PlayerWrapper player) {
-    player.PrintToChat("Closed permissions editor");
-    if (timers.TryGetValue(player, out var timer)) timer.Kill();
+    activeTexts.Remove(player.Steam);
     return Task.CompletedTask;
   }
 
-  public override void Dispose() {
-    foreach (var timer in timers.Values) timer.Kill();
-    timers.Clear();
+  private void sendText() {
+    foreach (var (steam, text) in activeTexts) {
+      var player = Utilities.GetPlayerFromSteamId(steam);
+      if (player == null || !player.IsValid) continue;
+      Printer(new PlayerWrapper(player), text);
+    }
   }
 
   override protected Task<List<Perm?>> GetItems(PlayerWrapper player) {
@@ -63,16 +71,7 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
     lines = lines.Append("/7 Back, /8 Next, 0. Close").ToArray();
 
     var text = string.Join("<br>", lines);
-    await Server.NextFrameAsync(() => {
-      timers[player] = new Timer(0.01f, () => {
-        if (!player.IsValid) {
-          timers[player].Kill();
-          return;
-        }
-
-        Printer(player, text);
-      }, TimerFlags.REPEAT | TimerFlags.STOP_ON_MAPCHANGE);
-    });
+    activeTexts[player.Steam] = text;
   }
 
   override protected async Task HandleItemSelection(PlayerWrapper player,

@@ -2,7 +2,7 @@
 
 namespace GangsAPI.Services.Menu;
 
-public interface IMenu : IBehavior {
+public interface IMenu : IPluginBehavior {
   Task Open(PlayerWrapper player);
   Task Close(PlayerWrapper player);
   Task AcceptInput(PlayerWrapper player, int input);

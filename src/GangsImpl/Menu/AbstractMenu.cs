@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API.Core;
+using GangsAPI.Data;
 using GangsAPI.Services.Menu;
 
 namespace Menu;
@@ -12,6 +13,8 @@ public abstract class AbstractMenu<T>(IMenuManager menus,
     var items = await GetItems(player);
     await Show(player, items);
   }
+
+  public virtual void Start(BasePlugin? plugin, bool hotReload) {}
 
   public virtual Task Close(PlayerWrapper player) { return Task.CompletedTask; }
 
