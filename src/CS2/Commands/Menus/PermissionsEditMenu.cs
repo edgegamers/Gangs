@@ -1,7 +1,5 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
-using CounterStrikeSharp.API.Modules.Timers;
-using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Permissions;
@@ -9,26 +7,37 @@ using GangsAPI.Services;
 using GangsAPI.Services.Menu;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
-using Timer = CounterStrikeSharp.API.Modules.Timers.Timer;
 
 namespace Commands.Menus;
 
-public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
-  Perm allowedPerms, IGangRank currentRank)
-  : AbstractPagedMenu<Perm?>(provider, NativeSenders.Center, 6) {
-  private Perm currentPerm = currentRank.Permissions;
+public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
+  public PermissionsEditMenu(IServiceProvider provider, BasePlugin plugin,
+    IGang gang, Perm allowedPerms, IGangRank currentRank) : base(provider,
+    NativeSenders.Center, 6) {
+    ranks             = provider.GetRequiredService<IRankManager>();
+    menus             = provider.GetRequiredService<IMenuManager>();
+    this.gang         = gang;
+    this.allowedPerms = allowedPerms;
+    this.currentRank  = currentRank;
+    this.plugin       = plugin;
+    currentPerm       = currentRank.Permissions;
 
+    plugin.RegisterListener<Listeners.OnTick>(sendText);
+    Server.PrintToConsole("Started permissions editor");
+  }
+
+  private Perm currentPerm;
   private readonly Dictionary<ulong, string> activeTexts = new();
 
-  private readonly IRankManager ranks =
-    provider.GetRequiredService<IRankManager>();
+  private readonly IRankManager ranks;
+  private readonly IMenuManager menus;
+  private readonly IGang gang;
+  private readonly Perm allowedPerms;
+  private readonly IGangRank currentRank;
+  private readonly BasePlugin plugin;
 
-  private readonly IMenuManager menus =
-    provider.GetRequiredService<IMenuManager>();
-
-  public override void Start(BasePlugin? plugin, bool hotReload) {
-    Server.PrintToConsole("Started permissions editor");
-    plugin?.RegisterListener<Listeners.OnTick>(sendText);
+  public override void Dispose() {
+    plugin.RemoveListener<Listeners.OnTick>(sendText);
   }
 
   public override Task Close(PlayerWrapper player) {

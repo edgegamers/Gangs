@@ -1,4 +1,5 @@
-﻿using GangsAPI;
+﻿using CounterStrikeSharp.API.Core;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
@@ -17,6 +18,8 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
 
   protected readonly IPlayerManager Players =
     provider.GetRequiredService<IPlayerManager>();
+
+  public virtual void Start(BasePlugin? plugin, bool hotReload) {}
 
   protected readonly IServiceProvider Provider = provider;
   public abstract string Name { get; }

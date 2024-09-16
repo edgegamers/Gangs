@@ -6,11 +6,8 @@ namespace Mock;
 
 public class MockMenuManager : IMenuManager {
   private readonly Dictionary<ulong, IMenu> activeMenus = new();
-  private BasePlugin? plugin = null!;
 
-  public virtual void Start(BasePlugin? plugin, bool hotReload) {
-    this.plugin = plugin;
-  }
+  public virtual void Start(BasePlugin? plugin, bool hotReload) { }
 
   public void Dispose() {
     foreach (var menu in activeMenus.Values) { menu.Dispose(); }
@@ -25,7 +22,6 @@ public class MockMenuManager : IMenuManager {
   public Task<bool> OpenMenu(PlayerWrapper player, IMenu menu) {
     if (activeMenus.TryGetValue(player.Steam, out var previous))
       previous.Close(player);
-    menu.Start(plugin, false);
     activeMenus[player.Steam] = menu;
     menu.Open(player);
     return Task.FromResult(true);

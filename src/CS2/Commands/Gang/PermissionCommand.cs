@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Commands.Menus;
+using CounterStrikeSharp.API.Core;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -34,6 +35,13 @@ public class PermissionCommand(IServiceProvider provider)
       "listranks", "listperms", "<rank>", "grant <rank> <perm>",
       "revoke <rank> <perm>", "set <rank> <int>"
     ];
+
+  private BasePlugin plugin = null!;
+
+  public override void Start(BasePlugin? basePlugin, bool hotReload) {
+    this.plugin = basePlugin!;
+    base.Start(basePlugin, hotReload);
+  }
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {
@@ -80,7 +88,7 @@ public class PermissionCommand(IServiceProvider provider)
         return CommandResult.SUCCESS;
       }
 
-      var menu = new PermissionsEditMenu(Provider, gang,
+      var menu = new PermissionsEditMenu(Provider, plugin, gang,
         executorRank.Permissions, directEdit);
       await menus.OpenMenu(executor, menu);
     }
