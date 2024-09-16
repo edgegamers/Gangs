@@ -14,9 +14,14 @@ public class PlaytimeData {
   public int MinutesT { get; set; }
   public int MinutesCT { get; set; }
   public int MinutesSpec { get; set; }
-  public ulong LastPlayed { get; set; }
+  public double LastPlayed { get; set; }
 
   public override string ToString() {
     return $"T: {MinutesT} CT: {MinutesCT} Spec: {MinutesSpec}";
+  }
+
+  public DateTime GetLastPlayed() {
+    return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(
+      LastPlayed);
   }
 }

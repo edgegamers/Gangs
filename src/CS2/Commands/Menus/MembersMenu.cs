@@ -1,10 +1,13 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI.Data;
 using GangsAPI.Data.Gang;
+using GangsAPI.Exceptions;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Player;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
+using Stats.Stat.Player;
 
 namespace Commands.Menus;
 
@@ -16,6 +19,11 @@ public class MembersMenu(IServiceProvider provider, IGang gang)
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
+  private readonly IPlayerStatManager playerStats =
+    provider.GetRequiredService<IPlayerStatManager>();
+
+  private readonly string playtimeId = new PlaytimeStat().StatId;
+
   override protected async Task<List<(IGangPlayer, IGangRank)>> GetItems(
     PlayerWrapper _) {
     var members     = (await players.GetMembers(gang)).ToList();
@@ -26,16 +34,17 @@ public class MembersMenu(IServiceProvider provider, IGang gang)
      .ToList();
   }
 
-  override protected Task HandleItemSelection(PlayerWrapper player,
+  override protected async Task HandleItemSelection(PlayerWrapper player,
     List<(IGangPlayer, IGangRank)> items, int selectedIndex) {
-    var (member, rank) = items[selectedIndex - 1];
-    player.PrintToChat(
-      $"{member.Name} - {rank.Name} - {member.Steam} - {member.GangRank} - {rank.Permissions.Describe()}");
-    return Task.CompletedTask;
+    var (member, _) = items[selectedIndex - 1];
+    var menu = new MemberMenu(Provider, member);
+
+    await Menus.OpenMenu(player, menu);
   }
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     (IGangPlayer, IGangRank) item) {
-    return Task.FromResult($"{item.Item2.Name}: {item.Item1.Name}");
+    return Task.FromResult(
+      $"{ChatColors.Yellow}{index}. {ChatColors.Green}{item.Item2.Name}{ChatColors.Default}: {ChatColors.LightBlue}{item.Item1.Name}");
   }
 }

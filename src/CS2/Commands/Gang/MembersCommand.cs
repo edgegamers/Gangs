@@ -33,7 +33,7 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
 
   public string Name => "members";
 
-  public string[] Usage => ["", "<gang>"];
+  public string[] Usage => ["", "<gang/player>"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

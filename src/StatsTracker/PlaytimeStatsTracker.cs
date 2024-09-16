@@ -48,7 +48,7 @@ public class PlaytimeStatsTracker(IServiceProvider provider) : IPluginBehavior {
         }
 
         stat.LastPlayed =
-          (ulong)DateTime.Now.Subtract(DateTime.UnixEpoch).TotalSeconds;
+          DateTime.Now.Subtract(DateTime.UnixEpoch).TotalSeconds;
         await playerStats.SetForPlayer(player.Steam, statId, stat);
       });
   }

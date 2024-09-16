@@ -77,7 +77,7 @@ public class KickCommand(IServiceProvider provider)
 
     await players.UpdatePlayer(target);
 
-    var gangChat = provider.GetService<IGangChatPerk>();
+    var gangChat = Provider.GetService<IGangChatPerk>();
 
     if (gangChat != null)
       await gangChat.SendGangChat(player, gang,

@@ -166,7 +166,7 @@ public static class PermissionExtensions {
     var    maxPerms   = Enum.GetValues<Perm>().Max();
     var    maxLength  = Convert.ToString((int)maxPerms, 2).Length;
     var    permString = Convert.ToString((int)perms, 2).PadLeft(maxLength, '0');
-    char[] permArray  = permString.ToCharArray();
+    var permArray  = permString.ToCharArray();
     Array.Reverse(permArray);
     permString = new string(permArray);
     permString = permString.Replace("0", ChatColors.Red + "X")
