@@ -151,9 +151,12 @@ public static class PermissionExtensions {
   }
 
   public static string GetChatBitfield(this Perm perms) {
-    var maxPerms   = Enum.GetValues<Perm>().Max();
-    var maxLength  = Convert.ToString((int)maxPerms, 2).Length;
-    var permString = Convert.ToString((int)perms, 2).PadLeft(maxLength, '0');
+    var    maxPerms   = Enum.GetValues<Perm>().Max();
+    var    maxLength  = Convert.ToString((int)maxPerms, 2).Length;
+    var    permString = Convert.ToString((int)perms, 2).PadLeft(maxLength, '0');
+    char[] permArray  = permString.ToCharArray();
+    Array.Reverse(permArray);
+    permString = new string(permArray);
     permString = permString.Replace("0", ChatColors.Red + "X")
      .Replace("1", ChatColors.Green + "Y");
     return permString;

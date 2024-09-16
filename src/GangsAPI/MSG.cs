@@ -79,7 +79,11 @@ public enum MSG {
   RANK_CANNOT_EDIT,
   RANK_MODIFY_GRANT,
   RANK_MODIFY_REVOKE,
-  RANK_MODIFY_SET
+  RANK_MODIFY_SET,
+  RANK_DEMOTE_BELOW_LOWEST,
+  RANK_DEMOTE_SUCCESS,
+  RANK_PROMOTE_ABOVE_HIGHEST,
+  RANK_PROMOTE_SUCCESS,
 }
 
 public static class LocaleExtensions {
@@ -167,6 +171,10 @@ public static class LocaleExtensions {
       MSG.RANK_MODIFY_GRANT => "rank.modify.grant",
       MSG.RANK_MODIFY_REVOKE => "rank.modify.revoke",
       MSG.RANK_MODIFY_SET => "rank.modify.set",
+      MSG.RANK_DEMOTE_BELOW_LOWEST => "rank.demote.below_lowest",
+      MSG.RANK_DEMOTE_SUCCESS => "rank.demote.success",
+      MSG.RANK_PROMOTE_ABOVE_HIGHEST => "rank.promote.above_highest",
+      MSG.RANK_PROMOTE_SUCCESS => "rank.promote.success",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }

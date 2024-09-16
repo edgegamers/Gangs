@@ -69,17 +69,22 @@ public class PermissionCommand(IServiceProvider provider)
       }
       case 2 when info.Args[1]
        .Equals("listranks", StringComparison.OrdinalIgnoreCase): {
-        var existing = await ranks.GetRanks(player.GangId.Value);
-        foreach (var r in existing)
+        var existing    = (await ranks.GetRanks(player.GangId.Value)).ToList();
+        var highestRank = existing.Max(r => r.Rank);
+        foreach (var r in existing) {
+          var paddedRank = r.Rank.ToString()
+           .PadLeft(highestRank.ToString().Length, '0');
           info.ReplySync(
-            $"{ChatColors.LightRed}{r.Rank} {ChatColors.Green}{r.Name}{ChatColors.Grey}: {r.Permissions.GetChatBitfield()}");
+            $" {ChatColors.LightRed}{paddedRank} {r.Permissions.GetChatBitfield()}{ChatColors.Default}: {ChatColors.LightBlue}{r.Name}");
+        }
+
         return CommandResult.SUCCESS;
       }
       case 2 when info.Args[1]
        .Equals("listperms", StringComparison.OrdinalIgnoreCase): {
         foreach (var r in Enum.GetValues<Perm>())
           info.ReplySync(
-            $"{r.GetChatBitfield()} {ChatColors.Green}{r.ToFriendlyString()}");
+            $" {r.GetChatBitfield()} {ChatColors.LightBlue}{r.ToFriendlyString()}");
         return CommandResult.SUCCESS;
       }
       case 2: {
@@ -112,40 +117,52 @@ public class PermissionCommand(IServiceProvider provider)
 
     Func<Perm, Perm> applicator;
 
-    Perm toSet;
+    Perm permsChanging;
     var  query = string.Join('_', info.Args.Skip(3)).ToUpper();
 
     if (int.TryParse(info.Args[3], out var permInt)) {
-      toSet = (Perm)permInt;
-    } else if (!Enum.TryParse(query, true, out toSet)) {
+      permsChanging = (Perm)permInt;
+    } else if (!Enum.TryParse(query, true, out permsChanging)) {
       info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, query,
         "rank or int"));
       return CommandResult.SUCCESS;
+    }
+
+    if (!executorRank.Permissions.HasFlag(permsChanging)) {
+      var missing = permsChanging ^ executorRank.Permissions;
+      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_NODE,
+        missing.Describe()));
+      return CommandResult.NO_PERMISSION;
     }
 
     string msg;
 
     switch (info.Args[1].ToLower()) {
       case "grant":
-        applicator = p => p | rank.Permissions;
-        msg        = Localizer.Get(MSG.RANK_MODIFY_GRANT, toSet, rank.Name);
+        applicator = original => original | permsChanging;
+        msg = Localizer.Get(MSG.RANK_MODIFY_GRANT, permsChanging, rank.Name);
         break;
       case "revoke":
-        applicator = p => p & ~rank.Permissions;
-        msg        = Localizer.Get(MSG.RANK_MODIFY_REVOKE, toSet, rank.Name);
+        applicator = original => original & permsChanging;
+        msg = Localizer.Get(MSG.RANK_MODIFY_REVOKE, permsChanging, rank.Name);
         break;
       case "set":
-        applicator = _ => rank.Permissions;
-        msg        = Localizer.Get(MSG.RANK_MODIFY_SET, rank.Name, toSet);
+        applicator = _ => permsChanging;
+        msg = Localizer.Get(MSG.RANK_MODIFY_SET, rank.Name,
+          permsChanging.Describe());
         break;
       default:
         return CommandResult.PRINT_USAGE;
     }
 
-    executor.PrintToChat(msg);
+    rank.Permissions = applicator(permsChanging);
 
-    rank.Permissions = applicator(toSet);
-    await ranks.UpdateRank(player.GangId.Value, rank);
+    var result = await ranks.UpdateRank(player.GangId.Value, rank);
+
+    if (!result) {
+      executor.PrintToChat(Localizer.Get(MSG.GENERIC_ERROR));
+      return CommandResult.ERROR;
+    }
 
     var gangChat = Provider.GetService<IGangChatPerk>();
     if (gangChat != null) await gangChat.SendGangChat(player, gang, msg);

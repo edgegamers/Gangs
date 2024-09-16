@@ -128,7 +128,7 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
         var query =
           $"UPDATE {table} SET Name = @Name, Permissions = @Perms WHERE GangId = @GangId AND `Rank` = @Rank";
         return await Connection.ExecuteAsync(query,
-          new { rank.Name, Perms = rank.Permissions, gang, rank.Rank },
+          new { rank.Name, Perms = rank.Permissions, GangId = gang, rank.Rank },
           Transaction) == 1;
       }
     }

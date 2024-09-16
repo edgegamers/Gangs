@@ -16,7 +16,6 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
     IGang gang, Perm allowedPerms, IGangRank currentRank) : base(provider,
     NativeSenders.Center, 6) {
     ranks             = provider.GetRequiredService<IRankManager>();
-    menus             = provider.GetRequiredService<IMenuManager>();
     commands          = provider.GetRequiredService<ICommandManager>();
     this.gang         = gang;
     this.allowedPerms = allowedPerms;
@@ -31,7 +30,6 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
   private readonly Dictionary<ulong, string> activeTexts = new();
 
   private readonly IRankManager ranks;
-  private readonly IMenuManager menus;
   private readonly IGang gang;
   private readonly Perm allowedPerms;
   private readonly IGangRank currentRank;
@@ -57,7 +55,7 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
 
   override protected Task<List<Perm?>> GetItems(PlayerWrapper player) {
     var perms = Enum.GetValues<Perm>();
-    var list = perms.Where(perm => perm != Perm.NONE)
+    var list = perms.Where(perm => perm != Perm.NONE && perm != Perm.OWNER)
      .Where(perm => allowedPerms.HasFlag(perm))
      .Select(perm => (Perm?)perm)
      .ToList();

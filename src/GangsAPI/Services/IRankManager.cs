@@ -156,6 +156,22 @@ public interface IRankManager : IPluginBehavior {
     return ranks.Last();
   }
 
+  async Task<IGangRank?> GetHigherRank(int gang, int rank) {
+    var ranks = (await GetRanks(gang)).ToList();
+    ranks.Sort((a, b) => a.Rank.CompareTo(b.Rank));
+    var index = ranks.FindIndex(r => r.Rank == rank);
+    if (index is -1 or 0) return null;
+    return ranks[index - 1];
+  }
+
+  async Task<IGangRank?> GetLowerRank(int gang, int rank) {
+    var ranks = (await GetRanks(gang)).ToList();
+    ranks.Sort((a, b) => a.Rank.CompareTo(b.Rank));
+    var index = ranks.FindIndex(r => r.Rank == rank);
+    if (index == -1 || index == ranks.Count - 1) return null;
+    return ranks[index + 1];
+  }
+
   async Task<IGangRank> GetRankNeeded(int gang, Perm perm) {
     var ranks = (await GetRanks(gang)).ToList();
     ranks.Sort((a, b) => a.Rank.CompareTo(b.Rank));
