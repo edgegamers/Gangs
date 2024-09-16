@@ -53,7 +53,7 @@ public class PermissionCommand(IServiceProvider provider)
       var lowerRanks = (await ranks.GetRanks(player.GangId.Value)).ToList();
       lowerRanks = lowerRanks.Where(r => r.Rank > executorRank.Rank).ToList();
 
-      var menu = new PermissionsRankMenu(provider, lowerRanks);
+      var menu = new PermissionsRankMenu(Provider, lowerRanks);
       await menus.OpenMenu(executor, menu);
       return CommandResult.SUCCESS;
     }
@@ -80,7 +80,7 @@ public class PermissionCommand(IServiceProvider provider)
         return CommandResult.SUCCESS;
       }
 
-      var menu = new PermissionsEditMenu(provider, gang,
+      var menu = new PermissionsEditMenu(Provider, gang,
         executorRank.Permissions, directEdit);
       await menus.OpenMenu(executor, menu);
     }

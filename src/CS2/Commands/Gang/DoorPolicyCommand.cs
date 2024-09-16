@@ -60,7 +60,7 @@ public class DoorPolicyCommand(IServiceProvider provider)
       var selected = (DoorPolicy)selectedIndex;
       await gangStats.SetForGang(player.GangId.Value, doorPolicyId, selected);
 
-      var gangChat = provider.GetService<IGangChatPerk>();
+      var gangChat = Provider.GetService<IGangChatPerk>();
 
       if (gangChat != null)
         await gangChat.SendGangChat(player, gang,
