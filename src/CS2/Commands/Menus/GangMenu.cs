@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
@@ -75,13 +76,16 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
   public async Task AcceptInput(PlayerWrapper player, int input) {
     switch (input) {
       case 1:
-        await commands.ProcessCommand(player, "css_gang", "members");
+        await commands.ProcessCommand(player, CommandCallingContext.Chat,
+          "css_gang", "members");
         break;
       case 2:
-        await commands.ProcessCommand(player, "css_gang", "invites");
+        await commands.ProcessCommand(player, CommandCallingContext.Chat,
+          "css_gang", "invites");
         break;
       case 3:
-        await commands.ProcessCommand(player, "css_gang", "perks");
+        await commands.ProcessCommand(player, CommandCallingContext.Chat,
+          "css_gang", "perks");
         break;
     }
   }

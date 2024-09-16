@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Services.Gang;
@@ -53,7 +54,8 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
     if (entry == null) {
       Printer.Invoke(player, $"Opening door policy menu for {gang.Name}");
       Provider.GetRequiredService<ICommandManager>()
-       .ProcessCommand(player, "css_gang", "doorpolicy");
+       .ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
+          "doorpolicy");
       return Task.CompletedTask;
     }
 

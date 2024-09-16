@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Perks;
@@ -74,7 +75,8 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
       return;
     }
 
-    await commands.ProcessCommand(player, "css_gang", "purchase", perk.StatId);
+    await commands.ProcessCommand(player, CommandCallingContext.Chat,
+      "css_gang", "purchase", perk.StatId);
     await Menus.CloseMenu(player);
   }
 

@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 
@@ -10,7 +11,8 @@ public class PermissionTests : TestParent {
   public async Task Permission_Pass(ICommandManager mgr) {
     mgr.RegisterCommand(Dummy);
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(TestPlayer, "css_dummy", "foobar"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_dummy", "foobar"));
   }
 
   [Theory]
@@ -18,7 +20,8 @@ public class PermissionTests : TestParent {
   public async Task Permission_Pass_Flag_Console(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], []));
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(null, "css_elevated"));
+      await mgr.ProcessCommand(null, CommandCallingContext.Chat,
+        "css_elevated"));
   }
 
   [Theory]
@@ -26,7 +29,8 @@ public class PermissionTests : TestParent {
   public async Task Permission_Pass_Group_Console(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand([], ["#test/group"]));
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(null, "css_elevated"));
+      await mgr.ProcessCommand(null, CommandCallingContext.Chat,
+        "css_elevated"));
   }
 
   [Theory]
@@ -34,7 +38,8 @@ public class PermissionTests : TestParent {
   public async Task Permission_Fail_Flag(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], []));
     Assert.Equal(CommandResult.NO_PERMISSION,
-      await mgr.ProcessCommand(TestPlayer, "css_elevated"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_elevated"));
   }
 
   [Theory]
@@ -42,7 +47,8 @@ public class PermissionTests : TestParent {
   public async Task Permission_Fail_Group(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand([], ["#test/group"]));
     Assert.Equal(CommandResult.NO_PERMISSION,
-      await mgr.ProcessCommand(TestPlayer, "css_elevated"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_elevated"));
   }
 
   [Theory]
@@ -50,7 +56,8 @@ public class PermissionTests : TestParent {
   public async Task Permission_Fail_Both_Flag(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], ["#test/group"]));
     Assert.Equal(CommandResult.NO_PERMISSION,
-      await mgr.ProcessCommand(TestPlayer, "css_elevated"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_elevated"));
   }
 
   [Theory]
@@ -58,7 +65,8 @@ public class PermissionTests : TestParent {
   public async Task Permission_Fail_Both_Group(ICommandManager mgr) {
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], ["#test/group"]));
     Assert.Equal(CommandResult.NO_PERMISSION,
-      await mgr.ProcessCommand(TestPlayer, "css_elevated"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_elevated"));
   }
 
   [Theory]
@@ -67,7 +75,8 @@ public class PermissionTests : TestParent {
     var elevatedPlayer = TestPlayer.WithFlags("@test/flag");
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], []));
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(elevatedPlayer, "css_elevated"));
+      await mgr.ProcessCommand(elevatedPlayer, CommandCallingContext.Chat,
+        "css_elevated"));
   }
 
   [Theory]
@@ -76,7 +85,8 @@ public class PermissionTests : TestParent {
     var elevatedPlayer = TestPlayer.WithGroups("#test/group");
     mgr.RegisterCommand(new ElevatedCommand([], ["#test/group"]));
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(elevatedPlayer, "css_elevated"));
+      await mgr.ProcessCommand(elevatedPlayer, CommandCallingContext.Chat,
+        "css_elevated"));
   }
 
   [Theory]
@@ -86,7 +96,8 @@ public class PermissionTests : TestParent {
       TestPlayer.WithFlags("@test/flag").WithGroups("#test/group");
     mgr.RegisterCommand(new ElevatedCommand(["@test/flag"], ["#test/group"]));
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(elevatedPlayer, "css_elevated"));
+      await mgr.ProcessCommand(elevatedPlayer, CommandCallingContext.Chat,
+        "css_elevated"));
   }
 
   private class ElevatedCommand(string[] flags, string[] groups) : ICommand {

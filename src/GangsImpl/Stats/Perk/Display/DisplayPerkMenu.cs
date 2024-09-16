@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Perks;
 using GangsAPI.Services;
@@ -53,7 +54,8 @@ public class DisplayPerkMenu(IServiceProvider provider, DisplayData data)
 
   public Task AcceptInput(PlayerWrapper player, int input) {
     if (input > 2) return Task.CompletedTask;
-    commands.ProcessCommand(player, "css_gang", "display", $"{input - 1}");
+    commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
+      "display", $"{input - 1}");
     return Task.CompletedTask;
   }
 }

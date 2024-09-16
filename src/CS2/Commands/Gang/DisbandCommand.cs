@@ -1,56 +1,31 @@
-﻿using GangsAPI;
+﻿using System.Diagnostics;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
+using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
-using GangsAPI.Perks;
 using GangsAPI.Permissions;
-using GangsAPI.Services;
-using GangsAPI.Services.Commands;
-using GangsAPI.Services.Gang;
-using GangsAPI.Services.Player;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 
 namespace Commands.Gang;
 
-public class DisbandCommand(IServiceProvider provider) : ICommand {
-  private readonly IGangManager gangs =
-    provider.GetRequiredService<IGangManager>();
+public class DisbandCommand(IServiceProvider provider)
+  : GangedPlayerCommand(provider) {
+  public override string Name => "disband";
+  public override string[] Usage => ["", "confirm"];
 
-  private readonly IStringLocalizer localizer =
-    provider.GetRequiredService<IStringLocalizer>();
+  override protected async Task<CommandResult> Execute(PlayerWrapper executor,
+    IGangPlayer player, CommandInfoWrapper info) {
+    var rank = player.GangRank;
 
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
-
-  private readonly IRankManager ranks =
-    provider.GetRequiredService<IRankManager>();
-
-  public string Name => "disband";
-
-  public string[] Usage => ["", "confirm"];
-
-  public async Task<CommandResult> Execute(PlayerWrapper? executor,
-    CommandInfoWrapper info) {
-    if (executor == null) return CommandResult.PLAYER_ONLY;
-
-    var gangPlayer = await players.GetPlayer(executor.Steam)
-      ?? throw new PlayerNotFoundException(executor.Steam);
-
-    if (gangPlayer.GangId == null) {
-      info.ReplySync(localizer.Get(MSG.NOT_IN_GANG));
-      return CommandResult.SUCCESS;
+    Debug.Assert(player.GangId != null, "player.GangId != null");
+    var (success, required) = await Ranks.CheckRank(player, Perm.OWNER);
+    if (required == null) {
+      throw new SufficientRankNotFoundException(player.GangId.Value,
+        Perm.OWNER);
     }
 
-    var rank = gangPlayer.GangRank;
-
-    var (success, required) = await ranks.CheckRank(gangPlayer, Perm.OWNER);
-    if (required == null)
-      throw new SufficientRankNotFoundException(gangPlayer.GangId.Value,
-        Perm.OWNER);
-
     if (!success) {
-      info.ReplySync(localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
       return CommandResult.SUCCESS;
     }
 
@@ -58,22 +33,21 @@ public class DisbandCommand(IServiceProvider provider) : ICommand {
       throw new GangException("Passed rank check but not numerical check");
 
     if (info.ArgCount == 1) {
-      info.ReplySync(localizer.Get(MSG.COMMAND_GANG_DISBAND_WARN));
+      info.ReplySync(Localizer.Get(MSG.COMMAND_GANG_DISBAND_WARN));
       return CommandResult.SUCCESS;
     }
 
-    var gang = await gangs.GetGang(gangPlayer.GangId.Value)
-      ?? throw new GangNotFoundException(gangPlayer.GangId.Value);
+    var gang = await Gangs.GetGang(player.GangId.Value)
+      ?? throw new GangNotFoundException(player.GangId.Value);
 
     if (info[1] != "confirm") return CommandResult.PRINT_USAGE;
 
-    var gangChat = provider.GetService<IGangChatPerk>();
-    if (gangChat != null)
-      await gangChat.SendGangChat(gang,
-        localizer.Get(MSG.COMMAND_GANG_DISBANDED,
+    if (GangChat != null)
+      await GangChat.SendGangChat(gang,
+        Localizer.Get(MSG.COMMAND_GANG_DISBANDED,
           executor.Name ?? executor.Steam.ToString()));
 
-    await gangs.DeleteGang(gangPlayer.GangId.Value);
+    await Gangs.DeleteGang(player.GangId.Value);
     return CommandResult.SUCCESS;
   }
 }

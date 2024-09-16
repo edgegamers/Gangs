@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using GangsAPI.Data;
 using GangsAPI.Data.Command;
 
 namespace GangsAPI.Services.Commands;
@@ -23,8 +24,9 @@ public interface ICommandManager : IPluginBehavior {
   ///   Attempts to process a command.
   /// </summary>
   /// <param name="executor"></param>
+  /// <param name="ctx"></param>
   /// <param name="args"></param>
   /// <returns>True if the command finished processing successfully.</returns>
   Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
-    params string[] args);
+    CommandCallingContext ctx, params string[] args);
 }

@@ -1,4 +1,5 @@
 ﻿using Commands.Gang;
+using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -23,13 +24,15 @@ public class CreateTests(IServiceProvider provider)
   [Fact]
   public async Task Create_NonPlayer() {
     Assert.Equal(CommandResult.PLAYER_ONLY,
-      await Commands.ProcessCommand(null, "create"));
+      await Commands.ProcessCommand(null, CommandCallingContext.Console,
+        "create"));
   }
 
   [Fact]
   public async Task Create_NoName() {
     Assert.Equal(CommandResult.PRINT_USAGE,
-      await Commands.ProcessCommand(player, "create"));
+      await Commands.ProcessCommand(player, CommandCallingContext.Console,
+        "create"));
     Assert.Contains(locale.Get(MSG.COMMAND_USAGE, "create " + Command.Usage[0]),
       player.ConsoleOutput);
   }
@@ -39,7 +42,8 @@ public class CreateTests(IServiceProvider provider)
     var gang = await gangs.GetGang(player.Steam);
     Assert.Null(gang);
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(player, "create", "foobar"));
+      await Commands.ProcessCommand(player, CommandCallingContext.Console,
+        "create", "foobar"));
     gang = await gangs.GetGang(player.Steam);
     Assert.NotNull(gang);
     Assert.Equal("foobar", gang.Name);
@@ -53,7 +57,8 @@ public class CreateTests(IServiceProvider provider)
     var gang = await gangs.GetGang(player.Steam);
     Assert.Null(gang);
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(player, "create", "foo bar"));
+      await Commands.ProcessCommand(player, CommandCallingContext.Console,
+        "create", "foo bar"));
     gang = await gangs.GetGang(player.Steam);
     Assert.NotNull(gang);
     Assert.Equal("foo bar", gang.Name);
@@ -64,7 +69,8 @@ public class CreateTests(IServiceProvider provider)
     var gang = await gangs.GetGang(player.Steam);
     Assert.Null(gang);
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(player, "create", "foo bar", "baz"));
+      await Commands.ProcessCommand(player, CommandCallingContext.Console,
+        "create", "foo bar", "baz"));
     gang = await gangs.GetGang(player.Steam);
     Assert.NotNull(gang);
     Assert.Equal("foo bar baz", gang.Name);
@@ -73,9 +79,11 @@ public class CreateTests(IServiceProvider provider)
   [Fact]
   public async Task Create_Already_Ganged() {
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(player, "create", "foo bar"));
+      await Commands.ProcessCommand(player, CommandCallingContext.Console,
+        "create", "foo bar"));
     Assert.Equal(CommandResult.ERROR,
-      await Commands.ProcessCommand(player, "create", "bar foo"));
+      await Commands.ProcessCommand(player, CommandCallingContext.Console,
+        "create", "bar foo"));
     Assert.Contains(locale.Get(MSG.ALREADY_IN_GANG), player.ConsoleOutput);
   }
 
@@ -84,9 +92,11 @@ public class CreateTests(IServiceProvider provider)
     var other =
       new PlayerWrapper((ulong)new Random().NextInt64(), "Other Player");
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(player, "create", "foo bar"));
+      await Commands.ProcessCommand(player, CommandCallingContext.Console,
+        "create", "foo bar"));
     Assert.Equal(CommandResult.ERROR,
-      await Commands.ProcessCommand(other, "create", "foo bar"));
+      await Commands.ProcessCommand(other, CommandCallingContext.Console,
+        "create", "foo bar"));
     // Assert.Contains("Gang 'foo bar' already exists", other.ConsoleOutput);
     Assert.Contains(
       locale.Get(MSG.COMMAND_GANG_CREATE_ALREADY_EXISTS, "foo bar"),

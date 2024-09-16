@@ -1,4 +1,5 @@
-﻿using GangsAPI;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
@@ -12,7 +13,8 @@ public class PlayerOnlyTests(IStringLocalizer locale) : TestParent {
   public async Task Command_PlayerOnly(ICommandManager mgr) {
     mgr.RegisterCommand(new PlayerOnlyCommand());
     Assert.Equal(CommandResult.PLAYER_ONLY,
-      await mgr.ProcessCommand(TestPlayer, "css_player"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "css_player"));
     Assert.Contains(locale.Get(MSG.GENERIC_PLAYER_ONLY),
       TestPlayer.ConsoleOutput);
   }

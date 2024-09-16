@@ -31,7 +31,7 @@ public class DisplayCommand(IServiceProvider provider)
     IGangPlayer player, CommandInfoWrapper info) {
     if (info.ArgCount != 2) return CommandResult.PRINT_USAGE;
 
-    int display = info.Args[1].ToLower() switch {
+    var display = info.Args[1].ToLower() switch {
       "0"                 => 0,
       "1"                 => 1,
       "chat" or "c"       => 0,

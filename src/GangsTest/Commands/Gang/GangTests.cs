@@ -1,4 +1,5 @@
 ﻿using Commands;
+using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
@@ -19,14 +20,15 @@ public class GangTests(IServiceProvider provider) : TestParent(provider,
   public async Task Gang_TestBase() {
     Assert.Equal("css_gang", Command.Name);
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, Command.Name));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        Command.Name));
   }
 
   [Fact]
   public async Task Gang_Test_Create() {
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, Command.Name, "create",
-        "foobar"));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        Command.Name, "create", "foobar"));
     Assert.Single(await gangs.GetGangs());
   }
 
@@ -48,26 +50,30 @@ public class GangTests(IServiceProvider provider) : TestParent(provider,
   [Fact]
   public async Task Gang_TestUnknown() {
     Assert.Equal(CommandResult.UNKNOWN_COMMAND,
-      await Commands.ProcessCommand(TestPlayer, Command.Name, "foobar"));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        Command.Name, "foobar"));
   }
 
   [Fact]
   public async Task Gang_TestHelp() {
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "css_gang", "help"));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_gang", "help"));
   }
 
   [Fact]
   public async Task Gang_TestHelp_Single() {
     Assert.Equal(CommandResult.UNKNOWN_COMMAND,
-      await Commands.ProcessCommand(TestPlayer, "css_gang help"));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_gang help"));
   }
 
   [Fact]
   public async Task Does_Not_Open_Menu() {
     Assert.Null(menus.GetActiveMenu(TestPlayer));
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, Command.Name));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        Command.Name));
     Assert.Null(menus.GetActiveMenu(TestPlayer));
   }
 
@@ -76,7 +82,8 @@ public class GangTests(IServiceProvider provider) : TestParent(provider,
     await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.Null(menus.GetActiveMenu(TestPlayer));
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, Command.Name));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        Command.Name));
     Assert.NotNull(menus.GetActiveMenu(TestPlayer));
   }
 }

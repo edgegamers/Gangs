@@ -24,8 +24,9 @@ public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
   }
 
   public async Task<CommandResult> ProcessCommand(PlayerWrapper? executor,
-    params string[] args) {
-    var info = new CommandInfoWrapper(executor, args: args);
+    CommandCallingContext ctx, params string[] args) {
+    var info =
+      new CommandInfoWrapper(executor, args: args) { CallingContext = ctx };
     return await ProcessCommand(executor, info);
   }
 

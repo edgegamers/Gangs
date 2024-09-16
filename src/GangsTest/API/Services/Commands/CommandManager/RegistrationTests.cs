@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data.Command;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 
 namespace GangsTest.API.Services.Commands.CommandManager;
@@ -9,14 +10,16 @@ public class RegistrationTests : TestParent {
   public async Task Command_Register(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(TestPlayer, "css_dummy", "foobar"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_dummy", "foobar"));
   }
 
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Command_Unregistered(ICommandManager mgr) {
     Assert.Equal(CommandResult.UNKNOWN_COMMAND,
-      await mgr.ProcessCommand(TestPlayer, "css_dummy"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_dummy"));
   }
 
   [Theory]
@@ -25,7 +28,8 @@ public class RegistrationTests : TestParent {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.True(mgr.UnregisterCommand(Dummy));
     Assert.Equal(CommandResult.UNKNOWN_COMMAND,
-      await mgr.ProcessCommand(TestPlayer, "css_dummy"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_dummy"));
   }
 
   [Theory]

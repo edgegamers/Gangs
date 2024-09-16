@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Services.Menu;
 using Menu;
@@ -19,8 +20,8 @@ public class DoorPolicyMenu(IServiceProvider provider, DoorPolicy active)
 
   override protected Task HandleItemSelection(PlayerWrapper player,
     List<DoorPolicy> items, int selectedIndex) {
-    commands.ProcessCommand(player, "css_gang", "doorpolicy",
-      (selectedIndex - 1).ToString());
+    commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
+      "doorpolicy", (selectedIndex - 1).ToString());
     return Task.CompletedTask;
   }
 

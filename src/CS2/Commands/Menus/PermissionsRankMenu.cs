@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Modules.Utils;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Permissions;
 using GangsAPI.Services.Commands;
@@ -21,7 +22,8 @@ public class PermissionsRankMenu(IServiceProvider provider,
     List<IGangRank> items, int selectedIndex) {
     var rank = items[selectedIndex].Rank;
 
-    commands.ProcessCommand(player, "css_gang", "permission", rank.ToString());
+    commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
+      "permission", rank.ToString());
     return Task.CompletedTask;
   }
 

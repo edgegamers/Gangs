@@ -1,4 +1,5 @@
 ﻿using Commands;
+using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Player;
@@ -23,7 +24,8 @@ public class BalanceTests(IServiceProvider provider) : TestParent(provider,
   public async Task None() {
     Assert.Equal("css_balance", Command.Name);
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, Command.Name));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        Command.Name));
     Assert.Contains(locale.Get(MSG.COMMAND_BALANCE_NONE),
       TestPlayer.ConsoleOutput);
   }
@@ -32,7 +34,8 @@ public class BalanceTests(IServiceProvider provider) : TestParent(provider,
   public async Task One() {
     await stats.SetForPlayer(TestPlayer.Steam, STAT_ID, 1);
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, Command.Name));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        Command.Name));
     Assert.Contains(locale.Get(MSG.COMMAND_BALANCE, 1),
       TestPlayer.ConsoleOutput);
   }
@@ -46,7 +49,8 @@ public class BalanceTests(IServiceProvider provider) : TestParent(provider,
   public async Task Multiple(int bal) {
     await stats.SetForPlayer(TestPlayer.Steam, STAT_ID, bal);
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, Command.Name));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        Command.Name));
     Assert.Contains(locale.Get(MSG.COMMAND_BALANCE, bal),
       TestPlayer.ConsoleOutput);
   }

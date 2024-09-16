@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data.Command;
+﻿using CounterStrikeSharp.API.Modules.Commands;
+using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 
 namespace GangsTest.API.Services.Commands.CommandManager;
@@ -9,7 +10,8 @@ public class LogicTests : TestParent {
   public async Task Command_Logic(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(TestPlayer, "css_dummy", "foobar"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_dummy", "foobar"));
   }
 
   [Theory]
@@ -17,7 +19,8 @@ public class LogicTests : TestParent {
   public async Task Command_Logic_Fail(ICommandManager mgr) {
     Assert.True(mgr.RegisterCommand(Dummy));
     Assert.Equal(CommandResult.ERROR,
-      await mgr.ProcessCommand(TestPlayer, "css_dummy", "barfoo"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "css_dummy", "barfoo"));
   }
 
   [Theory]
@@ -25,7 +28,8 @@ public class LogicTests : TestParent {
   public async Task Command_CaseInsensitive(ICommandManager mgr) {
     mgr.RegisterCommand(Dummy);
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(TestPlayer, "CSS_DUMMY", "foobar"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "CSS_DUMMY", "foobar"));
   }
 
   [Theory]
@@ -33,6 +37,7 @@ public class LogicTests : TestParent {
   public async Task Command_CaseInsensitive2(ICommandManager mgr) {
     mgr.RegisterCommand(Dummy);
     Assert.Equal(CommandResult.SUCCESS,
-      await mgr.ProcessCommand(TestPlayer, "CsS_DumMY", "foobar"));
+      await mgr.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
+        "CsS_DumMY", "foobar"));
   }
 }

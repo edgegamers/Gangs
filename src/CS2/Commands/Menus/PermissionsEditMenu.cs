@@ -1,5 +1,6 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Permissions;
@@ -103,8 +104,9 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
       }
       case 9:
         await Close(player);
-        await commands.ProcessCommand(player, "css_gang", "permission", "set",
-          currentRank.Rank.ToString(), ((int)currentPerm).ToString());
+        await commands.ProcessCommand(player, CommandCallingContext.Chat,
+          "css_gang", "permission", "set", currentRank.Rank.ToString(),
+          ((int)currentPerm).ToString());
         break;
       default:
         await HandleItemSelection(player, pageItems, input - 1);

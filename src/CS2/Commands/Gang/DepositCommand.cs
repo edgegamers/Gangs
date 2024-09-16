@@ -1,62 +1,42 @@
-﻿using GangsAPI;
+﻿using System.Diagnostics;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
-using GangsAPI.Exceptions;
+using GangsAPI.Data.Gang;
 using GangsAPI.Permissions;
-using GangsAPI.Services;
-using GangsAPI.Services.Commands;
-using GangsAPI.Services.Player;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 
 namespace Commands.Gang;
 
-public class DepositCommand(IServiceProvider provider) : ICommand {
-  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
+public class DepositCommand(IServiceProvider provider)
+  : GangedPlayerCommand(provider) {
+  public override string Name => "deposit";
+  public override string[] Usage => ["<amount>"];
 
-  private readonly IStringLocalizer localizer =
-    provider.GetRequiredService<IStringLocalizer>();
-
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
-
-  private readonly IRankManager ranks =
-    provider.GetRequiredService<IRankManager>();
-
-  public string Name => "deposit";
-  public string[] Usage => ["<amount>"];
-
-  public async Task<CommandResult> Execute(PlayerWrapper? executor,
-    CommandInfoWrapper info) {
-    if (executor == null) return CommandResult.PLAYER_ONLY;
+  override protected async Task<CommandResult> Execute(PlayerWrapper executor,
+    IGangPlayer gangPlayer, CommandInfoWrapper info) {
     if (info.ArgCount != 2) return CommandResult.PRINT_USAGE;
 
-    var gangPlayer = await players.GetPlayer(executor.Steam)
-      ?? throw new PlayerNotFoundException(executor.Steam);
-
-    if (gangPlayer.GangId == null) {
-      info.ReplySync(localizer.Get(MSG.NOT_IN_GANG));
-      return CommandResult.SUCCESS;
-    }
+    Debug.Assert(gangPlayer.GangId != null, "gangPlayer.GangId != null");
 
     var (authorized, required) =
-      await ranks.CheckRank(gangPlayer, Perm.BANK_DEPOSIT);
+      await Ranks.CheckRank(gangPlayer, Perm.BANK_DEPOSIT);
 
     if (!authorized) {
-      info.ReplySync(localizer.Get(MSG.GENERIC_NOPERM, required.Name));
+      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM, required.Name));
       return CommandResult.SUCCESS;
     }
 
     if (!int.TryParse(info[1], out var amount) || amount <= 0) {
-      info.ReplySync(localizer.Get(MSG.COMMAND_INVALID_PARAM, info[1],
+      info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, info[1],
         "a positive integer"));
       return CommandResult.SUCCESS;
     }
 
     var remaining =
-      await eco.TryPurchase(executor, amount, true, "deposit", true);
-    if (remaining >= 0)
-      await eco.Grant(gangPlayer.GangId.Value, amount, true, "deposit");
+      await Eco.TryPurchase(executor, amount, true, "deposit", true);
+    if (remaining >= 0) {
+      await Eco.Grant(gangPlayer.GangId.Value, amount, true, "deposit");
+    }
 
     return CommandResult.SUCCESS;
   }

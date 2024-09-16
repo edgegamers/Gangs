@@ -1,4 +1,5 @@
 ﻿using Commands.Gang;
+using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -40,24 +41,15 @@ public class InviteTests(IServiceProvider provider)
   [Fact]
   public async Task Invite_NonPlayer() {
     Assert.Equal(CommandResult.PLAYER_ONLY,
-      await Commands.ProcessCommand(null, "invite"));
-  }
-
-  [Fact]
-  public async Task Invite_NoArgument() {
-    await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
-    await gangs.CreateGang("Test Gang", TestPlayer);
-    Assert.Equal(CommandResult.PRINT_USAGE,
-      await Commands.ProcessCommand(TestPlayer, "invite"));
-    Assert.Contains(
-      localizer.Get(MSG.COMMAND_USAGE, $"{Command.Name} {Command.Usage[0]}"),
-      TestPlayer.ConsoleOutput);
+      await Commands.ProcessCommand(null, CommandCallingContext.Chat,
+        "invite"));
   }
 
   [Fact]
   public async Task Invite_NotInGang() {
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "invite", "123"));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", "123"));
     Assert.Contains(localizer.Get(MSG.NOT_IN_GANG), TestPlayer.ConsoleOutput);
   }
 
@@ -66,8 +58,8 @@ public class InviteTests(IServiceProvider provider)
     await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
     await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "invite",
-        TestPlayer.Steam.ToString()));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", TestPlayer.Steam.ToString()));
     Assert.Equal(
       [localizer.Get(MSG.COMMAND_INVITE_IN_YOUR_GANG, TestPlayer.Name!)],
       TestPlayer.ConsoleOutput);
@@ -78,7 +70,8 @@ public class InviteTests(IServiceProvider provider)
     await players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
     await gangs.CreateGang("Test Gang", TestPlayer);
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "invite", "123"));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", "123"));
     Assert.Equal([localizer.Get(MSG.GENERIC_STEAM_NOT_FOUND, "123")],
       TestPlayer.ConsoleOutput);
   }
@@ -101,7 +94,8 @@ public class InviteTests(IServiceProvider provider)
     Assert.NotNull(needed);
 
     Assert.Equal(CommandResult.NO_PERMISSION,
-      await Commands.ProcessCommand(guestWrapper, "invite", "123"));
+      await Commands.ProcessCommand(guestWrapper, CommandCallingContext.Console,
+        "invite", "123"));
     Assert.Equal([localizer.Get(MSG.GENERIC_NOPERM_RANK, needed.Name)],
       guestWrapper.ConsoleOutput);
   }
@@ -115,8 +109,8 @@ public class InviteTests(IServiceProvider provider)
     Assert.NotNull(gang);
 
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "invite",
-        toInvite.Steam.ToString()));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", toInvite.Steam.ToString()));
     Assert.Equal(
       [localizer.Get(MSG.COMMAND_INVITE_SUCCESS, toInvite.Name!, gang.Name)],
       TestPlayer.ConsoleOutput);
@@ -135,8 +129,8 @@ public class InviteTests(IServiceProvider provider)
     await gangStats.SetForGang(gang.GangId, inviteId, data);
 
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "invite",
-        toInvite.Steam.ToString()));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", toInvite.Steam.ToString()));
     Assert.Equal(
       [localizer.Get(MSG.COMMAND_INVITE_ALREADY_INVITED, toInvite.Name!)],
       TestPlayer.ConsoleOutput);
@@ -152,14 +146,14 @@ public class InviteTests(IServiceProvider provider)
     var inviteSuccess = localizer.Get(MSG.COMMAND_INVITE_SUCCESS,
       toInvite.Name!, gang.Name);
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "invite",
-        toInvite.Steam.ToString()));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", toInvite.Steam.ToString()));
 
     Assert.NotNull(gang);
 
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "invite",
-        toInvite.Steam.ToString()));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", toInvite.Steam.ToString()));
     Assert.Equal(
     [
       inviteSuccess,
@@ -180,8 +174,8 @@ public class InviteTests(IServiceProvider provider)
     Assert.NotNull(otherGang);
 
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "invite",
-        otherOwner.Steam.ToString()));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", otherOwner.Steam.ToString()));
     Assert.Equal(
       [localizer.Get(MSG.COMMAND_INVITE_ALREADY_IN_GANG, otherOwner.Name!)],
       TestPlayer.ConsoleOutput);
@@ -199,8 +193,8 @@ public class InviteTests(IServiceProvider provider)
     await players.UpdatePlayer(guest);
 
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "invite",
-        guest.Steam.ToString()));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", guest.Steam.ToString()));
     Assert.Equal([localizer.Get(MSG.COMMAND_INVITE_IN_YOUR_GANG, guest.Name!)],
       TestPlayer.ConsoleOutput);
   }
@@ -216,7 +210,8 @@ public class InviteTests(IServiceProvider provider)
     await server.AddPlayer(guestWrapper);
 
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, "invite", guest.Name!));
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", guest.Name!));
     Assert.Equal(
       [localizer.Get(MSG.COMMAND_INVITE_SUCCESS, guest.Name!, gang.Name)],
       TestPlayer.ConsoleOutput);
