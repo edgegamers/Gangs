@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -76,6 +77,8 @@ public class DisplayCommand(IServiceProvider provider)
         ?? throw new GangException("Display setting not found");
       var enabled = await displaySetting.IsChatEnabled(player.Steam);
       await displaySetting.SetChatEnabled(player.Steam, !enabled);
+      info.ReplySync(Localizer.Get(MSG.PERK_DISPLAY_CHAT,
+        enabled ? ChatColors.Red + "disabled" : ChatColors.Green + "enabled"));
       return CommandResult.SUCCESS;
     }
 
@@ -109,6 +112,10 @@ public class DisplayCommand(IServiceProvider provider)
       await scoreboardSetting.IsScoreboardEnabled(player.Steam);
     await scoreboardSetting.SetScoreboardEnabled(player.Steam,
       !scoreboardEnabled);
+    info.ReplySync(Localizer.Get(MSG.PERK_DISPLAY_SCOREBOARD,
+      scoreboardEnabled ?
+        ChatColors.Red + "disabled" :
+        ChatColors.Green + "enabled"));
     return CommandResult.SUCCESS;
   }
 }

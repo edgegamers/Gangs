@@ -55,6 +55,8 @@
   "gang.invited": "%prefix%%color.target%{0}%color.default% invited you to join their %color.gang%{1}%color.default% gang.\n%prefix%Type %color.command%/gang join {1}%color.default% to accept the invite.",
   "perk.missing": "%prefix%Your gang does not have the %color.special%{0}%color.default% perk.",
   "perk.gangchat.format": " {darkred}[{red}{0}{darkred}] %color.special%{1}%color.default%: %color.default%{2}",
+  "perk.display.chat.toggled": "%prefix%You {0}%color.default% your gang chat showing in chat.",
+  "perk.display.scoreboard.toggled": "%prefix%You {0}%color.default% your gang tag showing in the scoreboard.",
   "perk.purchased": "%color.target%{0}%color.default% purchased the %color.special%{1}%color.default% perk for your gang.",
   "perk.unpurchasable": "%prefix%You cannot purchase this perk.",
   "perk.unpurchasable_withitem": "%prefix%You cannot purchase %color.emph%{0}%color.default%.",

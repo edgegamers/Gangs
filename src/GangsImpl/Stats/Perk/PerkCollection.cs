@@ -11,6 +11,7 @@ public static class PerkCollection {
     provider.AddPluginBehavior<ICapacityPerk, CapacityPerk>();
     provider.AddPluginBehavior<IMotdPerk, MotdPerk>();
     provider.AddScoped<IDisplayPerk, DisplayPerk>();
+    provider.AddScoped<IDisplaySetting, DisplaySetting>();
     provider.AddPluginBehavior<DisplayListener>();
   }
 }
