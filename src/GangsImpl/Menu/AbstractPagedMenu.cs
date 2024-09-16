@@ -29,7 +29,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     switch (input) {
       case 0:
         await Close(player);
-        return;
+        break;
       // Handle page navigation
       case 9 when hasNextPage(player): {
         var currentPage = GetCurrentPage(player);

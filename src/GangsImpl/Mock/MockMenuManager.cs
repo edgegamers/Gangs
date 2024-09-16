@@ -14,6 +14,8 @@ public class MockMenuManager : IMenuManager {
   }
 
   public Task<bool> OpenMenu(PlayerWrapper player, IMenu menu) {
+    if (activeMenus.TryGetValue(player.Steam, out var previous))
+      previous.Close(player);
     activeMenus[player.Steam] = menu;
     menu.Open(player);
     return Task.FromResult(true);

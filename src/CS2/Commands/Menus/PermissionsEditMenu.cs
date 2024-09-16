@@ -5,6 +5,7 @@ using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
+using GangsAPI.Services.Menu;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Timer = CounterStrikeSharp.API.Modules.Timers.Timer;
@@ -13,7 +14,7 @@ namespace Commands.Menus;
 
 public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
   Perm allowedPerms, IGangRank currentRank)
-  : AbstractPagedMenu<Perm?>(provider, NativeSenders.Chat) {
+  : AbstractPagedMenu<Perm?>(provider, NativeSenders.Center, 6) {
   private Perm currentPerm = currentRank.Permissions;
 
   private readonly Dictionary<PlayerWrapper, Timer> timers = new();
@@ -21,7 +22,11 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
+  private readonly IMenuManager menus =
+    provider.GetRequiredService<IMenuManager>();
+
   public override Task Close(PlayerWrapper player) {
+    player.PrintToChat("Closed permissions editor");
     if (timers.TryGetValue(player, out var timer)) timer.Kill();
     return Task.CompletedTask;
   }
@@ -52,10 +57,7 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
 
     lines = lines.Append("/7 Back, /8 Next, 0. Close").ToArray();
 
-    var text = string.Join("\n", lines);
-
-    await Close(player);
-
+    var text = string.Join("<br>", lines);
     await Server.NextFrameAsync(() => {
       timers[player] = new Timer(0.1f, () => {
         if (!player.IsValid) {
@@ -81,7 +83,8 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
       currentPerm &= ~selected.Value;
     } else { currentPerm |= selected.Value; }
 
-    await Open(player);
+    await Close(player);
+    await menus.OpenMenu(player, this);
   }
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
@@ -90,7 +93,7 @@ public class PermissionsEditMenu(IServiceProvider provider, IGang gang,
 
     var color       = currentPerm.HasFlag(item.Value) ? "#00FF00" : "#FF0000";
     var coloredHtml = $"<font color=\"{color}\">{item.Value.Describe()}</font>";
-    var result      = $"{index}. {color}{coloredHtml}";
+    var result      = $"{index}. {coloredHtml}";
 
     if (index == 1) result = "Editing permissions for " + currentRank.Name;
 
