@@ -1,4 +1,5 @@
-﻿using GangsAPI;
+﻿using System.Diagnostics;
+using GangsAPI;
 using GangsAPI.Data.Gang;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
@@ -29,9 +30,12 @@ public class DisplayPerk(IServiceProvider provider)
     return Task.CompletedTask;
   }
 
-  public override Task<IMenu?> GetMenu(IGangPlayer player) {
-    var menu = new DisplayPerkMenu(Provider, Value);
-    return Task.FromResult<IMenu?>(menu);
+  public async override Task<IMenu?> GetMenu(IGangPlayer player) {
+    Debug.Assert(player.GangId != null, "player.GangId != null");
+    var (success, data) =
+      await gangStats.GetForGang<DisplayData>(player.GangId.Value, StatId);
+    var menu = new DisplayPerkMenu(Provider, data ?? new DisplayData());
+    return menu;
   }
 
   public override DisplayData Value { get; set; } = new();

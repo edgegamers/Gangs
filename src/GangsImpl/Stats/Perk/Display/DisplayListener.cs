@@ -40,30 +40,30 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
 
   private async Task applyDisplays(List<IGang> gangs,
     List<IGangPlayer> gangPlayers, List<PlayerWrapper> players) {
-    foreach (var gang in gangs) {
-      var displayPerk = provider.GetService<IDisplayPerk>();
-      if (displayPerk == null) continue;
+    var displayPerk = provider.GetService<IDisplayPerk>();
+    if (displayPerk == null) return;
 
+    var displaySetting = provider.GetService<IDisplaySetting>();
+    if (displaySetting == null) return;
+
+    foreach (var gangPlayer in gangPlayers) {
+      var gang       = gangs.FirstOrDefault(g => g.GangId == gangPlayer.GangId);
       var chat       = await displayPerk.HasChatDisplay(gang);
       var scoreboard = await displayPerk.HasScoreboardDisplay(gang);
+      var wrapper    = players.FirstOrDefault(p => p.Steam == gangPlayer.Steam);
+      if (wrapper == null || wrapper.Player == null) continue;
+      if (chat && await displaySetting.IsChatEnabled(gangPlayer)) {
+        // MAUL
+      }
 
-      foreach (var gangPlayer in gangPlayers) {
-        var wrapper = players.FirstOrDefault(p => p.Steam == gangPlayer.Steam);
-        if (wrapper == null || wrapper.Player == null) continue;
-
-        var displaySetting = provider.GetService<IDisplaySetting>();
-        if (displaySetting == null) break;
-
-        if (chat && await displaySetting.IsChatEnabled(gangPlayer)) {
-          // MAUL
-        }
-
-        if (scoreboard
-          && await displaySetting.IsScoreboardEnabled(gangPlayer)) {
+      if (scoreboard && await displaySetting.IsScoreboardEnabled(gangPlayer)) {
+        await Server.NextFrameAsync(() => {
           wrapper.Player.Clan = gang.Name;
           Utilities.SetStateChanged(wrapper.Player, "CCSPlayerController",
             "m_szClan");
-        }
+        });
+        wrapper.PrintToChat(
+          $"Your gang's name is now displayed on the scoreboard");
       }
     }
   }
