@@ -41,7 +41,7 @@ public class GangCommand(IServiceProvider provider) : ICommand {
     ["permissions"] = new PermissionCommand(provider),
     ["permission"]  = new PermissionCommand(provider),
     ["rank"]        = new RankCommand(provider),
-    ["kick"]        = new KickCommand(provider),
+    ["kick"]        = new KickCommand(provider)
   };
 
   private IStringLocalizer locale =

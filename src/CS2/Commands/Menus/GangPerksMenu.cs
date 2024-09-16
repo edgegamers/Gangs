@@ -3,7 +3,6 @@ using GangsAPI.Data;
 using GangsAPI.Exceptions;
 using GangsAPI.Perks;
 using GangsAPI.Services;
-using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Menu;
@@ -13,9 +12,6 @@ namespace Commands.Menus;
 
 public class GangPerksMenu(IServiceProvider provider)
   : AbstractPagedMenu<IPerk>(provider, NativeSenders.Chat) {
-  private readonly IGangStatManager gangStats =
-    provider.GetRequiredService<IGangStatManager>();
-
   override protected Task<List<IPerk>> GetItems(PlayerWrapper player) {
     var perks = Provider.GetRequiredService<IPerkManager>().Perks.ToList();
     return Task.FromResult(perks.ToList());

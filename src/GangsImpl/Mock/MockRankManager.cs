@@ -62,8 +62,6 @@ public class MockRankManager(IPlayerManager players) : IRankManager {
      .Where(p => p.GangRank == rank)
      .ToList();
 
-    if (members == null) return false;
-
     if (strat == IRankManager.DeleteStrat.DEMOTE_FAIL && lowerRank == null
       && members.Count != 0)
       return false;

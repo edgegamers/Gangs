@@ -137,8 +137,6 @@ public interface IRankManager : IPluginBehavior {
       await CreateRank(gang, "Member", 100, memberPerms)
       ?? throw new InvalidOperationException("Failed to create member rank.")
     };
-    if (defaultRanks.Any(r => r == null))
-      throw new InvalidOperationException("Failed to create default ranks.");
     return defaultRanks;
   }
 

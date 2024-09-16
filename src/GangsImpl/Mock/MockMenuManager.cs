@@ -10,7 +10,7 @@ public class MockMenuManager : IMenuManager {
   public virtual void Start(BasePlugin? plugin, bool hotReload) { }
 
   public void Dispose() {
-    foreach (var menu in activeMenus.Values) { menu.Dispose(); }
+    foreach (var menu in activeMenus.Values) menu.Dispose();
 
     activeMenus.Clear();
   }

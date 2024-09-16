@@ -10,12 +10,12 @@ namespace Commands.Menus;
 public class PermissionsRankMenu(IServiceProvider provider,
   List<IGangRank> ranks)
   : AbstractPagedMenu<IGangRank>(provider, NativeSenders.Chat) {
+  private readonly ICommandManager commands =
+    provider.GetRequiredService<ICommandManager>();
+
   override protected Task<List<IGangRank>> GetItems(PlayerWrapper player) {
     return Task.FromResult(ranks);
   }
-
-  private readonly ICommandManager commands =
-    provider.GetRequiredService<ICommandManager>();
 
   override protected Task HandleItemSelection(PlayerWrapper player,
     List<IGangRank> items, int selectedIndex) {

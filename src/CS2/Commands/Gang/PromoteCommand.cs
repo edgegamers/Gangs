@@ -7,7 +7,6 @@ using GangsAPI.Exceptions;
 using GangsAPI.Perks;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
-using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,18 +15,18 @@ namespace Commands.Gang;
 
 public class PromoteCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
-  public override string Name => "promote";
-
-  public override string[] Usage => ["<player>"];
-
-  private readonly IRankManager ranks =
-    provider.GetRequiredService<IRankManager>();
+  private readonly IGangManager gangs =
+    provider.GetRequiredService<IGangManager>();
 
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
-  private readonly IGangManager gangs =
-    provider.GetRequiredService<IGangManager>();
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
+
+  public override string Name => "promote";
+
+  public override string[] Usage => ["<player>"];
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

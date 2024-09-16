@@ -14,8 +14,6 @@ public abstract class AbstractMenu<T>(IMenuManager menus,
     await Show(player, items);
   }
 
-  public virtual void Start(BasePlugin? plugin, bool hotReload) {}
-
   public virtual Task Close(PlayerWrapper player) { return Task.CompletedTask; }
 
   public virtual async Task AcceptInput(PlayerWrapper player, int input) {
@@ -28,6 +26,12 @@ public abstract class AbstractMenu<T>(IMenuManager menus,
 
     await HandleItemSelection(player, items, input);
   }
+
+  public void Start() { }
+
+  public virtual void Dispose() { }
+
+  public virtual void Start(BasePlugin? plugin, bool hotReload) { }
 
   // Abstract methods that must be implemented by derived menus
   abstract protected Task<List<T>> GetItems(PlayerWrapper player);
@@ -45,10 +49,4 @@ public abstract class AbstractMenu<T>(IMenuManager menus,
   // Utility methods
   abstract protected Task<string> FormatItem(PlayerWrapper player, int index,
     T item);
-
-  public void Start() {}
-
-  public virtual void Dispose() {
-    
-  }
 }

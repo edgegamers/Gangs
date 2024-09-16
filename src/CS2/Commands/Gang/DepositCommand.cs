@@ -43,9 +43,7 @@ public class DepositCommand(IServiceProvider provider) : ICommand {
       await ranks.CheckRank(gangPlayer, Perm.BANK_DEPOSIT);
 
     if (!authorized) {
-      info.ReplySync(required == null ?
-        localizer.Get(MSG.GENERIC_NOPERM_RANK) :
-        localizer.Get(MSG.GENERIC_NOPERM, required.Name));
+      info.ReplySync(localizer.Get(MSG.GENERIC_NOPERM, required.Name));
       return CommandResult.SUCCESS;
     }
 

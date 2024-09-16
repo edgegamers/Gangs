@@ -18,9 +18,6 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
-  private readonly IGangStatManager stats =
-    provider.GetRequiredService<IGangStatManager>();
-
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
 

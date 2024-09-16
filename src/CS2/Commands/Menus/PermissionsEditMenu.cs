@@ -5,13 +5,23 @@ using GangsAPI.Data.Gang;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
-using GangsAPI.Services.Menu;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Menus;
 
 public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
+  private readonly Dictionary<ulong, string> activeTexts = new();
+  private readonly Perm allowedPerms;
+  private readonly ICommandManager commands;
+  private readonly IGangRank currentRank;
+  private readonly IGang gang;
+  private readonly BasePlugin plugin;
+
+  private readonly IRankManager ranks;
+
+  private Perm currentPerm;
+
   public PermissionsEditMenu(IServiceProvider provider, BasePlugin plugin,
     IGang gang, Perm allowedPerms, IGangRank currentRank) : base(provider,
     NativeSenders.Center, 6) {
@@ -25,16 +35,6 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
 
     Server.NextFrame(() => plugin.RegisterListener<Listeners.OnTick>(sendText));
   }
-
-  private Perm currentPerm;
-  private readonly Dictionary<ulong, string> activeTexts = new();
-
-  private readonly IRankManager ranks;
-  private readonly IGang gang;
-  private readonly Perm allowedPerms;
-  private readonly IGangRank currentRank;
-  private readonly ICommandManager commands;
-  private readonly BasePlugin plugin;
 
   public override void Dispose() {
     plugin.RemoveListener<Listeners.OnTick>(sendText);
@@ -95,7 +95,7 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
         break;
       }
       case 8 when HasNextPage(player): {
-        pageItems = allItems.Skip((currentPage) * ItemsPerPage)
+        pageItems = allItems.Skip(currentPage * ItemsPerPage)
          .Take(ItemsPerPage)
          .ToList();
         await ShowPage(player, pageItems, currentPage + 1, totalPages);
@@ -121,9 +121,10 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
       return;
     }
 
-    if (currentPerm.HasFlag(selected.Value)) {
+    if (currentPerm.HasFlag(selected.Value))
       currentPerm &= ~selected.Value;
-    } else { currentPerm |= selected.Value; }
+    else
+      currentPerm |= selected.Value;
 
     await ShowPage(player, items, GetCurrentPage(player),
       (items.Count + ItemsPerPage - 1) / ItemsPerPage);

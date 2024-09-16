@@ -47,7 +47,7 @@ public class CommandManager(IServiceProvider provider)
     processInternal(CCSPlayerController? executor, CommandInfo info) {
     var wrapper     = executor == null ? null : new PlayerWrapper(executor);
     var wrappedInfo = new CommandInfoWrapper(info);
-    var result = Task.Run(async () => {
+    Task.Run(async () => {
       try { return await ProcessCommand(wrapper, wrappedInfo); } catch (
         GangException e) {
         var msg = e.Message;

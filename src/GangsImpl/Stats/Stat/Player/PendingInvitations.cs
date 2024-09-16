@@ -3,7 +3,7 @@
 public class PendingInvitations : BaseStat<PendingInvitationData> {
   public override string StatId => "pending_invitation";
   public override string Name => "Invitations";
-  public override string? Description => "Invitations the player has received.";
+  public override string Description => "Invitations the player has received.";
   public override PendingInvitationData? Value { get; set; } = new();
 }
 

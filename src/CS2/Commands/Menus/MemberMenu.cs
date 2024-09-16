@@ -16,9 +16,6 @@ namespace Commands.Menus;
 public class MemberMenu(IServiceProvider provider, IGangPlayer member)
   : AbstractMenu<string>(provider.GetRequiredService<IMenuManager>(),
     NativeSenders.Chat) {
-  private readonly IRankManager ranks =
-    provider.GetRequiredService<IRankManager>();
-
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
@@ -26,6 +23,9 @@ public class MemberMenu(IServiceProvider provider, IGangPlayer member)
     provider.GetRequiredService<IPlayerStatManager>();
 
   private readonly string playtimeId = new PlaytimeStat().StatId;
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
 
   override protected async Task<List<string>> GetItems(PlayerWrapper player) {
     var gangPlayer = await players.GetPlayer(player.Steam)

@@ -6,7 +6,6 @@ using GangsAPI.Perks;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
-using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -14,9 +13,6 @@ using Microsoft.Extensions.Localization;
 namespace Commands.Gang;
 
 public class MotdCommand(IServiceProvider provider) : ICommand {
-  private readonly IGangManager gangs =
-    provider.GetRequiredService<IGangManager>();
-
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
 

@@ -21,11 +21,13 @@ public class PermissionCommand(IServiceProvider provider)
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
+  private readonly IMenuManager menus =
+    provider.GetRequiredService<IMenuManager>();
+
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
-  private readonly IMenuManager menus =
-    provider.GetRequiredService<IMenuManager>();
+  private BasePlugin plugin = null!;
 
   public override string Name => "permission";
 
@@ -37,10 +39,8 @@ public class PermissionCommand(IServiceProvider provider)
       "revoke <rank> <perm>", "set <rank> <int>"
     ];
 
-  private BasePlugin plugin = null!;
-
   public override void Start(BasePlugin? basePlugin, bool hotReload) {
-    this.plugin = basePlugin!;
+    plugin = basePlugin!;
     base.Start(basePlugin, hotReload);
   }
 

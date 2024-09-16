@@ -15,7 +15,7 @@ public class MotdPerk(IServiceProvider provider)
   public override string Value { get; set; } = "";
   public override string StatId => "gang_native_motd";
   public override string Name => "MOTD";
-  public override string? Description => "The message of the day for the gang.";
+  public override string Description => "The message of the day for the gang.";
 
   public override async Task<int?> GetCost(IGangPlayer player) {
     if (player.GangId == null || player.GangRank == null) return null;

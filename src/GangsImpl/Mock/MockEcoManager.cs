@@ -1,5 +1,4 @@
 ﻿using GangsAPI.Data;
-using GangsAPI.Data.Stat;
 using GangsAPI.Services;
 
 namespace Mock;
@@ -28,18 +27,5 @@ public class MockEcoManager : IEcoManager {
   public Task<int> Grant(ulong player, int amount, bool print = true,
     string? reason = null) {
     throw new NotImplementedException();
-  }
-
-  private class MockCurrencyStat : IStat<int> {
-    public bool Equals(IStat? other) {
-      return other is not null && StatId == other.StatId;
-    }
-
-    public string StatId => "test_mock_currency";
-    public string Name => "Test Mock Currency";
-    public string? Description => null;
-
-    public bool Equals(IStat<int>? other) { return Equals(other as IStat); }
-    public int Value { get; set; } = 0;
   }
 }

@@ -85,7 +85,8 @@ public enum MSG {
   RANK_DEMOTE_SUCCESS,
   RANK_PROMOTE_ABOVE_HIGHEST,
   RANK_PROMOTE_SUCCESS,
-  RANK_CANNOT_OWNER, }
+  RANK_CANNOT_OWNER
+}
 
 public static class LocaleExtensions {
   public static string Key(this MSG msg) {

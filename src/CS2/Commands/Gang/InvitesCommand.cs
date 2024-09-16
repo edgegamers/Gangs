@@ -18,9 +18,6 @@ public class InvitesCommand(IServiceProvider provider) : ICommand {
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
-  private readonly IGangStatManager gangStats =
-    provider.GetRequiredService<IGangStatManager>();
-
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
 
@@ -51,8 +48,7 @@ public class InvitesCommand(IServiceProvider provider) : ICommand {
       await ranks.CheckRank(gangPlayer, Perm.INVITE_OTHERS);
 
     if (!permitted) {
-      info.ReplySync(locale.Get(MSG.GENERIC_NOPERM_RANK,
-        minimum?.Name ?? "Unknown"));
+      info.ReplySync(locale.Get(MSG.GENERIC_NOPERM_RANK, minimum.Name));
       return CommandResult.NO_PERMISSION;
     }
 

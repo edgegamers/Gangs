@@ -1,5 +1,4 @@
-﻿using CounterStrikeSharp.API.Modules.Utils;
-using GangsAPI.Data;
+﻿using GangsAPI.Data;
 using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -9,12 +8,13 @@ namespace Menu;
 public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   Func<PlayerWrapper, string, Task> printer, int itemsPerPage = 7)
   : AbstractMenu<T>(provider.GetRequiredService<IMenuManager>(), printer) {
+  protected readonly Dictionary<ulong, int> CurrentPages = new();
+  protected readonly int ItemsPerPage = itemsPerPage;
+
   protected readonly IStringLocalizer Localizer =
     provider.GetRequiredService<IStringLocalizer>();
 
   protected readonly IServiceProvider Provider = provider;
-  protected readonly int ItemsPerPage = itemsPerPage;
-  protected readonly Dictionary<ulong, int> CurrentPages = new();
 
   public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);

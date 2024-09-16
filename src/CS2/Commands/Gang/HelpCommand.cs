@@ -20,7 +20,7 @@ public class HelpCommand(IServiceProvider provider,
     CommandInfoWrapper info) {
     HashSet<string> sent = [];
 
-    foreach (var (name, cmd) in sub) {
+    foreach (var (_, cmd) in sub) {
       if (!sent.Add(cmd.Name)) continue;
       var uses = cmd.Usage.Where(use => !string.IsNullOrEmpty(use)).ToList();
       var useString = uses.Count > 0 ? "(" + string.Join(", ", uses) + ")" : "";

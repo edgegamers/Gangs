@@ -81,5 +81,5 @@
   "rank.demote.success": "Demoted %color.target%{0}%color.default% to %color.special%{1}%color.default%.",
   "rank.promote.above_highest": "%prefix%You cannot promote %color.target%{0}%color.default% any further.",
   "rank.promote.success": "Promoted %color.target%{0}%color.default% to %color.special%{1}%color.default%.",
-  "rank.cannot.owner": "%prefix%You cannot {0} yourself as the owner, use %color.command%/gang transfer <player>%color.default% to transfer ownership.",
+  "rank.cannot.owner": "%prefix%You cannot {0} yourself as the owner, use %color.command%/gang transfer <player>%color.default% to transfer ownership."
 }

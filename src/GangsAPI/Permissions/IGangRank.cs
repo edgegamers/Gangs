@@ -99,14 +99,14 @@ public enum Perm {
   MANAGE_INVITES = 1 << 13 | INVITE_OTHERS,
 
   /// <summary>
-  /// The member may read gang chat.
+  ///   The member may read gang chat.
   /// </summary>
   READ_GANG_CHAT = 1 << 14,
 
   /// <summary>
-  /// The member may send messages to gang chat.
+  ///   The member may send messages to gang chat.
   /// </summary>
-  SEND_GANG_CHAT = 1 << 15 | READ_GANG_CHAT,
+  SEND_GANG_CHAT = 1 << 15 | READ_GANG_CHAT
 }
 
 public interface IGangRank : IComparable<IGangRank> {
@@ -163,9 +163,9 @@ public static class PermissionExtensions {
   }
 
   public static string GetChatBitfield(this Perm perms) {
-    var    maxPerms   = Enum.GetValues<Perm>().Max();
-    var    maxLength  = Convert.ToString((int)maxPerms, 2).Length;
-    var    permString = Convert.ToString((int)perms, 2).PadLeft(maxLength, '0');
+    var maxPerms   = Enum.GetValues<Perm>().Max();
+    var maxLength  = Convert.ToString((int)maxPerms, 2).Length;
+    var permString = Convert.ToString((int)perms, 2).PadLeft(maxLength, '0');
     var permArray  = permString.ToCharArray();
     Array.Reverse(permArray);
     permString = new string(permArray);

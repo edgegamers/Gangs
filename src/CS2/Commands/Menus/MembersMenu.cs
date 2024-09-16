@@ -1,13 +1,11 @@
 ﻿using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
-using GangsAPI.Exceptions;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Player;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
-using Stats.Stat.Player;
 
 namespace Commands.Menus;
 
@@ -18,11 +16,6 @@ public class MembersMenu(IServiceProvider provider, IGang gang)
 
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
-
-  private readonly IPlayerStatManager playerStats =
-    provider.GetRequiredService<IPlayerStatManager>();
-
-  private readonly string playtimeId = new PlaytimeStat().StatId;
 
   override protected async Task<List<(IGangPlayer, IGangRank)>> GetItems(
     PlayerWrapper _) {

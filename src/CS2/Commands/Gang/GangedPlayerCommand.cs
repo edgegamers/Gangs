@@ -19,9 +19,9 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
   protected readonly IPlayerManager Players =
     provider.GetRequiredService<IPlayerManager>();
 
-  public virtual void Start(BasePlugin? plugin, bool hotReload) {}
-
   protected readonly IServiceProvider Provider = provider;
+
+  public virtual void Start(BasePlugin? plugin, bool hotReload) { }
   public abstract string Name { get; }
   public virtual string? Description => null;
   public virtual string[] RequiredFlags => [];
