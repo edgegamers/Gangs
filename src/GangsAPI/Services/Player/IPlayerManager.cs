@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data.Gang;
+﻿using System.Diagnostics.CodeAnalysis;
+using GangsAPI.Data.Gang;
 
 namespace GangsAPI.Services.Player;
 
@@ -29,6 +30,22 @@ public interface IPlayerManager : IPluginBehavior {
 
   Task<IEnumerable<IGangPlayer>> GetMembers(IGang gang) {
     return GetMembers(gang.GangId);
+  }
+
+  async Task<IGangPlayer?> SearchPlayer(IGang gang, string query) {
+    var members = (await GetMembers(gang)).ToList();
+
+    var matchedSteams = members.Where(p => query.Contains(p.Steam.ToString()))
+     .ToList();
+
+    if (matchedSteams.Count == 0) return matchedSteams.First();
+
+    var matchedNames = members.Where(p
+        => p.Name != null
+        && query.Contains(p.Name, StringComparison.OrdinalIgnoreCase))
+     .ToList();
+
+    return matchedNames.Count != 1 ? null : matchedNames.First();
   }
 
   Task<bool> UpdatePlayer(IGangPlayer player);

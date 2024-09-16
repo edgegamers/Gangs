@@ -4,7 +4,9 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
+using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -20,6 +22,15 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
     provider.GetRequiredService<IPlayerManager>();
 
   protected readonly IServiceProvider Provider = provider;
+
+  protected readonly IGangStatManager GangStats =
+    provider.GetRequiredService<IGangStatManager>();
+
+  protected readonly IGangManager Gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  protected readonly IRankManager Ranks =
+    provider.GetRequiredService<IRankManager>();
 
   public virtual void Start(BasePlugin? plugin, bool hotReload) { }
   public abstract string Name { get; }

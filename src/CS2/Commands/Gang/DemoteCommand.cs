@@ -6,24 +6,12 @@ using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
 using GangsAPI.Perks;
 using GangsAPI.Permissions;
-using GangsAPI.Services;
-using GangsAPI.Services.Gang;
-using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Gang;
 
 public class DemoteCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
-  private readonly IGangManager gangs =
-    provider.GetRequiredService<IGangManager>();
-
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
-
-  private readonly IRankManager ranks =
-    provider.GetRequiredService<IRankManager>();
-
   public override string Name => "demote";
 
   public override string[] Usage => ["<player>"];
@@ -32,10 +20,10 @@ public class DemoteCommand(IServiceProvider provider)
     IGangPlayer player, CommandInfoWrapper info) {
     if (info.ArgCount < 2) return CommandResult.PRINT_USAGE;
 
-    var executorRank = await ranks.GetRank(player)
+    var executorRank = await Ranks.GetRank(player)
       ?? throw new GangException("You do not have a rank.");
 
-    var (allowed, required) = await ranks.CheckRank(player, Perm.DEMOTE_OTHERS);
+    var (allowed, required) = await Ranks.CheckRank(player, Perm.DEMOTE_OTHERS);
 
     if (!allowed) {
       info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
@@ -46,21 +34,21 @@ public class DemoteCommand(IServiceProvider provider)
 
     Debug.Assert(player.GangId != null, "player.GangId != null");
 
-    var gang = await gangs.GetGang(executor.Steam)
+    var gang = await Gangs.GetGang(executor.Steam)
       ?? throw new GangNotFoundException(player);
 
-    var target = await searchPlayer(gang, query);
+    var target = await Players.SearchPlayer(gang, query);
 
     if (target == null) {
       info.ReplySync(Localizer.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
       return CommandResult.SUCCESS;
     }
 
-    var targetRank = await ranks.GetRank(target)
+    var targetRank = await Ranks.GetRank(target)
       ?? throw new GangException("Target does not have a rank.");
 
-    var lower  = await ranks.GetLowerRank(gang.GangId, targetRank.Rank);
-    var higher = await ranks.GetHigherRank(gang.GangId, targetRank.Rank);
+    var lower  = await Ranks.GetLowerRank(gang.GangId, targetRank.Rank);
+    var higher = await Ranks.GetHigherRank(gang.GangId, targetRank.Rank);
 
     // Trying to demote below the lowest rank, they need to kick instead
     if (lower == null) {
@@ -83,7 +71,7 @@ public class DemoteCommand(IServiceProvider provider)
 
     target.GangRank = lower.Rank;
 
-    await players.UpdatePlayer(target);
+    await Players.UpdatePlayer(target);
 
     var gangChat = Provider.GetService<IGangChatPerk>();
     if (gangChat != null)
@@ -91,15 +79,5 @@ public class DemoteCommand(IServiceProvider provider)
         Localizer.Get(MSG.RANK_DEMOTE_SUCCESS,
           target.Name ?? target.Steam.ToString(), lower.Name));
     return CommandResult.SUCCESS;
-  }
-
-  private async Task<IGangPlayer?> searchPlayer(IGang gang, string query) {
-    var members = (await players.GetMembers(gang.GangId)).ToList();
-    var player = members.FirstOrDefault(p
-      => query.Equals(p.Name, StringComparison.OrdinalIgnoreCase));
-    if (player != null) return player;
-
-    if (!ulong.TryParse(query, out var id)) return null;
-    return members.FirstOrDefault(p => p.Steam == id);
   }
 }
