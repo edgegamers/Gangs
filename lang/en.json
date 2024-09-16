@@ -22,6 +22,7 @@
   "command.gang.invite.foundmultiple": "%prefix%Found multiple invites using %color.target%{0}%color.default%.",
   "command.gang.disband.warning": "%prefix%{darkred}WARNING: {red}This action is irreversible.\n{darkred}- {red}All players will be removed from the gang\n{darkred}- {red}All gang perks and statistics will be removed\n%prefix%{red}Type {darkred}/gang disband confirm{red} to confirm.",
   "command.gang.disbanded": "%prefix%%color.target%{0}%color.gang% disbanded the gang.",
+  "command.gang.kicked": "Kicked %color.target%{0}%color.default% from the gang.",
   "command.balance": "%prefix%You have %color.currency%{0} %currency%%s%{grey}.",
   "command.balance.gang": "%prefix%%color.gang%{0}%color.default% has %color.currency%{1} %currency%%s%%color.default%.",
   "command.balance.none": "%prefix%You have no %currency%%s%.",
@@ -79,5 +80,6 @@
   "rank.demote.below_lowest": "%prefix%You cannot demote %color.target%{0}%color.default% any further, use %color.command%/gang kick {1}%color.default% to remove them from the gang.",
   "rank.demote.success": "Demoted %color.target%{0}%color.default% to %color.special%{1}%color.default%.",
   "rank.promote.above_highest": "%prefix%You cannot promote %color.target%{0}%color.default% any further.",
-  "rank.promote.success": "Promoted %color.target%{0}%color.default% to %color.special%{1}%color.default%."
+  "rank.promote.success": "Promoted %color.target%{0}%color.default% to %color.special%{1}%color.default%.",
+  "rank.cannot.owner": "%prefix%You cannot {0} yourself as the owner, use %color.command%/gang transfer <player>%color.default% to transfer ownership.",
 }

@@ -116,12 +116,14 @@ public interface IRankManager : IPluginBehavior {
   /// </summary>
   /// <returns></returns>
   async Task<IEnumerable<IGangRank>> AssignDefaultRanks(int gang) {
-    var memberPerms = Perm.BANK_DEPOSIT | Perm.VIEW_MEMBER_DETAILS;
-    var officerPerms = memberPerms | Perm.INVITE_OTHERS | Perm.PURCHASE_PERKS
-      | Perm.BANK_WITHDRAW | Perm.KICK_OTHERS;
-    var managerPerms = officerPerms | Perm.MANAGE_PERKS | Perm.MANAGE_RANKS
-      | Perm.MANAGE_INVITES | Perm.PROMOTE_OTHERS | Perm.DEMOTE_OTHERS;
-    var coOwnerPerms = managerPerms | Perm.CREATE_RANKS;
+    const Perm memberPerms = Perm.BANK_DEPOSIT | Perm.VIEW_MEMBER_DETAILS
+      | Perm.PURCHASE_PERKS | Perm.SEND_GANG_CHAT;
+    const Perm officerPerms =
+      memberPerms | Perm.MANAGE_INVITES | Perm.KICK_OTHERS;
+    const Perm managerPerms = officerPerms | Perm.MANAGE_PERKS
+      | Perm.MANAGE_RANKS | Perm.PROMOTE_OTHERS | Perm.DEMOTE_OTHERS
+      | Perm.BANK_WITHDRAW;
+    const Perm coOwnerPerms = managerPerms | Perm.CREATE_RANKS;
 
     var defaultRanks = new[] {
       await CreateRank(gang, "Owner", 0, Perm.OWNER)

@@ -80,7 +80,7 @@ public enum Perm {
   ADMINISTRATOR = 1 << 10 | INVITE_OTHERS | KICK_OTHERS | BANK_DEPOSIT
     | BANK_WITHDRAW | PROMOTE_OTHERS | DEMOTE_OTHERS | PURCHASE_PERKS
     | MANAGE_PERKS | MANAGE_RANKS | CREATE_RANKS | VIEW_MEMBER_DETAILS
-    | MANAGE_INVITES,
+    | MANAGE_INVITES | READ_GANG_CHAT | SEND_GANG_CHAT,
 
   /// <summary>
   ///   The member is the owner of the gang, and can not be kicked.
@@ -96,7 +96,17 @@ public enum Perm {
   /// <summary>
   ///   The member may manage invites to the gang.
   /// </summary>
-  MANAGE_INVITES = 1 << 13 | INVITE_OTHERS
+  MANAGE_INVITES = 1 << 13 | INVITE_OTHERS,
+
+  /// <summary>
+  /// The member may read gang chat.
+  /// </summary>
+  READ_GANG_CHAT = 1 << 14,
+
+  /// <summary>
+  /// The member may send messages to gang chat.
+  /// </summary>
+  SEND_GANG_CHAT = 1 << 15 | READ_GANG_CHAT,
 }
 
 public interface IGangRank : IComparable<IGangRank> {
@@ -111,7 +121,7 @@ public static class PermissionExtensions {
       Perm.INVITE_OTHERS       => "Invite Others",
       Perm.KICK_OTHERS         => "Kick Others",
       Perm.BANK_DEPOSIT        => "Deposit Money",
-      Perm.BANK_WITHDRAW       => "Withdraw Money",
+      Perm.BANK_WITHDRAW       => "Use Bank Funds",
       Perm.PROMOTE_OTHERS      => "Promote Others",
       Perm.DEMOTE_OTHERS       => "Demote Others",
       Perm.PURCHASE_PERKS      => "Purchase Perks",
@@ -122,6 +132,8 @@ public static class PermissionExtensions {
       Perm.OWNER               => "Owner",
       Perm.VIEW_MEMBER_DETAILS => "View Member Details",
       Perm.MANAGE_INVITES      => "Manage Invites",
+      Perm.READ_GANG_CHAT      => "Read Gang Chat",
+      Perm.SEND_GANG_CHAT      => "Send Gang Chat",
       _                        => perms.ToString().ToTitleCase()
     };
   }

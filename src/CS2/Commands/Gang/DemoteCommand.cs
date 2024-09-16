@@ -61,7 +61,9 @@ public class DemoteCommand(IServiceProvider provider)
     var targetRank = await ranks.GetRank(target)
       ?? throw new GangException("Target does not have a rank.");
 
-    var lower = await ranks.GetLowerRank(gang.GangId, targetRank.Rank);
+    var lower  = await ranks.GetLowerRank(gang.GangId, targetRank.Rank);
+    var higher = await ranks.GetHigherRank(gang.GangId, targetRank.Rank);
+
     // Trying to demote below the lowest rank, they need to kick instead
     if (lower == null) {
       info.ReplySync(Localizer.Get(MSG.RANK_DEMOTE_BELOW_LOWEST,
@@ -71,7 +73,13 @@ public class DemoteCommand(IServiceProvider provider)
 
     if (targetRank.Rank <= executorRank.Rank) {
       // Can't demote someone with the same or higher rank
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, lower.Name));
+      if (higher == null) {
+        // No higher rank, can't demote
+        info.ReplySync(Localizer.Get(MSG.RANK_CANNOT_OWNER, "demote"));
+        return CommandResult.NO_PERMISSION;
+      }
+
+      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, higher.Name));
       return CommandResult.NO_PERMISSION;
     }
 

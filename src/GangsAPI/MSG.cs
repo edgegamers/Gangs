@@ -25,6 +25,7 @@ public enum MSG {
   COMMAND_BALANCE_SET,
   COMMAND_GANG_DISBAND_WARN,
   COMMAND_GANG_DISBANDED,
+  COMMAND_GANG_KICKED,
   COMMAND_USAGE,
   COMMAND_INVALID_PARAM,
   PREFIX,
@@ -84,7 +85,7 @@ public enum MSG {
   RANK_DEMOTE_SUCCESS,
   RANK_PROMOTE_ABOVE_HIGHEST,
   RANK_PROMOTE_SUCCESS,
-}
+  RANK_CANNOT_OWNER, }
 
 public static class LocaleExtensions {
   public static string Key(this MSG msg) {
@@ -116,6 +117,7 @@ public static class LocaleExtensions {
       MSG.COMMAND_INVALID_PARAM         => "command.invalid_parameter",
       MSG.COMMAND_GANG_DISBAND_WARN     => "command.gang.disband.warning",
       MSG.COMMAND_GANG_DISBANDED        => "command.gang.disbanded",
+      MSG.COMMAND_GANG_KICKED           => "command.gang.kicked",
       MSG.PREFIX                        => "prefix",
       MSG.GENERIC_PLAYER_NOT_FOUND      => "generic.player.not_found",
       MSG.SOONTM                        => "generic.soontm",
@@ -175,6 +177,7 @@ public static class LocaleExtensions {
       MSG.RANK_DEMOTE_SUCCESS => "rank.demote.success",
       MSG.RANK_PROMOTE_ABOVE_HIGHEST => "rank.promote.above_highest",
       MSG.RANK_PROMOTE_SUCCESS => "rank.promote.success",
+      MSG.RANK_CANNOT_OWNER => "rank.cannot.owner",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }
