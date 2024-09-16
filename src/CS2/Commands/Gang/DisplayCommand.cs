@@ -40,7 +40,7 @@ public class DisplayCommand(IServiceProvider provider)
 
     if (display == -1) return CommandResult.PRINT_USAGE;
 
-    var perk = provider.GetService<IDisplayPerk>()
+    var perk = Provider.GetService<IDisplayPerk>()
       ?? throw new GangException("Display perk not found");
 
     Debug.Assert(player.GangId != null, "player.GangId != null");
@@ -60,7 +60,9 @@ public class DisplayCommand(IServiceProvider provider)
           < 0)
           return CommandResult.SUCCESS;
 
-        var gangChat = provider.GetService<IGangChatPerk>();
+        await perk.SetChatDisplay(gang, true);
+
+        var gangChat = Provider.GetService<IGangChatPerk>();
         if (gangChat == null) return CommandResult.SUCCESS;
 
         await gangChat.SendGangChat(player, gang,
@@ -70,7 +72,7 @@ public class DisplayCommand(IServiceProvider provider)
       }
 
       // Toggle
-      var displaySetting = provider.GetService<IDisplaySetting>()
+      var displaySetting = Provider.GetService<IDisplaySetting>()
         ?? throw new GangException("Display setting not found");
       var enabled = await displaySetting.IsChatEnabled(player.Steam);
       await displaySetting.SetChatEnabled(player.Steam, !enabled);
@@ -88,7 +90,9 @@ public class DisplayCommand(IServiceProvider provider)
           item: "Scoreboard Display") < 0)
           return CommandResult.SUCCESS;
 
-        var gangChat = provider.GetService<IGangChatPerk>();
+        await perk.SetScoreboardDisplay(gang, true);
+
+        var gangChat = Provider.GetService<IGangChatPerk>();
         if (gangChat == null) return CommandResult.SUCCESS;
 
         await gangChat.SendGangChat(player, gang,
@@ -99,7 +103,7 @@ public class DisplayCommand(IServiceProvider provider)
     }
 
     // Toggle
-    var scoreboardSetting = provider.GetService<IDisplaySetting>()
+    var scoreboardSetting = Provider.GetService<IDisplaySetting>()
       ?? throw new GangException("Display setting not found");
     var scoreboardEnabled =
       await scoreboardSetting.IsScoreboardEnabled(player.Steam);

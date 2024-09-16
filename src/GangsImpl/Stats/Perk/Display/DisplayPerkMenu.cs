@@ -52,8 +52,8 @@ public class DisplayPerkMenu(IServiceProvider provider, DisplayData data)
   public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
 
   public Task AcceptInput(PlayerWrapper player, int input) {
-    if (input > 2) return Task.CompletedTask;
-    commands.ProcessCommand(player, "css_gang", "display", $"{input}");
+    if (input > 1) return Task.CompletedTask;
+    commands.ProcessCommand(player, "css_gang", "display", $"{input - 1}");
     return Task.CompletedTask;
   }
 }

@@ -2,6 +2,7 @@
 using GangsAPI.Perks;
 using GangsAPI.Services;
 using Stats.Perk;
+using Stats.Perk.Display;
 
 namespace GangsImpl;
 
@@ -10,7 +11,8 @@ public class PerkManager(IServiceProvider provider) : IPerkManager {
     Perks = new List<IPerk> {
       new GangChatPerk(provider),
       new MotdPerk(provider),
-      new CapacityPerk(provider)
+      new CapacityPerk(provider),
+      new DisplayPerk(provider)
     };
   }
 

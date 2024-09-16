@@ -3,6 +3,7 @@ using GangsAPI.Data.Gang;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
+using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Stats.Perk.Display;
@@ -43,6 +44,20 @@ public class DisplayPerk(IServiceProvider provider)
   public async Task<bool> HasScoreboardDisplay(IGang gang) {
     var (success, data) = await gangStats.GetForGang<DisplayData>(gang, StatId);
     return success && data is { ScoreboardBought: true };
+  }
+
+  public async Task SetChatDisplay(IGang gang, bool value) {
+    var (success, data) = await gangStats.GetForGang<DisplayData>(gang, StatId);
+    if (!success || data == null) data = new DisplayData();
+    data.ChatBought = value;
+    await gangStats.SetForGang(gang, StatId, data);
+  }
+
+  public async Task SetScoreboardDisplay(IGang gang, bool value) {
+    var (success, data) = await gangStats.GetForGang<DisplayData>(gang, StatId);
+    if (!success || data == null) data = new DisplayData();
+    data.ScoreboardBought = value;
+    await gangStats.SetForGang(gang, StatId, data);
   }
 }
 
