@@ -2,6 +2,7 @@
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Perks;
+using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Player;
@@ -21,6 +22,9 @@ public class PurchaseCommand(IServiceProvider provider) : ICommand {
 
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
 
   public string Name => "purchase";
 
@@ -42,6 +46,14 @@ public class PurchaseCommand(IServiceProvider provider) : ICommand {
       info.ReplySync(localizer.Get(MSG.GENERIC_ERROR_INFO,
         "Could not fetch gang player"));
       return CommandResult.SUCCESS;
+    }
+
+    var (allowed, required) =
+      await ranks.CheckRank(gangPlayer, Perm.PURCHASE_PERKS);
+
+    if (!allowed) {
+      localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name);
+      return CommandResult.NO_PERMISSION;
     }
 
     var cost = await perk.GetCost(gangPlayer);
