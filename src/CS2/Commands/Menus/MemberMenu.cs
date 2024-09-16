@@ -56,11 +56,11 @@ public class MemberMenu(IServiceProvider provider, IGangPlayer member)
 
   override protected Task HandleItemSelection(PlayerWrapper player,
     List<string> items, int selectedIndex) {
-    throw new NotImplementedException();
+    return Task.CompletedTask;
   }
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     string item) {
-    throw new NotImplementedException();
+    return Task.FromResult(item);
   }
 }

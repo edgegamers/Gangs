@@ -36,7 +36,8 @@ public class MembersMenu(IServiceProvider provider, IGang gang)
 
   override protected async Task HandleItemSelection(PlayerWrapper player,
     List<(IGangPlayer, IGangRank)> items, int selectedIndex) {
-    var (member, _) = items[selectedIndex - 1];
+    player.PrintToChat($"Got index {selectedIndex}");
+    var (member, _) = items[selectedIndex];
     var menu = new MemberMenu(Provider, member);
 
     await Menus.OpenMenu(player, menu);
