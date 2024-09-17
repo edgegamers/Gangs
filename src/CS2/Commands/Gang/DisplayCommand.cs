@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
@@ -9,6 +11,7 @@ using GangsAPI.Perks;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Gang;
+using GangsAPI.Shared;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Gang;
@@ -79,11 +82,13 @@ public class DisplayCommand(IServiceProvider provider)
       await displaySetting.SetChatEnabled(player.Steam, !enabled);
       info.ReplySync(Localizer.Get(MSG.PERK_DISPLAY_CHAT,
         enabled ? ChatColors.Red + "disabled" : ChatColors.Green + "enabled"));
+      await updateDisplay(executor, gang.Name, chat: !enabled ? 1 : 0,
+        scoreboard: -1);
       return CommandResult.SUCCESS;
     }
 
     if (!await perk.HasScoreboardDisplay(gang)) {
-      if (!await perk.HasChatDisplay(gang)) {
+      if (!await perk.HasScoreboardDisplay(gang)) {
         if (!canBuy) {
           info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
           return CommandResult.NO_PERMISSION;
@@ -116,6 +121,29 @@ public class DisplayCommand(IServiceProvider provider)
       scoreboardEnabled ?
         ChatColors.Red + "disabled" :
         ChatColors.Green + "enabled"));
+
+    await updateDisplay(executor, gang.Name, chat: -1,
+      scoreboard: !scoreboardEnabled ? 1 : 0);
     return CommandResult.SUCCESS;
+  }
+
+  private Task updateDisplay(PlayerWrapper player, string name, int chat = -1,
+    int scoreboard = -1) {
+    if (player.Player == null) return Task.CompletedTask;
+    return Server.NextFrameAsync(() => {
+      if (!player.IsValid) return;
+      if (chat != -1) {
+        var tags = ThirdPartyAPI.Actain?.getTagService();
+        tags?.SetTag(player.Player, chat == 0 ? "" : name, false);
+      }
+
+      if (scoreboard == -1) return;
+      Debug.Assert(player.Player != null, "player.Player != null");
+      player.Player.Clan = scoreboard == 0 ? "" : name;
+      Utilities.SetStateChanged(player.Player, "CCSPlayerController",
+        "m_szClan");
+      var ev = new EventNextlevelChanged(true);
+      ev.FireEvent(false);
+    });
   }
 }

@@ -19,10 +19,9 @@ public class DisbandCommand(IServiceProvider provider)
 
     Debug.Assert(player.GangId != null, "player.GangId != null");
     var (success, required) = await Ranks.CheckRank(player, Perm.OWNER);
-    if (required == null) {
+    if (required == null)
       throw new SufficientRankNotFoundException(player.GangId.Value,
         Perm.OWNER);
-    }
 
     if (!success) {
       info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));

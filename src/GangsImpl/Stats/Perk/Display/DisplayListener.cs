@@ -7,6 +7,7 @@ using GangsAPI.Data.Gang;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
+using GangsAPI.Shared;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Stats.Perk.Display;
@@ -32,6 +33,9 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
        .ToList();
 
       var cachedGangs = (await gangs.GetGangs()).ToList();
+
+      await Server.NextFrameAsync(()
+        => Server.PrintToChatAll("Applying displays..."));
 
       await applyDisplays(cachedGangs, gangPlayers!, wrapped);
     });
@@ -62,21 +66,29 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
         cachedPlayers.FirstOrDefault(p => p.Steam == gangPlayer.Steam);
       if (wrapper == null || wrapper.Player == null) continue;
       if (chat && await displaySetting.IsChatEnabled(gangPlayer)) {
-        // MAUL
+        await Server.NextFrameAsync(() => {
+          var tags = ThirdPartyAPI.Actain?.getTagService();
+          tags?.SetTag(wrapper.Player, gang.Name, false);
+          if (tags == null)
+            wrapper.Player.PlayerName =
+              gang.Name + " " + wrapper.Player.PlayerName;
+        });
       }
 
-      if (scoreboard && await displaySetting.IsScoreboardEnabled(gangPlayer)) {
-        await Server.NextFrameAsync(() => {
-          wrapper.Player.Clan = gang.Name;
-          Utilities.SetStateChanged(wrapper.Player, "CCSPlayerController",
-            "m_szClan");
-        });
-        wrapper.PrintToChat(
-          $"Your gang's name is now displayed on the scoreboard");
-      } else {
-        wrapper.PrintToChat(
-          "Your gang's name is no longer displayed on the scoreboard");
-      }
+      var name =
+        (scoreboard && await displaySetting.IsScoreboardEnabled(gangPlayer)) ?
+          gang.Name :
+          "";
+      await Server.NextFrameAsync(() => {
+        wrapper.Player.Clan = name;
+        Utilities.SetStateChanged(wrapper.Player, "CCSPlayerController",
+          "m_szClan");
+      });
     }
+
+    await Server.NextFrameAsync(() => {
+      var ev = new EventNextlevelChanged(true);
+      ev.FireEvent(false);
+    });
   }
 }

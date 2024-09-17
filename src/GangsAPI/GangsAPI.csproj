@@ -13,6 +13,9 @@
         <Reference Include="CounterStrikeSharp.API">
             <HintPath>..\..\..\..\..\.nuget\packages\counterstrikesharp.api\1.0.263\lib\net8.0\CounterStrikeSharp.API.dll</HintPath>
         </Reference>
+        <Reference Include="MAULActainShared.dll">
+            <HintPath>./Shared/MAULActainShared.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>

@@ -17,4 +17,10 @@
         <ProjectReference Include="..\..\GangsImpl\Stats\Stats.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="MAULActainShared">
+        <HintPath>..\..\GangsAPI\Shared\MAULActainShared.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
