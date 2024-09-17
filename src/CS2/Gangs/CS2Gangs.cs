@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Core.Capabilities;
 using GangsAPI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,9 @@ public class CS2Gangs(IServiceProvider provider) : BasePlugin, IGangPlugin {
   public override string ModuleVersion => "0.0.1";
   public BasePlugin Base => this;
   public IServiceProvider Services { get; } = provider;
+
+  public static PluginCapability<IGangPlugin> Capability { get; } =
+    new("gangs:core");
 
   public override void Load(bool hotReload) {
     scope = Services.CreateScope();
@@ -30,5 +34,7 @@ public class CS2Gangs(IServiceProvider provider) : BasePlugin, IGangPlugin {
         Logger.LogError(e, "Failed to load {@Name}", ext.GetType().FullName);
       }
     }
+
+    Capabilities.RegisterPluginCapability(Capability, () => this);
   }
 }
