@@ -1,5 +1,6 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
@@ -23,6 +24,6 @@ public class PeriodicRewarder(IServiceProvider provider) : IPluginBehavior {
         Task.Run(
           async () => await eco.Grant(player, reward, reason: "Playtime"));
       }
-    });
+    }, TimerFlags.REPEAT);
   }
 }
