@@ -38,19 +38,28 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
     return HookResult.Continue;
   }
 
-  private async Task applyDisplays(List<IGang> gangs,
-    List<IGangPlayer> gangPlayers, List<PlayerWrapper> players) {
+  private async Task applyDisplays(List<IGang> cachedGangs,
+    List<IGangPlayer> gangPlayers, List<PlayerWrapper> cachedPlayers) {
     var displayPerk = provider.GetService<IDisplayPerk>();
     if (displayPerk == null) return;
 
     var displaySetting = provider.GetService<IDisplaySetting>();
     if (displaySetting == null) return;
 
+    Dictionary<int, (bool, bool)> cachedPerks = new();
+
     foreach (var gangPlayer in gangPlayers) {
-      var gang       = gangs.FirstOrDefault(g => g.GangId == gangPlayer.GangId);
-      var chat       = await displayPerk.HasChatDisplay(gang);
-      var scoreboard = await displayPerk.HasScoreboardDisplay(gang);
-      var wrapper    = players.FirstOrDefault(p => p.Steam == gangPlayer.Steam);
+      var gang = cachedGangs.FirstOrDefault(g => g.GangId == gangPlayer.GangId);
+      if (gang == null || gangPlayer.GangId == null) continue;
+      bool chat, scoreboard;
+      if (!cachedPerks.TryGetValue(gang.GangId, out var perk)) {
+        chat       = await displayPerk.HasChatDisplay(gang);
+        scoreboard = await displayPerk.HasScoreboardDisplay(gang);
+        cachedPerks.Add(gang.GangId, (chat, scoreboard));
+      } else { (chat, scoreboard) = perk; }
+
+      var wrapper =
+        cachedPlayers.FirstOrDefault(p => p.Steam == gangPlayer.Steam);
       if (wrapper == null || wrapper.Player == null) continue;
       if (chat && await displaySetting.IsChatEnabled(gangPlayer)) {
         // MAUL
@@ -64,6 +73,9 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
         });
         wrapper.PrintToChat(
           $"Your gang's name is now displayed on the scoreboard");
+      } else {
+        wrapper.PrintToChat(
+          "Your gang's name is no longer displayed on the scoreboard");
       }
     }
   }
