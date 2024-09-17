@@ -18,7 +18,8 @@ public class PeriodicRewarder(IServiceProvider provider) : IPluginBehavior {
        .Select(p => new PlayerWrapper(p));
 
       foreach (var player in players) {
-        var reward = (bool)player.Player?.PawnIsAlive ? 7 : 3;
+        if (player.Player == null) continue;
+        var reward = player.Player.PawnIsAlive ? 7 : 3;
         Task.Run(
           async () => await eco.Grant(player, reward, reason: "Playtime"));
       }

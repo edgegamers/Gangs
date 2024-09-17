@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menu", "src\GangsImpl\Menu\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatsTracker", "src\StatsTracker\StatsTracker.csproj", "{B850CFA3-AFE8-4012-8BC2-9A4BC12B9748}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoRewards", "EcoRewards\EcoRewards.csproj", "{253C7948-3411-4860-BDDE-B1CA23FCE4DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoRewards", "src\EcoRewards\EcoRewards.csproj", "{253C7948-3411-4860-BDDE-B1CA23FCE4DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
