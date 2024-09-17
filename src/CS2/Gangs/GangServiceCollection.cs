@@ -1,5 +1,6 @@
 ﻿using Commands;
 using CounterStrikeSharp.API.Core;
+using EcoRewards;
 using GangsAPI.Data;
 using GangsAPI.Extensions;
 using GangsAPI.Services;
@@ -39,6 +40,7 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection.RegisterCommands();
     serviceCollection.RegisterStatsTracker();
     serviceCollection.RegisterPerks();
+    serviceCollection.RegisterRewards();
 
     serviceCollection.AddPluginBehavior<PlayerJoinCreationListener>();
     serviceCollection

@@ -1,3 +1,4 @@
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Exceptions;
@@ -12,6 +13,9 @@ namespace Commands.Menus;
 
 public class GangPerksMenu(IServiceProvider provider)
   : AbstractPagedMenu<IPerk>(provider, NativeSenders.Chat) {
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
   override protected Task<List<IPerk>> GetItems(PlayerWrapper player) {
     var perks = Provider.GetRequiredService<IPerkManager>().Perks.ToList();
     return Task.FromResult(perks.ToList());
@@ -34,8 +38,15 @@ public class GangPerksMenu(IServiceProvider provider)
     await Provider.GetRequiredService<IMenuManager>().OpenMenu(player, menu);
   }
 
-  override protected Task<string> FormatItem(PlayerWrapper player, int index,
-    IPerk item) {
-    return Task.FromResult($"{index} {item.Name}");
+  override async protected Task<string> FormatItem(PlayerWrapper player,
+    int index, IPerk item) {
+    var gangPlayer = await players.GetPlayer(player.Steam)
+      ?? throw new PlayerNotFoundException(player.Steam);
+    var cost = await item.GetCost(gangPlayer);
+    var result = (cost == null) ?
+      $"{index}. {ChatColors.Blue}{item.Name}" :
+      $"{ChatColors.DarkRed}{index}. {ChatColors.LightBlue}{item.Name} {ChatColors.DarkRed}({ChatColors.Red}{cost}{ChatColors.DarkRed})";
+    if (index == 1) result = $" {ChatColors.DarkBlue}Gang Perks\n{result}";
+    return result;
   }
 }

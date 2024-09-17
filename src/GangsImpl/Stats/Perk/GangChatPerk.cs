@@ -5,6 +5,8 @@ using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Perks;
+using GangsAPI.Permissions;
+using GangsAPI.Services;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +27,9 @@ public class GangChatPerk(IServiceProvider provider)
 
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
+
+  private readonly IRankManager ranks =
+    provider.GetRequiredService<IRankManager>();
 
   public override bool Value { get; set; }
 
@@ -50,7 +55,7 @@ public class GangChatPerk(IServiceProvider provider)
     if (player.GangId == null || player.GangRank == null) return null;
     var (success, perk) =
       await gangStats.GetForGang<bool>(player.GangId.Value, StatId);
-    return success && perk ? null : 1000;
+    return success && perk ? null : 10000;
   }
 
   public override async Task OnPurchase(IGangPlayer player) {
@@ -85,6 +90,14 @@ public class GangChatPerk(IServiceProvider provider)
 
       if (!success || !perk) {
         wrapper.PrintToChat(localizer.Get(MSG.PERK_MISSING, Name));
+        return;
+      }
+
+      var (allowed, required) =
+        await ranks.CheckRank(gangPlayer, Perm.SEND_GANG_CHAT);
+      if (!allowed) {
+        wrapper.PrintToChat(localizer.Get(MSG.GENERIC_NOPERM_RANK,
+          required.Name));
         return;
       }
 

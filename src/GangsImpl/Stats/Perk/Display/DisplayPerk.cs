@@ -11,8 +11,8 @@ namespace Stats.Perk.Display;
 
 public class DisplayPerk(IServiceProvider provider)
   : BasePerk<DisplayData>(provider), IDisplayPerk {
-  public int ChatCost => 50000;
-  public int ScoreboardCost => 2000;
+  public int ChatCost => 30000;
+  public int ScoreboardCost => 5000;
   public override string StatId => "display_perk";
   public override string Name => "Display";
 

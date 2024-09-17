@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\EcoRewards\EcoRewards.csproj" />
         <ProjectReference Include="..\..\StatsTracker\StatsTracker.csproj"/>
         <ProjectReference Include="..\Commands\Commands.csproj"/>
         <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>

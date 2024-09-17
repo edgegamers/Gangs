@@ -34,9 +34,6 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
 
       var cachedGangs = (await gangs.GetGangs()).ToList();
 
-      await Server.NextFrameAsync(()
-        => Server.PrintToChatAll("Applying displays..."));
-
       await applyDisplays(cachedGangs, gangPlayers!, wrapped);
     });
     return HookResult.Continue;
