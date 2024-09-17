@@ -4,5 +4,5 @@ using GangsAPI.Services;
 namespace Mock;
 
 public class MockPerkManager : IPerkManager {
-  public IEnumerable<IPerk> Perks { get; } = [];
+  public List<IPerk> Perks { get; set; } = [];
 }
