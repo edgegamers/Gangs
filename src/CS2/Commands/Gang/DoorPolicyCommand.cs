@@ -5,6 +5,7 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
+using GangsAPI.Extensions;
 using GangsAPI.Perks;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
@@ -65,7 +66,7 @@ public class DoorPolicyCommand(IServiceProvider provider)
       if (gangChat != null)
         await gangChat.SendGangChat(player, gang,
           Localizer.Get(MSG.GANG_THING_SET, "Door Policy",
-            selected.ToString()));
+            selected.ToString().ToTitleCase()));
 
       return CommandResult.SUCCESS;
     }
