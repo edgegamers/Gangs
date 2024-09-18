@@ -87,6 +87,14 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
         await commands.ProcessCommand(player, CommandCallingContext.Chat,
           "css_gang", "perks");
         break;
+      case 4:
+        await commands.ProcessCommand(player, CommandCallingContext.Chat,
+          "css_gang", "perms");
+        break;
+      case 5:
+        await commands.ProcessCommand(player, CommandCallingContext.Chat,
+          "css_gang", "ranks");
+        break;
     }
   }
 

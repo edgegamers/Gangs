@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Menus;
 
-public class GangPerksMenu(IServiceProvider provider)
+public class PerksMenu(IServiceProvider provider)
   : AbstractPagedMenu<IPerk>(provider, NativeSenders.Chat) {
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();

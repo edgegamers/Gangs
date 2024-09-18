@@ -3,7 +3,7 @@ using GangsAPI.Permissions;
 namespace Mock;
 
 public class MockRank(string name, int rank, Perm perms) : IGangRank {
-  public string Name { get; } = name;
+  public string Name { get; set; } = name;
   public int Rank { get; } = rank;
   public Perm Permissions { get; set; } = perms;
 

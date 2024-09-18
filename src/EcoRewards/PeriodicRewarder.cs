@@ -13,7 +13,7 @@ public class PeriodicRewarder(IServiceProvider provider) : IPluginBehavior {
   private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
-    plugin?.AddTimer(1, () => {
+    plugin?.AddTimer(60 * 5, () => {
       var players = Utilities.GetPlayers()
        .Where(p => p is { IsBot: false, Team: > CsTeam.Spectator })
        .Select(p => new PlayerWrapper(p))

@@ -16,7 +16,7 @@ public class RoundWinListener(IServiceProvider provider) : IPluginBehavior {
   private DateTime roundStart = DateTime.MinValue;
 
   [GameEventHandler]
-  public HookResult OnRoundStarT(EventRoundStart _1, GameEventInfo _2) {
+  public HookResult OnRoundStart(EventRoundStart _1, GameEventInfo _2) {
     roundStart = DateTime.Now;
     return HookResult.Continue;
   }
@@ -30,9 +30,6 @@ public class RoundWinListener(IServiceProvider provider) : IPluginBehavior {
      .Where(p => !p.IsBot && p.Team == (CsTeam)ev.Winner && p.PawnIsAlive)
      .Select(p => new PlayerWrapper(p))
      .ToList();
-
-    Server.PrintToChatAll(
-      $"Winners: {string.Join(", ", winners.Select(p => p.Name))}");
 
     if (winners.Count == 0) return HookResult.Continue;
     const int toDistribute = 100;
