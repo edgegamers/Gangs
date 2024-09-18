@@ -26,7 +26,7 @@ public class SmokeColorCommand(IServiceProvider provider)
     if (!success || data == null) data = new SmokePerkData();
 
     if (info.ArgCount == 1) {
-      var menu = new SmokeColorMenu(provider, data);
+      var menu = new SmokeColorMenu(Provider, data);
       await Menus.OpenMenu(executor, menu);
       return CommandResult.SUCCESS;
     }

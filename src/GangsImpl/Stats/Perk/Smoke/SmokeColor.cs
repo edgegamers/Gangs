@@ -5,20 +5,20 @@ namespace Stats.Perk.Smoke;
 
 [Flags]
 public enum SmokeColor {
-  DARK_RED,
-  RED,
-  ORANGE,
-  YELLOW,
-  LIGHT_GREEN,
-  GREEN,
-  LIGHT_BLUE,
-  BLUE,
-  MAGENTA,
-  PURPLE,
-  BLACK,
-  WHITE,
-  DEFAULT,
-  RANDOM
+  DARK_RED = 1 << 0,
+  RED = 1 << 1,
+  ORANGE = 1 << 2,
+  YELLOW = 1 << 3,
+  LIGHT_GREEN = 1 << 4,
+  GREEN = 1 << 5,
+  LIGHT_BLUE = 1 << 6,
+  BLUE = 1 << 7,
+  MAGENTA = 1 << 8,
+  PURPLE = 1 << 9,
+  BLACK = 1 << 10,
+  WHITE = 1 << 11,
+  DEFAULT = 1 << 12,
+  RANDOM = 1 << 13
 }
 
 public static class SmokeColorExtensions {
