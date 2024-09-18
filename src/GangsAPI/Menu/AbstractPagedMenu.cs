@@ -60,12 +60,13 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
 
     await ShowPaged(player, pageItems, currentPage < totalPages,
       currentPage > 1);
+    var pageStr = "";
     if (totalPages != 1)
-      player.PrintToChat(
-        $"{ChatColors.Grey}Page {ChatColors.Yellow}{currentPage}{ChatColors.Default}/{ChatColors.LightYellow}{totalPages}");
+      pageStr =
+        $"{ChatColors.Grey}Page {ChatColors.Yellow}{currentPage}{ChatColors.Default}/{ChatColors.LightYellow}{totalPages}{ChatColors.Default} | ";
 
     // Display navigation options
-    await Printer(player, $"0. {ChatColors.LightRed}Close");
+    await Printer(player, $"0. {pageStr}{ChatColors.LightRed}Close");
 
     CurrentPages[player.Steam] = currentPage;
   }
