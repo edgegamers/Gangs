@@ -35,6 +35,7 @@ public static class SmokeColorExtensions {
       SmokeColor.MAGENTA     => 5000,
       SmokeColor.PURPLE      => 1000,
       SmokeColor.WHITE       => 1000,
+      SmokeColor.BLACK       => 1000,
       SmokeColor.DEFAULT     => 1000,
       SmokeColor.RANDOM      => 10000,
       _                      => 0

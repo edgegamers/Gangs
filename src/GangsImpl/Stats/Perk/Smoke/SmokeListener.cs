@@ -44,13 +44,14 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
 
   [GameEventHandler]
   public HookResult OnRoundStart(EventRoundStart ev, GameEventInfo info) {
+    Server.PrintToChatAll("Round started");
     var wrapped = Utilities.GetPlayers()
      .Where(p => !p.IsBot)
      .Select(p => new PlayerWrapper(p))
      .ToList();
 
     smokeColors.Clear();
-    Task.Run(async () => { await fetchSmokeColors(wrapped); });
+    Task.Run(async () => await fetchSmokeColors(wrapped));
     return HookResult.Continue;
   }
 
