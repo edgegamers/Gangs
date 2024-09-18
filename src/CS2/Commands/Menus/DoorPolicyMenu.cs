@@ -1,6 +1,8 @@
 ﻿using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
+using GangsAPI.Extensions;
 using GangsAPI.Services.Menu;
 using Menu;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +30,7 @@ public class DoorPolicyMenu(IServiceProvider provider, DoorPolicy active)
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     DoorPolicy item) {
     return Task.FromResult(item == active ?
-      $"*{index + 1}. {item}" :
-      $"{index + 1}. {item}");
+      $"{index + 1}. {ChatColors.Green}{item.ToString().ToTitleCase()} (Selected)" :
+      $"{index + 1}. {ChatColors.LightRed}{item.ToString().ToTitleCase()}");
   }
 }
