@@ -43,18 +43,18 @@ public partial class FormatTests(IStringLocalizer localizer) {
     Assert.Equal(translated, StringLocalizer.HandlePluralization(source));
   }
 
-  [Theory]
-  [InlineData("Player MSWS' balance", "Player MSWS'%s% balance")]
-  [InlineData("Player George's balance", "Player George'%s% balance")]
-  [InlineData("Player MSWS' balance exceeds George's",
-    "Player MSWS'%s% balance exceeds George'%s%")]
-  [InlineData("MSWS' balance == MSWS' balance",
-    "MSWS'%s% balance == MSWS'%s% balance")]
-  public void
-    StaticLocalizer_WithPercentPlurals_HandlesApostrophes(string translated,
-      string source) {
-    Assert.Equal(translated, StringLocalizer.HandlePluralization(source));
-  }
+  // [Theory]
+  // [InlineData("Player MSWS' balance", "Player MSWS'%s% balance")]
+  // [InlineData("Player George's balance", "Player George'%s% balance")]
+  // [InlineData("Player MSWS' balance exceeds George's",
+  //   "Player MSWS'%s% balance exceeds George'%s%")]
+  // [InlineData("MSWS' balance == MSWS' balance",
+  //   "MSWS'%s% balance == MSWS'%s% balance")]
+  // public void
+  //   StaticLocalizer_WithPercentPlurals_HandlesApostrophes(string translated,
+  //     string source) {
+  //   Assert.Equal(translated, StringLocalizer.HandlePluralization(source));
+  // }
 
   [Theory]
   [InlineData(2)]

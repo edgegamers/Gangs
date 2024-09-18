@@ -45,7 +45,7 @@ public interface IPlayerManager : IPluginBehavior {
 
     var matchedNames = members.Where(p
         => p.Name != null
-        && query.Contains(p.Name, StringComparison.OrdinalIgnoreCase))
+        && p.Name.Contains(query, StringComparison.OrdinalIgnoreCase))
      .ToList();
 
     return matchedNames.Count != 1 ? null : matchedNames.First();
