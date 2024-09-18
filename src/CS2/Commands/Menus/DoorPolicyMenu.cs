@@ -29,8 +29,11 @@ public class DoorPolicyMenu(IServiceProvider provider, DoorPolicy active)
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     DoorPolicy item) {
-    return Task.FromResult(item == active ?
+    var result = Task.FromResult(item == active ?
       $"{index + 1}. {ChatColors.Green}{item.ToString().ToTitleCase()} (Selected)" :
       $"{index + 1}. {ChatColors.LightRed}{item.ToString().ToTitleCase()}");
+    if (index == 0)
+      result = Task.FromResult($" {ChatColors.DarkBlue}Door Policy\n{result}");
+    return result;
   }
 }

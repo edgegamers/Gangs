@@ -9,6 +9,7 @@ public static class StringExtensions {
   /// <param name="str"></param>
   /// <returns></returns>
   public static string ToTitleCase(this string str) {
-    return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str.ToLower());
+    return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str.ToLower()
+     .Replace('_', ' '));
   }
 }
