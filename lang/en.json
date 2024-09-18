@@ -38,7 +38,7 @@
   "command.rank.deleted": "Deleted the \"%color.special%{0}%color.default%\" rank.",
   "command.rank.renamed": "Renamed \"%color.special%{0}%color.default%\" to \"%color.special%{1}%color.default%\".",
   "command.rank.rename_prompt": "%prefix%Please use %color.command%/gang rank rename {0} [new name]%color.default% to rename the rank.",
-  "command.transfer.require_subordinate": "%prefix%You can only transfer ownership to someone with the \"%color.special%{0}%color.default%\" rank.",
+  "command.transfer.subordinate": "%prefix%You can only transfer ownership to someone with the \"%color.special%{0}%color.default%\" rank.",
   "command.coinflip.sent": "%prefix%You sent a coinflip request to %color.target%{0}%color.default% for %color.currency%{1} %currency%%s%.",
   "command.coinflip.received": "%prefix%%color.target%{0}%color.default% sent you a coinflip request for %color.currency%{1} %currency%%s%.\n%prefix%Type %color.command%/coinflip accept%color.default% to accept.",
   "command.coinflip.rejected": "%prefix%%color.target%{0}%color.default% rejected your coinflip request.",

@@ -52,7 +52,6 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
     var entry = items[selectedIndex];
 
     if (entry == null) {
-      Printer.Invoke(player, $"Opening door policy menu for {gang.Name}");
       Provider.GetRequiredService<ICommandManager>()
        .ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
           "doorpolicy");
@@ -74,7 +73,9 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
 
   override protected async Task<string> FormatItem(PlayerWrapper player,
     int index, InvitationEntry? item) {
-    if (item == null) return $"{index}. Current door policy: {doorPolicy}";
+    if (item == null)
+      return
+        $"{ChatColors.DarkRed}{index}. {ChatColors.Grey}Current door policy: {ChatColors.Default}{doorPolicy}";
     var invited = await players.GetPlayer(item.Value.Steam);
     var inviter = await players.GetPlayer(item.Value.Inviter);
 

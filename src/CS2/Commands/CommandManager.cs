@@ -35,7 +35,6 @@ public class CommandManager(IServiceProvider provider)
   }
 
   public override bool RegisterCommand(ICommand command) {
-    Server.PrintToConsole($"Registering command: {command.Name}");
     command.Start(plugin, hotReload);
     var registration = base.RegisterCommand(command);
     if (registration == false) return false;

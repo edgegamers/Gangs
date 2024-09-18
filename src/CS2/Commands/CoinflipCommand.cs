@@ -55,13 +55,13 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
     }
 
     if (!await eco.CanAfford(executor, amount, true)) {
-      info.ReplySync(locale.Get(MSG.COMMAND_BALANCE_INSUFFICIENT_FUNDS,
+      info.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS,
         amount));
       return CommandResult.SUCCESS;
     }
 
     if (!await eco.CanAfford(target, amount, true)) {
-      info.ReplySync(locale.Get(MSG.COMMAND_BALANCE_INSUFFICIENT_FUNDS_OTHER,
+      info.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS_OTHER,
         target.Name ?? target.Steam.ToString(), amount));
       return CommandResult.SUCCESS;
     }
@@ -69,9 +69,19 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
     requests.Add(new CoinflipRequest {
       Sender = executor.Steam, Receiver = target.Steam, Amount = amount
     });
-    await Server.RunOnTickAsync(Server.TickCount + 64 * 60,
-      () => requests.Remove(requests.First(req
-        => req.Receiver == target.Steam && req.Sender == executor.Steam)));
+
+    executor.PrintToChat(locale.Get(MSG.COMMAND_COINFLIP_SENT,
+      target.Name ?? target.Steam.ToString(), amount));
+    target.PrintToChat(locale.Get(MSG.COMMAND_COINFLIP_RECEIVED,
+      executor.Name ?? executor.Steam.ToString(), amount));
+
+    await Server.NextFrameAsync(() => {
+      Server.RunOnTick(Server.TickCount + 64 * 60, () => {
+        var request = requests.FirstOrDefault(req
+          => req.Receiver == target.Steam && req.Sender == executor.Steam);
+        if (request != null) requests.Remove(request);
+      });
+    });
     return CommandResult.SUCCESS;
   }
 
@@ -102,13 +112,13 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
 
     // Make sure they still have the money
     if (!await eco.CanAfford(executor, request.Amount, true)) {
-      wrapper.ReplySync(locale.Get(MSG.COMMAND_BALANCE_INSUFFICIENT_FUNDS,
+      wrapper.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS,
         request.Amount));
       return CommandResult.SUCCESS;
     }
 
     if (!await eco.CanAfford(executor, request.Amount, true)) {
-      wrapper.ReplySync(locale.Get(MSG.COMMAND_BALANCE_INSUFFICIENT_FUNDS_OTHER,
+      wrapper.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS_OTHER,
         executor.Name ?? executor.Steam.ToString(), request.Amount));
       return CommandResult.SUCCESS;
     }
@@ -128,7 +138,7 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
       await Server.NextFrameAsync(() => {
         targets = targets.Union(Utilities.GetPlayers()
            .Select(p => new PlayerWrapper(p))
-           .Where(p => p != winner && p != loser)
+           .Where(p => p.Steam != winner.Steam && p.Steam != loser.Steam)
            .ToList())
          .ToList();
       });

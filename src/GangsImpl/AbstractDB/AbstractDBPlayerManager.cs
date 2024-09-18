@@ -87,7 +87,7 @@ public abstract class AbstractDBPlayerManager(string connectionString,
 
   virtual protected string CreateTableQuery(string tableName, bool inTesting) {
     return inTesting ?
-      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (Steam BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), GangId INT, GangRank INT)" :
-      $"CREATE TABLE IF NOT EXISTS {tableName} (Steam BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255), GangId INT, GangRank INT)";
+      $"CREATE TEMPORARY TABLE IF NOT EXISTS {tableName} (Steam BIGINT NOT NULL PRIMARY KEY, Name VARCHAR(255), GangId INT, GangRank INT)" :
+      $"CREATE TABLE IF NOT EXISTS {tableName} (Steam BIGINT NOT NULL PRIMARY KEY, Name VARCHAR(255), GangId INT, GangRank INT)";
   }
 }

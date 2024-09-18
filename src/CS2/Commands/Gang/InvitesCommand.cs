@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Commands.Menus;
 using GangsAPI;
 using GangsAPI.Data;
@@ -38,10 +39,11 @@ public class InvitesCommand(IServiceProvider provider)
       return CommandResult.NO_PERMISSION;
     }
 
+    Debug.Assert(player.GangId != null, "player.GangId != null");
     var gang = await Gangs.GetGang(player.GangId.Value)
       ?? throw new GangNotFoundException(player.GangId.Value);
 
-    var menu = new OutgoingInvitesMenu(provider, gang);
+    var menu = new OutgoingInvitesMenu(Provider, gang);
     await Menus.OpenMenu(executor, menu);
     return CommandResult.SUCCESS;
   }

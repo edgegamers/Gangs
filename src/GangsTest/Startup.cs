@@ -1,4 +1,5 @@
-﻿using GangsAPI.Services;
+﻿using GangsAPI.Perks;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
 using Mock;
+using Stats.Perk;
 using StringLocalizer = GangsTest.TestLocale.StringLocalizer;
 
 namespace GangsTest;
@@ -28,6 +30,7 @@ public static class Startup {
     services.AddScoped<IPerkManager, MockPerkManager>();
     services.AddScoped<IEcoManager, MockEcoManager>();
     services.AddScoped<IGangTargeter, BasicGangTargeter>();
+    services.AddScoped<IGangChatPerk, GangChatPerk>();
     services
      .TryAddSingleton<IStringLocalizerFactory, LocalFileLocalizerFactory>();
     services.TryAddTransient(typeof(IStringLocalizer), typeof(StringLocalizer));

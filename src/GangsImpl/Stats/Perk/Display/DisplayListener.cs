@@ -25,7 +25,6 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
      .Where(p => !p.IsBot)
      .Select(p => new PlayerWrapper(p))
      .ToList();
-    Server.PrintToChatAll("Applying gang displays...");
 
     Task.Run(async () => {
       var gangPlayers = wrapped
@@ -34,7 +33,6 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
        .ToList();
 
       var cachedGangs = (await gangs.GetGangs()).ToList();
-
       await applyDisplays(cachedGangs, gangPlayers!, wrapped);
     });
     return HookResult.Continue;
@@ -61,10 +59,6 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
         scoreboard = await displayPerk.HasScoreboardDisplay(gang);
         cachedPerks.Add(gang.GangId, (chat, scoreboard));
       } else { (chat, scoreboard) = perk; }
-
-      await Server.NextFrameAsync(()
-        => Server.PrintToChatAll(
-          $"Applying {gang.Name} to {gangPlayer.Steam}"));
 
       var wrapper =
         cachedPlayers.FirstOrDefault(p => p.Steam == gangPlayer.Steam);

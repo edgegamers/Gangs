@@ -41,8 +41,8 @@ public enum MSG {
   COMMAND_COINFLIP_RESULT,
   COMMAND_COINFLIP_COOLDOWN,
   COMMAND_COINFLIP_PENDING,
-  COMMAND_BALANCE_INSUFFICIENT_FUNDS,
-  COMMAND_BALANCE_INSUFFICIENT_FUNDS_OTHER,
+  COMMAND_COINFLIP_INSUFFICIENT_FUNDS,
+  COMMAND_COINFLIP_INSUFFICIENT_FUNDS_OTHER,
   COMMAND_COINFLIP_NOPENDING,
   COMMAND_COINFLIP_INVALID,
   PREFIX,
@@ -150,10 +150,10 @@ public static class LocaleExtensions {
       MSG.COMMAND_COINFLIP_RESULT      => "command.coinflip.result",
       MSG.COMMAND_COINFLIP_COOLDOWN    => "command.coinflip.cooldown",
       MSG.COMMAND_COINFLIP_PENDING     => "command.coinflip.pending",
-      MSG.COMMAND_BALANCE_INSUFFICIENT_FUNDS =>
-        "command.balance.insufficient_funds",
-      MSG.COMMAND_BALANCE_INSUFFICIENT_FUNDS_OTHER =>
-        "command.balance.insufficient_funds.other",
+      MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS =>
+        "command.coinflip.insufficient_funds",
+      MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS_OTHER =>
+        "command.coinflip.insufficient_funds.other",
       MSG.COMMAND_COINFLIP_NOPENDING    => "command.coinflip.no_pending",
       MSG.COMMAND_COINFLIP_INVALID      => "command.coinflip.invalid",
       MSG.COMMAND_RANK_RENAME_PROMPT    => "command.rank.rename_prompt",
@@ -218,6 +218,7 @@ public static class LocaleExtensions {
       MSG.RANK_PROMOTE_ABOVE_HIGHEST => "rank.promote.above_highest",
       MSG.RANK_PROMOTE_SUCCESS => "rank.promote.success",
       MSG.RANK_CANNOT_OWNER => "rank.cannot.owner",
+      MSG.GANG_TRANSFERRED => "gang.transferred",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }

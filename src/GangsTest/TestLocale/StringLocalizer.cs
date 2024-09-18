@@ -73,26 +73,37 @@ public partial class StringLocalizer : IStringLocalizer {
       var index  = match.Index;
       var prefix = value[..index].Trim();
 
-      var lastWord = prefix.Split(' ').Last();
-      lastWord = new string(lastWord
-       .Where(c => char.IsLetterOrDigit(c) || c == '-')
-       .ToArray());
+      var lastWords = prefix.Split(' ')
+       .Select(w
+          => w.Where(c => char.IsLetterOrDigit(c) || c == '-').ToArray());
 
-      if (int.TryParse(lastWord, out var number))
-        // 1 cookie%s% -> 1 cookie, or 2 cookie%s% -> 2 cookies
-        // Replace %s% based on number value
-        value = value[..index]
-          + value[index..].Replace("%s%", number == 1 ? "" : "s");
+      var previousNumber = lastWords.LastOrDefault(w => int.TryParse(w, out _));
+
+      if (previousNumber != null)
+        value = value[..index] + value[index..]
+         .Replace("%s%", int.Parse(previousNumber) == 1 ? "" : "s");
       else
-        // Some cookie%s% -> Some cookies
         value = value[..index] + value[index..]
          .Replace("%s%", word.EndsWith('s') ? "" : "s");
     }
 
     value = value.Replace("%s%", "s");
-    while (value.Contains("s's", StringComparison.CurrentCultureIgnoreCase)) {
-      var aposIndex = value.IndexOf("s's", StringComparison.OrdinalIgnoreCase);
-      value = value[..(aposIndex + 1)] + "' " + value[(aposIndex + 4)..];
+
+    var trailingIndex = -1;
+
+    // We have to do this chicanery due to supporting colors in the string
+
+    while ((trailingIndex =
+      value.IndexOf("'s", trailingIndex + 1, StringComparison.Ordinal)) != -1) {
+      var startingWordBoundary = value[..trailingIndex].LastIndexOf(' ');
+      var endingWordBoundary = value.IndexOf(' ', trailingIndex + 2);
+      var word = value[(startingWordBoundary + 1)..endingWordBoundary];
+      var filteredWord = word.Where(c => char.IsLetterOrDigit(c) || c == '\'')
+       .ToArray();
+      if (new string(filteredWord).EndsWith("s's",
+        StringComparison.OrdinalIgnoreCase))
+        value = value[..(trailingIndex + 1)] + " "
+          + value[(trailingIndex + 4)..];
     }
 
     return value;
