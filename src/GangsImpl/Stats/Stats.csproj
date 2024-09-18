@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
-        <ProjectReference Include="..\Menu\Menu.csproj"/>
         <ProjectReference Include="..\Mock\Mock.csproj"/>
     </ItemGroup>
 
