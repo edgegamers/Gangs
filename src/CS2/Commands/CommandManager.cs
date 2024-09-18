@@ -28,6 +28,7 @@ public class CommandManager(IServiceProvider provider)
     RegisterCommand(new GangCommand(provider));
     RegisterCommand(new BalanceCommand(provider));
     RegisterCommand(new StatsCommand(provider));
+    RegisterCommand(new CoinflipCommand(provider));
 
     foreach (var command in provider.GetServices<ICommand>())
       command.Start(basePlugin, baseReload);
