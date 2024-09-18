@@ -13,22 +13,24 @@ public class SmokeColorMenu(IServiceProvider provider, SmokePerkData data)
   private readonly ICommandManager commands =
     provider.GetRequiredService<ICommandManager>();
 
-  // Method to sort bomb icons
+  // Method to sort smoke colors
   private int CompareSmokeColors(SmokeColor a, SmokeColor b) {
     // If the icon is equipped, it should be first
     if (a == data.Equipped) return -1;
+    if (b == data.Equipped) return 1;
 
     // If icon is unlocked, it should be next
     // If both are unlocked, sort by cost (highest first)
-    if (a == data.Unlocked) {
-      if (b == data.Equipped) return 1;
-      return b == data.Unlocked ? a.GetCost().CompareTo(b.GetCost()) : -1;
+    if (data.Unlocked.HasFlag(a)) {
+      if (data.Unlocked.HasFlag(b)) return a.GetCost().CompareTo(b.GetCost());
+      return -1;
     }
 
     // If both are locked, sort by cost (lowest first)
-    if (b == data.Equipped) return 1;
-    return b == data.Unlocked ? 1 : a.GetCost().CompareTo(b.GetCost());
+    if (data.Unlocked.HasFlag(b)) return 1;
+    return a.GetCost().CompareTo(b.GetCost());
   }
+
 
   override protected Task<List<SmokeColor>> GetItems(PlayerWrapper player) {
     var list = Enum.GetValues<SmokeColor>().ToList();

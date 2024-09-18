@@ -24,19 +24,19 @@ public enum SmokeColor {
 public static class SmokeColorExtensions {
   public static int GetCost(this SmokeColor color) {
     return color switch {
-      SmokeColor.DARK_RED    => 1000,
-      SmokeColor.RED         => 1000,
+      SmokeColor.DARK_RED    => 5000,
+      SmokeColor.RED         => 2000,
       SmokeColor.ORANGE      => 1000,
       SmokeColor.YELLOW      => 1000,
-      SmokeColor.LIGHT_GREEN => 1000,
-      SmokeColor.GREEN       => 1000,
-      SmokeColor.LIGHT_BLUE  => 1000,
-      SmokeColor.BLUE        => 1000,
-      SmokeColor.MAGENTA     => 1000,
+      SmokeColor.LIGHT_GREEN => 1500,
+      SmokeColor.GREEN       => 2000,
+      SmokeColor.LIGHT_BLUE  => 3000,
+      SmokeColor.BLUE        => 4000,
+      SmokeColor.MAGENTA     => 5000,
       SmokeColor.PURPLE      => 1000,
       SmokeColor.WHITE       => 1000,
       SmokeColor.DEFAULT     => 1000,
-      SmokeColor.RANDOM      => 1000,
+      SmokeColor.RANDOM      => 10000,
       _                      => 0
     };
   }
@@ -55,7 +55,7 @@ public static class SmokeColorExtensions {
       SmokeColor.PURPLE      => Color.Purple,
       SmokeColor.BLACK       => Color.Black,
       SmokeColor.WHITE       => Color.White,
-      SmokeColor.DEFAULT     => Color.WhiteSmoke,
+      SmokeColor.DEFAULT     => null,
       SmokeColor.RANDOM      => null,
       _                      => Color.White
     };
