@@ -26,26 +26,33 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   }
 
   public override async Task AcceptInput(PlayerWrapper player, int input) {
-    var items      = await GetItems(player);
-    var totalPages = (items.Count + ItemsPerPage - 1) / ItemsPerPage;
+    var start       = (GetCurrentPage(player) - 1) * ItemsPerPage;
+    var allItems    = await GetItems(player);
+    var pageItems   = allItems.Skip(start).Take(ItemsPerPage).ToList();
+    var totalPages  = (allItems.Count + ItemsPerPage - 1) / ItemsPerPage;
+    var currentPage = GetCurrentPage(player);
 
     switch (input) {
       case 0:
         await Close(player);
         break;
       // Handle page navigation
-      case 9 when HasNextPage(player): {
-        var currentPage = GetCurrentPage(player);
-        await ShowPage(player, items, currentPage + 1, totalPages);
+      case 8 when HasPreviousPage(player): {
+        pageItems = allItems.Skip((currentPage - 2) * ItemsPerPage)
+         .Take(ItemsPerPage)
+         .ToList();
+        await ShowPage(player, pageItems, currentPage - 1, totalPages);
         break;
       }
-      case 8 when HasPreviousPage(player): {
-        var currentPage = GetCurrentPage(player);
-        await ShowPage(player, items, currentPage - 1, totalPages);
+      case 9 when HasNextPage(player): {
+        pageItems = allItems.Skip(currentPage * ItemsPerPage)
+         .Take(ItemsPerPage)
+         .ToList();
+        await ShowPage(player, pageItems, currentPage + 1, totalPages);
         break;
       }
       default:
-        await HandleItemSelection(player, items, input - 1);
+        await HandleItemSelection(player, pageItems, input - 1);
         break;
     }
   }
