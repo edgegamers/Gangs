@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI.Data;
 using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -57,17 +58,23 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     var startIndex = (currentPage - 1) * ItemsPerPage;
     var pageItems  = items.Skip(startIndex).Take(ItemsPerPage).ToList();
 
-    if (totalPages != 1) player.PrintToChat($"Page {currentPage}/{totalPages}");
     await ShowPaged(player, pageItems, currentPage < totalPages,
       currentPage > 1);
+    if (totalPages != 1)
+      player.PrintToChat(
+        $"{ChatColors.Grey}Page {ChatColors.Yellow}{currentPage}{ChatColors.Default}/{ChatColors.LightYellow}{totalPages}");
 
     // Display navigation options
-    if (currentPage > 1) await Printer(player, "8. Previous Page");
-    if (currentPage < totalPages) await Printer(player, "9. Next Page");
-    await Printer(player, "0. Close");
+    await Printer(player, $"0. {ChatColors.LightRed}Close");
 
     CurrentPages[player.Steam] = currentPage;
   }
+
+  private readonly string right =
+    $"{ChatColors.LightYellow}/9 {ChatColors.DarkRed}->";
+
+  private readonly string left =
+    $"{ChatColors.DarkRed}<- {ChatColors.LightYellow}/8";
 
   virtual protected async Task ShowPaged(PlayerWrapper player, List<T> items,
     bool hasNext, bool hasPrev) {
@@ -75,13 +82,13 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
       var str = await FormatItem(player, i + 1, items[i]);
       if (i == 0)
         str = hasNext switch {
-          true when hasPrev  => $"<- /8  {str}  /9 ->",
-          true               => $"{str}  /9 ->",
-          false when hasPrev => $"<- /8  {str}",
+          true when hasPrev  => $"{left} {ChatColors.Default}{str} {right}",
+          true               => $"{str} {right}",
+          false when hasPrev => $"{left} {str}",
           _                  => str
         };
 
-      foreach (var s in str.Split('\n')) await Printer.Invoke(player, s);
+      await Printer.Invoke(player, str);
     }
   }
 
