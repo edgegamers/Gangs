@@ -25,6 +25,7 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
      .Where(p => !p.IsBot)
      .Select(p => new PlayerWrapper(p))
      .ToList();
+    Server.PrintToChatAll("Applying gang displays...");
 
     Task.Run(async () => {
       var gangPlayers = wrapped
@@ -50,6 +51,8 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
     Dictionary<int, (bool, bool)> cachedPerks = new();
 
     foreach (var gangPlayer in gangPlayers) {
+      await Server.NextFrameAsync(()
+        => Server.PrintToChatAll($"Processing {gangPlayer.Steam}"));
       var gang = cachedGangs.FirstOrDefault(g => g.GangId == gangPlayer.GangId);
       if (gang == null || gangPlayer.GangId == null) continue;
       bool chat, scoreboard;
@@ -58,6 +61,10 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
         scoreboard = await displayPerk.HasScoreboardDisplay(gang);
         cachedPerks.Add(gang.GangId, (chat, scoreboard));
       } else { (chat, scoreboard) = perk; }
+
+      await Server.NextFrameAsync(()
+        => Server.PrintToChatAll(
+          $"Applying {gang.Name} to {gangPlayer.Steam}"));
 
       var wrapper =
         cachedPlayers.FirstOrDefault(p => p.Steam == gangPlayer.Steam);
