@@ -42,7 +42,8 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
       return CommandResult.ERROR;
     }
 
-    if (await eco.TryPurchase(executor, CREATION_COST, item: "Create") < 0)
+    if (await eco.TryPurchase(executor, CREATION_COST, item: "Gang Creation")
+      < 0)
       return CommandResult.SUCCESS;
 
     var newGang = await gangs.CreateGang(name, executor.Steam);
