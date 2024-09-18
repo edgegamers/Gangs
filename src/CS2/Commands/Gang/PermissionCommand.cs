@@ -97,7 +97,7 @@ public class PermissionCommand(IServiceProvider provider)
         var menu = new PermissionsEditMenu(Provider, plugin, gang,
           executorRank.Permissions, directEdit);
         await menus.OpenMenu(executor, menu);
-        break;
+        return CommandResult.SUCCESS;
       }
     }
 

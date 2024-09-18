@@ -37,6 +37,7 @@
   "command.rank.cannot_delete": "%prefix%There are players with the rank \"%color.special%{0}%color.default%\", you must reassign them first.",
   "command.rank.deleted": "Deleted the \"%color.special%{0}%color.default%\" rank.",
   "command.rank.renamed": "Renamed \"%color.special%{0}%color.default%\" to \"%color.special%{1}%color.default%\".",
+  "command.rank.rename_prompt": "%prefix%Please use %color.command%/gang rank rename {0} [new name]%color.default% to rename the rank.",
   "generic.player.steam_not_found": "%prefix%The Steam ID \"%color.emph%{0}%color.default%\" has not played on the server.",
   "generic.player.not_found": "%prefix%Could not find a player using \"{darkred}{0}{grey}\".",
   "generic.player.found_multiple": "%prefix%Found multiple players using \"{darkred}{0}{grey}\".",

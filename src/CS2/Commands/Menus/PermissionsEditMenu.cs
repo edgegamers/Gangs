@@ -148,8 +148,7 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
     var coloredHtml = $"<font color=\"{color}\">{item.Value.Describe()}</font>";
     var result      = $"{index}. {coloredHtml}";
 
-    if (index == 1)
-      result = "Editing permissions for " + currentRank.Name + "<br>" + result;
+    if (index == 1) result = currentRank.Name + " perms<br>" + result;
 
     if (index == ItemsPerPage) result += "<br>" + footer;
     return Task.FromResult(result);

@@ -28,7 +28,7 @@ public class RankCommand(IServiceProvider provider)
     var gang = await Gangs.GetGang(player.GangId.Value)
       ?? throw new GangNotFoundException(player);
     if (info.ArgCount == 1) {
-      await Menus.OpenMenu(executor, new RankMenu(provider, gang));
+      await Menus.OpenMenu(executor, new RankMenu(Provider, gang));
       return CommandResult.SUCCESS;
     }
 
@@ -43,11 +43,10 @@ public class RankCommand(IServiceProvider provider)
       return CommandResult.INVALID_ARGS;
     }
 
-    var higher = await Ranks.GetHigherRank(gang.GangId, targetRank)
-      ?? throw new SufficientRankNotFoundException(gang.GangId,
-        Perm.MANAGE_RANKS);
     if (executorRank.Rank != 0 && executorRank.Rank >= targetRank
       || !executorRank.Permissions.HasFlag(Perm.MANAGE_RANKS)) {
+      var higher = await Ranks.GetHigherRank(gang.GangId, targetRank)
+        ?? throw new RankNotFoundException(gang.GangId, targetRank);
       info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, higher.Name));
       return CommandResult.NO_PERMISSION;
     }
