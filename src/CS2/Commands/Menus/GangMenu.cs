@@ -118,7 +118,7 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     if (!success || invites == null) invites = new InvitationData();
 
     var entry =
-      $" {ChatColors.DarkRed}2 {ChatColors.Grey}| {ChatColors.Yellow}{invites.GetInvitedSteams().Count} Invite";
+      $" {ChatColors.DarkRed}2 {ChatColors.Grey}| {ChatColors.Yellow}{invites.GetInvitedSteams().Count} {ChatColors.LightRed}Invite";
 
     var (policySuccess, doorPolicy) =
       await gangStatManager.GetForGang<DoorPolicy>(gang, doorPolicyId);
