@@ -68,11 +68,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
 
   virtual protected async Task ShowPage(PlayerWrapper player, List<T> items,
     int currentPage, int totalPages) {
-    var startIndex = (currentPage - 1) * ItemsPerPage;
-    var pageItems  = items.Skip(startIndex).Take(ItemsPerPage).ToList();
-
-    await ShowPaged(player, pageItems, currentPage < totalPages,
-      currentPage > 1);
+    await ShowPaged(player, items, currentPage < totalPages, currentPage > 1);
     var pageStr = "";
     if (totalPages != 1)
       pageStr =

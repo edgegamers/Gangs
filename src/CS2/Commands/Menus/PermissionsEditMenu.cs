@@ -43,6 +43,7 @@ public class PermissionsEditMenu : AbstractPagedMenu<Perm?> {
 
   public override Task Close(PlayerWrapper player) {
     activeTexts.Remove(player.Steam);
+    Server.NextFrame(() => plugin.RemoveListener<Listeners.OnTick>(sendText));
     return Task.CompletedTask;
   }
 
