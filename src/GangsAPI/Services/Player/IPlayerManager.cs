@@ -41,7 +41,7 @@ public interface IPlayerManager : IPluginBehavior {
     var matchedSteams = members.Where(p => query.Contains(p.Steam.ToString()))
      .ToList();
 
-    if (matchedSteams.Count == 0) return matchedSteams.First();
+    if (matchedSteams.Count == 1) return matchedSteams.First();
 
     var matchedNames = members.Where(p
         => p.Name != null
