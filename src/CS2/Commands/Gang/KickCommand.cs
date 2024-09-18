@@ -61,7 +61,7 @@ public class KickCommand(IServiceProvider provider)
     var higherRank = await ranks.GetHigherRank(gang.GangId, targetRank.Rank);
 
     if (higherRank == null) {
-      info.ReplySync(Localizer.Get(MSG.RANK_CANNOT_OWNER, "kick"));
+      info.ReplySync(Localizer.Get(MSG.RANK_CANNOT_OWNER, "kick yourself"));
       return CommandResult.NO_PERMISSION;
     }
 

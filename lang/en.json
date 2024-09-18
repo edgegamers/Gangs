@@ -49,6 +49,7 @@
   "command.coinflip.insufficient_funds.other": "%prefix%%color.target%{0}%color.default% cannot afford to coinflip %color.currency%{1} %currency%%s%.",
   "command.coinflip.no_pending": "%prefix%You have no pending coinflip requests. Send one with %color.command%/coinflip [player] [amount]%color.default%.",
   "command.coinflip.invalid": "%prefix%This coinflip request is no longer valid.",
+  "command.leave.left": "%color.target%{0}%color.default% left the gang.",
   "generic.player.steam_not_found": "%prefix%The Steam ID \"%color.emph%{0}%color.default%\" has not played on the server.",
   "generic.player.not_found": "%prefix%Could not find a player using \"{darkred}{0}{grey}\".",
   "generic.player.found_multiple": "%prefix%Found multiple players using \"{darkred}{0}{grey}\".",
@@ -100,5 +101,5 @@
   "rank.demote.success": "Demoted %color.target%{0}%color.default% to %color.special%{1}%color.default%.",
   "rank.promote.above_highest": "%prefix%You cannot promote %color.target%{0}%color.default% any further.",
   "rank.promote.success": "Promoted %color.target%{0}%color.default% to %color.special%{1}%color.default%.",
-  "rank.cannot.owner": "%prefix%You cannot {0} yourself as the owner, use %color.command%/gang transfer <player>%color.default% to transfer ownership."
+  "rank.cannot.owner": "%prefix%You cannot {0} as the owner, use %color.command%/gang transfer <player>%color.default% to transfer ownership."
 }

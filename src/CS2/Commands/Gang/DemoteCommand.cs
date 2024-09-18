@@ -37,7 +37,6 @@ public class DemoteCommand(IServiceProvider provider)
     var gang = await Gangs.GetGang(player.GangId.Value)
       ?? throw new GangNotFoundException(player);
 
-    info.ReplySync("Searching for player...");
     var target = await Players.SearchPlayer(gang, query);
     info.ReplySync("Player found.");
 
@@ -46,16 +45,13 @@ public class DemoteCommand(IServiceProvider provider)
       return CommandResult.SUCCESS;
     }
 
-    info.ReplySync("Checking player rank...");
 
     var targetRank = await Ranks.GetRank(target)
       ?? throw new GangException("Target does not have a rank.");
 
-    info.ReplySync("Checking permissions...");
 
     var lower = await Ranks.GetLowerRank(gang.GangId, targetRank.Rank);
 
-    info.ReplySync("Checking permissions...");
     var higher = await Ranks.GetHigherRank(gang.GangId, targetRank.Rank);
 
     // Trying to demote below the lowest rank, they need to kick instead
@@ -69,7 +65,7 @@ public class DemoteCommand(IServiceProvider provider)
       // Can't demote someone with the same or higher rank
       if (higher == null) {
         // No higher rank, can't demote
-        info.ReplySync(Localizer.Get(MSG.RANK_CANNOT_OWNER, "demote"));
+        info.ReplySync(Localizer.Get(MSG.RANK_CANNOT_OWNER, "demote yourself"));
         return CommandResult.NO_PERMISSION;
       }
 

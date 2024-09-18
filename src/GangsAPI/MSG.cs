@@ -45,6 +45,7 @@ public enum MSG {
   COMMAND_COINFLIP_INSUFFICIENT_FUNDS_OTHER,
   COMMAND_COINFLIP_NOPENDING,
   COMMAND_COINFLIP_INVALID,
+  COMMAND_LEAVE_LEFT,
   PREFIX,
   GENERIC_PLAYER_NOT_FOUND,
   GENERIC_PLAYER_FOUND_MULTIPLE,
@@ -219,6 +220,7 @@ public static class LocaleExtensions {
       MSG.RANK_PROMOTE_SUCCESS => "rank.promote.success",
       MSG.RANK_CANNOT_OWNER => "rank.cannot.owner",
       MSG.GANG_TRANSFERRED => "gang.transferred",
+      MSG.COMMAND_LEAVE_LEFT => "command.leave.left",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }
