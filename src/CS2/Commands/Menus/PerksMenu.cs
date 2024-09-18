@@ -2,11 +2,11 @@ using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Exceptions;
+using GangsAPI.Menu;
 using GangsAPI.Perks;
 using GangsAPI.Services;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
-using Menu;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Menus;
@@ -38,12 +38,12 @@ public class PerksMenu(IServiceProvider provider)
     await Provider.GetRequiredService<IMenuManager>().OpenMenu(player, menu);
   }
 
-  override async protected Task<string> FormatItem(PlayerWrapper player,
+  override protected async Task<string> FormatItem(PlayerWrapper player,
     int index, IPerk item) {
     var gangPlayer = await players.GetPlayer(player.Steam)
       ?? throw new PlayerNotFoundException(player.Steam);
     var cost = await item.GetCost(gangPlayer);
-    var result = (cost == null) ?
+    var result = cost == null ?
       $"{index}. {ChatColors.Blue}{item.Name}" :
       $"{ChatColors.DarkRed}{index}. {ChatColors.LightBlue}{item.Name} {ChatColors.DarkRed}({ChatColors.Red}{cost}{ChatColors.DarkRed})";
     if (index == 1) result = $" {ChatColors.DarkBlue}Gang Perks\n{result}";

@@ -14,13 +14,13 @@ namespace Commands.Gang;
 
 public class RankCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
+  private readonly IGangChatPerk gangChat =
+    provider.GetRequiredService<IGangChatPerk>();
+
   public override string Name => "rank";
 
   public override string[] Usage
     => ["", "create <rank> <name>", "delete <rank>", "rename <rank> <name>"];
-
-  private readonly IGangChatPerk gangChat =
-    provider.GetRequiredService<IGangChatPerk>();
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

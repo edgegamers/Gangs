@@ -1,10 +1,9 @@
 ﻿using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
+using GangsAPI.Menu;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
-using GangsAPI.Services.Menu;
-using Menu;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Menus;
@@ -26,7 +25,7 @@ public class RankMenu(IServiceProvider provider, IGang gang)
   override protected Task HandleItemSelection(PlayerWrapper player,
     List<IGangRank> items, int selectedIndex) {
     var rank = items[selectedIndex];
-    var menu = new RankEditMenu(provider, rank);
+    var menu = new RankEditMenu(Provider, rank);
     return Menus.OpenMenu(player, menu);
   }
 

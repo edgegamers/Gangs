@@ -1,6 +1,4 @@
 ﻿using CounterStrikeSharp.API;
-using CounterStrikeSharp.API.Core;
-using CounterStrikeSharp.API.Modules.Entities;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -13,19 +11,19 @@ using Microsoft.Extensions.Localization;
 namespace Commands;
 
 public class CoinflipCommand(IServiceProvider provider) : ICommand {
-  public string Name => "css_coinflip";
-  public string[] Aliases => ["coinflip", "cf"];
-  public string[] Usage => ["accept", "<player> <amount>"];
-
-  private readonly IPlayerTargeter targeter =
-    provider.GetRequiredService<IPlayerTargeter>();
+  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
 
-  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
-
   private readonly List<CoinflipRequest> requests = [];
+
+  private readonly IPlayerTargeter targeter =
+    provider.GetRequiredService<IPlayerTargeter>();
+
+  public string Name => "css_coinflip";
+  public string[] Aliases => ["coinflip", "cf"];
+  public string[] Usage => ["accept", "<player> <amount>"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
@@ -55,8 +53,8 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
     }
 
     if (!await eco.CanAfford(executor, amount, true)) {
-      info.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS,
-        amount));
+      info.ReplySync(
+        locale.Get(MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS, amount));
       return CommandResult.SUCCESS;
     }
 
@@ -118,7 +116,8 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
     }
 
     if (!await eco.CanAfford(executor, request.Amount, true)) {
-      wrapper.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS_OTHER,
+      wrapper.ReplySync(locale.Get(
+        MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS_OTHER,
         executor.Name ?? executor.Steam.ToString(), request.Amount));
       return CommandResult.SUCCESS;
     }
@@ -134,7 +133,7 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
       loser.Name ?? loser.Steam.ToString(), request.Amount);
 
     var targets = new List<PlayerWrapper> { winner, loser };
-    if (request.Amount >= 10000) {
+    if (request.Amount >= 10000)
       await Server.NextFrameAsync(() => {
         targets = targets.Union(Utilities.GetPlayers()
            .Select(p => new PlayerWrapper(p))
@@ -142,14 +141,13 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
            .ToList())
          .ToList();
       });
-    }
 
     foreach (var target in targets) target.PrintToChat(msg);
 
     return CommandResult.SUCCESS;
   }
 
-  private class CoinflipRequest() {
+  private class CoinflipRequest {
     public ulong Sender { get; init; }
     public ulong Receiver { get; init; }
     public int Amount { get; init; }

@@ -4,7 +4,6 @@ using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
-using GangsAPI.Permissions;
 using GangsAPI.Services;
 using Microsoft.Extensions.DependencyInjection;
 

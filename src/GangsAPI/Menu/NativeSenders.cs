@@ -1,6 +1,6 @@
 ﻿using GangsAPI.Data;
 
-namespace Menu;
+namespace GangsAPI.Menu;
 
 public class NativeSenders {
   public static Func<PlayerWrapper, string, Task> Chat

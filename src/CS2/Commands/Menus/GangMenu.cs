@@ -19,11 +19,12 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
   private readonly ICommandManager commands =
     provider.GetRequiredService<ICommandManager>();
 
+  private readonly string doorPolicyId = new DoorPolicyStat().StatId;
+
   private readonly IGangStatManager gangStatManager =
     provider.GetRequiredService<IGangStatManager>();
 
   private readonly string invitationStatId = new InvitationStat().StatId;
-  private readonly string doorPolicyId = new DoorPolicyStat().StatId;
 
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();

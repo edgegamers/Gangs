@@ -1,6 +1,6 @@
 ﻿using GangsAPI.Data;
 
-namespace Menu;
+namespace GangsAPI.Menu;
 
 public class SimplePagedMenu(IServiceProvider provider, List<string> items)
   : AbstractPagedMenu<string>(provider, NativeSenders.Chat) {

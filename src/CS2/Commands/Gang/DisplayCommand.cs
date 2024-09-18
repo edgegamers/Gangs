@@ -18,17 +18,17 @@ namespace Commands.Gang;
 
 public class DisplayCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
-  public override string Name => "display";
-
-  public override string[] Usage => ["<0/1>"];
+  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
-  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
-
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
+
+  public override string Name => "display";
+
+  public override string[] Usage => ["<0/1>"];
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {
@@ -82,12 +82,11 @@ public class DisplayCommand(IServiceProvider provider)
       await displaySetting.SetChatEnabled(player.Steam, !enabled);
       info.ReplySync(Localizer.Get(MSG.PERK_DISPLAY_CHAT,
         enabled ? ChatColors.Red + "disabled" : ChatColors.Green + "enabled"));
-      await updateDisplay(executor, gang.Name, chat: !enabled ? 1 : 0,
-        scoreboard: -1);
+      await updateDisplay(executor, gang.Name, !enabled ? 1 : 0);
       return CommandResult.SUCCESS;
     }
 
-    if (!await perk.HasScoreboardDisplay(gang)) {
+    if (!await perk.HasScoreboardDisplay(gang))
       if (!await perk.HasScoreboardDisplay(gang)) {
         if (!canBuy) {
           info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
@@ -108,7 +107,6 @@ public class DisplayCommand(IServiceProvider provider)
             player.Name ?? player.Steam.ToString(), "Display: Scoreboard"));
         return CommandResult.SUCCESS;
       }
-    }
 
     // Toggle
     var scoreboardSetting = Provider.GetService<IDisplaySetting>()
@@ -122,8 +120,7 @@ public class DisplayCommand(IServiceProvider provider)
         ChatColors.Red + "disabled" :
         ChatColors.Green + "enabled"));
 
-    await updateDisplay(executor, gang.Name, chat: -1,
-      scoreboard: !scoreboardEnabled ? 1 : 0);
+    await updateDisplay(executor, gang.Name, -1, !scoreboardEnabled ? 1 : 0);
     return CommandResult.SUCCESS;
   }
 

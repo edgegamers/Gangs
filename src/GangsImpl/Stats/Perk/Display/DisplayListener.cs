@@ -13,11 +13,11 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Stats.Perk.Display;
 
 public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
-
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
+
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
 
   [GameEventHandler]
   public HookResult OnRoundStart(EventRoundStart ev, GameEventInfo info) {
@@ -63,7 +63,7 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
       var wrapper =
         cachedPlayers.FirstOrDefault(p => p.Steam == gangPlayer.Steam);
       if (wrapper == null || wrapper.Player == null) continue;
-      if (chat && await displaySetting.IsChatEnabled(gangPlayer)) {
+      if (chat && await displaySetting.IsChatEnabled(gangPlayer))
         await Server.NextFrameAsync(() => {
           var tags = ThirdPartyAPI.Actain?.getTagService();
           tags?.SetTag(wrapper.Player, gang.Name, false);
@@ -71,10 +71,9 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
             wrapper.Player.PlayerName =
               gang.Name + " " + wrapper.Player.PlayerName;
         });
-      }
 
       var name =
-        (scoreboard && await displaySetting.IsScoreboardEnabled(gangPlayer)) ?
+        scoreboard && await displaySetting.IsScoreboardEnabled(gangPlayer) ?
           gang.Name :
           "";
       await Server.NextFrameAsync(() => {

@@ -9,13 +9,14 @@ namespace GangsImpl;
 
 public class CS2Gangs(IServiceProvider provider) : BasePlugin, IGangPlugin {
   private IServiceScope? scope;
+
+  public static PluginCapability<IGangPlugin> Capability { get; } =
+    new("gangs:core");
+
   public override string ModuleName => "Gangs";
   public override string ModuleVersion => "0.0.1";
   public BasePlugin Base => this;
   public IServiceProvider Services { get; } = provider;
-
-  public static PluginCapability<IGangPlugin> Capability { get; } =
-    new("gangs:core");
 
   public override void Load(bool hotReload) {
     scope = Services.CreateScope();

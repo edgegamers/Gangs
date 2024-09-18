@@ -11,18 +11,19 @@ namespace Commands.Gang;
 
 // create [name]
 public class CreateCommand(IServiceProvider provider) : ICommand {
+  private const int CREATION_COST = 500;
+
+  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
+
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
 
-  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
-
   public string Name => "create";
   public string Description => "Creates a new gang";
   public string[] Usage => ["[name]"];
-  private const int CREATION_COST = 500;
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

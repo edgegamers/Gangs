@@ -16,30 +16,13 @@ using Microsoft.Extensions.Localization;
 namespace Commands.Gang;
 
 /// <summary>
-/// Represents a command only executable by those in gangs.
+///   Represents a command only executable by those in gangs.
 /// </summary>
 /// <param name="provider"></param>
 public abstract class GangedPlayerCommand(IServiceProvider provider)
   : ICommand {
-  protected readonly IStringLocalizer Localizer =
-    provider.GetRequiredService<IStringLocalizer>();
-
-  protected readonly IPlayerManager Players =
-    provider.GetRequiredService<IPlayerManager>();
-
-  protected readonly IServiceProvider Provider = provider;
-
-  protected readonly IGangStatManager GangStats =
-    provider.GetRequiredService<IGangStatManager>();
-
-  protected readonly IPlayerStatManager PlayerStats =
-    provider.GetRequiredService<IPlayerStatManager>();
-
-  protected readonly IGangManager Gangs =
-    provider.GetRequiredService<IGangManager>();
-
-  protected readonly IRankManager Ranks =
-    provider.GetRequiredService<IRankManager>();
+  protected readonly ICommandManager Commands =
+    provider.GetRequiredService<ICommandManager>();
 
   protected readonly IEcoManager Eco =
     provider.GetRequiredService<IEcoManager>();
@@ -47,11 +30,28 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
   protected readonly IGangChatPerk? GangChat =
     provider.GetService<IGangChatPerk>();
 
-  protected readonly ICommandManager Commands =
-    provider.GetRequiredService<ICommandManager>();
+  protected readonly IGangManager Gangs =
+    provider.GetRequiredService<IGangManager>();
+
+  protected readonly IGangStatManager GangStats =
+    provider.GetRequiredService<IGangStatManager>();
+
+  protected readonly IStringLocalizer Localizer =
+    provider.GetRequiredService<IStringLocalizer>();
 
   protected readonly IMenuManager Menus =
     provider.GetRequiredService<IMenuManager>();
+
+  protected readonly IPlayerManager Players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  protected readonly IPlayerStatManager PlayerStats =
+    provider.GetRequiredService<IPlayerStatManager>();
+
+  protected readonly IServiceProvider Provider = provider;
+
+  protected readonly IRankManager Ranks =
+    provider.GetRequiredService<IRankManager>();
 
   public virtual void Start(BasePlugin? plugin, bool hotReload) { }
   public abstract string Name { get; }

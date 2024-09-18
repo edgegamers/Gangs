@@ -3,5 +3,5 @@
 namespace GangsAPI.Services;
 
 public interface IPerkManager : IPluginBehavior {
- List<IPerk> Perks { get; set; }
+  List<IPerk> Perks { get; set; }
 }

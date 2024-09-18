@@ -4,12 +4,12 @@ using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
 using GangsAPI.Extensions;
+using GangsAPI.Menu;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
-using Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Stats.Stat.Player;
 
@@ -18,6 +18,9 @@ namespace Commands.Menus;
 public class MemberMenu(IServiceProvider provider, IGangPlayer member)
   : AbstractMenu<string>(provider.GetRequiredService<IMenuManager>(),
     NativeSenders.Chat) {
+  private readonly ICommandManager commands =
+    provider.GetRequiredService<ICommandManager>();
+
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
@@ -28,9 +31,6 @@ public class MemberMenu(IServiceProvider provider, IGangPlayer member)
 
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
-
-  private readonly ICommandManager commands =
-    provider.GetRequiredService<ICommandManager>();
 
   override protected async Task<List<string>> GetItems(PlayerWrapper player) {
     var gangPlayer = await players.GetPlayer(player.Steam)
@@ -65,16 +65,15 @@ public class MemberMenu(IServiceProvider provider, IGangPlayer member)
     List<string> items, int selectedIndex) {
     var item = items[selectedIndex];
 
-    if (item.Contains("Promote")) {
+    if (item.Contains("Promote"))
       commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
         "promote", member.Steam.ToString());
-    } else if (item.Contains("Demote")) {
+    else if (item.Contains("Demote"))
       commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
         "demote", member.Steam.ToString());
-    } else if (item.Contains("Kick")) {
+    else if (item.Contains("Kick"))
       commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
         "kick", member.Steam.ToString());
-    }
 
     return Task.CompletedTask;
   }

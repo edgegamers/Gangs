@@ -12,9 +12,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="MAULActainShared">
-        <HintPath>..\..\GangsAPI\Shared\MAULActainShared.dll</HintPath>
-      </Reference>
+        <Reference Include="MAULActainShared">
+            <HintPath>..\..\GangsAPI\Shared\MAULActainShared.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>

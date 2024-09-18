@@ -4,7 +4,6 @@ using GangsAPI.Data;
 using GangsAPI.Perks;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
-using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using IMenu = GangsAPI.Services.Menu.IMenu;
 
@@ -12,11 +11,11 @@ namespace Stats.Perk.Display;
 
 public class DisplayPerkMenu(IServiceProvider provider, DisplayData data)
   : IMenu {
-  private readonly IEcoManager economy =
-    provider.GetRequiredService<IEcoManager>();
-
   private readonly ICommandManager commands =
     provider.GetRequiredService<ICommandManager>();
+
+  private readonly IEcoManager economy =
+    provider.GetRequiredService<IEcoManager>();
 
   public async Task Open(PlayerWrapper player) {
     player.PrintToChat(

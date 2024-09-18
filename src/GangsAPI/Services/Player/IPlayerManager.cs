@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using GangsAPI.Data.Gang;
+﻿using GangsAPI.Data.Gang;
 
 namespace GangsAPI.Services.Player;
 
@@ -32,8 +31,9 @@ public interface IPlayerManager : IPluginBehavior {
     return GetMembers(gang.GangId);
   }
 
-  async Task<IGangPlayer?> SearchPlayer(IGang gang, string query)
-    => await SearchPlayer(gang.GangId, query);
+  async Task<IGangPlayer?> SearchPlayer(IGang gang, string query) {
+    return await SearchPlayer(gang.GangId, query);
+  }
 
   async Task<IGangPlayer?> SearchPlayer(int gangId, string query) {
     var members = (await GetMembers(gangId)).ToList();

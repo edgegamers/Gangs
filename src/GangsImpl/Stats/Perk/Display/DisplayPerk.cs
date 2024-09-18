@@ -1,26 +1,25 @@
 ﻿using System.Diagnostics;
-using GangsAPI;
 using GangsAPI.Data.Gang;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
-using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Stats.Perk.Display;
 
 public class DisplayPerk(IServiceProvider provider)
   : BasePerk<DisplayData>(provider), IDisplayPerk {
+  private readonly IGangStatManager gangStats =
+    provider.GetRequiredService<IGangStatManager>();
+
+  public override DisplayData Value { get; set; } = new();
   public int ChatCost => 30000;
   public int ScoreboardCost => 5000;
   public override string StatId => "display_perk";
   public override string Name => "Display";
 
-  public override string? Description
+  public override string Description
     => "Customize where your gang name shows up";
-
-  private readonly IGangStatManager gangStats =
-    provider.GetRequiredService<IGangStatManager>();
 
   public override Task<int?> GetCost(IGangPlayer player) {
     return Task.FromResult<int?>(null);
@@ -30,15 +29,13 @@ public class DisplayPerk(IServiceProvider provider)
     return Task.CompletedTask;
   }
 
-  public async override Task<IMenu?> GetMenu(IGangPlayer player) {
+  public override async Task<IMenu?> GetMenu(IGangPlayer player) {
     Debug.Assert(player.GangId != null, "player.GangId != null");
-    var (success, data) =
+    var (_, data) =
       await gangStats.GetForGang<DisplayData>(player.GangId.Value, StatId);
     var menu = new DisplayPerkMenu(Provider, data ?? new DisplayData());
     return menu;
   }
-
-  public override DisplayData Value { get; set; } = new();
 
   public async Task<bool> HasChatDisplay(IGang gang) {
     var (success, data) = await gangStats.GetForGang<DisplayData>(gang, StatId);

@@ -3,8 +3,8 @@ using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Extensions;
+using GangsAPI.Menu;
 using GangsAPI.Services.Menu;
-using Menu;
 using Microsoft.Extensions.DependencyInjection;
 using ICommandManager = GangsAPI.Services.Commands.ICommandManager;
 

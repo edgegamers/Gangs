@@ -4,7 +4,6 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
-using GangsAPI.Services.Commands;
 
 namespace Commands.Gang;
 

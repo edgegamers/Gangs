@@ -1,9 +1,9 @@
 ﻿using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
+using GangsAPI.Menu;
 using GangsAPI.Permissions;
 using GangsAPI.Services.Commands;
-using Menu;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Menus;

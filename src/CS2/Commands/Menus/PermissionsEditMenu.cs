@@ -3,10 +3,10 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
+using GangsAPI.Menu;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
-using Menu;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Menus;

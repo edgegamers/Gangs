@@ -2,7 +2,7 @@
 using GangsAPI.Data;
 using GangsAPI.Services.Menu;
 
-namespace Menu;
+namespace GangsAPI.Menu;
 
 public abstract class AbstractMenu<T>(IMenuManager menus,
   Func<PlayerWrapper, string, Task> printer) : IMenu {

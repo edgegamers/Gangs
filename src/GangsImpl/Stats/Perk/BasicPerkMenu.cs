@@ -2,12 +2,12 @@
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
+using GangsAPI.Menu;
 using GangsAPI.Perks;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
-using Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 

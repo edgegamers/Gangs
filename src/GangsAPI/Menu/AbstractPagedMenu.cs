@@ -4,7 +4,7 @@ using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 
-namespace Menu;
+namespace GangsAPI.Menu;
 
 public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   Func<PlayerWrapper, string, Task> printer, int itemsPerPage = 7)
@@ -12,10 +12,16 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   protected readonly Dictionary<ulong, int> CurrentPages = new();
   protected readonly int ItemsPerPage = itemsPerPage;
 
+  private readonly string left =
+    $"{ChatColors.DarkRed}<- {ChatColors.LightYellow}/8";
+
   protected readonly IStringLocalizer Localizer =
     provider.GetRequiredService<IStringLocalizer>();
 
   protected readonly IServiceProvider Provider = provider;
+
+  private readonly string right =
+    $"{ChatColors.LightYellow}/9 {ChatColors.DarkRed}->";
 
   public override async Task Open(PlayerWrapper player) {
     var items = await GetItems(player);
@@ -77,12 +83,6 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
 
     CurrentPages[player.Steam] = currentPage;
   }
-
-  private readonly string right =
-    $"{ChatColors.LightYellow}/9 {ChatColors.DarkRed}->";
-
-  private readonly string left =
-    $"{ChatColors.DarkRed}<- {ChatColors.LightYellow}/8";
 
   virtual protected async Task ShowPaged(PlayerWrapper player, List<T> items,
     bool hasNext, bool hasPrev) {
