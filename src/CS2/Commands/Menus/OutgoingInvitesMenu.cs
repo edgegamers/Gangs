@@ -2,6 +2,7 @@
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
+using GangsAPI.Extensions;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Menu;
@@ -75,7 +76,7 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
     int index, InvitationEntry? item) {
     if (item == null)
       return
-        $"{ChatColors.DarkRed}{index}. {ChatColors.Grey}Current door policy: {ChatColors.Default}{doorPolicy}";
+        $"{ChatColors.DarkRed}{index}. {ChatColors.Grey}Current door policy: {ChatColors.Default}{doorPolicy.ToString().ToTitleCase()}";
     var invited = await players.GetPlayer(item.Value.Steam);
     var inviter = await players.GetPlayer(item.Value.Inviter);
 
