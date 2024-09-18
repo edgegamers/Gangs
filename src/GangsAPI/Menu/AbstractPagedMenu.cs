@@ -28,7 +28,8 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
     var totalPages =
       (items.Count + ItemsPerPage - 1)
       / ItemsPerPage; // Calculate number of pages
-    await ShowPage(player, items, GetCurrentPage(player), totalPages);
+    var pageItems = items.Take(ItemsPerPage).ToList();
+    await ShowPage(player, pageItems, GetCurrentPage(player), totalPages);
   }
 
   public override async Task AcceptInput(PlayerWrapper player, int input) {
