@@ -71,7 +71,7 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     addPermItem(rank, player);
     addRankItem(rank, player);
 
-    player.PrintToChat($"{ChatColors.Grey}... or /gang help");
+    player.PrintToChat($" {ChatColors.Grey}... or /gang help");
   }
 
   public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
