@@ -28,14 +28,18 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
 
   private void OnEntitySpawned(CEntityInstance entity) {
     if (entity.DesignerName != "smokegrenade_projectile") return;
+    Server.PrintToChatAll("Smoke grenade spawned");
 
     CSmokeGrenadeProjectile proj = new(entity.Handle);
     if (proj.Handle == IntPtr.Zero || !proj.IsValid) return;
+
+    Server.PrintToChatAll("Smoke grenade is valid");
 
     Server.NextFrame(() => {
       var thrower = proj.Thrower.Value?.Controller.Value;
       if (thrower == null || !thrower.IsValid) return;
       if (!smokeColors.TryGetValue(thrower.SteamID, out var color)) return;
+      Server.PrintToChatAll("Smoke grenade has color");
       proj.SmokeColor.X = color.R;
       proj.SmokeColor.Y = color.G;
       proj.SmokeColor.Z = color.B;
@@ -57,22 +61,49 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
 
   private async Task fetchSmokeColors(List<PlayerWrapper> wrappers) {
     Dictionary<int, Color?> cachedGangs = new();
+    await Server.NextFrameAsync(()
+      => Server.PrintToChatAll("Fetching smoke colors"));
     foreach (var wrapper in wrappers) {
       var player = await players.GetPlayer(wrapper.Steam);
-      if (player?.GangId == null) continue;
+      await Server.NextFrameAsync(()
+        => Server.PrintToChatAll($"Player {wrapper.Steam}"));
+      if (player?.GangId == null) {
+        await Server.NextFrameAsync(() => Server.PrintToChatAll("No gang"));
+        continue;
+      }
+
       if (!cachedGangs.TryGetValue(player.GangId.Value, out var color)) {
+        await Server.NextFrameAsync(
+          () => Server.PrintToChatAll("Fetching gang"));
         var gang = await gangs.GetGang(player.GangId.Value);
-        if (gang == null) continue;
+
+        await Server.NextFrameAsync(() => Server.PrintToChatAll("Got gang"));
+
+        if (gang == null) {
+          await Server.NextFrameAsync(() => Server.PrintToChatAll("No gang"));
+          continue;
+        }
+
+        Server.PrintToChatAll("Fetching data");
+        
         var (success, data) =
           await gangStats.GetForGang<SmokePerkData>(gang,
             SmokeColorPerk.STAT_ID);
+        
+        Server.PrintToChatAll("Fetched data");
+        
         if (!success || data == null) {
+          await Server.NextFrameAsync(() => Server.PrintToChatAll("No data"));
           cachedGangs.Add(player.GangId.Value, null);
           continue;
         }
 
+        await Server.NextFrameAsync(() => Server.PrintToChatAll("Got data"));
+
         color = data.Equipped.GetColor() ?? data.Equipped.PickRandom();
         cachedGangs.Add(player.GangId.Value, color);
+        await Server.NextFrameAsync(()
+          => Server.PrintToChatAll($"Fetched color {color}"));
       }
 
       if (color == null) continue;
