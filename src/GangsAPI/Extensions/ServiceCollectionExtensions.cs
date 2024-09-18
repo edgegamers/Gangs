@@ -35,11 +35,11 @@ public static class ServiceCollectionExtensions {
     //	This means every time Load is called in the main loader,
     //	the extension will be fetched and kept as a singleton for the duration
     //	until "Unload" is called.
-    collection.AddScoped<TExtension>();
+    collection.AddSingleton<TExtension>();
 
-    collection.AddTransient<TInterface, TExtension>(provider
+    collection.AddSingleton<TInterface, TExtension>(provider
       => provider.GetRequiredService<TExtension>());
-    collection.AddTransient<IPluginBehavior, TExtension>(provider
+    collection.AddSingleton<IPluginBehavior, TExtension>(provider
       => provider.GetRequiredService<TExtension>());
   }
 }
