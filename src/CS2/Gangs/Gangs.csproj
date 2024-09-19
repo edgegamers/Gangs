@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>GangsImpl</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\EcoRewards\EcoRewards.csproj"/>
+        <ProjectReference Include="..\..\StatsTracker\StatsTracker.csproj"/>
+        <ProjectReference Include="..\Commands\Commands.csproj"/>
+        <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
+        <ProjectReference Include="..\..\GangsImpl\MySQL\MySQL.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CounterStrikeSharp.API" Version="1.0.264"/>
+        <PackageReference Include="xunit" Version="2.9.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\..\..\lang\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lang\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="build\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Remove="build\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="build\**"/>
+    </ItemGroup>
+
+    <PropertyGroup>
+        <!--Publish Configuration-->
+        <PublishBaseDirectory>$(MSBuildThisFileDirectory)/../../../build</PublishBaseDirectory>
+        <PublishDir>$(PublishBaseDirectory)/Gangs</PublishDir>
+
+        <PublishRelease>false</PublishRelease>
+        <PublishSelfContained>false</PublishSelfContained>
+        <PublishDocumentationFile>true</PublishDocumentationFile>
+
+        <!--Host Options-->
+        <RollForward>Major</RollForward>
+        <UseAppHost>false</UseAppHost>
+    </PropertyGroup>
+
+    <Target Name="ZipOutputPath" AfterTargets="Publish">
+        <ZipDirectory Overwrite="true" SourceDirectory="$(PublishDir)\" DestinationFile="$(PublishBaseDirectory)\Gangs.zip"/>
+    </Target>
+
+</Project>
