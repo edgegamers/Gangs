@@ -29,7 +29,6 @@ public class MembersMenu(IServiceProvider provider, IGang gang)
 
   override protected async Task HandleItemSelection(PlayerWrapper player,
     List<(IGangPlayer, IGangRank)> items, int selectedIndex) {
-    player.PrintToChat($"Got index {selectedIndex}");
     var (member, _) = items[selectedIndex];
     var menu = new MemberMenu(Provider, member);
 
@@ -38,7 +37,10 @@ public class MembersMenu(IServiceProvider provider, IGang gang)
 
   override protected Task<string> FormatItem(PlayerWrapper player, int index,
     (IGangPlayer, IGangRank) item) {
-    return Task.FromResult(
-      $"{ChatColors.Yellow}{index}. {ChatColors.Green}{item.Item2.Name}{ChatColors.Default}: {ChatColors.LightBlue}{item.Item1.Name}");
+    var result =
+      $"{ChatColors.Yellow}{index}. {ChatColors.Green}{item.Item2.Name}{ChatColors.Default}: {ChatColors.LightBlue}{item.Item1.Name}";
+    if (index == 1) { result += $" {ChatColors.Red}({gang.Name})"; }
+
+    return Task.FromResult(result);
   }
 }

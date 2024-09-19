@@ -1,4 +1,5 @@
-﻿using GangsAPI;
+﻿using System.Text.Json.Serialization;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
@@ -70,7 +71,7 @@ public class JoinCommand(IServiceProvider provider) : ICommand {
       var members  = (await players.GetMembers(gang)).ToList();
 
       if (members.Count >= capacity) {
-        info.ReplySync(localizer.Get(MSG.GANG_FULL));
+        info.ReplySync(localizer.Get(MSG.GANG_FULL, gang.Name));
         return CommandResult.SUCCESS;
       }
     }
@@ -78,8 +79,7 @@ public class JoinCommand(IServiceProvider provider) : ICommand {
     var (fetchedPolicy, policy) =
       await gangStats.GetForGang<DoorPolicy>(gang, doorPolicyId);
 
-    if (!fetchedPolicy)
-      throw new GangException($"could not find door policy for {gang.GangId}");
+    if (!fetchedPolicy) policy = DoorPolicy.REQUEST_ONLY;
 
     if (policy == DoorPolicy.OPEN) {
       await joinGang(gangPlayer, gang);

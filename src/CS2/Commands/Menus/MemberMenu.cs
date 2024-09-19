@@ -74,7 +74,7 @@ public class MemberMenu(IServiceProvider provider, IGangPlayer member)
     else if (item.Contains("Kick"))
       commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
         "kick", member.Steam.ToString());
-
+    Close(player);
     return Task.CompletedTask;
   }
 

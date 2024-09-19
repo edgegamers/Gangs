@@ -78,7 +78,8 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
     await Server.NextFrameAsync(() => {
       Server.RunOnTick(Server.TickCount + 64 * 60, () => {
         var request = requests.FirstOrDefault(req
-          => req.Receiver == target.Steam && req.Sender == executor.Steam);
+          => req.Receiver == target.Steam && req.Sender == executor.Steam
+          && req.Amount == amount);
         if (request != null) requests.Remove(request);
       });
     });
