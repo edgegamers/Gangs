@@ -105,7 +105,9 @@ public enum MSG {
   RANK_DEMOTE_SUCCESS,
   RANK_PROMOTE_ABOVE_HIGHEST,
   RANK_PROMOTE_SUCCESS,
-  RANK_CANNOT_OWNER
+  RANK_CANNOT_OWNER,
+  COMMAND_GANG_CREATE_INVALID,
+  COMMAND_GANG_RESTRICTED
 }
 
 public static class LocaleExtensions {
@@ -221,6 +223,8 @@ public static class LocaleExtensions {
       MSG.RANK_CANNOT_OWNER => "rank.cannot.owner",
       MSG.GANG_TRANSFERRED => "gang.transferred",
       MSG.COMMAND_LEAVE_LEFT => "command.leave.left",
+      MSG.COMMAND_GANG_CREATE_INVALID => "command.gang.create.invalid",
+      MSG.COMMAND_GANG_RESTRICTED => "command.gang.create.restricted",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }

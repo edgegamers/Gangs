@@ -1,5 +1,6 @@
 ﻿using Commands.Gang;
 using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Entities;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -18,8 +19,9 @@ public class CreateTests(IServiceProvider provider)
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
 
-  private readonly PlayerWrapper player = new((ulong)new Random().NextInt64(),
-    "Test Player");
+  private readonly PlayerWrapper player =
+    new PlayerWrapper((ulong)new Random().NextInt64(), "Test Player").WithFlags(
+      "@ego/dssilver");
 
   [Fact]
   public async Task Create_NonPlayer() {
@@ -90,7 +92,8 @@ public class CreateTests(IServiceProvider provider)
   [Fact]
   public async Task Create_Duplicate_Name() {
     var other =
-      new PlayerWrapper((ulong)new Random().NextInt64(), "Other Player");
+      new PlayerWrapper((ulong)new Random().NextInt64(), "Other Player")
+       .WithFlags("@ego/dssilver");
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(player, CommandCallingContext.Console,
         "create", "foo bar"));

@@ -11,6 +11,8 @@
   "command.gang.not_in_gang": "%prefix%You are not in a gang. Type %color.command%/gang create [name]%color.default% to create one.",
   "command.gang.create.already_exists": "%prefix%The '%color.command%{0}%color.default%' gang already exists.",
   "command.gang.create.success": "%prefix%Successfully created the '%color.command%{0}%color.default%' (%color.number%{1}%color.default%) gang.",
+  "command.gang.create.invalid": "%prefix%That gang name is invalid.",
+  "command.gang.create.restricted": "%prefix%Gang creation is restricted for {green}Dedicated Supporters{grey} for our{blue}Beta{grey} test. Become one at {green}https://edgm.rs/donate{grey}.",
   "command.gang.invite.max_invites": "%prefix%Your gang has reached the maximum of %color.number%{0} %color.default%invite%s%.",
   "command.gang.invite.already_ingang": "%prefix%%color.target%{0}%color.default% is already in a gang.",
   "command.gang.invite.already_inyourgang": "%prefix%%color.target%{0}%color.default% is in your gang!",

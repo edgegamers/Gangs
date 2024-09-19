@@ -1,4 +1,5 @@
-﻿using GangsAPI;
+﻿using System.Text.RegularExpressions;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services;
@@ -35,6 +36,22 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
 
     if (await gangs.GetGang(executor.Steam) != null) {
       info.ReplySync(locale.Get(MSG.ALREADY_IN_GANG));
+      return CommandResult.ERROR;
+    }
+
+    if (!executor.HasFlags("@ego/dssilver")) {
+      info.ReplySync(locale.Get(MSG.COMMAND_GANG_RESTRICTED));
+      return CommandResult.ERROR;
+    }
+
+    if (name.Length is < 1 or > 16) {
+      info.ReplySync(locale.Get(MSG.COMMAND_GANG_CREATE_INVALID));
+      return CommandResult.ERROR;
+    }
+
+    // Regex check for invalid characters
+    if (!Regex.IsMatch(name, @"^[a-zA-Z0-9!@#$%^&*()-=_+?.{}\[\]' ]+$")) {
+      info.ReplySync(locale.Get(MSG.COMMAND_GANG_CREATE_INVALID));
       return CommandResult.ERROR;
     }
 
