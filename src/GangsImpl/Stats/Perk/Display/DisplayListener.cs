@@ -49,8 +49,6 @@ public class DisplayListener(IServiceProvider provider) : IPluginBehavior {
     Dictionary<int, (bool, bool)> cachedPerks = new();
 
     foreach (var gangPlayer in gangPlayers) {
-      await Server.NextFrameAsync(()
-        => Server.PrintToChatAll($"Processing {gangPlayer.Steam}"));
       var gang = cachedGangs.FirstOrDefault(g => g.GangId == gangPlayer.GangId);
       if (gang == null || gangPlayer.GangId == null) continue;
       bool chat, scoreboard;
