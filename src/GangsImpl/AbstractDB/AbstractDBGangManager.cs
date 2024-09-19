@@ -21,7 +21,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
 
-  private readonly Dictionary<int, IGang> cache = new();
+  // private readonly Dictionary<int, IGang> cache = new();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);
@@ -50,14 +50,13 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
   }
 
   public async Task<IGang?> GetGang(int id) {
-    if (cache.TryGetValue(id, out var gang)) return gang;
     var query = $"SELECT * FROM {table} WHERE GangId = @id";
     var result =
       await Connection.QueryFirstOrDefaultAsync<DBGang>(query, new { id },
         Transaction);
 
     if (result == null) return null;
-    cache[id] = result;
+    // cache[id] = result;
     return result;
   }
 
@@ -69,7 +68,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
 
   public async Task<bool> UpdateGang(IGang gang) {
     var query = $"UPDATE {table} SET Name = @Name WHERE GangId = @GangId";
-    cache[gang.GangId] = gang;
+    // cache[gang.GangId] = gang;
     return await Connection.ExecuteAsync(query, new { gang.Name, gang.GangId },
       Transaction) == 1;
   }
@@ -84,7 +83,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
 
     await ranks.DeleteAllRanks(id);
 
-    cache.Remove(id);
+    // cache.Remove(id);
     var query = $"DELETE FROM {table} WHERE GangId = @id";
     return await Connection.ExecuteAsync(query, new { id }, Transaction) > 0;
   }

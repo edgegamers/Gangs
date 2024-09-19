@@ -4,6 +4,7 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
+using GangsAPI.Perks;
 using GangsAPI.Permissions;
 using GangsAPI.Services.Server;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +39,28 @@ public class InviteCommand(IServiceProvider provider)
 
     if (!perms.Permissions.HasFlag(Perm.INVITE_OTHERS))
       return await handleNoPermission(player, info);
+
+    var (policySuccess, doorPolicy) =
+      await GangStats.GetForGang<DoorPolicy>(player.GangId.Value,
+        new DoorPolicyStat().StatId);
+    if (!policySuccess) doorPolicy = DoorPolicy.INVITE_ONLY;
+
+    if (doorPolicy != DoorPolicy.INVITE_ONLY) {
+      info.ReplySync(Localizer.Get(MSG.COMMAND_INVITE_DOORPOLICY));
+      return CommandResult.ERROR;
+    }
+
+    var capacityPerk = provider.GetService<ICapacityPerk>();
+    if (capacityPerk != null) {
+      var gang = await Gangs.GetGang(player.GangId.Value)
+        ?? throw new GangNotFoundException(player.GangId.Value);
+      var capacity = await capacityPerk.GetCapacity(player.GangId.Value);
+      var members  = (await Players.GetMembers(player.GangId.Value)).Count();
+      if (members >= capacity) {
+        info.ReplySync(Localizer.Get(MSG.GANG_FULL, gang.Name));
+        return CommandResult.ERROR;
+      }
+    }
 
     var (success, invites) =
       await GangStats.GetForGang<InvitationData>(player.GangId.Value,

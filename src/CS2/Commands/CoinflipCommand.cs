@@ -50,7 +50,8 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
     }
 
     if (!int.TryParse(info[2], out var amount) || amount <= 0) {
-      info.ReplySync(locale.Get(MSG.COMMAND_INVALID_PARAM, "positive integer"));
+      info.ReplySync(locale.Get(MSG.COMMAND_INVALID_PARAM, info[2],
+        "positive integer"));
       return CommandResult.SUCCESS;
     }
 

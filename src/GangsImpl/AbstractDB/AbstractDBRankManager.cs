@@ -41,14 +41,16 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
   }
 
   public async Task<Dictionary<int, IEnumerable<IGangRank>>> GetAllRanks() {
-    var ranks = await Connection.QueryAsync<DBRank>($"SELECT * FROM {table}");
+    var ranks = await Connection.QueryAsync<DBRank>(
+      $"SELECT * FROM {table} ORDER BY GangId ASC, `Rank` ASC", Transaction);
     return ranks.GroupBy(r => r.GangId)
      .ToDictionary(g => g.Key, g => g.AsEnumerable<IGangRank>());
   }
 
   public async Task<IEnumerable<IGangRank>> GetRanks(int gang) {
     return await Connection.QueryAsync<DBRank>(
-      $"SELECT * FROM {table} WHERE GangId = @gang", new { gang }, Transaction);
+      $"SELECT * FROM {table} WHERE GangId = @gang ORDER BY `Rank` ASC",
+      new { gang }, Transaction);
   }
 
   public async Task<IGangRank?> GetRank(int gang, int rank) {

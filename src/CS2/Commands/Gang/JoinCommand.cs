@@ -79,7 +79,7 @@ public class JoinCommand(IServiceProvider provider) : ICommand {
     var (fetchedPolicy, policy) =
       await gangStats.GetForGang<DoorPolicy>(gang, doorPolicyId);
 
-    if (!fetchedPolicy) policy = DoorPolicy.REQUEST_ONLY;
+    if (!fetchedPolicy) policy = DoorPolicy.INVITE_ONLY;
 
     if (policy == DoorPolicy.OPEN) {
       await joinGang(gangPlayer, gang);

@@ -38,7 +38,6 @@ public class DemoteCommand(IServiceProvider provider)
       ?? throw new GangNotFoundException(player);
 
     var target = await Players.SearchPlayer(gang, query);
-    info.ReplySync("Player found.");
 
     if (target == null) {
       info.ReplySync(Localizer.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
