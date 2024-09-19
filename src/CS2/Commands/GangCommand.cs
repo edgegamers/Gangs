@@ -46,7 +46,8 @@ public class GangCommand(IServiceProvider provider) : ICommand {
     ["display"]     = new DisplayCommand(provider),
     ["transfer"]    = new TransferCommand(provider),
     ["leave"]       = new LeaveCommand(provider),
-    ["smokecolor"]  = new SmokeColorCommand(provider)
+    ["smokecolor"]  = new SmokeColorCommand(provider),
+    ["join"]        = new JoinCommand(provider)
   };
 
   private IStringLocalizer locale =
