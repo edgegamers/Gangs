@@ -39,11 +39,13 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
     var pending = requests.Where(req => req.Receiver == target.Steam).ToArray();
     if (pending.Length != 0) {
       if (pending.First().Sender == executor.Steam) {
-        info.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_COOLDOWN));
+        info.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_COOLDOWN,
+          target.Name ?? target.Steam.ToString()));
         return CommandResult.SUCCESS;
       }
 
-      info.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_PENDING));
+      info.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_PENDING,
+        target.Name ?? target.Steam.ToString()));
       return CommandResult.SUCCESS;
     }
 

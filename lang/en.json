@@ -45,7 +45,7 @@
   "command.coinflip.received": "%prefix%%color.target%{0}%color.default% sent you a coinflip request for %color.currency%{1} %currency%%s%.\n%prefix%Type %color.command%/coinflip accept%color.default% to accept.",
   "command.coinflip.rejected": "%prefix%%color.target%{0}%color.default% rejected your coinflip request.",
   "command.coinflip.result": "%prefix%%color.target%{0}%color.default% won a coinflip against %color.target%{1}%color.default% for %color.currency%{2} %currency%%s%.",
-  "command.coinflip.cooldown": "%prefix%You must wait before sending another coinflip request to %color.target%{1}%color.default%.",
+  "command.coinflip.cooldown": "%prefix%You must wait before sending another coinflip request to %color.target%{0}%color.default%.",
   "command.coinflip.pending": "%prefix%%color.target%{0}%color.default% already has a pending coinflip request.",
   "command.coinflip.insufficient_funds": "%prefix%You cannot afford to coinflip %color.currency%{0} %currency%%s%.",
   "command.coinflip.insufficient_funds.other": "%prefix%%color.target%{0}%color.default% cannot afford to coinflip %color.currency%{1} %currency%%s%.",
