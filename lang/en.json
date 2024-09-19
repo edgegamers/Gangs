@@ -49,7 +49,7 @@
   "command.coinflip.pending": "%prefix%%color.target%{0}%color.default% already has a pending coinflip request.",
   "command.coinflip.insufficient_funds": "%prefix%You cannot afford to coinflip %color.currency%{0} %currency%%s%.",
   "command.coinflip.insufficient_funds.other": "%prefix%%color.target%{0}%color.default% cannot afford to coinflip %color.currency%{1} %currency%%s%.",
-  "command.coinflip.no_pending": "%prefix%You have no pending coinflip requests. Send one with %color.command%/coinflip [player] [amount]%color.default%.",
+  "command.coinflip.no_pending": "%prefix%You have no pending coinflip requests. Send one with %color.ccommand%/coinflip [player] [amount]%color.default%.",
   "command.coinflip.invalid": "%prefix%This coinflip request is no longer valid.",
   "command.leave.left": "%color.target%{0}%color.default% left the gang.",
   "generic.player.steam_not_found": "%prefix%The Steam ID \"%color.emph%{0}%color.default%\" has not played on the server.",
