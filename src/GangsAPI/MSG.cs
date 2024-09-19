@@ -226,6 +226,7 @@ public static class LocaleExtensions {
       MSG.COMMAND_LEAVE_LEFT => "command.leave.left",
       MSG.COMMAND_GANG_CREATE_INVALID => "command.gang.create.invalid",
       MSG.COMMAND_GANG_RESTRICTED => "command.gang.create.restricted",
+      MSG.COMMAND_INVITE_DOORPOLICY => "command.gang.invite.doorpolicy",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }
