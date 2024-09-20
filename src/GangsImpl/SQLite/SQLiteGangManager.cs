@@ -14,11 +14,6 @@ public class SQLiteGangManager(IServiceProvider provider,
       $"CREATE TABLE IF NOT EXISTS {tableName} (GangId INTEGER PRIMARY KEY, Name VARCHAR(255) NOT NULL)";
   }
 
-  override protected Task<int> GetLastId() {
-    return Connection.ExecuteScalarAsync<int>("SELECT last_insert_rowid()",
-      transaction: Transaction);
-  }
-
   override protected DbConnection CreateDbConnection(string connectionString) {
     return new SqliteConnection(connectionString);
   }

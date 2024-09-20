@@ -108,7 +108,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
       return null;
     }
 
-    var id = await GetLastId();
+    var id = await GetLastId(table);
 
     await ranks.AssignDefaultRanks(id);
 
@@ -136,7 +136,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
   }
 
   virtual protected async Task<int> GetLastId() {
-    return await Connection.ExecuteScalarAsync<int>("SELECT MAX(GangId) FROM gang_gangs",
-      transaction: Transaction);
+    return await Connection.ExecuteScalarAsync<int>(
+      $"SELECT MAX(GangId) FROM {table}", transaction: Transaction);
   }
 }
