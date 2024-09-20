@@ -71,6 +71,11 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
       return CommandResult.ERROR;
     }
 
+    if (newGang.GangId == 0) {
+      info.ReplySync(locale.Get(MSG.GENERIC_ERROR_INFO, "GangID returned 0"));
+      return CommandResult.ERROR;
+    }
+
     info.ReplySync(locale.Get(MSG.COMMAND_GANG_CREATE_SUCCESS, name,
       newGang.GangId));
     return CommandResult.SUCCESS;

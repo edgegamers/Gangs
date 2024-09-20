@@ -136,7 +136,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
   }
 
   virtual protected async Task<int> GetLastId() {
-    return await Connection.ExecuteScalarAsync<int>("SELECT LAST_INSERT_ID()",
+    return await Connection.ExecuteScalarAsync<int>("SELECT MAX(GangId) FROM gang_gangs",
       transaction: Transaction);
   }
 }
