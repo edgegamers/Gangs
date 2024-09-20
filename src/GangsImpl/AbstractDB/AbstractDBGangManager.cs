@@ -108,7 +108,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
       return null;
     }
 
-    var id = await GetLastId(table);
+    var id = await GetLastId();
 
     await ranks.AssignDefaultRanks(id);
 
