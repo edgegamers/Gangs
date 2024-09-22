@@ -3,7 +3,6 @@ using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
-using GangsTest.API.Services.Commands.Command;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GangsTest.Commands.Gang;

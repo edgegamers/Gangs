@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using BalanceCommand = Commands.BalanceCommand;
 using StatsCommand = Commands.Gang.StatsCommand;
 
-namespace GangsTest.API.Services.Commands.Command;
+namespace GangsTest.Commands;
 
 public class TestData : TheoryData<ICommand> {
   private static readonly IServiceCollection services = new ServiceCollection();
