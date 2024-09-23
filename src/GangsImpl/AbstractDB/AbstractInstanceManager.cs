@@ -1,6 +1,5 @@
 ﻿using System.Data.Common;
 using System.Reflection;
-using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using Dapper;
 using GangsAPI.Extensions;

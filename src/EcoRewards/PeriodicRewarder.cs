@@ -1,5 +1,6 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
@@ -19,10 +20,9 @@ public class PeriodicRewarder(IServiceProvider provider) : IPluginBehavior {
        .Select(p => new PlayerWrapper(p))
        .ToList();
 
-      if (players.Count < 5) return;
+      if (players.Count < RewardsCollection.MIN_PLAYERS) return;
 
-      foreach (var player in players) {
-        if (player.Player == null) continue;
+      foreach (var player in players.Where(p => p.Player != null)) {
         var reward = getReward(player);
         Task.Run(
           async () => await eco.Grant(player, reward, reason: "Playtime"));

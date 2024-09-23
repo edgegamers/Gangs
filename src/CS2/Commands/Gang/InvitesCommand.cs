@@ -35,7 +35,7 @@ public class InvitesCommand(IServiceProvider provider)
       await Ranks.CheckRank(player, Perm.INVITE_OTHERS);
 
     if (!permitted) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, minimum.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, minimum.Name));
       return CommandResult.NO_PERMISSION;
     }
 

@@ -54,7 +54,7 @@ public class PermissionCommand(IServiceProvider provider)
       ?? throw new GangNotFoundException(player.GangId.Value);
 
     if (!allowed) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
       return CommandResult.NO_PERMISSION;
     }
 
@@ -90,7 +90,7 @@ public class PermissionCommand(IServiceProvider provider)
       case 2: {
         var directEdit = await getRank(executor, player, info.Args[1]);
         if (directEdit == null) {
-          info.ReplySync(Localizer.Get(MSG.RANK_NOT_FOUND, info.Args[1]));
+          info.ReplySync(Locale.Get(MSG.RANK_NOT_FOUND, info.Args[1]));
           return CommandResult.SUCCESS;
         }
 
@@ -106,12 +106,12 @@ public class PermissionCommand(IServiceProvider provider)
     var rank = await getRank(executor, player, info.Args[2]);
 
     if (rank == null) {
-      info.ReplySync(Localizer.Get(MSG.RANK_NOT_FOUND, info.Args[2]));
+      info.ReplySync(Locale.Get(MSG.RANK_NOT_FOUND, info.Args[2]));
       return CommandResult.SUCCESS;
     }
 
     if (rank.Rank <= executorRank.Rank) {
-      info.ReplySync(Localizer.Get(MSG.RANK_CANNOT_EDIT, rank.Name));
+      info.ReplySync(Locale.Get(MSG.RANK_CANNOT_EDIT, rank.Name));
       return CommandResult.SUCCESS;
     }
 
@@ -123,14 +123,14 @@ public class PermissionCommand(IServiceProvider provider)
     if (int.TryParse(info.Args[3], out var permInt)) {
       permsChanging = (Perm)permInt;
     } else if (!Enum.TryParse(query, true, out permsChanging)) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, query,
+      info.ReplySync(Locale.Get(MSG.COMMAND_INVALID_PARAM, query,
         "rank or int"));
       return CommandResult.SUCCESS;
     }
 
     if (!executorRank.Permissions.HasFlag(permsChanging)) {
       var missing = permsChanging ^ executorRank.Permissions;
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_NODE,
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_NODE,
         missing.Describe()));
       return CommandResult.NO_PERMISSION;
     }
@@ -140,15 +140,15 @@ public class PermissionCommand(IServiceProvider provider)
     switch (info.Args[1].ToLower()) {
       case "grant":
         applicator = original => original | permsChanging;
-        msg = Localizer.Get(MSG.RANK_MODIFY_GRANT, permsChanging, rank.Name);
+        msg = Locale.Get(MSG.RANK_MODIFY_GRANT, permsChanging, rank.Name);
         break;
       case "revoke":
         applicator = original => original & permsChanging;
-        msg = Localizer.Get(MSG.RANK_MODIFY_REVOKE, permsChanging, rank.Name);
+        msg = Locale.Get(MSG.RANK_MODIFY_REVOKE, permsChanging, rank.Name);
         break;
       case "set":
         applicator = _ => permsChanging;
-        msg = Localizer.Get(MSG.RANK_MODIFY_SET, rank.Name,
+        msg = Locale.Get(MSG.RANK_MODIFY_SET, rank.Name,
           permsChanging.Describe());
         break;
       default:
@@ -160,7 +160,7 @@ public class PermissionCommand(IServiceProvider provider)
     var result = await ranks.UpdateRank(player.GangId.Value, rank);
 
     if (!result) {
-      executor.PrintToChat(Localizer.Get(MSG.GENERIC_ERROR));
+      executor.PrintToChat(Locale.Get(MSG.GENERIC_ERROR));
       return CommandResult.ERROR;
     }
 
@@ -179,7 +179,7 @@ public class PermissionCommand(IServiceProvider provider)
       => r.Name.Equals(query, StringComparison.OrdinalIgnoreCase));
 
     if (result == null)
-      wrapper.PrintToChat(Localizer.Get(MSG.RANK_NOT_FOUND, query));
+      wrapper.PrintToChat(Locale.Get(MSG.RANK_NOT_FOUND, query));
 
     return result;
   }

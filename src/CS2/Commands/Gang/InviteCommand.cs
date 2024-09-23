@@ -46,7 +46,7 @@ public class InviteCommand(IServiceProvider provider)
     if (!policySuccess) doorPolicy = DoorPolicy.INVITE_ONLY;
 
     if (doorPolicy != DoorPolicy.INVITE_ONLY) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_INVITE_DOORPOLICY));
+      info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_DOORPOLICY));
       return CommandResult.ERROR;
     }
 
@@ -57,7 +57,7 @@ public class InviteCommand(IServiceProvider provider)
       var capacity = await capacityPerk.GetCapacity(player.GangId.Value);
       var members  = (await Players.GetMembers(player.GangId.Value)).Count();
       if (members >= capacity) {
-        info.ReplySync(Localizer.Get(MSG.GANG_FULL, gang.Name));
+        info.ReplySync(Locale.Get(MSG.GANG_FULL, gang.Name));
         return CommandResult.ERROR;
       }
     }
@@ -78,7 +78,7 @@ public class InviteCommand(IServiceProvider provider)
     Debug.Assert(player.GangId != null, "player.GangId != null");
     var required =
       await Ranks.GetRankNeeded(player.GangId.Value, Perm.INVITE_OTHERS);
-    info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+    info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
     return CommandResult.NO_PERMISSION;
   }
 
@@ -107,9 +107,9 @@ public class InviteCommand(IServiceProvider provider)
     if (invites.RemoveInvitation(steamId)) {
       Debug.Assert(player.GangId != null, "player.GangId != null");
       await GangStats.SetForGang(player.GangId.Value, gangInviteId, invites);
-      info.ReplySync(Localizer.Get(MSG.COMMAND_INVITE_CANCELED, query));
+      info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_CANCELED, query));
     } else {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_INVITE_NOTFOUND, query));
+      info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_NOTFOUND, query));
     }
 
     return steamId;
@@ -122,10 +122,10 @@ public class InviteCommand(IServiceProvider provider)
 
     switch (invitedNames.Count) {
       case 0:
-        info.ReplySync(Localizer.Get(MSG.COMMAND_INVITE_NOTFOUND, query));
+        info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_NOTFOUND, query));
         return null;
       case > 1:
-        info.ReplySync(Localizer.Get(MSG.COMMAND_INVITE_FOUNDMULTIPLE, query));
+        info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_FOUNDMULTIPLE, query));
         return null;
     }
 
@@ -133,7 +133,7 @@ public class InviteCommand(IServiceProvider provider)
     if (invites.RemoveInvitation(steamId)) {
       Debug.Assert(player.GangId != null, "player.GangId != null");
       await GangStats.SetForGang(player.GangId.Value, gangInviteId, invites);
-      info.ReplySync(Localizer.Get(MSG.COMMAND_INVITE_CANCELED, name));
+      info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_CANCELED, name));
     } else {
       throw new GangException(
         $"failed to remove invite which we found via {query}");
@@ -163,7 +163,7 @@ public class InviteCommand(IServiceProvider provider)
     if (info.ArgCount != 2) return CommandResult.PRINT_USAGE;
 
     if (invites.GetEntries().Count >= invites.MaxAmo) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_INVITE_MAXINVITES,
+      info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_MAXINVITES,
         invites.MaxAmo));
       return CommandResult.ERROR;
     }
@@ -178,7 +178,7 @@ public class InviteCommand(IServiceProvider provider)
     PlayerWrapper executor) {
     if (info[1].All(char.IsDigit)) return ulong.Parse(info[1]);
 
-    return (await playerTargeter.GetSingleTarget(info[1], executor, Localizer))
+    return (await playerTargeter.GetSingleTarget(info[1], executor, Locale))
     ?.Steam;
   }
 
@@ -187,12 +187,12 @@ public class InviteCommand(IServiceProvider provider)
     ulong steam) {
     var offlinePlayer = await Players.GetPlayer(steam, false);
     if (offlinePlayer == null) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_STEAM_NOT_FOUND, steam));
+      info.ReplySync(Locale.Get(MSG.GENERIC_STEAM_NOT_FOUND, steam));
       return CommandResult.SUCCESS;
     }
 
     if (invites.GetInvitedSteams().Contains(steam)) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_INVITE_ALREADY_INVITED,
+      info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_ALREADY_INVITED,
         offlinePlayer.Name ?? offlinePlayer.Steam.ToString()));
       return CommandResult.SUCCESS;
     }
@@ -201,7 +201,7 @@ public class InviteCommand(IServiceProvider provider)
       var msg = offlinePlayer.GangId == player.GangId ?
         MSG.COMMAND_INVITE_IN_YOUR_GANG :
         MSG.COMMAND_INVITE_ALREADY_IN_GANG;
-      info.ReplySync(Localizer.Get(msg,
+      info.ReplySync(Locale.Get(msg,
         offlinePlayer.Name ?? offlinePlayer.Steam.ToString()));
       return CommandResult.SUCCESS;
     }
@@ -209,7 +209,7 @@ public class InviteCommand(IServiceProvider provider)
     Debug.Assert(player.GangId != null, "player.GangId != null");
     var gangName = (await Gangs.GetGang(player.GangId.Value))?.Name;
     if (gangName == null) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_ERROR_INFO,
+      info.ReplySync(Locale.Get(MSG.GENERIC_ERROR_INFO,
         "Gang name not found"));
       return CommandResult.ERROR;
     }
@@ -217,13 +217,13 @@ public class InviteCommand(IServiceProvider provider)
     invites.AddInvitation(executor.Steam, steam);
     await GangStats.SetForGang(player.GangId.Value, gangInviteId, invites);
 
-    info.ReplySync(Localizer.Get(MSG.COMMAND_INVITE_SUCCESS,
+    info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_SUCCESS,
       offlinePlayer.Name ?? offlinePlayer.Steam.ToString(), gangName));
 
     var onlinePlayer =
       await playerTargeter.GetSingleTarget(offlinePlayer.Steam.ToString());
 
-    onlinePlayer?.PrintToChat(Localizer.Get(MSG.GANG_INVITED,
+    onlinePlayer?.PrintToChat(Locale.Get(MSG.GANG_INVITED,
       player.Name ?? player.Steam.ToString(), gangName));
     return await addPendingInvitation(player, offlinePlayer.Steam);
   }

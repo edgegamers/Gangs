@@ -1,4 +1,5 @@
 ﻿using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Modules.Menu;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
@@ -24,9 +25,15 @@ public class CommandBasedMenuManager(Lazy<ICommandManager> provider)
 
   private HookResult AcceptInput(CCSPlayerController? player, int index) {
     if (player == null) return HookResult.Continue;
+    var wrapper = new PlayerWrapper(player);
+    if (MenuManager.GetActiveMenu(player) != null) {
+      // Avoid conflicts with CS#-based menus
+      CloseMenu(wrapper);
+      return HookResult.Continue;
+    }
+
     var activeMenu = GetActiveMenu(player.SteamID);
 
-    var wrapper = new PlayerWrapper(player);
     Task.Run(() => activeMenu?.AcceptInput(wrapper, index));
     return HookResult.Continue;
   }

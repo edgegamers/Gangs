@@ -39,7 +39,7 @@ public class PromoteCommand(IServiceProvider provider)
       await ranks.CheckRank(player, Perm.PROMOTE_OTHERS);
 
     if (!allowed) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
       return CommandResult.NO_PERMISSION;
     }
 
@@ -53,7 +53,7 @@ public class PromoteCommand(IServiceProvider provider)
     var target = await searchPlayer(gang, query);
 
     if (target == null) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
+      info.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
       return CommandResult.SUCCESS;
     }
 
@@ -63,14 +63,14 @@ public class PromoteCommand(IServiceProvider provider)
     var higher = await ranks.GetHigherRank(gang.GangId, targetRank.Rank);
     // Trying to promote above the highest rank
     if (higher == null) {
-      info.ReplySync(Localizer.Get(MSG.RANK_PROMOTE_ABOVE_HIGHEST,
+      info.ReplySync(Locale.Get(MSG.RANK_PROMOTE_ABOVE_HIGHEST,
         target.Name ?? target.Steam.ToString()));
       return CommandResult.NO_PERMISSION;
     }
 
     if (higher.Rank < executorRank.Rank) {
       // Can't promote to a rank higher than your own
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, higher.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, higher.Name));
       return CommandResult.NO_PERMISSION;
     }
 
@@ -81,7 +81,7 @@ public class PromoteCommand(IServiceProvider provider)
     var gangChat = Provider.GetService<IGangChatPerk>();
     if (gangChat != null)
       await gangChat.SendGangChat(player, gang,
-        Localizer.Get(MSG.RANK_PROMOTE_SUCCESS,
+        Locale.Get(MSG.RANK_PROMOTE_SUCCESS,
           target.Name ?? target.Steam.ToString(), higher.Name));
     return CommandResult.SUCCESS;
   }

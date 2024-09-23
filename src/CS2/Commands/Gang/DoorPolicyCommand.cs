@@ -42,7 +42,7 @@ public class DoorPolicyCommand(IServiceProvider provider)
 
     if (info.ArgCount == 2) {
       if (!int.TryParse(info.Args[1], out var selectedIndex)) {
-        info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, info.Args[1],
+        info.ReplySync(Locale.Get(MSG.COMMAND_INVALID_PARAM, info.Args[1],
           "a number"));
         return CommandResult.SUCCESS;
       }
@@ -51,21 +51,22 @@ public class DoorPolicyCommand(IServiceProvider provider)
         await ranks.CheckRank(player, Perm.MANAGE_INVITES);
 
       if (!success) {
-        info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+        info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
         return CommandResult.SUCCESS;
       }
 
       var gang = await gangs.GetGang(player.GangId.Value)
         ?? throw new GangNotFoundException(player.GangId.Value);
 
-      var selected = (DoorPolicy)selectedIndex;
+      var selected =
+        (DoorPolicy)(selectedIndex % Enum.GetValues<DoorPolicy>().Length);
       await gangStats.SetForGang(player.GangId.Value, doorPolicyId, selected);
 
       var gangChat = Provider.GetService<IGangChatPerk>();
 
       if (gangChat != null)
         await gangChat.SendGangChat(player, gang,
-          Localizer.Get(MSG.GANG_THING_SET, "Door Policy",
+          Locale.Get(MSG.GANG_THING_SET, "Door Policy",
             selected.ToString().ToTitleCase()));
 
       return CommandResult.SUCCESS;
