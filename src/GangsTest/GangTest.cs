@@ -15,12 +15,15 @@ public abstract class GangTest(IServiceProvider provider) {
   protected readonly IGangManager Gangs =
     provider.GetRequiredService<IGangManager>();
 
+  protected readonly IGangStatManager GangStats =
+    provider.GetRequiredService<IGangStatManager>();
+
   protected readonly PlayerWrapper TestPlayer =
     new(new Random().NextULong(), "Test Player");
 
   protected readonly IStringLocalizer Locale =
     provider.GetRequiredService<IStringLocalizer>();
-  
+
   protected readonly IPlayerStatManager PlayerStats =
     provider.GetRequiredService<IPlayerStatManager>();
 }
