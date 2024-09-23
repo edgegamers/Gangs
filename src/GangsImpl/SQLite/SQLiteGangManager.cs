@@ -1,5 +1,4 @@
 using System.Data.Common;
-using Dapper;
 using GenericDB;
 using Microsoft.Data.Sqlite;
 

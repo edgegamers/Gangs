@@ -22,15 +22,16 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
     provider.GetRequiredService<IPlayerTargeter>();
 
   public string Name => "css_coinflip";
-  public string[] Aliases => ["coinflip", "cf"];
-  public string[] Usage => ["accept", "<player> <amount>"];
+  public string[] Aliases => ["css_coinflip", "css_cf"];
+  public string[] Usage => ["accept/yes", "<player> <amount>"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
     if (executor == null) return CommandResult.PLAYER_ONLY;
-    if (info.ArgCount == 2
-      && info[1].Equals("accept", StringComparison.OrdinalIgnoreCase))
-      return await handleAccept(executor, info);
+    if (info.ArgCount == 2)
+      if (info[1].Equals("accept", StringComparison.OrdinalIgnoreCase)
+        || info[1].Equals("yes", StringComparison.OrdinalIgnoreCase))
+        return await handleAccept(executor, info);
 
     if (info.ArgCount != 3) return CommandResult.PRINT_USAGE;
     var target = await targeter.GetSingleTarget(info[1], executor, locale);

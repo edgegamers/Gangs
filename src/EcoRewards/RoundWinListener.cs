@@ -25,12 +25,16 @@ public class RoundWinListener(IServiceProvider provider) : IPluginBehavior {
     if (DateTime.Now - roundStart < TimeSpan.FromMinutes(3))
       return HookResult.Continue;
 
+    var allPlayers = Utilities.GetPlayers();
+    if (allPlayers.Count < RewardsCollection.MIN_PLAYERS)
+      return HookResult.Continue;
     var winners = Utilities.GetPlayers()
      .Where(p => !p.IsBot && p.Team == (CsTeam)ev.Winner && p.PawnIsAlive)
      .Select(p => new PlayerWrapper(p))
      .ToList();
 
     if (winners.Count == 0) return HookResult.Continue;
+
     const int toDistribute = 100;
     var       each = (int)Math.Ceiling(toDistribute / (double)winners.Count);
 
@@ -41,9 +45,12 @@ public class RoundWinListener(IServiceProvider provider) : IPluginBehavior {
   }
 
   [GameEventHandler]
-  public HookResult OnMVP(EventRoundMvp ev, GameEventInfo info) {
+  public HookResult OnMVP(EventRoundMvp ev, GameEventInfo _) {
     var player = ev.Userid;
     if (player == null || !player.IsValid || player.IsBot)
+      return HookResult.Continue;
+
+    if (Utilities.GetPlayers().Count < RewardsCollection.MIN_PLAYERS)
       return HookResult.Continue;
 
     var mvp = new PlayerWrapper(player);

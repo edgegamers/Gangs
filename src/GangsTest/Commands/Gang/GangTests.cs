@@ -26,8 +26,8 @@ public class GangTests(IServiceProvider provider) : TestParent(provider,
   [Fact]
   public async Task Gang_Test_Create() {
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer.WithFlags("@ego/dssilver"), CommandCallingContext.Chat,
-        Command.Name, "create", "foobar"));
+      await Commands.ProcessCommand(TestPlayer.WithFlags("@ego/dssilver"),
+        CommandCallingContext.Chat, Command.Name, "create", "foobar"));
     Assert.Single(await gangs.GetGangs());
   }
 

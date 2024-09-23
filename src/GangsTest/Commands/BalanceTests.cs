@@ -2,9 +2,6 @@
 using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI;
 using GangsAPI.Data.Command;
-using GangsAPI.Services.Player;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using Stats.Stat;
 
 namespace GangsTest.Commands;

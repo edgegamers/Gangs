@@ -1,6 +1,5 @@
 ﻿using Commands.Gang;
 using CounterStrikeSharp.API.Modules.Commands;
-using CounterStrikeSharp.API.Modules.Entities;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;

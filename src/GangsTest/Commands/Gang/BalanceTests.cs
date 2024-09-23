@@ -10,10 +10,10 @@ namespace GangsTest.Commands.Gang;
 
 public class BalanceTests(IServiceProvider provider)
   : TestParent(provider, new BalanceCommand(provider)) {
+  private static readonly string STAT_ID = new BalanceStat().StatId;
+
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
-
-  private static readonly string STAT_ID = new BalanceStat().StatId;
 
   [Fact]
   public async Task Balance_WithoutGang_PrintsNoGang() {

@@ -11,16 +11,16 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Stats.Perk.Smoke;
 
 public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
-  private readonly Dictionary<ulong, Color> smokeColors = new();
-
-  private readonly IPlayerManager players =
-    provider.GetRequiredService<IPlayerManager>();
-
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
   private readonly IGangStatManager gangStats =
     provider.GetRequiredService<IGangStatManager>();
+
+  private readonly IPlayerManager players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  private readonly Dictionary<ulong, Color> smokeColors = new();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     plugin?.RegisterListener<Listeners.OnEntitySpawned>(OnEntitySpawned);

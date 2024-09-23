@@ -39,7 +39,7 @@ public class MembersMenu(IServiceProvider provider, IGang gang)
     (IGangPlayer, IGangRank) item) {
     var result =
       $"{ChatColors.Yellow}{index}. {ChatColors.Green}{item.Item2.Name}{ChatColors.Default}: {ChatColors.LightBlue}{item.Item1.Name}";
-    if (index == 1) { result += $" {ChatColors.Red}({gang.Name})"; }
+    if (index == 1) result += $" {ChatColors.Red}({gang.Name})";
 
     return Task.FromResult(result);
   }
