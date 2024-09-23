@@ -38,7 +38,7 @@ public class KickCommand(IServiceProvider provider)
     var (allowed, required) = await ranks.CheckRank(player, Perm.KICK_OTHERS);
 
     if (!allowed) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
       return CommandResult.NO_PERMISSION;
     }
 
@@ -51,7 +51,7 @@ public class KickCommand(IServiceProvider provider)
 
     var target = await searchPlayer(gang, query);
     if (target == null) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
+      info.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
       return CommandResult.SUCCESS;
     }
 
@@ -61,12 +61,12 @@ public class KickCommand(IServiceProvider provider)
     var higherRank = await ranks.GetHigherRank(gang.GangId, targetRank.Rank);
 
     if (higherRank == null) {
-      info.ReplySync(Localizer.Get(MSG.RANK_CANNOT_OWNER, "kick yourself"));
+      info.ReplySync(Locale.Get(MSG.RANK_CANNOT_OWNER, "kick yourself"));
       return CommandResult.NO_PERMISSION;
     }
 
     if (targetRank.Rank <= executorRank.Rank) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, higherRank.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, higherRank.Name));
       return CommandResult.NO_PERMISSION;
     }
 
@@ -79,7 +79,7 @@ public class KickCommand(IServiceProvider provider)
 
     if (gangChat != null)
       await gangChat.SendGangChat(player, gang,
-        Localizer.Get(MSG.COMMAND_GANG_KICKED,
+        Locale.Get(MSG.COMMAND_GANG_KICKED,
           target.Name ?? target.Steam.ToString()));
     return CommandResult.SUCCESS;
   }

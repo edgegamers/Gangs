@@ -35,7 +35,7 @@ public class SmokeColorCommand(IServiceProvider provider)
     var        query = string.Join('_', info.Args.Skip(1)).ToUpper();
     if (!int.TryParse(info[1], out var colorInt) || colorInt < 0) {
       if (!Enum.TryParse(query, out color)) {
-        info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, info[1],
+        info.ReplySync(Locale.Get(MSG.COMMAND_INVALID_PARAM, info[1],
           "a color"));
         return CommandResult.SUCCESS;
       }
@@ -46,7 +46,7 @@ public class SmokeColorCommand(IServiceProvider provider)
         Perm.PURCHASE_PERKS);
 
       if (!canPurchase) {
-        info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, minRank.Name));
+        info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, minRank.Name));
         return CommandResult.SUCCESS;
       }
 
@@ -62,7 +62,7 @@ public class SmokeColorCommand(IServiceProvider provider)
       if (GangChat == null) return CommandResult.SUCCESS;
 
       await GangChat.SendGangChat(player, gang,
-        Localizer.Get(MSG.PERK_PURCHASED, color.ToString()));
+        Locale.Get(MSG.PERK_PURCHASED, color.ToString()));
       return CommandResult.SUCCESS;
     }
 
@@ -71,7 +71,7 @@ public class SmokeColorCommand(IServiceProvider provider)
     var (canManage, required) =
       await Ranks.CheckRank(player, Perm.MANAGE_PERKS);
     if (!canManage) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
       return CommandResult.SUCCESS;
     }
 
@@ -81,7 +81,7 @@ public class SmokeColorCommand(IServiceProvider provider)
     if (GangChat == null) return CommandResult.SUCCESS;
 
     await GangChat.SendGangChat(player, gang,
-      Localizer.Get(MSG.GANG_THING_SET, "Smoke Color",
+      Locale.Get(MSG.GANG_THING_SET, "Smoke Color",
         color.ToString().ToTitleCase()));
     return CommandResult.SUCCESS;
   }

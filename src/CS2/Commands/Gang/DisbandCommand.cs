@@ -24,7 +24,7 @@ public class DisbandCommand(IServiceProvider provider)
         Perm.OWNER);
 
     if (!success) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
       return CommandResult.SUCCESS;
     }
 
@@ -32,7 +32,7 @@ public class DisbandCommand(IServiceProvider provider)
       throw new GangException("Passed rank check but not numerical check");
 
     if (info.ArgCount == 1) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_GANG_DISBAND_WARN));
+      info.ReplySync(Locale.Get(MSG.COMMAND_GANG_DISBAND_WARN));
       return CommandResult.SUCCESS;
     }
 
@@ -43,7 +43,7 @@ public class DisbandCommand(IServiceProvider provider)
 
     if (GangChat != null)
       await GangChat.SendGangChat(gang,
-        Localizer.Get(MSG.COMMAND_GANG_DISBANDED,
+        Locale.Get(MSG.COMMAND_GANG_DISBANDED,
           executor.Name ?? executor.Steam.ToString()));
 
     await Gangs.DeleteGang(player.GangId.Value);

@@ -20,13 +20,13 @@ public class LeaveCommand(IServiceProvider provider)
 
     Debug.Assert(player.GangRank != null, "player.GangRank != null");
     if (player.GangRank.Value == 0) {
-      info.ReplySync(Localizer.Get(MSG.RANK_CANNOT_OWNER, "leave"));
+      info.ReplySync(Locale.Get(MSG.RANK_CANNOT_OWNER, "leave"));
       return CommandResult.SUCCESS;
     }
 
     if (GangChat != null)
       await GangChat.SendGangChat(player, gang,
-        Localizer.Get(MSG.COMMAND_LEAVE_LEFT,
+        Locale.Get(MSG.COMMAND_LEAVE_LEFT,
           player.Name ?? player.Steam.ToString()));
 
     player.GangId   = null;

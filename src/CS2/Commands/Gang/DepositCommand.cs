@@ -22,12 +22,12 @@ public class DepositCommand(IServiceProvider provider)
       await Ranks.CheckRank(gangPlayer, Perm.BANK_DEPOSIT);
 
     if (!authorized) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM, required.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM, required.Name));
       return CommandResult.SUCCESS;
     }
 
     if (!int.TryParse(info[1], out var amount) || amount <= 0) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, info[1],
+      info.ReplySync(Locale.Get(MSG.COMMAND_INVALID_PARAM, info[1],
         "a positive integer"));
       return CommandResult.SUCCESS;
     }

@@ -24,11 +24,11 @@ public class BalanceCommand(IServiceProvider provider)
       ?? throw new GangNotFoundException(player.GangId.Value);
 
     if (!success) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_BALANCE_GANG_NONE, gang.Name));
+      info.ReplySync(Locale.Get(MSG.COMMAND_BALANCE_GANG_NONE, gang.Name));
       return CommandResult.SUCCESS;
     }
 
-    info.ReplySync(Localizer.Get(MSG.COMMAND_BALANCE_GANG, gang.Name, balance));
+    info.ReplySync(Locale.Get(MSG.COMMAND_BALANCE_GANG, gang.Name, balance));
     return CommandResult.SUCCESS;
   }
 }
