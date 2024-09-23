@@ -1,11 +1,9 @@
 ﻿using Commands.Gang;
 using CounterStrikeSharp.API.Modules.Commands;
-using CounterStrikeSharp.API.Modules.Entities;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Gang;
-using GangsTest.API.Services.Commands.Command;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 

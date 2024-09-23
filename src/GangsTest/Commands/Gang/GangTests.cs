@@ -3,7 +3,6 @@ using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
-using GangsTest.API.Services.Commands.Command;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GangsTest.Commands.Gang;
@@ -27,8 +26,8 @@ public class GangTests(IServiceProvider provider) : TestParent(provider,
   [Fact]
   public async Task Gang_Test_Create() {
     Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer.WithFlags("@ego/dssilver"), CommandCallingContext.Chat,
-        Command.Name, "create", "foobar"));
+      await Commands.ProcessCommand(TestPlayer.WithFlags("@ego/dssilver"),
+        CommandCallingContext.Chat, Command.Name, "create", "foobar"));
     Assert.Single(await gangs.GetGangs());
   }
 

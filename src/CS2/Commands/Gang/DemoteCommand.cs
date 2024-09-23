@@ -26,7 +26,7 @@ public class DemoteCommand(IServiceProvider provider)
     var (allowed, required) = await Ranks.CheckRank(player, Perm.DEMOTE_OTHERS);
 
     if (!allowed) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
       return CommandResult.NO_PERMISSION;
     }
 
@@ -40,7 +40,7 @@ public class DemoteCommand(IServiceProvider provider)
     var target = await Players.SearchPlayer(gang, query);
 
     if (target == null) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
+      info.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
       return CommandResult.SUCCESS;
     }
 
@@ -55,7 +55,7 @@ public class DemoteCommand(IServiceProvider provider)
 
     // Trying to demote below the lowest rank, they need to kick instead
     if (lower == null) {
-      info.ReplySync(Localizer.Get(MSG.RANK_DEMOTE_BELOW_LOWEST,
+      info.ReplySync(Locale.Get(MSG.RANK_DEMOTE_BELOW_LOWEST,
         target.Name ?? target.Steam.ToString()));
       return CommandResult.NO_PERMISSION;
     }
@@ -64,11 +64,11 @@ public class DemoteCommand(IServiceProvider provider)
       // Can't demote someone with the same or higher rank
       if (higher == null) {
         // No higher rank, can't demote
-        info.ReplySync(Localizer.Get(MSG.RANK_CANNOT_OWNER, "demote yourself"));
+        info.ReplySync(Locale.Get(MSG.RANK_CANNOT_OWNER, "demote yourself"));
         return CommandResult.NO_PERMISSION;
       }
 
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, higher.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, higher.Name));
       return CommandResult.NO_PERMISSION;
     }
 
@@ -79,7 +79,7 @@ public class DemoteCommand(IServiceProvider provider)
     var gangChat = Provider.GetService<IGangChatPerk>();
     if (gangChat != null)
       await gangChat.SendGangChat(player, gang,
-        Localizer.Get(MSG.RANK_DEMOTE_SUCCESS,
+        Locale.Get(MSG.RANK_DEMOTE_SUCCESS,
           target.Name ?? target.Steam.ToString(), lower.Name));
     return CommandResult.SUCCESS;
   }

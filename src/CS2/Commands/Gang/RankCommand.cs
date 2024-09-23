@@ -38,7 +38,7 @@ public class RankCommand(IServiceProvider provider)
       ?? throw new RankNotFoundException(player);
 
     if (!int.TryParse(info[2], out var targetRank)) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_INVALID_PARAM, info[2],
+      info.ReplySync(Locale.Get(MSG.COMMAND_INVALID_PARAM, info[2],
         "an integer"));
       return CommandResult.INVALID_ARGS;
     }
@@ -47,7 +47,7 @@ public class RankCommand(IServiceProvider provider)
       || !executorRank.Permissions.HasFlag(Perm.MANAGE_RANKS)) {
       var higher = await Ranks.GetHigherRank(gang.GangId, targetRank)
         ?? throw new RankNotFoundException(gang.GangId, targetRank);
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, higher.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, higher.Name));
       return CommandResult.NO_PERMISSION;
     }
 
@@ -71,18 +71,18 @@ public class RankCommand(IServiceProvider provider)
     var name     = string.Join(' ', info.Args.Skip(3));
     var existing = await Ranks.GetRank(gang.GangId, rank);
     if (existing != null) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_RANK_EXISTS, existing.Name));
+      info.ReplySync(Locale.Get(MSG.COMMAND_RANK_EXISTS, existing.Name));
       return CommandResult.ERROR;
     }
 
     var newRank = await Ranks.CreateRank(gang.GangId, name, rank, Perm.NONE);
     if (newRank == null) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_ERROR));
+      info.ReplySync(Locale.Get(MSG.GENERIC_ERROR));
       return CommandResult.ERROR;
     }
 
     await gangChat.SendGangChat(player, gang,
-      Localizer.Get(MSG.COMMAND_RANK_CREATED, newRank.Name));
+      Locale.Get(MSG.COMMAND_RANK_CREATED, newRank.Name));
     return CommandResult.SUCCESS;
   }
 
@@ -91,7 +91,7 @@ public class RankCommand(IServiceProvider provider)
     var target = await Ranks.GetRank(gang.GangId, rank)
       ?? throw new RankNotFoundException(gang.GangId, rank);
     if (target.Rank == 0) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_RANK_CANNOT_DELETE,
+      info.ReplySync(Locale.Get(MSG.COMMAND_RANK_CANNOT_DELETE,
         target.Name));
       return CommandResult.ERROR;
     }
@@ -101,7 +101,7 @@ public class RankCommand(IServiceProvider provider)
      .ToList();
 
     if (assigned.Count != 0) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_RANK_CANNOT_DELETE,
+      info.ReplySync(Locale.Get(MSG.COMMAND_RANK_CANNOT_DELETE,
         target.Name));
       return CommandResult.SUCCESS;
     }
@@ -109,12 +109,12 @@ public class RankCommand(IServiceProvider provider)
     var result = await Ranks.DeleteRank(gang.GangId, target,
       IRankManager.DeleteStrat.DEMOTE_FAIL);
     if (!result) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_ERROR));
+      info.ReplySync(Locale.Get(MSG.GENERIC_ERROR));
       return CommandResult.ERROR;
     }
 
     await gangChat.SendGangChat(player, gang,
-      Localizer.Get(MSG.COMMAND_RANK_DELETED, target.Name));
+      Locale.Get(MSG.COMMAND_RANK_DELETED, target.Name));
     return CommandResult.SUCCESS;
   }
 
@@ -129,12 +129,12 @@ public class RankCommand(IServiceProvider provider)
 
     var result = await Ranks.UpdateRank(gang.GangId, target);
     if (!result) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_ERROR));
+      info.ReplySync(Locale.Get(MSG.GENERIC_ERROR));
       return CommandResult.ERROR;
     }
 
     await gangChat.SendGangChat(player, gang,
-      Localizer.Get(MSG.COMMAND_RANK_RENAMED, oldName, target.Name));
+      Locale.Get(MSG.COMMAND_RANK_RENAMED, oldName, target.Name));
     return CommandResult.SUCCESS;
   }
 }

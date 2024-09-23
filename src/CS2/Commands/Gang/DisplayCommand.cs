@@ -56,7 +56,7 @@ public class DisplayCommand(IServiceProvider provider)
     if (display == 0) {
       if (!await perk.HasChatDisplay(gang)) {
         if (!canBuy) {
-          info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+          info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
           return CommandResult.NO_PERMISSION;
         }
 
@@ -70,7 +70,7 @@ public class DisplayCommand(IServiceProvider provider)
         if (gangChat == null) return CommandResult.SUCCESS;
 
         await gangChat.SendGangChat(player, gang,
-          Localizer.Get(MSG.PERK_PURCHASED,
+          Locale.Get(MSG.PERK_PURCHASED,
             player.Name ?? player.Steam.ToString(), "Display: Chat"));
         return CommandResult.SUCCESS;
       }
@@ -80,33 +80,32 @@ public class DisplayCommand(IServiceProvider provider)
         ?? throw new GangException("Display setting not found");
       var enabled = await displaySetting.IsChatEnabled(player.Steam);
       await displaySetting.SetChatEnabled(player.Steam, !enabled);
-      info.ReplySync(Localizer.Get(MSG.PERK_DISPLAY_CHAT,
+      info.ReplySync(Locale.Get(MSG.PERK_DISPLAY_CHAT,
         enabled ? ChatColors.Red + "disabled" : ChatColors.Green + "enabled"));
       await updateDisplay(executor, gang.Name, !enabled ? 1 : 0);
       return CommandResult.SUCCESS;
     }
 
-    if (!await perk.HasScoreboardDisplay(gang))
-      if (!await perk.HasScoreboardDisplay(gang)) {
-        if (!canBuy) {
-          info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
-          return CommandResult.NO_PERMISSION;
-        }
-
-        if (await eco.TryPurchase(executor, perk.ScoreboardCost,
-          item: "Scoreboard Display") < 0)
-          return CommandResult.SUCCESS;
-
-        await perk.SetScoreboardDisplay(gang, true);
-
-        var gangChat = Provider.GetService<IGangChatPerk>();
-        if (gangChat == null) return CommandResult.SUCCESS;
-
-        await gangChat.SendGangChat(player, gang,
-          Localizer.Get(MSG.PERK_PURCHASED,
-            player.Name ?? player.Steam.ToString(), "Display: Scoreboard"));
-        return CommandResult.SUCCESS;
+    if (!await perk.HasScoreboardDisplay(gang)) {
+      if (!canBuy) {
+        info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+        return CommandResult.NO_PERMISSION;
       }
+
+      if (await eco.TryPurchase(executor, perk.ScoreboardCost,
+        item: "Scoreboard Display") < 0)
+        return CommandResult.SUCCESS;
+
+      await perk.SetScoreboardDisplay(gang, true);
+
+      var gangChat = Provider.GetService<IGangChatPerk>();
+      if (gangChat == null) return CommandResult.SUCCESS;
+
+      await gangChat.SendGangChat(player, gang,
+        Locale.Get(MSG.PERK_PURCHASED,
+          player.Name ?? player.Steam.ToString(), "Display: Scoreboard"));
+      return CommandResult.SUCCESS;
+    }
 
     // Toggle
     var scoreboardSetting = Provider.GetService<IDisplaySetting>()
@@ -115,7 +114,7 @@ public class DisplayCommand(IServiceProvider provider)
       await scoreboardSetting.IsScoreboardEnabled(player.Steam);
     await scoreboardSetting.SetScoreboardEnabled(player.Steam,
       !scoreboardEnabled);
-    info.ReplySync(Localizer.Get(MSG.PERK_DISPLAY_SCOREBOARD,
+    info.ReplySync(Locale.Get(MSG.PERK_DISPLAY_SCOREBOARD,
       scoreboardEnabled ?
         ChatColors.Red + "disabled" :
         ChatColors.Green + "enabled"));

@@ -36,7 +36,7 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
   protected readonly IGangStatManager GangStats =
     provider.GetRequiredService<IGangStatManager>();
 
-  protected readonly IStringLocalizer Localizer =
+  protected readonly IStringLocalizer Locale =
     provider.GetRequiredService<IStringLocalizer>();
 
   protected readonly IMenuManager Menus =
@@ -68,7 +68,7 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
     var gangPlayer = await Players.GetPlayer(executor.Steam)
       ?? throw new PlayerNotFoundException(executor.Steam);
     if (gangPlayer.GangId == null || gangPlayer.GangRank == null) {
-      info.ReplySync(Localizer.Get(MSG.NOT_IN_GANG));
+      info.ReplySync(Locale.Get(MSG.NOT_IN_GANG));
       return CommandResult.SUCCESS;
     }
 

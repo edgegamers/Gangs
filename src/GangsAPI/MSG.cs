@@ -109,7 +109,8 @@ public enum MSG {
   COMMAND_GANG_CREATE_INVALID,
   COMMAND_GANG_RESTRICTED,
   COMMAND_INVITE_DOORPOLICY,
-}
+  MENU_FORMAT_INVITATION,
+  MENU_FORMAT_REQUEST, }
 
 public static class LocaleExtensions {
   public static string Key(this MSG msg) {
@@ -227,6 +228,8 @@ public static class LocaleExtensions {
       MSG.COMMAND_GANG_CREATE_INVALID => "command.gang.create.invalid",
       MSG.COMMAND_GANG_RESTRICTED => "command.gang.create.restricted",
       MSG.COMMAND_INVITE_DOORPOLICY => "command.invite.doorpolicy",
+      MSG.MENU_FORMAT_INVITATION => "menu.format.invitation",
+      MSG.MENU_FORMAT_REQUEST => "menu.format.request",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }

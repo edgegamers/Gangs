@@ -1,6 +1,6 @@
 ﻿using GangsAPI.Services.Commands;
 
-namespace GangsTest.API.Services.Commands.Command;
+namespace GangsTest.Commands;
 
 public class FieldTests {
   [Theory]

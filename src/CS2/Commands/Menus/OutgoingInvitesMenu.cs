@@ -1,5 +1,6 @@
 ﻿using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Utils;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
 using GangsAPI.Extensions;
@@ -48,20 +49,24 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
     return results;
   }
 
-  override protected Task HandleItemSelection(PlayerWrapper player,
+  override protected async Task HandleItemSelection(PlayerWrapper player,
     List<InvitationEntry?> items, int selectedIndex) {
     var entry = items[selectedIndex];
 
     if (entry == null) {
-      Provider.GetRequiredService<ICommandManager>()
+      await Provider.GetRequiredService<ICommandManager>()
        .ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
           "doorpolicy");
-      return Task.CompletedTask;
+      return;
     }
 
-    Printer.Invoke(player,
-      $"Invitation sent to {entry.Value.Steam} by {entry.Value.Inviter} on {entry.Value.Date}");
-    return Task.CompletedTask;
+    var inviterName = await players.GetPlayer(entry.Value.Inviter);
+    var invitedName = await players.GetPlayer(entry.Value.Steam);
+
+    await Printer.Invoke(player,
+      Localizer.Get(MSG.MENU_FORMAT_INVITATION,
+        inviterName?.Name ?? entry.Value.Inviter.ToString(),
+        invitedName?.Name ?? entry.Value.Steam.ToString(), entry.Value.Date));
   }
 
   override protected Task ShowPage(PlayerWrapper player,

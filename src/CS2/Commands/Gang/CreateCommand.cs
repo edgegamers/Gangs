@@ -10,7 +10,6 @@ using Microsoft.Extensions.Localization;
 
 namespace Commands.Gang;
 
-// create [name]
 public class CreateCommand(IServiceProvider provider) : ICommand {
   private const int CREATION_COST = 500;
 
@@ -29,7 +28,6 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
     if (executor == null) return CommandResult.PLAYER_ONLY;
-
     if (info.ArgCount < 2) return CommandResult.PRINT_USAGE;
 
     var name = string.Join(' ', info.Args.Skip(1));

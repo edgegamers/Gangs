@@ -26,7 +26,7 @@ public class TransferCommand(IServiceProvider provider)
         Perm.OWNER);
 
     if (!success) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_RANK, required.Name));
       return CommandResult.SUCCESS;
     }
 
@@ -38,7 +38,7 @@ public class TransferCommand(IServiceProvider provider)
       await Ranks.GetLowerRank(player.GangId.Value, player.GangRank.Value);
 
     if (immediatelyLower == null) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_ERROR_INFO,
+      info.ReplySync(Locale.Get(MSG.GENERIC_ERROR_INFO,
         "Could not find a lower rank"));
       return CommandResult.SUCCESS;
     }
@@ -46,7 +46,7 @@ public class TransferCommand(IServiceProvider provider)
     var query  = string.Join(' ', info.Args.Skip(1));
     var target = await Players.SearchPlayer(player.GangId.Value, query);
     if (target == null) {
-      info.ReplySync(Localizer.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
+      info.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
       return CommandResult.SUCCESS;
     }
 
@@ -54,7 +54,7 @@ public class TransferCommand(IServiceProvider provider)
       ?? throw new GangException("Target does not have a rank.");
 
     if (targetRank != immediatelyLower) {
-      info.ReplySync(Localizer.Get(MSG.COMMAND_TRANSFER_SUBORDINATE,
+      info.ReplySync(Locale.Get(MSG.COMMAND_TRANSFER_SUBORDINATE,
         immediatelyLower.Name));
       return CommandResult.SUCCESS;
     }
@@ -70,7 +70,7 @@ public class TransferCommand(IServiceProvider provider)
 
     if (GangChat != null)
       await GangChat.SendGangChat(gang,
-        Localizer.Get(MSG.GANG_TRANSFERRED,
+        Locale.Get(MSG.GANG_TRANSFERRED,
           executor.Name ?? executor.Steam.ToString(),
           target.Name ?? target.Steam.ToString()));
 
