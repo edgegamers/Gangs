@@ -110,7 +110,11 @@ public enum MSG {
   COMMAND_GANG_RESTRICTED,
   COMMAND_INVITE_DOORPOLICY,
   MENU_FORMAT_INVITATION,
-  MENU_FORMAT_REQUEST, }
+  MENU_FORMAT_REQUEST,
+  RAFFLE_BEGIN,
+  RAFFLE_PRE_ANNOUNCE,
+  RAFFLE_WINNER
+}
 
 public static class LocaleExtensions {
   public static string Key(this MSG msg) {
@@ -230,6 +234,9 @@ public static class LocaleExtensions {
       MSG.COMMAND_INVITE_DOORPOLICY => "command.invite.doorpolicy",
       MSG.MENU_FORMAT_INVITATION => "menu.format.invitation",
       MSG.MENU_FORMAT_REQUEST => "menu.format.request",
+      MSG.RAFFLE_BEGIN => "raffle.begin",
+      MSG.RAFFLE_PRE_ANNOUNCE => "raffle.preannounce",
+      MSG.RAFFLE_WINNER => "raffle.winner",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }
