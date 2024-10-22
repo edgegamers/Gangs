@@ -27,7 +27,8 @@ public class RaffleCommand(IServiceProvider provider) : ICommand {
       // entries are closed
       return CommandResult.SUCCESS;
 
-    if (!await eco.CanAfford(executor, raffle.Raffle.BuyIn, true))
+    if (await eco.TryPurchase(executor, raffle.Raffle.BuyIn, true, "Raffle Ticket",
+      true) < 0)
       return CommandResult.SUCCESS;
 
     raffle.Raffle.AddPlayer(executor.Steam);
