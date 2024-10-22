@@ -3,12 +3,14 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Cvars;
 using GangsAPI;
+using GangsAPI.Services.Commands;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Timer = CounterStrikeSharp.API.Modules.Timers.Timer;
 
 namespace Raffle;
 
-public class RaffleManager(IStringLocalizer locale)
+public class RaffleManager(IServiceProvider provider)
   : IPluginBehavior, IRaffleManager {
   public static FakeConVar<float> CV_RAFFLE_CHANCE =
     new("cs2_gangs_raffle_chance", "The chance of a raffle starting per round",
@@ -34,9 +36,15 @@ public class RaffleManager(IStringLocalizer locale)
   private Timer? entryTimer;
   private BasePlugin? plugin;
 
+  private readonly IStringLocalizer locale =
+    provider.GetRequiredService<IStringLocalizer>();
+
   public void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin == null) return;
     this.plugin = plugin;
+    var cmd = provider.GetRequiredService<ICommandManager>();
+    cmd.RegisterCommand(new RaffleCommand(provider));
+    cmd.RegisterCommand(new StartRaffleCommand(provider));
   }
 
   public Raffle? Raffle { get; private set; }

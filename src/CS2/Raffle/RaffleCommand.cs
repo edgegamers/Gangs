@@ -18,10 +18,6 @@ public class RaffleCommand(IServiceProvider provider) : ICommand {
 
   public string Name => "css_raffle";
 
-  public void Start(BasePlugin? plugin, bool hotReload) {
-    commands.RegisterCommand(this);
-  }
-
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
     if (executor == null) return CommandResult.PLAYER_ONLY;

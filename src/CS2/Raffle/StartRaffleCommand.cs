@@ -14,10 +14,6 @@ public class StartRaffleCommand(IServiceProvider provider) : ICommand {
   public string[] RequiredFlags => ["@css/root"];
   public string[] Usage => ["", "<amount>"];
 
-  public void Start(BasePlugin? plugin, bool hotReload) {
-    provider.GetRequiredService<ICommandManager>().RegisterCommand(this);
-  }
-
   public Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
     var amo = 100;
