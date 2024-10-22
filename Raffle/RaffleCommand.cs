@@ -1,3 +1,4 @@
+using CounterStrikeSharp.API.Core;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services;
@@ -12,7 +13,14 @@ public class RaffleCommand(IServiceProvider provider) : ICommand {
   private readonly IRaffleManager raffle =
     provider.GetRequiredService<IRaffleManager>();
 
+  private readonly ICommandManager commands =
+    provider.GetRequiredService<ICommandManager>();
+
   public string Name => "css_raffle";
+
+  public void Start(BasePlugin? plugin, bool hotReload) {
+    commands.RegisterCommand(this);
+  }
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
@@ -27,8 +35,8 @@ public class RaffleCommand(IServiceProvider provider) : ICommand {
       // entries are closed
       return CommandResult.SUCCESS;
 
-    if (await eco.TryPurchase(executor, raffle.Raffle.BuyIn, true, "Raffle Ticket",
-      true) < 0)
+    if (await eco.TryPurchase(executor, raffle.Raffle.BuyIn, true,
+      "Raffle Ticket", true) < 0)
       return CommandResult.SUCCESS;
 
     raffle.Raffle.AddPlayer(executor.Steam);

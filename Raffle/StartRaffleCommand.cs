@@ -1,3 +1,4 @@
+using CounterStrikeSharp.API.Core;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
@@ -12,6 +13,10 @@ public class StartRaffleCommand(IServiceProvider provider) : ICommand {
   public string Name => "css_startraffle";
   public string[] RequiredFlags => ["@css/root"];
   public string[] Usage => ["", "<amount>"];
+
+  public void Start(BasePlugin? plugin, bool hotReload) {
+    provider.GetRequiredService<ICommandManager>().RegisterCommand(this);
+  }
 
   public Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
