@@ -120,10 +120,10 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
       return CommandResult.SUCCESS;
     }
 
-    if (!await eco.CanAfford(executor, request.Amount, true)) {
+    if (!await eco.CanAfford(senderWrapper, request.Amount, true)) {
       wrapper.ReplySync(locale.Get(
         MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS_OTHER,
-        executor.Name ?? executor.Steam.ToString(), request.Amount));
+        senderWrapper.Name ?? senderWrapper.Steam.ToString(), request.Amount));
       return CommandResult.SUCCESS;
     }
 
