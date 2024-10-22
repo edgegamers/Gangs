@@ -1,3 +1,4 @@
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -21,7 +22,7 @@ public class StartRaffleCommand(IServiceProvider provider) : ICommand {
       if (!int.TryParse(info.Args[1], out amo))
         return Task.FromResult(CommandResult.PRINT_USAGE);
 
-    raffle.StartRaffle(amo);
+    Server.NextFrame(() => raffle.StartRaffle(amo));
     return Task.FromResult(CommandResult.SUCCESS);
   }
 }
