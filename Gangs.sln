@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatsTracker", "src\StatsTr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoRewards", "src\EcoRewards\EcoRewards.csproj", "{253C7948-3411-4860-BDDE-B1CA23FCE4DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raffle", "Raffle\Raffle.csproj", "{05B36B8C-F430-411B-9B8D-61EB14D5E5FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raffle", "src\CS2\Raffle\Raffle.csproj", "{05B36B8C-F430-411B-9B8D-61EB14D5E5FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

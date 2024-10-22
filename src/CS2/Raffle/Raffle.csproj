@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\src\GangsAPI\GangsAPI.csproj"/>
+        <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
     </ItemGroup>
 
 </Project>
