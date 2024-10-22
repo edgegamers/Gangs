@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
 using Mock;
+using Raffle;
 using SQLImpl;
 using Stats.Perk;
 using StatsTracker;
@@ -41,6 +42,7 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection.RegisterStatsTracker();
     serviceCollection.RegisterPerks();
     serviceCollection.RegisterRewards();
+    serviceCollection.RegisterRaffle();
 
     serviceCollection.AddPluginBehavior<PlayerJoinCreationListener>();
     serviceCollection
