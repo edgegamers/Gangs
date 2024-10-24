@@ -44,7 +44,6 @@ public class RaffleManager(IServiceProvider provider)
   private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
-    Console.WriteLine($"Start called on RaffleManager, plugin: {plugin}");
     if (plugin == null) return;
     this.plugin = plugin;
     var cmd = provider.GetRequiredService<ICommandManager>();
@@ -82,6 +81,8 @@ public class RaffleManager(IServiceProvider provider)
 
   public void DrawWinner() {
     if (Raffle == null || plugin == null) return;
+    var    players = Raffle.TotalPlayers;
+    var    total   = Raffle.Value;
     ulong? winner;
     do { winner = Raffle.GetWinner(); } while (winner != null
       && Raffle.TotalPlayers > 0);
@@ -98,12 +99,10 @@ public class RaffleManager(IServiceProvider provider)
 
     var wrapper = new PlayerWrapper(winner.Value, name);
 
-    Task.Run(async () => {
-      await eco.Grant(wrapper, Raffle.Value, true, "Raffle");
-    });
+    Task.Run(async () => await eco.Grant(wrapper, total, true, "Raffle"));
 
     Server.PrintToChatAll(locale.Get(MSG.RAFFLE_WINNER, name,
-      (1.0f / (Raffle.TotalPlayers + 1)).ToString("P1")));
+      (1.0f / players).ToString("P1")));
     Raffle = null;
   }
 
