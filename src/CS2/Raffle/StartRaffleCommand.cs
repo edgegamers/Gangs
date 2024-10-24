@@ -15,14 +15,19 @@ public class StartRaffleCommand(IServiceProvider provider) : ICommand {
   public string[] RequiredFlags => ["@css/root"];
   public string[] Usage => ["", "<amount>"];
 
-  public Task<CommandResult> Execute(PlayerWrapper? executor,
+  public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
     var amo = 100;
     if (info.ArgCount == 2)
       if (!int.TryParse(info.Args[1], out amo))
-        return Task.FromResult(CommandResult.PRINT_USAGE);
+        return CommandResult.PRINT_USAGE;
 
-    Server.NextFrame(() => raffle.StartRaffle(amo));
-    return Task.FromResult(CommandResult.SUCCESS);
+    var result = false;
+    await Server.NextFrameAsync(() => { result = raffle.StartRaffle(amo); });
+
+    info.ReplySync(result ?
+      "Raffle started with a prize of $" + amo :
+      "Raffle already in progress");
+    return CommandResult.SUCCESS;
   }
 }
