@@ -40,6 +40,7 @@ public class RaffleManager(IServiceProvider provider)
     provider.GetRequiredService<IStringLocalizer>();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
+    Console.WriteLine($"Start called on RaffleManager, plugin: {plugin}");
     if (plugin == null) return;
     this.plugin = plugin;
     var cmd = provider.GetRequiredService<ICommandManager>();
