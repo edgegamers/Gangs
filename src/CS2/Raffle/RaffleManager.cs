@@ -30,7 +30,7 @@ public class RaffleManager(IServiceProvider provider)
 
   public static FakeConVar<float> CV_RAFFLE_DURATION =
     new("cs2_gangs_raffle_duration", "Time to give playeres to enter raffle",
-      20);
+      30);
 
   private static readonly Random rng = new();
   private int cooldownRounds;

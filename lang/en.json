@@ -107,7 +107,7 @@
   "command.invite.doorpolicy": "%prefix%Your door policy must be set to invite-only to send invites.",
   "menu.format.invitation": "%color.special%{0}%color.default% invited %color.target%{1}%color.default% on %color.emph%{2}%color.default%.",
   "menu.format.request": "%color.target%{0}%color.default% requested to join on %color.emph%{1}%color.default%.",
-  "raffle.begin": "%prefix%A raffle for %color.currency%{0} %currency%%s%%color.default% has begun. Type %color.command%/raffle %color.default% to enter.",
+  "raffle.begin": "%prefix%A raffle for %color.currency%{0} %currency%%s%%color.default% has begun. Type %color.command%/raffle%color.default% to enter.",
   "raffle.preannounce": "%prefix%Raffle closed! Collected %color.currency%{0} %currency%%s%%color.default% across %color.number%{1}%color.default% entrant%s%.",
   "raffle.winner": "%prefix%%color.target%{0}%color.default% won the raffle with a %color.number%{1}%color.default% chance!",
   "raffle.notactive": "%prefix%There is no active raffle.",
