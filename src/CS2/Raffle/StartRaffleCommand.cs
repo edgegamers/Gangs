@@ -22,12 +22,7 @@ public class StartRaffleCommand(IServiceProvider provider) : ICommand {
       if (!int.TryParse(info.Args[1], out amo))
         return CommandResult.PRINT_USAGE;
 
-    var result = false;
-    await Server.NextFrameAsync(() => { result = raffle.StartRaffle(amo); });
-
-    info.ReplySync(result ?
-      "Raffle started with a prize of $" + amo :
-      "Raffle already in progress");
+    await Server.NextFrameAsync(() => { raffle.StartRaffle(amo); });
     return CommandResult.SUCCESS;
   }
 }

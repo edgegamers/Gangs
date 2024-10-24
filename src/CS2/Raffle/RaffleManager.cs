@@ -3,6 +3,8 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Cvars;
 using GangsAPI;
+using GangsAPI.Data;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -38,6 +40,8 @@ public class RaffleManager(IServiceProvider provider)
 
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     Console.WriteLine($"Start called on RaffleManager, plugin: {plugin}");
@@ -91,6 +95,12 @@ public class RaffleManager(IServiceProvider provider)
 
     var name = Utilities.GetPlayerFromSteamId(winner.Value)?.PlayerName
       ?? winner.ToString() ?? "";
+
+    var wrapper = new PlayerWrapper(winner.Value, name);
+
+    Task.Run(async () => {
+      await eco.Grant(wrapper, Raffle.Value, true, "Raffle");
+    });
 
     Server.PrintToChatAll(locale.Get(MSG.RAFFLE_WINNER, name,
       (1.0f / (Raffle.TotalPlayers + 1)).ToString("P1")));
