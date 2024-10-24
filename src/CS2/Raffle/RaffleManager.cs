@@ -81,8 +81,14 @@ public class RaffleManager(IServiceProvider provider)
 
   public void DrawWinner() {
     if (Raffle == null || plugin == null) return;
-    var    players = Raffle.TotalPlayers;
-    var    total   = Raffle.Value;
+    var players = Raffle.TotalPlayers;
+    if (players <= 0) {
+      Server.PrintToChatAll(locale.Get(MSG.RAFFLE_NOENTRANTS));
+      Raffle = null;
+      return;
+    }
+
+    var    total = Raffle.Value;
     ulong? winner;
     do { winner = Raffle.GetWinner(); } while (winner != null
       && Raffle.TotalPlayers > 0);

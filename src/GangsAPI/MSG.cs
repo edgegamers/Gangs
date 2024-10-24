@@ -115,7 +115,8 @@ public enum MSG {
   RAFFLE_PRE_ANNOUNCE,
   RAFFLE_WINNER,
   RAFFLE_NOTACTIVE,
-  RAFFLE_NOTOPEN
+  RAFFLE_NOTOPEN,
+  RAFFLE_NOENTRANTS
 }
 
 public static class LocaleExtensions {
@@ -241,6 +242,7 @@ public static class LocaleExtensions {
       MSG.RAFFLE_WINNER => "raffle.winner",
       MSG.RAFFLE_NOTACTIVE => "raffle.notactive",
       MSG.RAFFLE_NOTOPEN => "raffle.notopen",
+      MSG.RAFFLE_NOENTRANTS => "raffle.noentrants",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }

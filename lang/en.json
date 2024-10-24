@@ -111,5 +111,6 @@
   "raffle.preannounce": "%prefix%Raffle closed! Collected %color.currency%{0} %currency%%s%%color.default% across %color.number%{1}%color.default% entrant%s%.",
   "raffle.winner": "%prefix%%color.target%{0}%color.default% won the raffle with a %color.number%{1}%color.default% chance!",
   "raffle.notactive": "%prefix%There is no active raffle.",
-  "raffle.notopen": "%prefix%The raffle closed entries and is currently drawing."
+  "raffle.notopen": "%prefix%The raffle closed entries and is currently drawing.",
+  "raffle.noentrants": "%prefix%There are no entrants in the raffle."
 }
