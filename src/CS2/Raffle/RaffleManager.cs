@@ -114,13 +114,18 @@ public class RaffleManager(IServiceProvider provider)
 
   [GameEventHandler]
   public HookResult OnRoundStart(EventRoundStart ev, GameEventInfo info) {
+    Server.PrintToConsole("RaffleManager#OnRoundStart");
     if (RoundUtil.IsWarmup()) return HookResult.Continue;
+    Server.PrintToConsole("RaffleManager#OnRoundStart > Not warmup");
     if (cooldownRounds > 0) {
       cooldownRounds--;
       return HookResult.Continue;
     }
 
+    Server.PrintToConsole("RaffleManager#OnRoundStart > cooldownRounds == 0");
+
     if (rng.NextDouble() > CV_RAFFLE_CHANCE.Value) return HookResult.Continue;
+    Server.PrintToConsole("RaffleManager#OnRoundStart > starting raffle");
     var amo = rng.Next(CV_RAFFLE_MINIMUM.Value, CV_RAFFLE_MAXIMUM.Value);
     StartRaffle(amo);
     cooldownRounds = CV_RAFFLE_COOLDOWN.Value;
