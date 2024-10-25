@@ -23,10 +23,10 @@ public class RaffleManager(IServiceProvider provider)
       2);
 
   public static FakeConVar<int> CV_RAFFLE_MINIMUM =
-    new("cs2_gangs_raffle_min", "Minimum amount per player", 2);
+    new("cs2_gangs_raffle_min", "Minimum amount per player", 20);
 
   public static FakeConVar<int> CV_RAFFLE_MAXIMUM =
-    new("cs2_gangs_raffle_max", "Maximum amount per player", 2);
+    new("cs2_gangs_raffle_max", "Maximum amount per player", 500);
 
   public static FakeConVar<float> CV_RAFFLE_DURATION =
     new("cs2_gangs_raffle_duration", "Time to give playeres to enter raffle",
@@ -114,18 +114,13 @@ public class RaffleManager(IServiceProvider provider)
 
   [GameEventHandler]
   public HookResult OnRoundStart(EventRoundStart ev, GameEventInfo info) {
-    Server.PrintToConsole("RaffleManager#OnRoundStart");
     if (RoundUtil.IsWarmup()) return HookResult.Continue;
-    Server.PrintToConsole("RaffleManager#OnRoundStart > Not warmup");
     if (cooldownRounds > 0) {
       cooldownRounds--;
       return HookResult.Continue;
     }
 
-    Server.PrintToConsole("RaffleManager#OnRoundStart > cooldownRounds == 0");
-
     if (rng.NextDouble() > CV_RAFFLE_CHANCE.Value) return HookResult.Continue;
-    Server.PrintToConsole("RaffleManager#OnRoundStart > starting raffle");
     var amo = rng.Next(CV_RAFFLE_MINIMUM.Value, CV_RAFFLE_MAXIMUM.Value);
     StartRaffle(amo);
     cooldownRounds = CV_RAFFLE_COOLDOWN.Value;
