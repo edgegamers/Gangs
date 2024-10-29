@@ -73,7 +73,8 @@ public class InvitationData {
     dates.RemoveAt(index);
     InvitedSteams = string.Join(",", invitedSteams);
     InviterSteams = string.Join(",", inviterSteams);
-    Dates         = string.Join(",", dates);
+    Dates = string.Join(",",
+      dates.Select(s => s.Subtract(DateTime.UnixEpoch).TotalSeconds));
     return true;
   }
 

@@ -46,7 +46,29 @@ public class MockCommandManager(IStringLocalizer locale) : ICommandManager {
       return CommandResult.UNKNOWN_COMMAND;
     }
 
-    if (!command.CanExecute(executor)) return CommandResult.NO_PERMISSION;
+    if (!command.CanExecute(executor)) {
+      var flags  = command.RequiredFlags;
+      var groups = command.RequiredGroups;
+      if (executor == null) {
+        sourceInfo.ReplySync(Locale.Get(MSG.GENERIC_NOPERM));
+        return CommandResult.NO_PERMISSION;
+      }
+
+      if (flags.Any(f => !executor.HasFlags(f))) {
+        sourceInfo.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_NODE,
+          string.Join(", ", flags)));
+        return CommandResult.NO_PERMISSION;
+      }
+
+      if (executor.Data != null
+        && groups.Any(g => !executor.Data.Groups.Contains(g))) {
+        sourceInfo.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_NODE,
+          string.Join(", ", groups)));
+        return CommandResult.NO_PERMISSION;
+      }
+
+      return CommandResult.NO_PERMISSION;
+    }
 
     result = await command.Execute(executor, sourceInfo);
 
