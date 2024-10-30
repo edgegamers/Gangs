@@ -7,13 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\GangsAPI\GangsAPI.csproj" />
+      <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
+
     </ItemGroup>
 
     <ItemGroup>
       <Reference Include="MySqlConnector">
-        <HintPath>..\..\..\..\.nuget\packages\mysqlconnector\2.3.7\lib\net8.0\MySqlConnector.dll</HintPath>
+        <HintPath>..\..\..\..\..\..\.nuget\packages\mysqlconnector\2.3.7\lib\net8.0\MySqlConnector.dll</HintPath>
       </Reference>
     </ItemGroup>
-
 </Project>

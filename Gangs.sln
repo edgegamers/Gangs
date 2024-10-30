@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoRewards", "src\EcoReward
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raffle", "src\CS2\Raffle\Raffle.csproj", "{05B36B8C-F430-411B-9B8D-61EB14D5E5FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leaderboard", "Leaderboard\Leaderboard.csproj", "{C45C866D-0F51-4C1A-80FD-BD2E6AB25EF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leaderboard", "src\CS2\Leaderboard\Leaderboard.csproj", "{C45C866D-0F51-4C1A-80FD-BD2E6AB25EF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
