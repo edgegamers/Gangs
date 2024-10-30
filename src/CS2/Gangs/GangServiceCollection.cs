@@ -8,6 +8,7 @@ using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using GangsAPI.Services.Server;
+using Leaderboard;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
@@ -43,6 +44,7 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection.RegisterPerks();
     serviceCollection.RegisterRewards();
     serviceCollection.RegisterRaffle();
+    serviceCollection.RegisterLeaderboard();
 
     serviceCollection.AddPluginBehavior<PlayerJoinCreationListener>();
     serviceCollection
