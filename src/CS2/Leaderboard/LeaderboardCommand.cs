@@ -7,8 +7,8 @@ using GangsAPI.Services.Commands;
 namespace Leaderboard;
 
 public class LeaderboardCommand(ILeaderboard leaderboard) : ICommand {
-  public string Name => "css_lb";
-  public string[] Aliases => ["css_lb", "css_leaderboard"];
+  public string Name => "css_gangrank";
+  public string[] Aliases => ["css_gangranks", "css_gangtop", "css_ganglb"];
   private (int, double)[]? cachedLeaderboard;
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
