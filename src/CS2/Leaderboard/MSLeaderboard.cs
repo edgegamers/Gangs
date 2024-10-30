@@ -33,7 +33,7 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
 
     while (await reader.ReadAsync())
       result.Add((reader.GetInt32(0), reader.GetDouble(1)));
-
+    
     return result;
   }
 }

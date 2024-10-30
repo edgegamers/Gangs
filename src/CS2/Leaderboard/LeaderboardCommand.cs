@@ -8,7 +8,7 @@ namespace Leaderboard;
 
 public class LeaderboardCommand(ILeaderboard leaderboard) : ICommand {
   public string Name => "css_lb";
-  public string[] Aliases { get; } = ["css_lb", "css_leaderboard"];
+  public string[] Aliases => ["css_lb", "css_leaderboard"];
   private (int, double)[]? cachedLeaderboard;
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
