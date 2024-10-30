@@ -18,6 +18,7 @@ public class LeaderboardCommand(ILeaderboard leaderboard) : ICommand {
     foreach (var (gangId, score) in cachedLeaderboard)
       info.ReplySync($"Gang {gangId} has a score of {score}");
 
+    info.ReplySync($"{cachedLeaderboard.Length} total ranked gangs.");
     return CommandResult.SUCCESS;
   }
 
