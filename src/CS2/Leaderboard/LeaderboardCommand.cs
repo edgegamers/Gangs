@@ -13,6 +13,7 @@ public class LeaderboardCommand(ILeaderboard leaderboard) : ICommand {
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
+    info.ReplySync("Fetching leaderboard...");
     cachedLeaderboard ??= (await leaderboard.GetTopGangs()).ToArray();
 
     foreach (var (gangId, score) in cachedLeaderboard)
