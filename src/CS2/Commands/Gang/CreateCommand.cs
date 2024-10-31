@@ -37,11 +37,6 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
       return CommandResult.ERROR;
     }
 
-    if (!executor.HasFlags("@ego/dssilver")) {
-      info.ReplySync(locale.Get(MSG.COMMAND_GANG_RESTRICTED));
-      return CommandResult.ERROR;
-    }
-
     if (name.Length is < 1 or > 16) {
       info.ReplySync(locale.Get(MSG.COMMAND_GANG_CREATE_INVALID));
       return CommandResult.ERROR;
