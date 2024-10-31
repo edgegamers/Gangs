@@ -3,6 +3,7 @@ using CounterStrikeSharp.API.Core;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Services.Commands;
+using GangsAPI.Services.Gang;
 using Microsoft.Extensions.DependencyInjection;
 using MySqlConnector;
 
@@ -13,7 +14,8 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
   public void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin == null) return;
     var cmd = provider.GetRequiredService<ICommandManager>();
-    cmd.RegisterCommand(new LeaderboardCommand(this));
+    cmd.RegisterCommand(new LeaderboardCommand(this,
+      provider.GetRequiredService<IGangManager>()));
   }
 
   public async Task<IEnumerable<(int, double)>> GetTopGangs(int limit = 10,
@@ -33,7 +35,7 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
 
     while (await reader.ReadAsync())
       result.Add((reader.GetInt32(0), reader.GetDouble(1)));
-    
+
     return result;
   }
 }
