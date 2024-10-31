@@ -1,5 +1,6 @@
 ﻿using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
+using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
@@ -21,7 +22,8 @@ public class LeaderboardCommand(ILeaderboard leaderboard, IGangManager gangs)
     foreach (var (gangId, score) in cachedLeaderboard) {
       var gang = await gangs.GetGang(gangId);
       if (gang == null) continue;
-      info.ReplySync($"{++index} {gang.Name}: {score}");
+      info.ReplySync(
+        $"{ChatColors.Orange}{++index}. {ChatColors.Red}{gang.Name}{ChatColors.Grey}: {ChatColors.White}{score}");
     }
 
     return CommandResult.SUCCESS;
