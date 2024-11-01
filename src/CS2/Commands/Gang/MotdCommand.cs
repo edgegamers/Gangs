@@ -53,9 +53,6 @@ public class MotdCommand(IServiceProvider provider) : ICommand {
       return CommandResult.SUCCESS;
     }
 
-    if (rank != 0)
-      throw new GangException("Passed rank check but not numerical check");
-
     if (info.ArgCount == 1) return CommandResult.PRINT_USAGE;
 
     var motdManager = provider.GetService<IMotdPerk>();
