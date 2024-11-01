@@ -14,8 +14,10 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
   public void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin == null) return;
     var cmd = provider.GetRequiredService<ICommandManager>();
-    cmd.RegisterCommand(new LeaderboardCommand(this,
-      provider.GetRequiredService<IGangManager>()));
+    var lbCommand = new LeaderboardCommand(this,
+      provider.GetRequiredService<IGangManager>());
+    cmd.RegisterCommand(lbCommand);
+    plugin.RegisterAllAttributes(lbCommand);
   }
 
   public async Task<IEnumerable<(int, double)>> GetTopGangs(int limit = 10,
