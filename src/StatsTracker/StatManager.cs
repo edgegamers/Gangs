@@ -12,5 +12,5 @@ public class StatManager : IStatManager {
     };
   }
 
-  public IEnumerable<IStat> Stats { get; private set; } = [];
+  public IList<IStat> Stats { get; private set; } = [];
 }

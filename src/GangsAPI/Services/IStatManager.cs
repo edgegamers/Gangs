@@ -6,5 +6,5 @@ namespace GangsAPI.Services;
 ///   A manager for statistics. Allows for the registration, retrieval, and updating of statistics.
 /// </summary>
 public interface IStatManager : IPluginBehavior {
-  IEnumerable<IStat> Stats { get; }
+  IList<IStat> Stats { get; }
 }

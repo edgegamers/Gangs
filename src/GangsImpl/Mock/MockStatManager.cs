@@ -4,5 +4,5 @@ using GangsAPI.Services;
 namespace Mock;
 
 public class MockStatManager : IStatManager {
-  public IEnumerable<IStat> Stats { get; } = [];
+  public IList<IStat> Stats { get; } = [];
 }
