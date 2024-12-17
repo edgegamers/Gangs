@@ -12,16 +12,12 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
   abstract protected string PrimaryKey { get; }
   private string primaryTypeString => GetDBType(typeof(TK));
 
-  // private Dictionary<string, Dictionary<TK, object>> cache = new();
-
-  public void ClearCache() { }
-
-  public Task Load() { return Task.CompletedTask; }
+  private readonly Dictionary<string, Dictionary<TK, object>> cache = new();
 
   public async Task<(bool, TV?)> Get<TV>(TK key, string statId) {
-    // if (cache.TryGetValue(statId, out var dict)
-    //   && dict.TryGetValue(key, out var value))
-    //   return (true, (TV)value);
+    if (cache.TryGetValue(statId, out var dict)
+      && dict.TryGetValue(key, out var value))
+      return (true, (TV)value);
     await createTable<TV>(statId);
     try {
       var dynamic = new DynamicParameters();
@@ -30,8 +26,8 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
         $"SELECT {(typeof(TV).IsBasicallyPrimitive() ? statId : GetFieldNames<TV>())} FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamic);
       if (result == null) return (true, result);
-      // if (!cache.ContainsKey(statId)) cache[statId] = new();
-      // cache[statId][key] = result;
+      if (!cache.ContainsKey(statId)) cache[statId] = new();
+      cache[statId][key] = result;
       return (true, result);
     } catch (InvalidOperationException e) {
       if (!e.Message.Contains("Sequence contains no elements")) throw;
@@ -76,9 +72,9 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
         fieldValues.Add($"@{field.Name}", field.GetValue(value));
 
     if (value != null) {
-      // if (!cache.ContainsKey(statId))
-      //   cache[statId] = new Dictionary<TK, object>();
-      // cache[statId][key] = value;
+      if (!cache.ContainsKey(statId))
+        cache[statId] = new Dictionary<TK, object>();
+      cache[statId][key] = value;
     }
 
     await Connection.ExecuteAsync(cmd, fieldValues);
@@ -92,8 +88,8 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       await Connection.ExecuteAsync(
         $"DELETE FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamicParameters);
-      // if (!cache.TryGetValue(statId, out var value)) return true;
-      // value.Remove(key);
+      if (!cache.TryGetValue(statId, out var value)) return true;
+      value.Remove(key);
       return true;
     } catch (DbException e) {
       if (e.Message.Contains("no such table")) return false;

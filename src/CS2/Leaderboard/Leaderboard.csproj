@@ -16,4 +16,8 @@
         <HintPath>..\..\..\..\..\..\.nuget\packages\mysqlconnector\2.3.7\lib\net8.0\MySqlConnector.dll</HintPath>
       </Reference>
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MySqlConnector" Version="2.3.7" />
+    </ItemGroup>
 </Project>
