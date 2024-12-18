@@ -50,7 +50,7 @@ public class InviteCommand(IServiceProvider provider)
       return CommandResult.ERROR;
     }
 
-    var capacityPerk = provider.GetService<ICapacityPerk>();
+    var capacityPerk = Provider.GetService<ICapacityPerk>();
     if (capacityPerk != null) {
       var gang = await Gangs.GetGang(player.GangId.Value)
         ?? throw new GangNotFoundException(player.GangId.Value);
@@ -108,9 +108,7 @@ public class InviteCommand(IServiceProvider provider)
       Debug.Assert(player.GangId != null, "player.GangId != null");
       await GangStats.SetForGang(player.GangId.Value, gangInviteId, invites);
       info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_CANCELED, query));
-    } else {
-      info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_NOTFOUND, query));
-    }
+    } else { info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_NOTFOUND, query)); }
 
     return steamId;
   }
@@ -163,8 +161,7 @@ public class InviteCommand(IServiceProvider provider)
     if (info.ArgCount != 2) return CommandResult.PRINT_USAGE;
 
     if (invites.GetEntries().Count >= invites.MaxAmo) {
-      info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_MAXINVITES,
-        invites.MaxAmo));
+      info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_MAXINVITES, invites.MaxAmo));
       return CommandResult.ERROR;
     }
 
@@ -209,8 +206,7 @@ public class InviteCommand(IServiceProvider provider)
     Debug.Assert(player.GangId != null, "player.GangId != null");
     var gangName = (await Gangs.GetGang(player.GangId.Value))?.Name;
     if (gangName == null) {
-      info.ReplySync(Locale.Get(MSG.GENERIC_ERROR_INFO,
-        "Gang name not found"));
+      info.ReplySync(Locale.Get(MSG.GENERIC_ERROR_INFO, "Gang name not found"));
       return CommandResult.ERROR;
     }
 
