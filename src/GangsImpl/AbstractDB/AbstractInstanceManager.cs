@@ -26,7 +26,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
         $"SELECT {(typeof(TV).IsBasicallyPrimitive() ? statId : GetFieldNames<TV>())} FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamic);
       if (result == null) return (true, result);
-      if (!cache.ContainsKey(statId)) cache[statId] = new();
+      if (!cache.ContainsKey(statId)) cache[statId] = new Dictionary<TK, object>();
       cache[statId][key] = result;
       return (true, result);
     } catch (InvalidOperationException e) {
