@@ -41,8 +41,9 @@ public class SmokeColorMenu(IServiceProvider provider, SmokePerkData data)
 
   override protected Task HandleItemSelection(PlayerWrapper player,
     List<SmokeColor> items, int selectedIndex) {
-    commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
-      "smokecolor", items[selectedIndex].ToString());
+    if (selectedIndex > 0)
+      commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
+        "smokecolor", items[selectedIndex].ToString());
     Close(player);
     return Task.CompletedTask;
   }

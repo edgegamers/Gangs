@@ -72,7 +72,7 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
           continue;
         }
 
-        color = data.Equipped.GetColor() ?? data.Equipped.PickRandom();
+        color = data.Equipped.GetColor() ?? data.Unlocked.PickRandom();
         cachedGangs.Add(player.GangId.Value, color);
       }
 
