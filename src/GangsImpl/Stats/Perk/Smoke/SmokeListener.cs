@@ -7,6 +7,7 @@ using GangsAPI.Data;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
+using Timer = CounterStrikeSharp.API.Modules.Timers.Timer;
 
 namespace Stats.Perk.Smoke;
 
@@ -20,10 +21,17 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
-  private readonly Dictionary<ulong, Color> smokeColors = new();
+  private readonly Dictionary<ulong, Color?> smokeColors = new();
+  private readonly Dictionary<IntPtr, Timer> smokeTimers = new();
+
+  private BasePlugin plugin = null!;
+
+  private readonly Random rng = new();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
-    plugin?.RegisterListener<Listeners.OnEntitySpawned>(OnEntitySpawned);
+    if (plugin == null) return;
+    this.plugin = plugin;
+    this.plugin.RegisterListener<Listeners.OnEntitySpawned>(OnEntitySpawned);
   }
 
   private void OnEntitySpawned(CEntityInstance entity) {
@@ -32,14 +40,31 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
     CSmokeGrenadeProjectile proj = new(entity.Handle);
     if (proj.Handle == IntPtr.Zero || !proj.IsValid) return;
 
-    Server.NextFrame(() => {
+    var timer = plugin.AddTimer(1, () => {
       var thrower = proj.Thrower.Value?.Controller.Value;
-      if (thrower == null || !thrower.IsValid) return;
-      if (!smokeColors.TryGetValue(thrower.SteamID, out var color)) return;
-      proj.SmokeColor.X = color.R;
-      proj.SmokeColor.Y = color.G;
-      proj.SmokeColor.Z = color.B;
+      if (thrower == null || !thrower.IsValid) { goto kill; }
+
+      if (!smokeColors.TryGetValue(thrower.SteamID, out var color)) {
+        goto kill;
+      }
+
+      if (!proj.IsValid) goto kill;
+
+      color ??= Color.FromArgb(rng.Next(0, 256), rng.Next(0, 256),
+        rng.Next(0, 256));
+
+      proj.SmokeColor.X = color.Value.R;
+      proj.SmokeColor.Y = color.Value.G;
+      proj.SmokeColor.Z = color.Value.B;
+
+      return;
+
+    kill:
+      smokeTimers[proj.Handle].Kill();
+      smokeTimers.Remove(proj.Handle);
     });
+
+    smokeTimers[proj.Handle] = timer;
   }
 
   [GameEventHandler]
@@ -60,7 +85,6 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
       var player = await players.GetPlayer(wrapper.Steam);
       if (player?.GangId == null) continue;
 
-
       if (!cachedGangs.TryGetValue(player.GangId.Value, out var color)) {
         var gang = await gangs.GetGang(player.GangId.Value);
         if (gang == null) continue;
@@ -72,12 +96,16 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
           continue;
         }
 
-        color = data.Equipped.GetColor() ?? data.Unlocked.PickRandom();
+        if (data.Equipped == SmokeColor.RAINBOW) {
+          color                      = null;
+          smokeColors[wrapper.Steam] = null;
+        } else
+          color = data.Equipped.GetColor() ?? data.Unlocked.PickRandom();
+
         cachedGangs.Add(player.GangId.Value, color);
       }
 
-      if (color == null) continue;
-      smokeColors[wrapper.Steam] = color.Value;
+      if (color != null) smokeColors[wrapper.Steam] = color.Value;
     }
   }
 }
