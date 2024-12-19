@@ -22,11 +22,14 @@ public class PeriodicRewarder(IServiceProvider provider) : IPluginBehavior {
 
       if (players.Count < RewardsCollection.MIN_PLAYERS) return;
 
-      foreach (var player in players.Where(p => p.Player != null)) {
-        var reward = getReward(player);
-        Task.Run(
-          async () => await eco.Grant(player, reward, reason: "Playtime"));
-      }
+      players = players.Where(p => p.Player != null).ToList();
+
+      Task.Run(async () => {
+        foreach (var player in players) {
+          var reward = getReward(player);
+          await eco.Grant(player, reward, reason: "Playtime");
+        }
+      });
     }, TimerFlags.REPEAT);
   }
 
