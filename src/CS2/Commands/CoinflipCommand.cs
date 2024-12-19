@@ -50,10 +50,32 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
       return CommandResult.SUCCESS;
     }
 
-    if (!int.TryParse(info[2], out var amount) || amount <= 0) {
-      info.ReplySync(locale.Get(MSG.COMMAND_INVALID_PARAM, info[2],
-        "positive integer"));
-      return CommandResult.SUCCESS;
+    int amount;
+
+    if (info[2].Equals("all", StringComparison.OrdinalIgnoreCase)) {
+      var execBal   = await eco.GetBalance(executor, true);
+      var targetBal = await eco.GetBalance(target, true);
+
+      amount = Math.Min(execBal, targetBal);
+
+      if (amount <= 0) {
+        if (execBal == 0) {
+          info.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS,
+            0));
+        } else {
+          info.ReplySync(locale.Get(
+            MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS_OTHER,
+            target.Name ?? target.Steam.ToString(), 0));
+        }
+
+        return CommandResult.SUCCESS;
+      }
+    } else {
+      if (!int.TryParse(info[2], out amount) || amount <= 0) {
+        info.ReplySync(locale.Get(MSG.COMMAND_INVALID_PARAM, info[2],
+          "positive integer"));
+        return CommandResult.SUCCESS;
+      }
     }
 
     if (!await eco.CanAfford(executor, amount, true)) {

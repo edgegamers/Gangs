@@ -43,6 +43,12 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     return (excludeGangCredits ? playerBalance : total) >= cost;
   }
 
+  public async Task<int> GetBalance(PlayerWrapper player,
+    bool excludeGangCredits = false) {
+    var (playerBalance, total) = await getBalance(player.Steam);
+    return excludeGangCredits ? playerBalance : total;
+  }
+
   public async Task<int> TryPurchase(PlayerWrapper player, int balanceDue,
     bool print = true, string? item = null, bool excludeGangCredits = false) {
     var (playerBalance, totalBalance) = await getBalance(player.Steam);

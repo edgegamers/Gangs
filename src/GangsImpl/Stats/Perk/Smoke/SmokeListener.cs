@@ -22,7 +22,10 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
 
   private readonly Dictionary<ulong, Color> smokeColors = new();
 
+  private BasePlugin plugin = null!;
+
   public void Start(BasePlugin? plugin, bool hotReload) {
+    this.plugin = plugin;
     plugin?.RegisterListener<Listeners.OnEntitySpawned>(OnEntitySpawned);
   }
 

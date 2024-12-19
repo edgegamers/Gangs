@@ -9,6 +9,11 @@ public class MockEcoManager : IEcoManager {
     return Task.FromResult(true);
   }
 
+  public Task<int> GetBalance(PlayerWrapper player,
+    bool excludeGangCredits = false) {
+    return Task.FromResult(0);
+  }
+
   public Task<int> TryPurchase(PlayerWrapper player, int balanceDue,
     bool print = true, string? item = null, bool excludeGangCredits = false) {
     return Task.FromResult(0);
