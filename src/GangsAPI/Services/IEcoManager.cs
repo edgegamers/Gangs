@@ -6,6 +6,8 @@ namespace GangsAPI.Services;
 public interface IEcoManager : IPluginBehavior {
   Task<bool> CanAfford(PlayerWrapper player, int cost,
     bool excludeGangCredits = false);
+  
+  Task<int> GetBalance(PlayerWrapper player, bool excludeGangCredits = false);
 
   /// <summary>
   ///   Attempts to purchase an item for the player.

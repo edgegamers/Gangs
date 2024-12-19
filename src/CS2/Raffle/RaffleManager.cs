@@ -14,21 +14,21 @@ namespace Raffle;
 
 public class RaffleManager(IServiceProvider provider)
   : IPluginBehavior, IRaffleManager {
-  public static FakeConVar<float> CV_RAFFLE_CHANCE =
+  public static readonly FakeConVar<float> CV_RAFFLE_CHANCE =
     new("cs2_gangs_raffle_chance", "The chance of a raffle starting per round",
       0.05f);
 
-  public static FakeConVar<int> CV_RAFFLE_COOLDOWN =
+  public static readonly FakeConVar<int> CV_RAFFLE_COOLDOWN =
     new("cs2_gangs_raffle_cooldown", "Minimum number of rounds between raffles",
       3);
 
-  public static FakeConVar<int> CV_RAFFLE_MINIMUM = new("cs2_gangs_raffle_min",
-    "Minimum amount per player", 20);
+  public static readonly FakeConVar<int> CV_RAFFLE_MINIMUM =
+    new("cs2_gangs_raffle_min", "Minimum amount per player", 20);
 
-  public static FakeConVar<int> CV_RAFFLE_MAXIMUM = new("cs2_gangs_raffle_max",
-    "Maximum amount per player", 1000);
+  public static readonly FakeConVar<int> CV_RAFFLE_MAXIMUM =
+    new("cs2_gangs_raffle_max", "Maximum amount per player", 1000);
 
-  public static FakeConVar<float> CV_RAFFLE_DURATION =
+  public static readonly FakeConVar<float> CV_RAFFLE_DURATION =
     new("cs2_gangs_raffle_duration", "Time to give playeres to enter raffle",
       30);
 
