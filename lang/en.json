@@ -7,7 +7,7 @@
   "color.currency": "{gold}",
   "color.target": "{green}",
   "color.gang": "{lightred}",
-  "prefix": " {lightblue}Gangs> %color.default%",
+  "prefix": " {darkblue}Gangs> %color.default%",
   "command.gang.not_in_gang": "%prefix%You are not in a gang. Type %color.command%/gang create [name]%color.default% to create one.",
   "command.gang.create.already_exists": "%prefix%The '%color.command%{0}%color.default%' gang already exists.",
   "command.gang.create.success": "%prefix%Successfully created the '%color.command%{0}%color.default%' (%color.number%{1}%color.default%) gang.",
