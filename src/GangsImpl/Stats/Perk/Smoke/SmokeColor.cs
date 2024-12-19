@@ -13,8 +13,7 @@ public enum SmokeColor {
   BLUE = 1 << 5,
   PURPLE = 1 << 6,
   DEFAULT = 1 << 7,
-  RANDOM = 1 << 8,
-  RAINBOW = 1 << 9
+  RANDOM = 1 << 8
 }
 
 public static class SmokeColorExtensions {
@@ -28,7 +27,6 @@ public static class SmokeColorExtensions {
       SmokeColor.PURPLE  => 2000,
       SmokeColor.DEFAULT => 1000,
       SmokeColor.RANDOM  => 10000,
-      SmokeColor.RAINBOW => 25000,
       _                  => 0
     };
   }
@@ -43,7 +41,6 @@ public static class SmokeColorExtensions {
       SmokeColor.PURPLE  => Color.Purple,
       SmokeColor.DEFAULT => null,
       SmokeColor.RANDOM  => null,
-      SmokeColor.RAINBOW => Color.White,
       _                  => Color.White
     };
   }
@@ -59,7 +56,6 @@ public static class SmokeColorExtensions {
       SmokeColor.PURPLE     => ChatColors.Purple,
       SmokeColor.DEFAULT    => ChatColors.White,
       SmokeColor.RANDOM     => ChatColors.White,
-      SmokeColor.RAINBOW    => ChatColors.Orange,
       _                     => ChatColors.White
     };
   }
