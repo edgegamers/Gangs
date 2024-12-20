@@ -1,5 +1,6 @@
 ﻿using System.Data.Common;
 using System.Reflection;
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using Dapper;
 using GangsAPI.Extensions;
@@ -12,13 +13,18 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
   abstract protected string PrimaryKey { get; }
   private string primaryTypeString => GetDBType(typeof(TK));
 
+  private readonly SemaphoreSlim semaphore = new(1, 1);
+
   private readonly Dictionary<string, Dictionary<TK, object>> cache = new();
 
   public async Task<(bool, TV?)> Get<TV>(TK key, string statId) {
     if (cache.TryGetValue(statId, out var dict)
       && dict.TryGetValue(key, out var value))
       return (true, (TV)value);
+
     await createTable<TV>(statId);
+
+    await semaphore.WaitAsync();
     try {
       var dynamic = new DynamicParameters();
       dynamic.Add(PrimaryKey, key);
@@ -26,13 +32,14 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
         $"SELECT {(typeof(TV).IsBasicallyPrimitive() ? statId : GetFieldNames<TV>())} FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamic);
       if (result == null) return (true, result);
-      if (!cache.ContainsKey(statId)) cache[statId] = new Dictionary<TK, object>();
+      if (!cache.ContainsKey(statId))
+        cache[statId] = new Dictionary<TK, object>();
       cache[statId][key] = result;
       return (true, result);
     } catch (InvalidOperationException e) {
       if (!e.Message.Contains("Sequence contains no elements")) throw;
       return (false, default);
-    }
+    } finally { semaphore.Release(); }
   }
 
   virtual protected string GenerateInsertQuery<TV>(string statId,
@@ -53,9 +60,8 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       $"INSERT INTO {table_prefix}_{statId} ({PrimaryKey}, {columns}) VALUES (@{PrimaryKey}, {values}) ON DUPLICATE KEY UPDATE {onDuplicate}";
   }
 
-  public async Task<bool> Set<TV>(TK key, string statId, TV value) {
-    await createTable<TV>(statId);
 
+  public async Task<bool> Set<TV>(TK key, string statId, TV value) {
     var fields = typeof(TV)
      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
      .ToList();
@@ -77,7 +83,12 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       cache[statId][key] = value;
     }
 
-    await Connection.ExecuteAsync(cmd, fieldValues);
+    await createTable<TV>(statId);
+    try {
+      await semaphore.WaitAsync();
+      await Connection.ExecuteAsync(cmd, fieldValues);
+    } finally { semaphore.Release(); }
+
     return true;
   }
 
@@ -85,6 +96,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     try {
       var dynamicParameters = new DynamicParameters();
       dynamicParameters.Add(PrimaryKey, key);
+      await semaphore.WaitAsync();
       await Connection.ExecuteAsync(
         $"DELETE FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamicParameters);
@@ -95,7 +107,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       if (e.Message.Contains("no such table")) return false;
       if (e.Message.EndsWith("doesn't exist")) return false;
       throw;
-    }
+    } finally { semaphore.Release(); }
   }
 
   public void Start(BasePlugin? plugin, bool hotReload) {
@@ -150,7 +162,10 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       cmd = cmd[..^2] + ")";
     }
 
-    await Connection.ExecuteAsync(cmd);
+    try {
+      await semaphore.WaitAsync();
+      await Connection.ExecuteAsync(cmd);
+    } finally { semaphore.Release(); }
   }
 
   protected string GetFieldNames<TV>(string prefix = "") {

@@ -38,8 +38,10 @@ public class RoundWinListener(IServiceProvider provider) : IPluginBehavior {
     const int toDistribute = 100;
     var       each = (int)Math.Ceiling(toDistribute / (double)winners.Count);
 
-    foreach (var winner in winners)
-      Task.Run(async () => await eco.Grant(winner, each, reason: "Round Win"));
+    Task.Run(async () => {
+      foreach (var winner in winners)
+        await eco.Grant(winner, each, reason: "Round Win");
+    });
 
     return HookResult.Continue;
   }
