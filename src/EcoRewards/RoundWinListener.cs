@@ -39,6 +39,8 @@ public class RoundWinListener(IServiceProvider provider) : IPluginBehavior {
     var       each = (int)Math.Ceiling(toDistribute / (double)winners.Count);
 
     Task.Run(async () => {
+      // Delay to give time for player kill rewards
+      await Task.Delay(500);
       foreach (var winner in winners)
         await eco.Grant(winner, each, reason: "Round Win");
     });

@@ -1,5 +1,6 @@
 ﻿using System.Data.Common;
 using System.Reflection;
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using Dapper;
 using GangsAPI.Extensions;
@@ -11,6 +12,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
   protected DbConnection Connection = null!;
   abstract protected string PrimaryKey { get; }
   private string primaryTypeString => GetDBType(typeof(TK));
+  private bool busy;
 
   private readonly Dictionary<string, Dictionary<TK, object>> cache = new();
 
@@ -18,6 +20,17 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     if (cache.TryGetValue(statId, out var dict)
       && dict.TryGetValue(key, out var value))
       return (true, (TV)value);
+
+    if (busy) {
+      await Server.NextFrameAsync(() => {
+        Server.PrintToConsole($"ERROR: Get called while busy ({key}:{statId})");
+        Task.Run(async () => {
+          await Task.Delay(50);
+          return Get<TV>(key, statId);
+        });
+      });
+    }
+
     await createTable<TV>(statId);
     try {
       var dynamic = new DynamicParameters();
@@ -54,7 +67,19 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       $"INSERT INTO {table_prefix}_{statId} ({PrimaryKey}, {columns}) VALUES (@{PrimaryKey}, {values}) ON DUPLICATE KEY UPDATE {onDuplicate}";
   }
 
+
   public async Task<bool> Set<TV>(TK key, string statId, TV value) {
+    if (busy) {
+      await Server.NextFrameAsync(() => {
+        Server.PrintToConsole(
+          $"ERROR: Set called while busy ({key}:{statId} = {value})");
+        Task.Run(async () => {
+          await Task.Delay(50);
+          return Set(key, statId, value);
+        });
+      });
+    }
+
     await createTable<TV>(statId);
 
     var fields = typeof(TV)
@@ -79,6 +104,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     }
 
     await Connection.ExecuteAsync(cmd, fieldValues);
+    busy = false;
     return true;
   }
 
