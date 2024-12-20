@@ -11,7 +11,7 @@ using Microsoft.Extensions.Localization;
 namespace Commands.Gang;
 
 public class CreateCommand(IServiceProvider provider) : ICommand {
-  private const int CREATION_COST = 500;
+  private const int CREATION_COST = 2000;
 
   private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
