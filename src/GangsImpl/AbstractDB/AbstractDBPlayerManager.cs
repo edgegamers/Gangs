@@ -11,6 +11,8 @@ public abstract class AbstractDBPlayerManager(string connectionString,
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
 
+  private readonly SemaphoreSlim semaphore = new(1, 1);
+
   private readonly Dictionary<ulong, IGangPlayer> cache = new();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
@@ -42,11 +44,15 @@ public abstract class AbstractDBPlayerManager(string connectionString,
   public async Task<IGangPlayer?> GetPlayer(ulong steamId, bool create = true) {
     if (cache.TryGetValue(steamId, out var player)) return player;
     var query = $"SELECT * FROM {table} WHERE Steam = @steamId";
-    var result = await Connection.QueryFirstOrDefaultAsync<DBPlayer>(query,
-      new { steamId }, Transaction);
-    if (result != null) cache[steamId] = result;
-    if (result != null || !create) return result;
-    return await CreatePlayer(steamId);
+
+    try {
+      await semaphore.WaitAsync();
+      var result = await Connection.QueryFirstOrDefaultAsync<DBPlayer>(query,
+        new { steamId }, Transaction);
+      if (result != null) cache[steamId] = result;
+      if (result != null || !create) return result;
+      return await CreatePlayer(steamId);
+    } finally { semaphore.Release(); }
   }
 
   public async Task<IGangPlayer> CreatePlayer(ulong steamId,
@@ -55,22 +61,32 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     if (existing != null) return existing;
     var player = new DBPlayer { Steam = steamId, Name = name };
     var query  = $"INSERT INTO {table} (Steam, Name) VALUES (@Steam, @Name)";
-    await Connection.ExecuteAsync(query, player, Transaction);
-    cache[steamId] = player;
-    return player;
+
+    try {
+      await semaphore.WaitAsync();
+
+      await Connection.ExecuteAsync(query, player, Transaction);
+      cache[steamId] = player;
+      return player;
+    } finally { semaphore.Release(); }
   }
 
   public async Task<IEnumerable<IGangPlayer>> GetAllPlayers() {
     var query = $"SELECT * FROM {table}";
-    return await Connection.QueryAsync<DBPlayer>(query,
-      transaction: Transaction);
+    try {
+      await semaphore.WaitAsync();
+      return await Connection.QueryAsync<DBPlayer>(query, Transaction);
+    } finally { semaphore.Release(); }
   }
 
   public async Task<IEnumerable<IGangPlayer>> GetMembers(int gangId) {
     var query =
       $"SELECT * FROM {table} WHERE GangId = @gangId ORDER BY GangRank ASC";
-    return await Connection.QueryAsync<DBPlayer>(query, new { gangId },
-      Transaction);
+    try {
+      await semaphore.WaitAsync();
+      return await Connection.QueryAsync<DBPlayer>(query, new { gangId },
+        Transaction);
+    } finally { semaphore.Release(); }
   }
 
   public async Task<bool> UpdatePlayer(IGangPlayer player) {
@@ -81,14 +97,21 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     var query =
       $"UPDATE {table} SET Name = @Name, GangId = @GangId, GangRank = @GangRank WHERE Steam = @Steam";
     cache[player.Steam] = player;
-    return await Connection.ExecuteAsync(query, player, Transaction) == 1;
+
+    try {
+      await semaphore.WaitAsync();
+      return await Connection.ExecuteAsync(query, player, Transaction) == 1;
+    } finally { semaphore.Release(); }
   }
 
   public async Task<bool> DeletePlayer(ulong steamId) {
     var query = $"DELETE FROM {table} WHERE Steam = @steamId";
     cache.Remove(steamId);
-    return await Connection.ExecuteAsync(query, new { steamId }, Transaction)
-      == 1;
+    try {
+      await semaphore.WaitAsync();
+      return await Connection.ExecuteAsync(query, new { steamId }, Transaction)
+        == 1;
+    } finally { semaphore.Release(); }
   }
 
   abstract protected DbConnection CreateDbConnection(string connectionString);

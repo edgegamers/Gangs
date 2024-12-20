@@ -21,6 +21,8 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
 
+  private readonly SemaphoreSlim semaphore = new(1, 1);
+
   private readonly Dictionary<int, IGang> cache = new();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
@@ -52,13 +54,17 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
   public async Task<IGang?> GetGang(int id) {
     if (cache.TryGetValue(id, out var cached)) return cached;
     var query = $"SELECT * FROM {table} WHERE GangId = @id";
-    var result =
-      await Connection.QueryFirstOrDefaultAsync<DBGang>(query, new { id },
-        Transaction);
 
-    if (result == null) return null;
-    cache[id] = result;
-    return result;
+    try {
+      await semaphore.WaitAsync();
+      var result =
+        await Connection.QueryFirstOrDefaultAsync<DBGang>(query, new { id },
+          Transaction);
+
+      if (result == null) return null;
+      cache[id] = result;
+      return result;
+    } finally { semaphore.Release(); }
   }
 
   public async Task<IGang?> GetGang(ulong steam) {
@@ -70,8 +76,12 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
   public async Task<bool> UpdateGang(IGang gang) {
     var query = $"UPDATE {table} SET Name = @Name WHERE GangId = @GangId";
     cache[gang.GangId] = gang;
-    return await Connection.ExecuteAsync(query, new { gang.Name, gang.GangId },
-      Transaction) == 1;
+
+    try {
+      await semaphore.WaitAsync();
+      return await Connection.ExecuteAsync(query,
+        new { gang.Name, gang.GangId }, Transaction) == 1;
+    } finally { semaphore.Release(); }
   }
 
   public async Task<bool> DeleteGang(int id) {
@@ -86,7 +96,11 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
 
     cache.Remove(id);
     var query = $"DELETE FROM {table} WHERE GangId = @id";
-    return await Connection.ExecuteAsync(query, new { id }, Transaction) > 0;
+
+    try {
+      await semaphore.WaitAsync();
+      return await Connection.ExecuteAsync(query, new { id }, Transaction) > 0;
+    } finally { semaphore.Release(); }
   }
 
   public async Task<IGang?> CreateGang(string name, ulong owner) {
@@ -102,12 +116,15 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
         $"Attempted to create a gang for {owner} who is already in gang {player.GangId}");
 
     var query = $"INSERT INTO {table} (Name) VALUES (@name)";
-    var result =
-      await Connection.ExecuteAsync(query, new { name }, Transaction);
-    if (result == 0) {
-      Console.WriteLine($"Failed to create gang {name}: database returned 0");
-      return null;
-    }
+    try {
+      await semaphore.WaitAsync();
+      var result =
+        await Connection.ExecuteAsync(query, new { name }, Transaction);
+      if (result == 0) {
+        Console.WriteLine($"Failed to create gang {name}: database returned 0");
+        return null;
+      }
+    } finally { semaphore.Release(); }
 
     var id = await GetLastId();
 

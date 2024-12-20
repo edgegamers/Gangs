@@ -12,7 +12,8 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
   protected DbConnection Connection = null!;
   abstract protected string PrimaryKey { get; }
   private string primaryTypeString => GetDBType(typeof(TK));
-  private bool busy;
+
+  private readonly SemaphoreSlim semaphore = new(1, 1);
 
   private readonly Dictionary<string, Dictionary<TK, object>> cache = new();
 
@@ -21,17 +22,9 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       && dict.TryGetValue(key, out var value))
       return (true, (TV)value);
 
-    if (busy) {
-      await Server.NextFrameAsync(() => {
-        Server.PrintToConsole($"ERROR: Get called while busy ({key}:{statId})");
-        Task.Run(async () => {
-          await Task.Delay(50);
-          return Get<TV>(key, statId);
-        });
-      });
-    }
-
     await createTable<TV>(statId);
+
+    await semaphore.WaitAsync();
     try {
       var dynamic = new DynamicParameters();
       dynamic.Add(PrimaryKey, key);
@@ -46,7 +39,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     } catch (InvalidOperationException e) {
       if (!e.Message.Contains("Sequence contains no elements")) throw;
       return (false, default);
-    }
+    } finally { semaphore.Release(); }
   }
 
   virtual protected string GenerateInsertQuery<TV>(string statId,
@@ -69,19 +62,6 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
 
 
   public async Task<bool> Set<TV>(TK key, string statId, TV value) {
-    if (busy) {
-      await Server.NextFrameAsync(() => {
-        Server.PrintToConsole(
-          $"ERROR: Set called while busy ({key}:{statId} = {value})");
-        Task.Run(async () => {
-          await Task.Delay(50);
-          return Set(key, statId, value);
-        });
-      });
-    }
-
-    await createTable<TV>(statId);
-
     var fields = typeof(TV)
      .GetProperties(BindingFlags.Public | BindingFlags.Instance)
      .ToList();
@@ -103,8 +83,12 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       cache[statId][key] = value;
     }
 
-    await Connection.ExecuteAsync(cmd, fieldValues);
-    busy = false;
+    await createTable<TV>(statId);
+    try {
+      await semaphore.WaitAsync();
+      await Connection.ExecuteAsync(cmd, fieldValues);
+    } finally { semaphore.Release(); }
+
     return true;
   }
 
@@ -112,6 +96,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     try {
       var dynamicParameters = new DynamicParameters();
       dynamicParameters.Add(PrimaryKey, key);
+      await semaphore.WaitAsync();
       await Connection.ExecuteAsync(
         $"DELETE FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamicParameters);
@@ -122,7 +107,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       if (e.Message.Contains("no such table")) return false;
       if (e.Message.EndsWith("doesn't exist")) return false;
       throw;
-    }
+    } finally { semaphore.Release(); }
   }
 
   public void Start(BasePlugin? plugin, bool hotReload) {
@@ -177,7 +162,10 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       cmd = cmd[..^2] + ")";
     }
 
-    await Connection.ExecuteAsync(cmd);
+    try {
+      await semaphore.WaitAsync();
+      await Connection.ExecuteAsync(cmd);
+    } finally { semaphore.Release(); }
   }
 
   protected string GetFieldNames<TV>(string prefix = "") {
