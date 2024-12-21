@@ -1,4 +1,5 @@
 ﻿using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Modules.Entities;
 using CounterStrikeSharp.API.Modules.Menu;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -12,13 +13,18 @@ public class CommandBasedMenuManager(Lazy<ICommandManager> provider)
   : MockMenuManager {
   public override void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin == null) {
-      for (var i = 1; i < 10; i++)
+      for (var i = 0; i < 10; i++)
         provider.Value.RegisterCommand(new DigitCommand(this, i));
       return;
     }
 
-    for (var i = 1; i < 10; i++) {
+    for (var i = 0; i < 10; i++) {
       var index = i;
+      if (index == 0) {
+        plugin.AddCommand("css_0", "", (p, _) => AcceptInput(p, 0));
+        continue;
+      }
+
       plugin.AddCommandListener($"css_{i}", (p, _) => AcceptInput(p, index));
     }
   }

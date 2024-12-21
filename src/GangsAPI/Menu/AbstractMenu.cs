@@ -18,7 +18,7 @@ public abstract class AbstractMenu<T>(IMenuManager menus,
 
   public virtual async Task AcceptInput(PlayerWrapper player, int input) {
     if (input == 0) {
-      await Close(player);
+      await Menus.CloseMenu(player);
       return;
     }
 

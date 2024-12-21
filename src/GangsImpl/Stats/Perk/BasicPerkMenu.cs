@@ -34,6 +34,11 @@ public class BasicPerkMenu(IServiceProvider provider, IPerk perk)
   }
 
   public override async Task AcceptInput(PlayerWrapper player, int input) {
+    if (input == 0) {
+      await Menus.CloseMenu(player);
+      return;
+    }
+
     await HandleItemSelection(player, await GetItems(player), input);
   }
 

@@ -36,7 +36,7 @@ public class PlayerJoinCreationListener(IPlayerManager mgr) : IPluginBehavior {
   private async Task updatePlayerName(ulong steam, string name) {
     var gPlayer = await mgr.CreatePlayer(steam, name);
 
-    if (gPlayer.Name == null) {
+    if (gPlayer.Name != name) {
       gPlayer.Name = name;
       await mgr.UpdatePlayer(gPlayer);
     }

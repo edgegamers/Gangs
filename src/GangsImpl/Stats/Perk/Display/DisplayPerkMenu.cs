@@ -4,6 +4,7 @@ using GangsAPI.Data;
 using GangsAPI.Perks;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
+using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
 using IMenu = GangsAPI.Services.Menu.IMenu;
 
@@ -16,6 +17,9 @@ public class DisplayPerkMenu(IServiceProvider provider, DisplayData data)
 
   private readonly IEcoManager economy =
     provider.GetRequiredService<IEcoManager>();
+
+  private readonly IMenuManager menus =
+    provider.GetRequiredService<IMenuManager>();
 
   public async Task Open(PlayerWrapper player) {
     player.PrintToChat(
@@ -52,9 +56,16 @@ public class DisplayPerkMenu(IServiceProvider provider, DisplayData data)
   public Task Close(PlayerWrapper player) { return Task.CompletedTask; }
 
   public Task AcceptInput(PlayerWrapper player, int input) {
-    if (input > 2) return Task.CompletedTask;
-    commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
-      "display", $"{input - 1}");
-    return Task.CompletedTask;
+    switch (input) {
+      case 0:
+        menus.CloseMenu(player);
+        return Task.CompletedTask;
+      case > 2:
+        return Task.CompletedTask;
+      default:
+        commands.ProcessCommand(player, CommandCallingContext.Chat, "css_gang",
+          "display", $"{input - 1}");
+        return Task.CompletedTask;
+    }
   }
 }
