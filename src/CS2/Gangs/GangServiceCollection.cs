@@ -29,7 +29,6 @@ public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
     serviceCollection.AddPluginBehavior<IPlayerManager, MySQLPlayerManager>();
     serviceCollection
      .AddPluginBehavior<IMenuManager, CommandBasedMenuManager>();
-    serviceCollection.AddPluginBehavior<ZeroCommand>();
     serviceCollection.AddPluginBehavior<IStatManager, StatManager>();
     serviceCollection
      .AddPluginBehavior<IGangStatManager, MySQLGangInstanceManager>();

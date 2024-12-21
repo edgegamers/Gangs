@@ -8,6 +8,7 @@ using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Stats.Stat.Gang;
@@ -31,6 +32,9 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
 
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
+
+  private readonly IMenuManager menus =
+    provider.GetRequiredService<IMenuManager>();
 
   private IList<IGangPlayer> members = new List<IGangPlayer>();
 
@@ -98,6 +102,9 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
       case 5:
         await commands.ProcessCommand(player, CommandCallingContext.Chat,
           "css_gang", "ranks");
+        break;
+      case 0:
+        await menus.CloseMenu(player);
         break;
     }
   }
