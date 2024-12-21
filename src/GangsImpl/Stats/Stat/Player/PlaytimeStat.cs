@@ -21,7 +21,6 @@ public class PlaytimeData {
   }
 
   public DateTime GetLastPlayed() {
-    return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(
-      LastPlayed);
+    return DateTime.UnixEpoch.AddSeconds(LastPlayed);
   }
 }

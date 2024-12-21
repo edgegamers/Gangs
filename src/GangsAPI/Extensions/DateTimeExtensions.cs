@@ -2,7 +2,7 @@
 
 public static class DateTimeExtensions {
   public static string FormatRelative(this DateTime dt) {
-    var ts    = new TimeSpan(DateTime.UtcNow.Ticks - dt.Ticks);
+    var ts    = DateTime.Now - dt;
     var delta = Math.Abs(ts.TotalSeconds);
 
     switch (delta) {

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using CounterStrikeSharp.API;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -71,6 +72,11 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
 
     info.ReplySync(locale.Get(MSG.COMMAND_GANG_CREATE_SUCCESS, name,
       newGang.GangId));
+    var msg = locale.Get(MSG.GANG_CREATED,
+      executor.Name ?? executor.Steam.ToString(), name);
+
+    if (executor.Player != null)
+      await Server.NextFrameAsync(() => Server.PrintToChatAll(msg));
     return CommandResult.SUCCESS;
   }
 }
