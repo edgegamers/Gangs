@@ -12,12 +12,12 @@ public class CommandBasedMenuManager(Lazy<ICommandManager> provider)
   : MockMenuManager {
   public override void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin == null) {
-      for (var i = 1; i < 10; i++)
+      for (var i = 0; i < 10; i++)
         provider.Value.RegisterCommand(new DigitCommand(this, i));
       return;
     }
 
-    for (var i = 1; i < 10; i++) {
+    for (var i = 0; i < 10; i++) {
       var index = i;
       plugin.AddCommandListener($"css_{i}", (p, _) => AcceptInput(p, index));
     }
