@@ -74,7 +74,9 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
       newGang.GangId));
     var msg = locale.Get(MSG.GANG_CREATED,
       executor.Name ?? executor.Steam.ToString(), name);
-    await Server.NextFrameAsync(() => Server.PrintToChatAll(msg));
+
+    if (executor.Player != null)
+      await Server.NextFrameAsync(() => Server.PrintToChatAll(msg));
     return CommandResult.SUCCESS;
   }
 }
