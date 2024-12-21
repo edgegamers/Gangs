@@ -41,7 +41,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
 
     switch (input) {
       case 0:
-        await Close(player);
+        await Menus.CloseMenu(player);
         break;
       // Handle page navigation
       case 8 when HasPreviousPage(player): {
