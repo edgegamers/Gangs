@@ -138,22 +138,27 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     return balanceRemaining;
   }
 
+  private readonly SemaphoreSlim grantSemaphore = new(1);
+
   public async Task<int> Grant(PlayerWrapper player, int amount,
     bool print = true, string? reason = null) {
-    var (playerBalance, _) = await getBalance(player.Steam);
+    try {
+      await grantSemaphore.WaitAsync();
+      var (playerBalance, _) = await getBalance(player.Steam);
 
-    await playerStats.SetForPlayer(player.Steam, statId,
-      playerBalance + amount);
+      await playerStats.SetForPlayer(player.Steam, statId,
+        playerBalance + amount);
 
-    if (!print) return playerBalance + amount;
+      if (!print) return playerBalance + amount;
 
-    var msg = amount < 0 ?
-      MSG.ECO_PLAYER_GIVE_NEGATIVE :
-      MSG.ECO_PLAYER_GIVE_POSITIVE;
+      var msg = amount < 0 ?
+        MSG.ECO_PLAYER_GIVE_NEGATIVE :
+        MSG.ECO_PLAYER_GIVE_POSITIVE;
 
-    player.PrintToChat(
-      localizer.Get(msg, Math.Abs(amount), reason ?? "Unknown"));
-    return playerBalance + amount;
+      player.PrintToChat(localizer.Get(msg, Math.Abs(amount),
+        reason ?? "Unknown"));
+      return playerBalance + amount;
+    } finally { grantSemaphore.Release(); }
   }
 
   public async Task<int> Grant(int gangId, int amount, bool print,
