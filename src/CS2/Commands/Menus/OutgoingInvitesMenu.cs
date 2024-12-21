@@ -60,13 +60,9 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
       return;
     }
 
-    var inviterName = await players.GetPlayer(entry.Value.Inviter);
-    var invitedName = await players.GetPlayer(entry.Value.Steam);
-
-    await Printer.Invoke(player,
-      Localizer.Get(MSG.MENU_FORMAT_INVITATION,
-        inviterName?.Name ?? entry.Value.Inviter.ToString(),
-        invitedName?.Name ?? entry.Value.Steam.ToString(), entry.Value.Date));
+    await Provider.GetRequiredService<ICommandManager>()
+     .ProcessCommand(player, CommandCallingContext.Chat, "css_gang", "invites",
+        entry.Value.Steam.ToString());
   }
 
   override protected Task ShowPage(PlayerWrapper player,
@@ -87,7 +83,7 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
 
     var invitedName = invited?.Name ?? item.Value.Steam.ToString();
     var inviterName = inviter?.Name ?? item.Value.Inviter.ToString();
-    var text        = $"{invitedName} by {inviterName} on {item.Value.Date}";
-    return text;
+    return Localizer.Get(MSG.MENU_FORMAT_INVITATION, inviterName, invitedName,
+      item.Value.Date);
   }
 }
