@@ -52,7 +52,7 @@ public class MemberMenu(IServiceProvider provider, IGangPlayer member)
       result.Add($"{ChatColors.Orange}Kick");
 
     var (success, data) =
-      await playerStats.GetForPlayer<PlaytimeData>(player, playtimeId);
+      await playerStats.GetForPlayer<PlaytimeData>(member.Steam, playtimeId);
 
     if (!success || data == null) return result;
 
