@@ -24,12 +24,11 @@ public class PeriodicRewarder(IServiceProvider provider) : IPluginBehavior {
 
       players = players.Where(p => p.Player != null).ToList();
 
-      Task.Run(async () => {
-        foreach (var player in players) {
-          var reward = getReward(player);
-          await eco.Grant(player, reward, reason: "Playtime");
-        }
-      });
+      foreach (var player in players) {
+        var reward = getReward(player);
+        Task.Run(
+          async () => await eco.Grant(player, reward, reason: "Playtime"));
+      }
     }, TimerFlags.REPEAT);
   }
 
