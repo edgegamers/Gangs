@@ -38,6 +38,6 @@ public class PeriodicRewarder(IServiceProvider provider) : IPluginBehavior {
     if (player.HasFlags("@ego/platinum")) return alive ? 14 : 10;
     if (player.HasFlags("@ego/dsgold")) return alive ? 10 : 7;
     if (player.HasFlags("@ego/dssilver")) return alive ? 8 : 5;
-    return alive ? 7 : 3;
+    return alive ? 5 : 3;
   }
 }
