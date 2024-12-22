@@ -58,7 +58,7 @@ public class CommandInfoWrapper {
       return;
     }
 
-    if (!CallingPlayer.IsValid) {
+    if (!CallingPlayer.IsValid().GetAwaiter().GetResult()) {
       Console.Error.WriteLine(
         $"Player {CallingPlayer} is not valid, cannot reply to command");
       return;
