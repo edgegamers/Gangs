@@ -74,6 +74,8 @@
   "gang.invited": "%prefix%%color.target%{0}%color.default% invited you to join their %color.gang%{1}%color.default% gang.\n%prefix%Type %color.command%/gang join {1}%color.default% to accept the invite.",
   "gang.transferred": "%color.target%{0}%color.default% transferred ownership of the gang to %color.target%{1}%color.default%.",
   "gang.created": "%prefix%%color.target%{0}%color.default% created the %color.gang%{1}%color.default% gang.",
+  "gang.player.join": "%color.target%{0}%color.default% joined the %color.gang%{1}%color.default% gang.",
+  "gang.player.leave": "%color.target%{0}%color.default% left the %color.gang%{1}%color.default% gang.",
   "perk.missing": "%prefix%Your gang does not have the %color.special%{0}%color.default% perk.",
   "perk.gangchat.format": " {darkred}[{red}{0}{darkred}] %color.special%{1}%color.default%: %color.default%{2}",
   "perk.display.chat.toggled": "%prefix%You {0}%color.default% your gang chat showing in chat.",
