@@ -25,6 +25,7 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
   private BasePlugin plugin = null!;
 
   public void Start(BasePlugin? plugin, bool hotReload) {
+    if (plugin == null) return;
     this.plugin = plugin;
     plugin?.RegisterListener<Listeners.OnEntitySpawned>(OnEntitySpawned);
   }

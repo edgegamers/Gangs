@@ -2,8 +2,10 @@ using System.Data;
 using CounterStrikeSharp.API.Core;
 using GangsAPI;
 using GangsAPI.Data;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
+using GangsAPI.Services.Server;
 using Microsoft.Extensions.DependencyInjection;
 using MySqlConnector;
 
@@ -39,5 +41,19 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
       result.Add((reader.GetInt32(0), reader.GetDouble(1)));
 
     return result;
+  }
+
+  public async Task<int?> GetPosition(int gang) {
+    await using var connection = new MySqlConnection(config.ConnectionString);
+    await connection.OpenAsync();
+
+    var cmd = connection.CreateCommand();
+    cmd.CommandText =
+      $"SELECT Position FROM {config.TablePrefix}_leaderboard WHERE GangId = @gang LIMIT 1";
+
+    cmd.Parameters.Add(new MySqlParameter("@gang", gang));
+
+    var result = await cmd.ExecuteScalarAsync();
+    return result == null ? null : Convert.ToInt32(result);
   }
 }

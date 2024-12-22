@@ -12,7 +12,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
   protected readonly Dictionary<ulong, int> CurrentPages = new();
   protected readonly int ItemsPerPage = itemsPerPage;
 
-  private readonly string left =
+  protected readonly string left =
     $"{ChatColors.DarkRed}<- {ChatColors.LightYellow}/8";
 
   protected readonly IStringLocalizer Localizer =
@@ -20,7 +20,7 @@ public abstract class AbstractPagedMenu<T>(IServiceProvider provider,
 
   protected readonly IServiceProvider Provider = provider;
 
-  private readonly string right =
+  protected readonly string right =
     $"{ChatColors.LightYellow}/9 {ChatColors.DarkRed}->";
 
   public override async Task Open(PlayerWrapper player) {

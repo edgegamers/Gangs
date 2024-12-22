@@ -13,7 +13,7 @@ public class DisplayPerk(IServiceProvider provider)
     provider.GetRequiredService<IGangStatManager>();
 
   public override DisplayData Value { get; set; } = new();
-  public int ChatCost => 30000;
+  public int ChatCost => 50000;
   public int ScoreboardCost => 5000;
   public override string StatId => "display_perk";
   public override string Name => "Display";

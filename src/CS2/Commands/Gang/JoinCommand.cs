@@ -1,4 +1,5 @@
-﻿using GangsAPI;
+﻿using CounterStrikeSharp.API;
+using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
@@ -128,5 +129,7 @@ public class JoinCommand(IServiceProvider provider) : ICommand {
 
     await players.UpdatePlayer(player);
     if (chatPerk != null) await chatPerk.SendGangChat(player, gang, "joined.");
+    Server.PrintToChatAll(localizer.Get(MSG.GANG_PLAYER_JOINED,
+      player.Name ?? player.Steam.ToString(), gang.Name));
   }
 }

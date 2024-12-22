@@ -3,6 +3,7 @@ using GangsAPI.Data.Gang;
 using GangsAPI.Perks;
 using GangsAPI.Services.Gang;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 
 namespace Stats.Perk;
 
@@ -34,6 +35,16 @@ public class CapacityPerk(IServiceProvider provider)
     if (!success) capacity = 1;
     capacity++;
     await gangStats.SetForGang(player.GangId.Value, StatId, capacity);
+
+    var localizer = Provider.GetService<IStringLocalizer>();
+    var gangChat  = Provider.GetService<IGangChatPerk>();
+    var gang =
+      await (Provider.GetService<IGangManager>()?.GetGang(player.GangId.Value)
+        ?? Task.FromResult<IGang?>(null));
+    if (localizer == null || gangChat == null || gang == null) return;
+    var str = localizer.Get(MSG.PERK_PURCHASED,
+      player.Name ?? player.Steam.ToString(), $"{Name} ({capacity})");
+    await gangChat.SendGangChat(gang, str);
   }
 
   public async Task<int> GetCapacity(int gangid) {

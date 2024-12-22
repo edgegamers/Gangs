@@ -19,14 +19,14 @@ public enum SmokeColor {
 public static class SmokeColorExtensions {
   public static int GetCost(this SmokeColor color) {
     return color switch {
-      SmokeColor.RED     => 2000,
-      SmokeColor.ORANGE  => 1000,
-      SmokeColor.YELLOW  => 1000,
-      SmokeColor.GREEN   => 2000,
-      SmokeColor.BLUE    => 4000,
-      SmokeColor.PURPLE  => 2000,
-      SmokeColor.DEFAULT => 1000,
-      SmokeColor.RANDOM  => 10000,
+      SmokeColor.RED     => 18000,
+      SmokeColor.ORANGE  => 9000,
+      SmokeColor.YELLOW  => 7500,
+      SmokeColor.GREEN   => 6000,
+      SmokeColor.BLUE    => 12000,
+      SmokeColor.PURPLE  => 13500,
+      SmokeColor.DEFAULT => 1,
+      SmokeColor.RANDOM  => 30000,
       _                  => 0
     };
   }

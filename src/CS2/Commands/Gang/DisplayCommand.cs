@@ -70,8 +70,8 @@ public class DisplayCommand(IServiceProvider provider)
         if (gangChat == null) return CommandResult.SUCCESS;
 
         await gangChat.SendGangChat(player, gang,
-          Locale.Get(MSG.PERK_PURCHASED,
-            player.Name ?? player.Steam.ToString(), "Display: Chat"));
+          Locale.Get(MSG.PERK_PURCHASED, player.Name ?? player.Steam.ToString(),
+            "Display: Chat"));
         return CommandResult.SUCCESS;
       }
 
@@ -102,8 +102,8 @@ public class DisplayCommand(IServiceProvider provider)
       if (gangChat == null) return CommandResult.SUCCESS;
 
       await gangChat.SendGangChat(player, gang,
-        Locale.Get(MSG.PERK_PURCHASED,
-          player.Name ?? player.Steam.ToString(), "Display: Scoreboard"));
+        Locale.Get(MSG.PERK_PURCHASED, player.Name ?? player.Steam.ToString(),
+          "Display: Scoreboard"));
       return CommandResult.SUCCESS;
     }
 
@@ -127,7 +127,7 @@ public class DisplayCommand(IServiceProvider provider)
     int scoreboard = -1) {
     if (player.Player == null) return Task.CompletedTask;
     return Server.NextFrameAsync(() => {
-      if (!player.IsValid) return;
+      if (!player.IsValid().GetAwaiter().GetResult()) return;
       if (chat != -1) {
         var tags = ThirdPartyAPI.Actain?.getTagService();
         tags?.SetTag(player.Player, chat == 0 ? "" : name, false);

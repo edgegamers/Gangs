@@ -38,6 +38,18 @@ public class PerksMenu(IServiceProvider provider)
     await Provider.GetRequiredService<IMenuManager>().OpenMenu(player, menu);
   }
 
+  override protected async Task ShowPaged(PlayerWrapper player,
+    List<IPerk> items, bool hasNext, bool hasPrev) {
+    var title          = $" {ChatColors.DarkBlue} Gang Perks";
+    if (hasNext) title += $" {right}";
+    if (hasPrev) title =  $"{left} {title}";
+    await Printer.Invoke(player, title);
+    for (var i = 0; i < items.Count; i++) {
+      var str = await FormatItem(player, i + 1, items[i]);
+      await Printer.Invoke(player, str);
+    }
+  }
+
   override protected async Task<string> FormatItem(PlayerWrapper player,
     int index, IPerk item) {
     var gangPlayer = await players.GetPlayer(player.Steam)
@@ -46,7 +58,6 @@ public class PerksMenu(IServiceProvider provider)
     var result = cost == null ?
       $"{index}. {ChatColors.Blue}{item.Name}" :
       $"{ChatColors.DarkRed}{index}. {ChatColors.LightBlue}{item.Name} {ChatColors.DarkRed}({ChatColors.Red}{cost}{ChatColors.DarkRed})";
-    if (index == 1) result = $" {ChatColors.DarkBlue}Gang Perks\n{result}";
     return result;
   }
 }

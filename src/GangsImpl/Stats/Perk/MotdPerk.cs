@@ -21,7 +21,7 @@ public class MotdPerk(IServiceProvider provider)
     if (player.GangId == null || player.GangRank == null) return null;
     var (success, _) =
       await gangStats.GetForGang<string>(player.GangId.Value, StatId);
-    if (!success) return 1000;
+    if (!success) return 7500;
     return null;
   }
 

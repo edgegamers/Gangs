@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using CounterStrikeSharp.API;
+using Microsoft.Extensions.Localization;
 
 namespace GangsAPI;
 
@@ -66,6 +67,8 @@ public enum MSG {
   GANG_INVITED,
   GANG_TRANSFERRED,
   GANG_CREATED,
+  GANG_PLAYER_JOINED,
+  GANG_PLAYER_LEFT,
   GANG_THING_SET,
   COLOR_DEFAULT,
   COLOR_EMPHASIS,
@@ -233,6 +236,8 @@ public static class LocaleExtensions {
       MSG.RANK_CANNOT_OWNER => "rank.cannot.owner",
       MSG.GANG_TRANSFERRED => "gang.transferred",
       MSG.GANG_CREATED => "gang.created",
+      MSG.GANG_PLAYER_JOINED => "gang.player.join",
+      MSG.GANG_PLAYER_LEFT => "gang.player.leave",
       MSG.COMMAND_LEAVE_LEFT => "command.leave.left",
       MSG.COMMAND_GANG_CREATE_INVALID => "command.gang.create.invalid",
       MSG.COMMAND_GANG_RESTRICTED => "command.gang.create.restricted",
