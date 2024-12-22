@@ -114,7 +114,7 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
       ChatColors.DarkRed + "1" :
       ChatColors.LightRed + "X";
     player.PrintToChat(
-      $" {memberPrefix} {ChatColors.Grey}| {ChatColors.Yellow}{members.Count}{ChatColors.LightRed} Members");
+      $" {memberPrefix}{ChatColors.Grey}. {ChatColors.Yellow}{members.Count}{ChatColors.LightRed} Members");
     return Task.CompletedTask;
   }
 
@@ -126,7 +126,7 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     if (!success || invites == null) invites = new InvitationData();
 
     var entry =
-      $" {ChatColors.DarkRed}2 {ChatColors.Grey}| {ChatColors.Yellow}{invites.GetInvitedSteams().Count} {ChatColors.LightRed}Invite";
+      $" {ChatColors.DarkRed}2{ChatColors.Grey}. {ChatColors.Yellow}{invites.GetInvitedSteams().Count} {ChatColors.LightRed}Invite";
 
     var (policySuccess, doorPolicy) =
       await gangStatManager.GetForGang<DoorPolicy>(gang, doorPolicyId);
@@ -145,19 +145,19 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
 
   private Task addPerkItem(Perm _, PlayerWrapper player) {
     player.PrintToChat(
-      $" {ChatColors.DarkRed}3 {ChatColors.Grey}| {ChatColors.LightRed}Perks");
+      $" {ChatColors.DarkRed}3{ChatColors.Grey}. {ChatColors.LightRed}Perks");
     return Task.CompletedTask;
   }
 
   private void addPermItem(Perm rank, PlayerWrapper player) {
     if (!rank.HasFlag(Perm.MANAGE_RANKS)) return;
     player.PrintToChat(
-      $" {ChatColors.DarkRed}4 {ChatColors.Grey}| {ChatColors.LightRed}Permissions");
+      $" {ChatColors.DarkRed}4{ChatColors.Grey}. {ChatColors.LightRed}Permissions");
   }
 
   private void addRankItem(Perm rank, PlayerWrapper player) {
     if (!rank.HasFlag(Perm.CREATE_RANKS)) return;
     player.PrintToChat(
-      $" {ChatColors.DarkRed}5 {ChatColors.Grey}| {ChatColors.LightRed}Ranks");
+      $" {ChatColors.DarkRed}5{ChatColors.Grey}. {ChatColors.LightRed}Ranks");
   }
 }

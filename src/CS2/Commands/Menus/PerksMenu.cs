@@ -58,7 +58,6 @@ public class PerksMenu(IServiceProvider provider)
     var result = cost == null ?
       $"{index}. {ChatColors.Blue}{item.Name}" :
       $"{ChatColors.DarkRed}{index}. {ChatColors.LightBlue}{item.Name} {ChatColors.DarkRed}({ChatColors.Red}{cost}{ChatColors.DarkRed})";
-    // if (index == 1) result = $" {ChatColors.DarkBlue}Gang Perks\n{result}";
     return result;
   }
 }
