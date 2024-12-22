@@ -41,8 +41,8 @@ public class PerksMenu(IServiceProvider provider)
   override protected async Task ShowPaged(PlayerWrapper player,
     List<IPerk> items, bool hasNext, bool hasPrev) {
     var title          = $" {ChatColors.DarkBlue} Gang Perks";
-    if (hasNext) title =  $"{left} {title}";
-    if (hasPrev) title += $" {right}";
+    if (hasNext) title += $" {right}";
+    if (hasPrev) title =  $"{left} {title}";
     await Printer.Invoke(player, title);
     for (var i = 0; i < items.Count; i++) {
       var str = await FormatItem(player, i + 1, items[i]);
