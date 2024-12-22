@@ -56,7 +56,7 @@ public class RoundWinListener(IServiceProvider provider) : IPluginBehavior {
       return HookResult.Continue;
 
     var mvp = new PlayerWrapper(player);
-    Task.Run(async () => await eco.Grant(mvp, 20, reason: "MVP"));
+    Task.Run(async () => await eco.Grant(mvp, 25, reason: "MVP"));
 
     return HookResult.Continue;
   }
