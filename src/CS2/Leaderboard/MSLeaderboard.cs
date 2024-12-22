@@ -40,4 +40,18 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
 
     return result;
   }
+
+  public async Task<int?> GetPosition(int gang) {
+    await using var connection = new MySqlConnection(config.ConnectionString);
+    await connection.OpenAsync();
+
+    var cmd = connection.CreateCommand();
+    cmd.CommandText =
+      $"SELECT Position FROM {config.TablePrefix}_leaderboard WHERE GangId = @gang LIMIT 1";
+
+    cmd.Parameters.Add(new MySqlParameter("@gang", gang));
+
+    var result = await cmd.ExecuteScalarAsync();
+    return result == null ? null : Convert.ToInt32(result);
+  }
 }
