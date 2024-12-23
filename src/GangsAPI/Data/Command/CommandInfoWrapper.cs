@@ -58,12 +58,6 @@ public class CommandInfoWrapper {
       return;
     }
 
-    if (!CallingPlayer.IsValid().GetAwaiter().GetResult()) {
-      Console.Error.WriteLine(
-        $"Player {CallingPlayer} is not valid, cannot reply to command");
-      return;
-    }
-
     if (CallingContext == CommandCallingContext.Console)
       CallingPlayer.PrintToConsole(message);
     else

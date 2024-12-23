@@ -127,7 +127,7 @@ public class DisplayCommand(IServiceProvider provider)
     int scoreboard = -1) {
     if (player.Player == null) return Task.CompletedTask;
     return Server.NextFrameAsync(() => {
-      if (!player.IsValid().GetAwaiter().GetResult()) return;
+      if (!player.Player.IsValid) return;
       if (chat != -1) {
         var tags = ThirdPartyAPI.Actain?.getTagService();
         tags?.SetTag(player.Player, chat == 0 ? "" : name, false);
