@@ -9,7 +9,7 @@ public enum SmokeColor {
   ORANGE = 1 << 1,
   YELLOW = 1 << 2,
   GREEN = 1 << 3,
-  LIGHT_BLUE = 1 << 4,
+  CYAN = 1 << 4,
   BLUE = 1 << 5,
   PURPLE = 1 << 6,
   DEFAULT = 1 << 7,
@@ -23,7 +23,8 @@ public static class SmokeColorExtensions {
       SmokeColor.ORANGE  => 3750,
       SmokeColor.YELLOW  => 3125,
       SmokeColor.GREEN   => 2500,
-      SmokeColor.BLUE    => 6250,
+      SmokeColor.CYAN    => 6250,
+      SmokeColor.BLUE    => 5000,
       SmokeColor.PURPLE  => 5625,
       SmokeColor.DEFAULT => 0,
       SmokeColor.RANDOM  => 12500,
@@ -37,6 +38,7 @@ public static class SmokeColorExtensions {
       SmokeColor.ORANGE  => Color.Orange,
       SmokeColor.YELLOW  => Color.Yellow,
       SmokeColor.GREEN   => Color.Green,
+      SmokeColor.CYAN    => Color.LightBlue,
       SmokeColor.BLUE    => Color.Blue,
       SmokeColor.PURPLE  => Color.Purple,
       SmokeColor.DEFAULT => null,
@@ -47,16 +49,16 @@ public static class SmokeColorExtensions {
 
   public static char GetChatColor(this SmokeColor color) {
     return color switch {
-      SmokeColor.RED        => ChatColors.Red,
-      SmokeColor.ORANGE     => ChatColors.Orange,
-      SmokeColor.YELLOW     => ChatColors.Yellow,
-      SmokeColor.GREEN      => ChatColors.Green,
-      SmokeColor.LIGHT_BLUE => ChatColors.LightBlue,
-      SmokeColor.BLUE       => ChatColors.Blue,
-      SmokeColor.PURPLE     => ChatColors.Purple,
-      SmokeColor.DEFAULT    => ChatColors.White,
-      SmokeColor.RANDOM     => ChatColors.White,
-      _                     => ChatColors.White
+      SmokeColor.RED     => ChatColors.Red,
+      SmokeColor.ORANGE  => ChatColors.Orange,
+      SmokeColor.YELLOW  => ChatColors.Yellow,
+      SmokeColor.GREEN   => ChatColors.Green,
+      SmokeColor.CYAN    => ChatColors.LightBlue,
+      SmokeColor.BLUE    => ChatColors.Blue,
+      SmokeColor.PURPLE  => ChatColors.Purple,
+      SmokeColor.DEFAULT => ChatColors.White,
+      SmokeColor.RANDOM  => ChatColors.White,
+      _                  => ChatColors.White
     };
   }
 
