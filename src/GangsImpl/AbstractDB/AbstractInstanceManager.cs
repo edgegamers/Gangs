@@ -24,22 +24,21 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
 
     await createTable<TV>(statId);
 
-    await semaphore.WaitAsync();
     try {
+      await semaphore.WaitAsync();
       var dynamic = new DynamicParameters();
       dynamic.Add(PrimaryKey, key);
       var result = await Connection.QuerySingleAsync<TV>(
         $"SELECT {(typeof(TV).IsBasicallyPrimitive() ? statId : GetFieldNames<TV>())} FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamic);
-      if (result == null) return (true, result);
+      if (result == null) return (false, result);
       if (!cache.ContainsKey(statId))
         cache[statId] = new Dictionary<TK, object>();
       cache[statId][key] = result;
       return (true, result);
-    } catch (InvalidOperationException e) {
-      if (!e.Message.Contains("Sequence contains no elements")) throw;
-      return (false, default);
-    } finally { semaphore.Release(); }
+    } catch (InvalidOperationException) { return (false, default); } finally {
+      semaphore.Release();
+    }
   }
 
   virtual protected string GenerateInsertQuery<TV>(string statId,
@@ -93,21 +92,22 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
   }
 
   public async Task<bool> Remove(TK key, string statId) {
+    var dynamicParameters = new DynamicParameters();
+    dynamicParameters.Add(PrimaryKey, key);
     try {
-      var dynamicParameters = new DynamicParameters();
-      dynamicParameters.Add(PrimaryKey, key);
       await semaphore.WaitAsync();
       await Connection.ExecuteAsync(
         $"DELETE FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamicParameters);
-      if (!cache.TryGetValue(statId, out var value)) return true;
-      value.Remove(key);
-      return true;
     } catch (DbException e) {
       if (e.Message.Contains("no such table")) return false;
       if (e.Message.EndsWith("doesn't exist")) return false;
       throw;
     } finally { semaphore.Release(); }
+
+    if (!cache.TryGetValue(statId, out var value)) return true;
+    value.Remove(key);
+    return true;
   }
 
   public void Start(BasePlugin? plugin, bool hotReload) {
