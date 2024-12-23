@@ -14,7 +14,7 @@
         <PackageReference Include="FuzzDotNet.MSTest" Version="0.1.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>
-        <PackageReference Include="Xunit.DependencyInjection" Version="9.6.0"/>
+        <PackageReference Include="Xunit.DependencyInjection" Version="9.7.1"/>
         <PackageReference Include="Xunit.DependencyInjection.Logging" Version="9.0.0"/>
     </ItemGroup>
 
