@@ -42,14 +42,6 @@ public class PlayerWrapper {
   public IReadOnlyList<string> ConsoleOutput => consoleOutput;
   public IReadOnlyList<string> CenterOutput => centerOutput;
 
-  public async Task<bool> IsValid() {
-    if (Player == null) return true;
-
-    var result = false;
-    await Server.NextFrameAsync(() => result = Player.IsValid);
-    return result;
-  }
-
   private static char USER_CHAR => PermissionCharacters.UserPermissionChar;
   private static char GROUP_CHAR => PermissionCharacters.GroupPermissionChar;
 
