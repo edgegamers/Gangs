@@ -9,7 +9,7 @@ public enum SmokeColor {
   ORANGE = 1 << 1,
   YELLOW = 1 << 2,
   GREEN = 1 << 3,
-  LIGHT_BLUE = 1 << 4,
+  CYAN = 1 << 4,
   BLUE = 1 << 5,
   PURPLE = 1 << 6,
   DEFAULT = 1 << 7,
@@ -19,14 +19,15 @@ public enum SmokeColor {
 public static class SmokeColorExtensions {
   public static int GetCost(this SmokeColor color) {
     return color switch {
-      SmokeColor.RED     => 18000,
-      SmokeColor.ORANGE  => 9000,
-      SmokeColor.YELLOW  => 7500,
-      SmokeColor.GREEN   => 6000,
-      SmokeColor.BLUE    => 12000,
-      SmokeColor.PURPLE  => 13500,
-      SmokeColor.DEFAULT => 1,
-      SmokeColor.RANDOM  => 30000,
+      SmokeColor.RED     => 7500,
+      SmokeColor.ORANGE  => 3750,
+      SmokeColor.YELLOW  => 3125,
+      SmokeColor.GREEN   => 2500,
+      SmokeColor.CYAN    => 6250,
+      SmokeColor.BLUE    => 5000,
+      SmokeColor.PURPLE  => 5625,
+      SmokeColor.DEFAULT => 0,
+      SmokeColor.RANDOM  => 12500,
       _                  => 0
     };
   }
@@ -37,6 +38,7 @@ public static class SmokeColorExtensions {
       SmokeColor.ORANGE  => Color.Orange,
       SmokeColor.YELLOW  => Color.Yellow,
       SmokeColor.GREEN   => Color.Green,
+      SmokeColor.CYAN    => Color.LightBlue,
       SmokeColor.BLUE    => Color.Blue,
       SmokeColor.PURPLE  => Color.Purple,
       SmokeColor.DEFAULT => null,
@@ -47,16 +49,16 @@ public static class SmokeColorExtensions {
 
   public static char GetChatColor(this SmokeColor color) {
     return color switch {
-      SmokeColor.RED        => ChatColors.Red,
-      SmokeColor.ORANGE     => ChatColors.Orange,
-      SmokeColor.YELLOW     => ChatColors.Yellow,
-      SmokeColor.GREEN      => ChatColors.Green,
-      SmokeColor.LIGHT_BLUE => ChatColors.LightBlue,
-      SmokeColor.BLUE       => ChatColors.Blue,
-      SmokeColor.PURPLE     => ChatColors.Purple,
-      SmokeColor.DEFAULT    => ChatColors.White,
-      SmokeColor.RANDOM     => ChatColors.White,
-      _                     => ChatColors.White
+      SmokeColor.RED     => ChatColors.Red,
+      SmokeColor.ORANGE  => ChatColors.Orange,
+      SmokeColor.YELLOW  => ChatColors.Yellow,
+      SmokeColor.GREEN   => ChatColors.Green,
+      SmokeColor.CYAN    => ChatColors.LightBlue,
+      SmokeColor.BLUE    => ChatColors.Blue,
+      SmokeColor.PURPLE  => ChatColors.Purple,
+      SmokeColor.DEFAULT => ChatColors.White,
+      SmokeColor.RANDOM  => ChatColors.White,
+      _                  => ChatColors.White
     };
   }
 
