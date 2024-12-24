@@ -114,6 +114,11 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
     if (rank <= 0) return false;
     // Check if any players have this rank
 
+    if (cache.TryGetValue(gang, out var cached)) {
+      cached      = cached.Where(r => r.Rank != rank);
+      cache[gang] = cached;
+    }
+
     if (strat == IRankManager.DeleteStrat.CANCEL) {
       var prePlayerCheck = await players.GetMembers(gang);
       if (prePlayerCheck.Any(p => p.GangRank == rank)) return false;
