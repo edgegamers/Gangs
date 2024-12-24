@@ -10,7 +10,7 @@ namespace Commands.Gang;
 public class DepositCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
   public override string Name => "deposit";
-  public override string[] Usage => ["<amount>"];
+  public override string[] Usage => ["<amount/all>"];
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer gangPlayer, CommandInfoWrapper info) {
