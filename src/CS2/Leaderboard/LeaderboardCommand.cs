@@ -6,15 +6,14 @@ using GangsAPI.Data.Command;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
-using GangsAPI.Services.Server;
 
 namespace Leaderboard;
 
 public class LeaderboardCommand(ILeaderboard leaderboard, IGangManager gangs)
   : ICommand {
+  private (int, double)[]? cachedLeaderboard;
   public string Name => "css_gangrank";
   public string[] Aliases => ["css_gangranks", "css_gangtop", "css_ganglb"];
-  private (int, double)[]? cachedLeaderboard;
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

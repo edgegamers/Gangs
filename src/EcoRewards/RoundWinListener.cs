@@ -36,7 +36,7 @@ public class RoundWinListener(IServiceProvider provider) : IPluginBehavior {
     if (winners.Count == 0) return HookResult.Continue;
 
     const int toDistribute = 100;
-    var       each = (int)Math.Ceiling(toDistribute / (double)winners.Count);
+    var each = (int)System.Math.Ceiling(toDistribute / (double)winners.Count);
 
     Task.Run(async () => {
       foreach (var winner in winners)

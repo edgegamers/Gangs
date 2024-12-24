@@ -31,11 +31,11 @@ public interface IPlayerManager : IPluginBehavior {
     return GetMembers(gang.GangId);
   }
 
-  async Task<IGangPlayer?> SearchPlayer(IGang gang, string query) {
-    return await SearchPlayer(gang.GangId, query);
+  async Task<IGangPlayer?> FindPlayerInGang(IGang gang, string query) {
+    return await FindPlayerInGang(gang.GangId, query);
   }
 
-  async Task<IGangPlayer?> SearchPlayer(int gangId, string query) {
+  async Task<IGangPlayer?> FindPlayerInGang(int gangId, string query) {
     var members = (await GetMembers(gangId)).ToList();
 
     var matchedSteams = members.Where(p => query.Contains(p.Steam.ToString()))

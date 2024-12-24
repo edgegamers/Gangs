@@ -40,16 +40,6 @@ public class InviteCommand(IServiceProvider provider)
     if (!perms.Permissions.HasFlag(Perm.INVITE_OTHERS))
       return await handleNoPermission(player, info);
 
-    var (policySuccess, doorPolicy) =
-      await GangStats.GetForGang<DoorPolicy>(player.GangId.Value,
-        new DoorPolicyStat().StatId);
-    if (!policySuccess) doorPolicy = DoorPolicy.INVITE_ONLY;
-
-    if (doorPolicy != DoorPolicy.INVITE_ONLY) {
-      info.ReplySync(Locale.Get(MSG.COMMAND_INVITE_DOORPOLICY));
-      return CommandResult.ERROR;
-    }
-
     var capacityPerk = Provider.GetService<ICapacityPerk>();
     if (capacityPerk != null) {
       var gang = await Gangs.GetGang(player.GangId.Value)

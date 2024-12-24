@@ -2,6 +2,7 @@ using Commands.Gang;
 using CounterStrikeSharp.API.Modules.Commands;
 using GangsAPI;
 using GangsAPI.Data.Command;
+using GangsAPI.Extensions;
 using GangsAPI.Services.Gang;
 using Microsoft.Extensions.DependencyInjection;
 using Stats.Stat;
@@ -10,27 +11,48 @@ namespace GangsTest.Commands.Gang;
 
 public class BalanceTests(IServiceProvider provider)
   : TestParent(provider, new BalanceCommand(provider)) {
-  private static readonly string STAT_ID = new BalanceStat().StatId;
+  private const string STAT_ID = BalanceStat.STAT_ID;
 
   private readonly IGangManager gangs =
     provider.GetRequiredService<IGangManager>();
 
   [Fact]
   public async Task Balance_WithoutGang_PrintsNoGang() {
-    Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
-        Command.Name));
-    Assert.Contains(Locale.Get(MSG.NOT_IN_GANG), TestPlayer.ConsoleOutput);
+    var result = await Commands.ProcessCommand(TestPlayer,
+      CommandCallingContext.Console, Command.Name);
+    var expected = Locale.Get(MSG.NOT_IN_GANG);
+    Assert.Equal(CommandResult.ERROR, result);
+    Assert.Contains(expected, TestPlayer.ConsoleOutput);
   }
 
   [Fact]
   public async Task Balance_WithoutCredits_PrintsNoCredits() {
     await gangs.CreateGang("Test Gang", TestPlayer.Steam);
-    Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
-        Command.Name));
-    Assert.Contains(Locale.Get(MSG.COMMAND_BALANCE_GANG_NONE, "Test Gang"),
-      TestPlayer.ConsoleOutput);
+    var result = await Commands.ProcessCommand(TestPlayer,
+      CommandCallingContext.Console, Command.Name);
+    var expected = Locale.Get(MSG.COMMAND_BALANCE_GANG_NONE, "Test Gang");
+    Assert.Equal(CommandResult.SUCCESS, result);
+    Assert.Contains(expected, TestPlayer.ConsoleOutput);
+  }
+
+  [Fact]
+  public async Task Balance_WithOtherGang_PrintsCredits() {
+    var testGang = await gangs.CreateGang("Test Gang", TestPlayer.Steam);
+    var otherGang =
+      await gangs.CreateGang("Other Gang", new Random().NextULong());
+
+    Assert.NotNull(testGang);
+    Assert.NotNull(otherGang);
+
+    await GangStats.SetForGang(testGang, STAT_ID, 1000);
+    await GangStats.SetForGang(otherGang, STAT_ID, 500);
+
+    var result = await Commands.ProcessCommand(TestPlayer,
+      CommandCallingContext.Console, Command.Name, "Other Gang");
+    var expected = Locale.Get(MSG.COMMAND_BALANCE_GANG, "Other Gang", 500);
+
+    Assert.Equal(CommandResult.SUCCESS, result);
+    Assert.Contains(expected, TestPlayer.ConsoleOutput);
   }
 
   [Theory]

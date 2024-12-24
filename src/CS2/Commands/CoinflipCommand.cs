@@ -59,14 +59,13 @@ public class CoinflipCommand(IServiceProvider provider) : ICommand {
       amount = Math.Min(execBal, targetBal);
 
       if (amount <= 0) {
-        if (execBal == 0) {
+        if (execBal == 0)
           info.ReplySync(locale.Get(MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS,
             0));
-        } else {
+        else
           info.ReplySync(locale.Get(
             MSG.COMMAND_COINFLIP_INSUFFICIENT_FUNDS_OTHER,
             target.Name ?? target.Steam.ToString(), 0));
-        }
 
         return CommandResult.SUCCESS;
       }

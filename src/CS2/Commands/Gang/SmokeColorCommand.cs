@@ -35,8 +35,8 @@ public class SmokeColorCommand(IServiceProvider provider)
     var        query = string.Join('_', info.Args.Skip(1)).ToUpper();
     if (!int.TryParse(info[1], out var colorInt) || colorInt < 0) {
       if (!Enum.TryParse(query, out color)) {
-        info.ReplySync(Locale.Get(MSG.COMMAND_INVALID_PARAM, info[1],
-          "a color"));
+        info.ReplySync(
+          Locale.Get(MSG.COMMAND_INVALID_PARAM, info[1], "a color"));
         return CommandResult.SUCCESS;
       }
     } else { color = (SmokeColor)colorInt; }

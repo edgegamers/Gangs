@@ -8,19 +8,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Leaderboard\Leaderboard.csproj" />
-        <ProjectReference Include="..\..\..\Raffle\Raffle.csproj" />
+        <ProjectReference Include="..\..\..\Leaderboard\Leaderboard.csproj"/>
+        <ProjectReference Include="..\..\..\Raffle\Raffle.csproj"/>
         <ProjectReference Include="..\..\EcoRewards\EcoRewards.csproj"/>
         <ProjectReference Include="..\..\StatsTracker\StatsTracker.csproj"/>
         <ProjectReference Include="..\Commands\Commands.csproj"/>
         <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
         <ProjectReference Include="..\..\GangsImpl\MySQL\MySQL.csproj"/>
-        <ProjectReference Include="..\Leaderboard\Leaderboard.csproj" />
-        <ProjectReference Include="..\Raffle\Raffle.csproj" />
+        <ProjectReference Include="..\Leaderboard\Leaderboard.csproj"/>
+        <ProjectReference Include="..\Raffle\Raffle.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CounterStrikeSharp.API" Version="1.0.290"/>
+        <PackageReference Include="CounterStrikeSharp.API" Version="1.0.294"/>
         <PackageReference Include="xunit" Version="2.9.2"/>
     </ItemGroup>
 

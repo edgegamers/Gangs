@@ -12,18 +12,18 @@ namespace GenericDB;
 public abstract class AbstractDBGangManager(IServiceProvider provider,
   string connectionString, string table = "gang_gangs", bool testing = false)
   : IGangManager {
+  private readonly Dictionary<int, IGang> cache = new();
+
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
-  protected DbConnection Connection = null!;
-  protected DbTransaction? Transaction;
-
   private readonly SemaphoreSlim semaphore = new(1, 1);
 
-  private readonly Dictionary<int, IGang> cache = new();
+  protected DbConnection Connection = null!;
+  protected DbTransaction? Transaction;
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);

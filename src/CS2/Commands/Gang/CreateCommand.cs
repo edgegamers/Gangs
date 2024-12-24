@@ -11,6 +11,10 @@ using Microsoft.Extensions.Localization;
 
 namespace Commands.Gang;
 
+/// <summary>
+///   Allows players to create a new gang
+/// </summary>
+/// <param name="provider"></param>
 public class CreateCommand(IServiceProvider provider) : ICommand {
   private const int CREATION_COST = 2000;
 
@@ -31,7 +35,7 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
     if (executor == null) return CommandResult.PLAYER_ONLY;
     if (info.ArgCount < 2) return CommandResult.PRINT_USAGE;
 
-    var name = string.Join(' ', info.Args.Skip(1));
+    var name = string.Join(' ', info.Args.Skip(1)).Trim();
 
     if (await gangs.GetGang(executor.Steam) != null) {
       info.ReplySync(locale.Get(MSG.ALREADY_IN_GANG));
@@ -49,8 +53,11 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
       return CommandResult.ERROR;
     }
 
-    if ((await gangs.GetGangs()).Any(g => g.Name == name)) {
-      info.ReplySync(locale.Get(MSG.COMMAND_GANG_CREATE_ALREADY_EXISTS, name));
+    var first = (await gangs.GetGangs()).FirstOrDefault(g
+      => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    if (first != null) {
+      info.ReplySync(locale.Get(MSG.COMMAND_GANG_CREATE_ALREADY_EXISTS,
+        first.Name));
       return CommandResult.ERROR;
     }
 

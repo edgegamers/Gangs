@@ -1,13 +1,9 @@
 ﻿using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Utils;
-using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
-using GangsAPI.Extensions;
 using GangsAPI.Menu;
-using GangsAPI.Services.Gang;
 using Microsoft.Extensions.DependencyInjection;
-using Stats.Stat.Gang;
 using ICommandManager = GangsAPI.Services.Commands.ICommandManager;
 
 namespace Commands.Menus;
@@ -21,11 +17,10 @@ public class OutgoingInviteMenu(IServiceProvider provider, IGang gang,
 
   override protected async Task HandleItemSelection(PlayerWrapper player,
     List<string> items, int selectedIndex) {
-    if (selectedIndex != 1) {
+    if (selectedIndex != 1)
       await Provider.GetRequiredService<ICommandManager>()
        .ProcessCommand(player, CommandCallingContext.Chat, "css_gang", "invite",
           "cancel", invited.ToString());
-    }
   }
 
   override protected Task ShowPage(PlayerWrapper player, List<string> items,

@@ -1,6 +1,5 @@
 ﻿using System.Data.Common;
 using System.Reflection;
-using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using Dapper;
 using GangsAPI.Extensions;
@@ -9,13 +8,12 @@ namespace GenericDB;
 
 public abstract class AbstractInstanceManager<TK>(string connectionString,
   string table_prefix, bool testing = false) where TK : notnull {
+  private readonly Dictionary<string, Dictionary<TK, object>> cache = new();
+
+  private readonly SemaphoreSlim semaphore = new(1, 1);
   protected DbConnection Connection = null!;
   abstract protected string PrimaryKey { get; }
   private string primaryTypeString => GetDBType(typeof(TK));
-
-  private readonly SemaphoreSlim semaphore = new(1, 1);
-
-  private readonly Dictionary<string, Dictionary<TK, object>> cache = new();
 
   public async Task<(bool, TV?)> Get<TV>(TK key, string statId) {
     if (cache.TryGetValue(statId, out var dict)

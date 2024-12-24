@@ -10,10 +10,9 @@ namespace GenericDB;
 public abstract class AbstractDBRankManager(IPlayerManager players,
   string connectionString, string table = "gang_ranks", bool testing = false)
   : IRankManager {
+  private readonly SemaphoreSlim semaphore = new(1, 1);
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
-
-  private readonly SemaphoreSlim semaphore = new(1, 1);
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);

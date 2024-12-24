@@ -7,17 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
+        <ProjectReference Include="..\..\GangsAPI\GangsAPI.csproj"/>
 
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="MySqlConnector">
-        <HintPath>..\..\..\..\..\..\.nuget\packages\mysqlconnector\2.3.7\lib\net8.0\MySqlConnector.dll</HintPath>
-      </Reference>
+        <Reference Include="MySqlConnector">
+            <HintPath>..\..\..\..\..\..\.nuget\packages\mysqlconnector\2.3.7\lib\net8.0\MySqlConnector.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="MySqlConnector" Version="2.4.0" />
+        <PackageReference Include="MySqlConnector" Version="2.4.0"/>
     </ItemGroup>
 </Project>

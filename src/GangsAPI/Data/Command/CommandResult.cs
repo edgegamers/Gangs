@@ -2,14 +2,12 @@
 
 public enum CommandResult {
   /// <summary>
-  ///   The **logic** of the command was completed successfully.
-  ///   This includes if arguments were invalid (e.g: expected
-  ///   a number, but received a string)
+  ///   The command ran successfully
   /// </summary>
   SUCCESS,
 
   /// <summary>
-  ///   The command ran in to an unexpected error
+  ///   The command ran into an error
   /// </summary>
   ERROR,
 

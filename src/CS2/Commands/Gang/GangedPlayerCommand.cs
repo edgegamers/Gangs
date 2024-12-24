@@ -10,6 +10,7 @@ using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
 using GangsAPI.Services.Player;
+using GangsAPI.Services.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 
@@ -53,6 +54,9 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
   protected readonly IRankManager Ranks =
     provider.GetRequiredService<IRankManager>();
 
+  protected readonly IGangTargeter GangTargeter =
+    provider.GetRequiredService<IGangTargeter>();
+
   public virtual void Start(BasePlugin? plugin, bool hotReload) { }
   public abstract string Name { get; }
   public virtual string? Description => null;
@@ -69,7 +73,7 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
       ?? throw new PlayerNotFoundException(executor.Steam);
     if (gangPlayer.GangId == null || gangPlayer.GangRank == null) {
       info.ReplySync(Locale.Get(MSG.NOT_IN_GANG));
-      return CommandResult.SUCCESS;
+      return CommandResult.ERROR;
     }
 
     return await Execute(executor, gangPlayer, info);

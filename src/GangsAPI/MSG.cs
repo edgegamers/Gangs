@@ -1,5 +1,4 @@
-﻿using CounterStrikeSharp.API;
-using Microsoft.Extensions.Localization;
+﻿using Microsoft.Extensions.Localization;
 
 namespace GangsAPI;
 
@@ -112,7 +111,6 @@ public enum MSG {
   RANK_CANNOT_OWNER,
   COMMAND_GANG_CREATE_INVALID,
   COMMAND_GANG_RESTRICTED,
-  COMMAND_INVITE_DOORPOLICY,
   MENU_FORMAT_INVITATION,
   MENU_FORMAT_REQUEST,
   RAFFLE_BEGIN,
@@ -120,7 +118,11 @@ public enum MSG {
   RAFFLE_WINNER,
   RAFFLE_NOTACTIVE,
   RAFFLE_NOTOPEN,
-  RAFFLE_NOENTRANTS
+  RAFFLE_NOENTRANTS,
+  MATH_QUERY,
+  MATH_QUERYLINE,
+  MATH_ANSWERED,
+  MATH_TIMEOUT
 }
 
 public static class LocaleExtensions {
@@ -241,7 +243,6 @@ public static class LocaleExtensions {
       MSG.COMMAND_LEAVE_LEFT => "command.leave.left",
       MSG.COMMAND_GANG_CREATE_INVALID => "command.gang.create.invalid",
       MSG.COMMAND_GANG_RESTRICTED => "command.gang.create.restricted",
-      MSG.COMMAND_INVITE_DOORPOLICY => "command.invite.doorpolicy",
       MSG.MENU_FORMAT_INVITATION => "menu.format.invitation",
       MSG.MENU_FORMAT_REQUEST => "menu.format.request",
       MSG.RAFFLE_BEGIN => "raffle.begin",
@@ -250,6 +251,10 @@ public static class LocaleExtensions {
       MSG.RAFFLE_NOTACTIVE => "raffle.notactive",
       MSG.RAFFLE_NOTOPEN => "raffle.notopen",
       MSG.RAFFLE_NOENTRANTS => "raffle.noentrants",
+      MSG.MATH_QUERY => "math.query",
+      MSG.MATH_QUERYLINE => "math.queryline",
+      MSG.MATH_ANSWERED => "math.answered",
+      MSG.MATH_TIMEOUT => "math.timeout",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }

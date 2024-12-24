@@ -1,8 +1,10 @@
 using GangsAPI.Data;
 using GangsAPI.Extensions;
+using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Player;
+using GangsAPI.Services.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 
@@ -23,6 +25,15 @@ public abstract class GangTest(IServiceProvider provider) {
 
   protected readonly IPlayerStatManager PlayerStats =
     provider.GetRequiredService<IPlayerStatManager>();
+
+  protected readonly IPlayerManager Players =
+    provider.GetRequiredService<IPlayerManager>();
+
+  protected readonly IServerProvider Server =
+    provider.GetRequiredService<IServerProvider>();
+
+  protected readonly IRankManager Ranks =
+    provider.GetRequiredService<IRankManager>();
 
   protected readonly PlayerWrapper TestPlayer =
     new(new Random().NextULong(), "Test Player");

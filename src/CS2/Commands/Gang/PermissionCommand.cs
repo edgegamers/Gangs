@@ -123,15 +123,14 @@ public class PermissionCommand(IServiceProvider provider)
     if (int.TryParse(info.Args[3], out var permInt)) {
       permsChanging = (Perm)permInt;
     } else if (!Enum.TryParse(query, true, out permsChanging)) {
-      info.ReplySync(Locale.Get(MSG.COMMAND_INVALID_PARAM, query,
-        "rank or int"));
+      info.ReplySync(
+        Locale.Get(MSG.COMMAND_INVALID_PARAM, query, "rank or int"));
       return CommandResult.SUCCESS;
     }
 
     if (!executorRank.Permissions.HasFlag(permsChanging)) {
       var missing = permsChanging ^ executorRank.Permissions;
-      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_NODE,
-        missing.Describe()));
+      info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM_NODE, missing.Describe()));
       return CommandResult.NO_PERMISSION;
     }
 
