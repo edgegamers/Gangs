@@ -36,7 +36,6 @@ public class DemoteCommand(IServiceProvider provider)
 
     var gang = await Gangs.GetGang(player.GangId.Value)
       ?? throw new GangNotFoundException(player);
-
     var target = await Players.FindPlayerInGang(gang, query);
 
     if (target == null) {
@@ -44,13 +43,10 @@ public class DemoteCommand(IServiceProvider provider)
       return CommandResult.SUCCESS;
     }
 
-
     var targetRank = await Ranks.GetRank(target)
       ?? throw new GangException("Target does not have a rank.");
 
-
-    var lower = await Ranks.GetLowerRank(gang.GangId, targetRank.Rank);
-
+    var lower  = await Ranks.GetLowerRank(gang.GangId, targetRank.Rank);
     var higher = await Ranks.GetHigherRank(gang.GangId, targetRank.Rank);
 
     // Trying to demote below the lowest rank, they need to kick instead
