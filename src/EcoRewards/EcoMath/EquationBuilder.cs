@@ -59,8 +59,6 @@ public class EquationBuilder {
 
   public double Evaluate() {
     var expr = new Expression(Equation.Replace(" ", ""));
-    Server.PrintToChatAll(
-      $"Evaluating {Equation.Replace(" ", "")}, result: {expr.Evaluate()}");
     return Convert.ToDouble(expr.Evaluate());
   }
 
