@@ -1,7 +1,5 @@
-﻿using System.Reflection;
-using CounterStrikeSharp.API;
+﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
-using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
@@ -17,24 +15,72 @@ namespace EcoRewards.EcoMath;
 
 public class MathRewarder(IServiceProvider provider)
   : IPluginBehavior, IMathService {
-  private readonly Random rng = new();
+  private readonly ICommandManager commands =
+    provider.GetRequiredService<ICommandManager>();
+
+  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
 
-  private readonly ICommandManager commands =
-    provider.GetRequiredService<ICommandManager>();
+  private readonly Random rng = new();
 
   private Timer? mathTimer;
 
-  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
+  private BasePlugin plugin = null!;
 
   public IMathService.MathParams? Question { get; private set; }
 
-  private BasePlugin plugin = null!;
+  public void StartMath(IMathService.MathParams? question = null) {
+    Question = question ?? generateEquation();
+    var players = Utilities.GetPlayers()
+     .Where(p => p is { IsBot: false, Team: > CsTeam.Spectator })
+     .Select(p => new PlayerWrapper(p))
+     .ToList();
 
-  public void Start(BasePlugin? plugin, bool hotReload) {
-    this.plugin = plugin;
+    players = players.Where(p => p.Player != null).ToList();
+
+    foreach (var player in players) {
+      player.PrintToChat(locale.Get(MSG.MATH_QUERY, Question.Value.Reward));
+      player.PrintToChat(locale.Get(MSG.MATH_QUERYLINE,
+        convertToFancy(Question.Value.Equation)));
+    }
+
+    mathTimer?.Kill();
+    mathTimer = plugin.AddTimer(30, () => { StopMath(null); },
+      TimerFlags.STOP_ON_MAPCHANGE);
+  }
+
+  public void StopMath(CCSPlayerController? winner) {
+    if (Question == null) return;
+    var players = Utilities.GetPlayers()
+     .Where(p => p is { IsBot: false, Team: > CsTeam.Spectator })
+     .Select(p => new PlayerWrapper(p))
+     .ToList();
+
+    var ans    = Question?.Answer ?? 0;
+    var ansStr = ans % 1 == 0 ? ans.ToString("0") : ans.ToString("0.##");
+
+    if (winner == null) {
+      foreach (var player in players)
+        player.PrintToChat(locale.Get(MSG.MATH_TIMEOUT, ansStr));
+    } else {
+      foreach (var player in players)
+        player.PrintToChat(locale.Get(MSG.MATH_ANSWERED, winner.PlayerName,
+          ansStr, Question?.Reward ?? 0));
+
+      var wrapper = new PlayerWrapper(winner);
+      var reward  = Question?.Reward ?? 0;
+      Task.Run(async () => await eco.Grant(wrapper, reward, true, "Math"));
+    }
+
+    Question = null;
+    mathTimer?.Kill();
+    mathTimer = null;
+  }
+
+  public void Start(BasePlugin? parent, bool hotReload) {
+    if (parent != null) plugin = parent;
     plugin?.AddTimer(60 * 15, () => {
       var players = Utilities.GetPlayers()
        .Where(p => p is { IsBot: false, Team: > CsTeam.Spectator })
@@ -91,58 +137,10 @@ public class MathRewarder(IServiceProvider provider)
     return result;
   }
 
-  public void StartMath(IMathService.MathParams? question = null) {
-    Question = question ?? generateEquation();
-    var players = Utilities.GetPlayers()
-     .Where(p => p is { IsBot: false, Team: > CsTeam.Spectator })
-     .Select(p => new PlayerWrapper(p))
-     .ToList();
-
-    players = players.Where(p => p.Player != null).ToList();
-
-    foreach (var player in players) {
-      player.PrintToChat(locale.Get(MSG.MATH_QUERY, Question.Value.Reward));
-      player.PrintToChat(locale.Get(MSG.MATH_QUERYLINE,
-        convertToFancy(Question.Value.Equation)));
-    }
-
-    mathTimer?.Kill();
-    mathTimer = plugin.AddTimer(30, () => { StopMath(null); },
-      TimerFlags.STOP_ON_MAPCHANGE);
-  }
-
   private string convertToFancy(string eq) {
     return eq.Replace('%', '％')
      .Replace("**", "^")
      .Replace('*', '×')
      .Replace(" ", "   ");
-  }
-
-  public void StopMath(CCSPlayerController? winner) {
-    if (Question == null) return;
-    var players = Utilities.GetPlayers()
-     .Where(p => p is { IsBot: false, Team: > CsTeam.Spectator })
-     .Select(p => new PlayerWrapper(p))
-     .ToList();
-
-    var ans    = Question?.Answer ?? 0;
-    var ansStr = ans % 1 == 0 ? ans.ToString("0") : ans.ToString("0.##");
-
-    if (winner == null)
-      foreach (var player in players)
-        player.PrintToChat(locale.Get(MSG.MATH_TIMEOUT, ansStr));
-    else {
-      foreach (var player in players)
-        player.PrintToChat(locale.Get(MSG.MATH_ANSWERED, winner.PlayerName,
-          ansStr, Question?.Reward ?? 0));
-
-      var wrapper = new PlayerWrapper(winner);
-      var reward  = Question?.Reward ?? 0;
-      Task.Run(async () => await eco.Grant(wrapper, reward, true, "Math"));
-    }
-
-    Question = null;
-    mathTimer?.Kill();
-    mathTimer = null;
   }
 }

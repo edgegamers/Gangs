@@ -1,13 +1,10 @@
-﻿using System.Data;
-using CounterStrikeSharp.API;
-using NCalc;
+﻿using NCalc;
 
 namespace EcoRewards.EcoMath;
 
 public class EquationBuilder {
-  public string Equation { get; private set; }
-
   public EquationBuilder(int start) { Equation = start.ToString(); }
+  public string Equation { get; private set; }
 
   public EquationBuilder WithAddition(int x, bool parentheses = false) {
     if (parentheses && Equation.Contains(' '))
@@ -63,8 +60,8 @@ public class EquationBuilder {
   }
 
   /// <summary>
-  /// Estimated difficulty of the equation,
-  /// with 1 being the hardest and 0 being the easiest.
+  ///   Estimated difficulty of the equation,
+  ///   with 1 being the hardest and 0 being the easiest.
   /// </summary>
   /// <returns></returns>
   public double Difficulty() {

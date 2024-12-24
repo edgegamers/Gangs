@@ -7,11 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 namespace EcoRewards.EcoMath;
 
 public class StartMathCommand(IServiceProvider provider) : ICommand {
+  private readonly IMathService? math = provider.GetService<IMathService>();
   public string Name => "css_startmath";
 
   public string[] RequiredFlags => ["@css/root"];
-
-  private readonly IMathService? math = provider.GetService<IMathService>();
 
   public Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
