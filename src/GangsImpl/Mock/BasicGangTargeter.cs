@@ -47,7 +47,7 @@ public class BasicGangTargeter(IServiceProvider provider)
          .First();
 
         if (print)
-          executor?.PrintToChat(localizer.Get(MSG.GANG_NOT_FOUND_CLOSEST,
+          executor?.PrintToChat(localizer.Get(MSG.GANG_NOT_FOUND_CLOSEST, query,
             closest.Name));
         break;
       }
