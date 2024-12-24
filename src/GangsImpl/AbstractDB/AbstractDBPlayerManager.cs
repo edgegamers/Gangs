@@ -46,7 +46,7 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     var query = $"SELECT * FROM {table} WHERE Steam = @steamId";
 
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       var result = await Connection.QueryFirstOrDefaultAsync<DBPlayer>(query,
         new { steamId }, Transaction);
       if (result != null) cache[steamId] = result;
@@ -63,7 +63,7 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     var query  = $"INSERT INTO {table} (Steam, Name) VALUES (@Steam, @Name)";
 
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
 
       await Connection.ExecuteAsync(query, player, Transaction);
       cache[steamId] = player;
@@ -74,7 +74,7 @@ public abstract class AbstractDBPlayerManager(string connectionString,
   public async Task<IEnumerable<IGangPlayer>> GetAllPlayers() {
     var query = $"SELECT * FROM {table}";
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.QueryAsync<DBPlayer>(query, Transaction);
     } finally { semaphore.Release(); }
   }
@@ -83,7 +83,7 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     var query =
       $"SELECT * FROM {table} WHERE GangId = @gangId ORDER BY GangRank ASC";
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.QueryAsync<DBPlayer>(query, new { gangId },
         Transaction);
     } finally { semaphore.Release(); }
@@ -99,7 +99,7 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     cache[player.Steam] = player;
 
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.ExecuteAsync(query, player, Transaction) == 1;
     } finally { semaphore.Release(); }
   }
@@ -108,7 +108,7 @@ public abstract class AbstractDBPlayerManager(string connectionString,
     var query = $"DELETE FROM {table} WHERE Steam = @steamId";
     cache.Remove(steamId);
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.ExecuteAsync(query, new { steamId }, Transaction)
         == 1;
     } finally { semaphore.Release(); }

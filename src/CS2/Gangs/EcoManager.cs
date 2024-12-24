@@ -138,12 +138,12 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     return balanceRemaining;
   }
 
-  private readonly SemaphoreSlim grantSemaphore = new(1);
+  private readonly SemaphoreSlim grantSemaphore = new(1, 1);
 
   public async Task<int> Grant(PlayerWrapper player, int amount,
     bool print = true, string? reason = null) {
     try {
-      await grantSemaphore.WaitAsync();
+      await grantSemaphore.WaitAsync(TimeSpan.FromSeconds(1));
       var (playerBalance, _) = await getBalance(player.Steam);
 
       await playerStats.SetForPlayer(player.Steam, statId,

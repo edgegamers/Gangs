@@ -44,7 +44,7 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
 
   public async Task<Dictionary<int, IEnumerable<IGangRank>>> GetAllRanks() {
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       var ranks = await Connection.QueryAsync<DBRank>(
         $"SELECT * FROM {table} ORDER BY GangId ASC, `Rank` ASC", Transaction);
       return ranks.GroupBy(r => r.GangId)
@@ -54,7 +54,7 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
 
   public async Task<IEnumerable<IGangRank>> GetRanks(int gang) {
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.QueryAsync<DBRank>(
         $"SELECT * FROM {table} WHERE GangId = @gang ORDER BY `Rank` ASC",
         new { gang }, Transaction);
@@ -63,7 +63,7 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
 
   public async Task<IGangRank?> GetRank(int gang, int rank) {
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.QueryFirstOrDefaultAsync<DBRank>(
         $"SELECT * FROM {table} WHERE GangId = @gang AND `Rank` = @rank",
         new { gang, rank }, Transaction);
@@ -78,7 +78,7 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
       $"INSERT INTO {table} (GangId, `Rank`, Name, Permissions) VALUES (@GangId, @Rank, @Name, @Perms)";
 
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.ExecuteAsync(query,
         new { GangId = gang, rank.Rank, rank.Name, Perms = rank.Permissions },
         Transaction) == 1;
@@ -106,7 +106,7 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
     }
 
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       var lowerRank = await Connection.QueryFirstOrDefaultAsync<DBRank>(
         $"SELECT * FROM {table} WHERE GangId = @GangId AND `Rank` > @Rank ORDER BY `Rank` ASC LIMIT 1",
         new { GangId = gang, rank }, Transaction);
@@ -136,7 +136,7 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
   public async Task<bool> DeleteAllRanks(int gang) {
     var query = $"DELETE FROM {table} WHERE GangId = @GangId";
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.ExecuteAsync(query, new { gang }, Transaction)
         > 0;
     } finally { semaphore.Release(); }
@@ -153,7 +153,7 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
           $"UPDATE {table} SET Name = @Name, Permissions = @Perms WHERE GangId = @GangId AND `Rank` = @Rank";
 
         try {
-          await semaphore.WaitAsync();
+          await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
           return await Connection.ExecuteAsync(query,
             new {
               rank.Name, Perms = rank.Permissions, GangId = gang, rank.Rank
