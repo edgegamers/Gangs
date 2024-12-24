@@ -153,6 +153,7 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
   }
 
   public async Task<bool> DeleteAllRanks(int gang) {
+    cache.Remove(gang);
     var query = $"DELETE FROM {table} WHERE GangId = @GangId";
     try {
       await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
@@ -162,6 +163,16 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
   }
 
   public async Task<bool> UpdateRank(int gang, IGangRank rank) {
+    if (cache.TryGetValue(gang, out var cached)) {
+      var gangRanks = cached.ToList();
+      var rankObj   = gangRanks.FirstOrDefault(r => r.Rank == rank.Rank);
+      if (rankObj != null) {
+        rankObj.Name        = rank.Name;
+        rankObj.Permissions = rank.Permissions;
+        cache[gang]         = gangRanks;
+      }
+    }
+
     switch (rank.Rank) {
       case < 0:
       case > 0 when rank.Permissions.HasFlag(Perm.OWNER):
