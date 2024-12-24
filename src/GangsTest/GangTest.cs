@@ -35,9 +35,12 @@ public abstract class GangTest(IServiceProvider provider) {
 
   protected readonly IRankManager Ranks =
     provider.GetRequiredService<IRankManager>();
-  
+
   protected readonly IGangChatPerk GangChat =
     provider.GetRequiredService<IGangChatPerk>();
+
+  protected readonly IEcoManager Eco =
+    provider.GetRequiredService<IEcoManager>();
 
   protected readonly PlayerWrapper TestPlayer = TestUtil.CreateFakePlayer();
 }

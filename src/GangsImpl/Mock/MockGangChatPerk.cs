@@ -32,13 +32,14 @@ public class MockGangChatPerk(IServiceProvider provider)
     return Task.FromResult<IMenu?>(null);
   }
 
-  public async Task SendGangChat(string name, IGang gang, string message) {
+  public Task SendGangChat(string name, IGang gang, string message) {
     if (!history.TryGetValue(gang.GangId, out var value)) {
       value                = [];
       history[gang.GangId] = value;
     }
 
     value.Add($"{name}: {message}");
+    return Task.CompletedTask;
   }
 
   public void ClearChatHistory(IGang gang) { history.Remove(gang.GangId); }

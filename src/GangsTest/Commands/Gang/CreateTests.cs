@@ -34,6 +34,7 @@ public class CreateTests(IServiceProvider provider)
 
   [Fact]
   public async Task Create_Simple() {
+    await Eco.Grant(TestPlayer, 2000);
     var result = await Commands.ProcessCommand(TestPlayer,
       CommandCallingContext.Console, "create", "foobar");
     Assert.Equal(CommandResult.SUCCESS, result);
@@ -48,6 +49,7 @@ public class CreateTests(IServiceProvider provider)
 
   [Fact]
   public async Task Create_MultiWord() {
+    await Eco.Grant(TestPlayer, 2000);
     var result = await Commands.ProcessCommand(TestPlayer,
       CommandCallingContext.Console, "create", "foo bar");
     Assert.Equal(CommandResult.SUCCESS, result);
@@ -58,6 +60,7 @@ public class CreateTests(IServiceProvider provider)
 
   [Fact]
   public async Task Create_MultiParam() {
+    await Eco.Grant(TestPlayer, 2000);
     var result = await Commands.ProcessCommand(TestPlayer,
       CommandCallingContext.Console, "create", "foo bar", "baz");
     Assert.Equal(CommandResult.SUCCESS, result);
@@ -68,6 +71,7 @@ public class CreateTests(IServiceProvider provider)
 
   [Fact]
   public async Task Create_Already_Ganged() {
+    await Eco.Grant(TestPlayer, 2000);
     var result = await Commands.ProcessCommand(TestPlayer,
       CommandCallingContext.Console, "create", "foo bar");
     Assert.Equal(CommandResult.SUCCESS, result);
@@ -89,6 +93,7 @@ public class CreateTests(IServiceProvider provider)
   [InlineData("foo bar", "FOO bar ")]
   public async Task Create_WithDuplicateName_DoesNotPass(string first,
     string second) {
+    await Eco.Grant(TestPlayer, 2000);
     var other = new PlayerWrapper(new Random().NextULong(), "Other Player");
     var result = await Commands.ProcessCommand(TestPlayer,
       CommandCallingContext.Console, "create", first);
@@ -106,6 +111,7 @@ public class CreateTests(IServiceProvider provider)
   [InlineData("\x01")]
   [InlineData("0123456789ABCDEFG")]
   public async Task Create_WithInvalidName_DoesNotPass(string name) {
+    await Eco.Grant(TestPlayer, 2000);
     var result = await Commands.ProcessCommand(TestPlayer,
       CommandCallingContext.Console, "create", name);
     Assert.Equal(CommandResult.ERROR, result);

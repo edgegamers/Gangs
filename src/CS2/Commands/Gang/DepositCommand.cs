@@ -23,13 +23,21 @@ public class DepositCommand(IServiceProvider provider)
 
     if (!authorized) {
       info.ReplySync(Locale.Get(MSG.GENERIC_NOPERM, required.Name));
-      return CommandResult.SUCCESS;
+      return CommandResult.NO_PERMISSION;
     }
 
     if (!int.TryParse(info[1], out var amount) || amount <= 0) {
-      info.ReplySync(Locale.Get(MSG.COMMAND_INVALID_PARAM, info[1],
-        "a positive integer"));
-      return CommandResult.SUCCESS;
+      if (!info[1].Equals("all", StringComparison.OrdinalIgnoreCase)) {
+        info.ReplySync(Locale.Get(MSG.COMMAND_INVALID_PARAM, info[1],
+          "a positive integer"));
+        return CommandResult.INVALID_ARGS;
+      }
+
+      amount = await Eco.GetBalance(executor);
+      if (amount <= 0) {
+        info.ReplySync(Locale.Get(MSG.COMMAND_BALANCE_NONE));
+        return CommandResult.ERROR;
+      }
     }
 
     var remaining =
@@ -38,6 +46,6 @@ public class DepositCommand(IServiceProvider provider)
       await Eco.Grant(gangPlayer.GangId.Value, amount, true,
         "deposit from " + (executor.Name ?? executor.Steam.ToString()));
 
-    return CommandResult.SUCCESS;
+    return remaining >= 0 ? CommandResult.SUCCESS : CommandResult.ERROR;
   }
 }
