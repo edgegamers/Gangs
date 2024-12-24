@@ -5,7 +5,6 @@ using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Data.Gang;
 using GangsAPI.Exceptions;
-using GangsAPI.Menu;
 using GangsAPI.Permissions;
 using GangsAPI.Services.Player;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,11 +13,11 @@ namespace Commands.Gang;
 
 public class InvitesCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
-  public override string Name => "invites";
-  public override string[] Usage => ["", "<player/steam>"];
-
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
+
+  public override string Name => "invites";
+  public override string[] Usage => ["", "<player/steam>"];
 
   public override async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

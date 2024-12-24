@@ -33,15 +33,16 @@ public class RaffleManager(IServiceProvider provider)
       30);
 
   private static readonly Random rng = new();
-  private int cooldownRounds;
 
-  private Timer? entryTimer;
-  private BasePlugin? plugin;
+  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
 
-  private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
+  private int cooldownRounds;
+
+  private Timer? entryTimer;
+  private BasePlugin? plugin;
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin == null) return;

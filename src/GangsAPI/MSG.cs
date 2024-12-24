@@ -1,5 +1,4 @@
-﻿using CounterStrikeSharp.API;
-using Microsoft.Extensions.Localization;
+﻿using Microsoft.Extensions.Localization;
 
 namespace GangsAPI;
 

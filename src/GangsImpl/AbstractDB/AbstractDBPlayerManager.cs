@@ -8,12 +8,11 @@ namespace GenericDB;
 
 public abstract class AbstractDBPlayerManager(string connectionString,
   string table = "gang_players", bool testing = false) : IPlayerManager {
-  protected DbConnection Connection = null!;
-  protected DbTransaction? Transaction;
+  private readonly Dictionary<ulong, IGangPlayer> cache = new();
 
   private readonly SemaphoreSlim semaphore = new(1, 1);
-
-  private readonly Dictionary<ulong, IGangPlayer> cache = new();
+  protected DbConnection Connection = null!;
+  protected DbTransaction? Transaction;
 
   public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);

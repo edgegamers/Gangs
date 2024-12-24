@@ -23,6 +23,8 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
   private readonly IGangStatManager gangStats =
     provider.GetRequiredService<IGangStatManager>();
 
+  private readonly SemaphoreSlim grantSemaphore = new(1, 1);
+
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
 
@@ -137,8 +139,6 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
 
     return balanceRemaining;
   }
-
-  private readonly SemaphoreSlim grantSemaphore = new(1, 1);
 
   public async Task<int> Grant(PlayerWrapper player, int amount,
     bool print = true, string? reason = null) {

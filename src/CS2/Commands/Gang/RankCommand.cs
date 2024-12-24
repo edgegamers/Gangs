@@ -91,8 +91,7 @@ public class RankCommand(IServiceProvider provider)
     var target = await Ranks.GetRank(gang.GangId, rank)
       ?? throw new RankNotFoundException(gang.GangId, rank);
     if (target.Rank == 0) {
-      info.ReplySync(Locale.Get(MSG.COMMAND_RANK_CANNOT_DELETE,
-        target.Name));
+      info.ReplySync(Locale.Get(MSG.COMMAND_RANK_CANNOT_DELETE, target.Name));
       return CommandResult.ERROR;
     }
 
@@ -101,8 +100,7 @@ public class RankCommand(IServiceProvider provider)
      .ToList();
 
     if (assigned.Count != 0) {
-      info.ReplySync(Locale.Get(MSG.COMMAND_RANK_CANNOT_DELETE,
-        target.Name));
+      info.ReplySync(Locale.Get(MSG.COMMAND_RANK_CANNOT_DELETE, target.Name));
       return CommandResult.SUCCESS;
     }
 

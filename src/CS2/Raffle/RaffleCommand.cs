@@ -1,4 +1,3 @@
-using CounterStrikeSharp.API.Core;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
@@ -12,11 +11,11 @@ namespace Raffle;
 public class RaffleCommand(IServiceProvider provider) : ICommand {
   private readonly IEcoManager eco = provider.GetRequiredService<IEcoManager>();
 
-  private readonly IRaffleManager raffle =
-    provider.GetRequiredService<IRaffleManager>();
-
   private readonly IStringLocalizer locale =
     provider.GetRequiredService<IStringLocalizer>();
+
+  private readonly IRaffleManager raffle =
+    provider.GetRequiredService<IRaffleManager>();
 
   public string Name => "css_raffle";
 

@@ -27,14 +27,14 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
 
   private readonly string invitationStatId = new InvitationStat().StatId;
 
+  private readonly IMenuManager menus =
+    provider.GetRequiredService<IMenuManager>();
+
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();
 
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
-
-  private readonly IMenuManager menus =
-    provider.GetRequiredService<IMenuManager>();
 
   private IList<IGangPlayer> members = new List<IGangPlayer>();
 
