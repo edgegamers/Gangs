@@ -56,7 +56,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
     var query = $"SELECT * FROM {table} WHERE GangId = @id";
 
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       var result =
         await Connection.QueryFirstOrDefaultAsync<DBGang>(query, new { id },
           Transaction);
@@ -78,7 +78,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
     cache[gang.GangId] = gang;
 
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.ExecuteAsync(query,
         new { gang.Name, gang.GangId }, Transaction) == 1;
     } finally { semaphore.Release(); }
@@ -98,7 +98,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
     var query = $"DELETE FROM {table} WHERE GangId = @id";
 
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.ExecuteAsync(query, new { id }, Transaction) > 0;
     } finally { semaphore.Release(); }
   }
@@ -117,7 +117,7 @@ public abstract class AbstractDBGangManager(IServiceProvider provider,
 
     var query = $"INSERT INTO {table} (Name) VALUES (@name)";
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       var result =
         await Connection.ExecuteAsync(query, new { name }, Transaction);
       if (result == 0) {

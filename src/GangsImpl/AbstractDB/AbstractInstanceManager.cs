@@ -25,7 +25,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     await createTable<TV>(statId);
 
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       var dynamic = new DynamicParameters();
       dynamic.Add(PrimaryKey, key);
       var result = await Connection.QuerySingleAsync<TV>(
@@ -84,7 +84,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
 
     await createTable<TV>(statId);
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       await Connection.ExecuteAsync(cmd, fieldValues);
     } finally { semaphore.Release(); }
 
@@ -95,7 +95,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     var dynamicParameters = new DynamicParameters();
     dynamicParameters.Add(PrimaryKey, key);
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       await Connection.ExecuteAsync(
         $"DELETE FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamicParameters);
@@ -163,7 +163,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
     }
 
     try {
-      await semaphore.WaitAsync();
+      await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       await Connection.ExecuteAsync(cmd);
     } finally { semaphore.Release(); }
   }
