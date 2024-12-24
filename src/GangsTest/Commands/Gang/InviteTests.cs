@@ -17,8 +17,6 @@ namespace GangsTest.Commands.Gang;
 
 public class InviteTests(IServiceProvider provider)
   : TestParent(provider, new InviteCommand(provider)) {
-  private readonly string inviteId = new InvitationStat().StatId;
-
   [Fact]
   public async Task Invite_NonPlayer() {
     Assert.Equal(CommandResult.PLAYER_ONLY,
@@ -107,7 +105,7 @@ public class InviteTests(IServiceProvider provider)
 
     var data = new InvitationData();
     data.AddInvitation(TestPlayer.Steam, toInvite.Steam);
-    await GangStats.SetForGang(gang.GangId, inviteId, data);
+    await GangStats.SetForGang(gang.GangId, InvitationStat.STAT_ID, data);
 
     Assert.Equal(CommandResult.SUCCESS,
       await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,

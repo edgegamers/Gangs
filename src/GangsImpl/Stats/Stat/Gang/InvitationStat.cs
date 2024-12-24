@@ -1,7 +1,8 @@
 ﻿namespace Stats.Stat.Gang;
 
 public class InvitationStat : BaseStat<InvitationData> {
-  public override string StatId => "gang_invitation";
+  public const string STAT_ID = "gang_invitation";
+  public override string StatId => STAT_ID;
   public override string Name => "Invitation";
   public override string Description => "Invitations sent or received.";
   public override InvitationData? Value { get; set; } = new();
