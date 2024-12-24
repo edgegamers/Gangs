@@ -26,9 +26,9 @@ public class InviteTests(IServiceProvider provider)
 
   [Fact]
   public async Task Invite_NotInGang() {
-    Assert.Equal(CommandResult.SUCCESS,
-      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
-        "invite", "123"));
+    var result = await Commands.ProcessCommand(TestPlayer,
+      CommandCallingContext.Console, "invite", "123");
+    Assert.Equal(CommandResult.ERROR, result);
     Assert.Contains(Locale.Get(MSG.NOT_IN_GANG), TestPlayer.ConsoleOutput);
   }
 

@@ -73,7 +73,7 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
       ?? throw new PlayerNotFoundException(executor.Steam);
     if (gangPlayer.GangId == null || gangPlayer.GangRank == null) {
       info.ReplySync(Locale.Get(MSG.NOT_IN_GANG));
-      return CommandResult.SUCCESS;
+      return CommandResult.ERROR;
     }
 
     return await Execute(executor, gangPlayer, info);

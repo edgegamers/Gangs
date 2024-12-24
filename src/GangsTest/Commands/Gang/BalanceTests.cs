@@ -21,7 +21,7 @@ public class BalanceTests(IServiceProvider provider)
     var result = await Commands.ProcessCommand(TestPlayer,
       CommandCallingContext.Console, Command.Name);
     var expected = Locale.Get(MSG.NOT_IN_GANG);
-    Assert.Equal(CommandResult.SUCCESS, result);
+    Assert.Equal(CommandResult.ERROR, result);
     Assert.Contains(expected, TestPlayer.ConsoleOutput);
   }
 
