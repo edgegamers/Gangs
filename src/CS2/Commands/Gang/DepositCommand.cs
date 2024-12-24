@@ -42,10 +42,10 @@ public class DepositCommand(IServiceProvider provider)
 
     var remaining =
       await Eco.TryPurchase(executor, amount, true, "deposit", true);
-    if (remaining >= 0)
-      await Eco.Grant(gangPlayer.GangId.Value, amount, true,
-        "deposit from " + (executor.Name ?? executor.Steam.ToString()));
+    if (remaining < 0) return CommandResult.ERROR;
+    await Eco.Grant(gangPlayer.GangId.Value, amount, true,
+      "deposit from " + (executor.Name ?? executor.Steam.ToString()));
 
-    return remaining >= 0 ? CommandResult.SUCCESS : CommandResult.ERROR;
+    return CommandResult.SUCCESS;
   }
 }
