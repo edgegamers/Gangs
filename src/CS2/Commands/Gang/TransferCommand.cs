@@ -44,7 +44,7 @@ public class TransferCommand(IServiceProvider provider)
     }
 
     var query  = string.Join(' ', info.Args.Skip(1));
-    var target = await Players.SearchPlayer(player.GangId.Value, query);
+    var target = await Players.FindPlayerInGang(player.GangId.Value, query);
     if (target == null) {
       info.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
       return CommandResult.SUCCESS;

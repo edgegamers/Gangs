@@ -49,7 +49,8 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
       return CommandResult.ERROR;
     }
 
-    if ((await gangs.GetGangs()).Any(g => g.Name == name)) {
+    if ((await gangs.GetGangs()).Any(g
+      => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase))) {
       info.ReplySync(locale.Get(MSG.COMMAND_GANG_CREATE_ALREADY_EXISTS, name));
       return CommandResult.ERROR;
     }

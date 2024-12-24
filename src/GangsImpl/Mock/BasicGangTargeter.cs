@@ -16,8 +16,11 @@ public class BasicGangTargeter(IServiceProvider provider)
   private readonly IStringLocalizer localizer =
     provider.GetRequiredService<IStringLocalizer>();
 
+  private readonly IPlayerTargeter playerTargeter =
+    provider.GetRequiredService<IPlayerTargeter>();
+
   public async Task<IGang?> FindGang(string query,
-    PlayerWrapper? executor = null) {
+    PlayerWrapper? executor = null, bool print = true) {
     var existing = (await gangs.GetGangs()).ToList();
 
     var matches = existing.Where(g => g.Name.Contains(query)).ToList();
@@ -33,7 +36,8 @@ public class BasicGangTargeter(IServiceProvider provider)
 
     switch (matches.Count) {
       case 0:
-        executor?.PrintToChat(localizer.Get(MSG.GANG_NOT_FOUND, query));
+        if (print)
+          executor?.PrintToChat(localizer.Get(MSG.GANG_NOT_FOUND, query));
         break;
       case 1:
         return matches.First();
@@ -41,13 +45,35 @@ public class BasicGangTargeter(IServiceProvider provider)
         var closest = matches
          .OrderBy(g => CalcLevenshteinDistance(g.Name, query))
          .First();
-        executor?.PrintToChat(localizer.Get(MSG.GANG_NOT_FOUND_CLOSEST,
-          closest.Name));
+
+        if (print)
+          executor?.PrintToChat(localizer.Get(MSG.GANG_NOT_FOUND_CLOSEST,
+            closest.Name));
         break;
       }
     }
 
     return null;
+  }
+
+  public async Task<IGang?> FindGangOrByMember(string query,
+    PlayerWrapper? executor = null, bool print = true) {
+    var gang = await FindGang(query, executor);
+    if (gang != null) return gang;
+    var player =
+      await playerTargeter.GetSingleTarget(query, executor, localizer);
+    if (player == null) {
+      if (print)
+        executor?.PrintToChat(localizer.Get(MSG.GANG_NOT_FOUND, query));
+      return null;
+    }
+
+    gang = await gangs.GetGang(player.Steam);
+
+    if (gang == null && print)
+      executor?.PrintToChat(localizer.Get(MSG.GANG_NOT_FOUND, query));
+
+    return gang;
   }
 
   private static int CalcLevenshteinDistance(string a, string b) {
