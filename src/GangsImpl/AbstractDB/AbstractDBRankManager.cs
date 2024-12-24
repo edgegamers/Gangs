@@ -14,6 +14,9 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
   protected DbConnection Connection = null!;
   protected DbTransaction? Transaction;
 
+  private readonly IDictionary<int, IEnumerable<IGangRank>> cache =
+    new Cache<int, IEnumerable<IGangRank>>(TimeSpan.FromMinutes(5));
+
   public void Start(BasePlugin? plugin, bool hotReload) {
     Connection = CreateDbConnection(connectionString);
 
@@ -52,6 +55,8 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
   }
 
   public async Task<IEnumerable<IGangRank>> GetRanks(int gang) {
+    if (cache.TryGetValue(gang, out var cached)) return cached;
+
     try {
       await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.QueryAsync<DBRank>(
@@ -61,6 +66,11 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
   }
 
   public async Task<IGangRank?> GetRank(int gang, int rank) {
+    if (cache.TryGetValue(gang, out var cached)) {
+      var rankObj = cached.FirstOrDefault(r => r.Rank == rank);
+      if (rankObj != null) return rankObj;
+    }
+
     try {
       await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       return await Connection.QueryFirstOrDefaultAsync<DBRank>(
@@ -72,6 +82,11 @@ public abstract class AbstractDBRankManager(IPlayerManager players,
   public async Task<bool> AddRank(int gang, IGangRank rank) {
     if (rank.Rank < 0) return false;
     if (await GetRank(gang, rank.Rank) != null) return false;
+
+    var existing = cache.TryGetValue(gang, out var cached) ?
+      cached :
+      new List<IGangRank>();
+    cache[gang] = existing.Append(rank);
 
     var query =
       $"INSERT INTO {table} (GangId, `Rank`, Name, Permissions) VALUES (@GangId, @Rank, @Name, @Perms)";

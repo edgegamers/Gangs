@@ -8,7 +8,8 @@ namespace GenericDB;
 
 public abstract class AbstractInstanceManager<TK>(string connectionString,
   string table_prefix, bool testing = false) where TK : notnull {
-  private readonly Dictionary<string, Dictionary<TK, object>> cache = new();
+  private readonly IDictionary<string, Dictionary<TK, object>> cache =
+    new Cache<string, Dictionary<TK, object>>(TimeSpan.FromMinutes(1));
 
   private readonly SemaphoreSlim semaphore = new(1, 1);
   protected DbConnection Connection = null!;
