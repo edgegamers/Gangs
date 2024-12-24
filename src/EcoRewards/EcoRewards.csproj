@@ -7,7 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\GangsAPI\GangsAPI.csproj"/>
+        <ProjectReference Include="..\GangsAPI\GangsAPI.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NCalcSync" Version="5.3.1" />
     </ItemGroup>
 
 </Project>

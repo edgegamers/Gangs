@@ -118,7 +118,11 @@ public enum MSG {
   RAFFLE_WINNER,
   RAFFLE_NOTACTIVE,
   RAFFLE_NOTOPEN,
-  RAFFLE_NOENTRANTS
+  RAFFLE_NOENTRANTS,
+  MATH_QUERY,
+  MATH_QUERYLINE,
+  MATH_ANSWERED,
+  MATH_TIMEOUT
 }
 
 public static class LocaleExtensions {
@@ -247,6 +251,10 @@ public static class LocaleExtensions {
       MSG.RAFFLE_NOTACTIVE => "raffle.notactive",
       MSG.RAFFLE_NOTOPEN => "raffle.notopen",
       MSG.RAFFLE_NOENTRANTS => "raffle.noentrants",
+      MSG.MATH_QUERY => "math.query",
+      MSG.MATH_QUERYLINE => "math.queryline",
+      MSG.MATH_ANSWERED => "math.answered",
+      MSG.MATH_TIMEOUT => "math.timeout",
       _ => throw new ArgumentOutOfRangeException(nameof(msg), msg, null)
     };
   }
