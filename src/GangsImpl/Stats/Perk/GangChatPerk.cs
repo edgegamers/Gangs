@@ -31,6 +31,8 @@ public class GangChatPerk(IServiceProvider provider)
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
+  private readonly Dictionary<int, List<string>> history = new();
+
   public override bool Value { get; set; }
 
   public override string StatId => "gang_native_chat";
@@ -40,6 +42,13 @@ public class GangChatPerk(IServiceProvider provider)
     => "Chat with your gang members with .[message]";
 
   public async Task SendGangChat(string name, IGang gang, string message) {
+    if (!history.TryGetValue(gang.GangId, out var value)) {
+      value                = [];
+      history[gang.GangId] = value;
+    }
+
+    value.Add($"{name}: {message}");
+
     var members = await players.GetMembers(gang);
     await Server.NextFrameAsync(() => {
       foreach (var member in members) {
@@ -49,6 +58,12 @@ public class GangChatPerk(IServiceProvider provider)
           message));
       }
     });
+  }
+
+  public void ClearChatHistory(IGang gang) { history.Remove(gang.GangId); }
+
+  public IEnumerable<string> GetChatHistory(IGang gang) {
+    return history.TryGetValue(gang.GangId, out var value) ? value : [];
   }
 
   public override async Task<int?> GetCost(IGangPlayer player) {

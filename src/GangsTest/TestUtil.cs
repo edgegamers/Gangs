@@ -7,7 +7,7 @@ public class TestUtil {
   public const string FakePlayerName = "Test Player";
   private static readonly Random Random = new();
 
-  public static PlayerWrapper CreateFakePlayer() {
-    return new PlayerWrapper(Random.NextULong(), FakePlayerName);
+  public static PlayerWrapper CreateFakePlayer(string name = FakePlayerName) {
+    return new PlayerWrapper(Random.NextULong(), name);
   }
 }

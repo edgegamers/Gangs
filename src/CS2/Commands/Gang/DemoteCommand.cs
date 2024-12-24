@@ -7,6 +7,7 @@ using GangsAPI.Exceptions;
 using GangsAPI.Perks;
 using GangsAPI.Permissions;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
 namespace Commands.Gang;
 
@@ -40,7 +41,7 @@ public class DemoteCommand(IServiceProvider provider)
 
     if (target == null) {
       info.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
-      return CommandResult.SUCCESS;
+      return CommandResult.INVALID_ARGS;
     }
 
     var targetRank = await Ranks.GetRank(target)
@@ -72,11 +73,10 @@ public class DemoteCommand(IServiceProvider provider)
 
     await Players.UpdatePlayer(target);
 
-    var gangChat = Provider.GetService<IGangChatPerk>();
-    if (gangChat != null)
-      await gangChat.SendGangChat(player, gang,
-        Locale.Get(MSG.RANK_DEMOTE_SUCCESS,
-          target.Name ?? target.Steam.ToString(), lower.Name));
+    var gangChat = Provider.GetRequiredService<IGangChatPerk>();
+    await gangChat.SendGangChat(player, gang,
+      Locale.Get(MSG.RANK_DEMOTE_SUCCESS,
+        target.Name ?? target.Steam.ToString(), lower.Name));
     return CommandResult.SUCCESS;
   }
 }

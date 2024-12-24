@@ -12,4 +12,8 @@ public interface IGangChatPerk : IPerk {
   Task SendGangChat(IGang gang, string message) {
     return SendGangChat("SYSTEM", gang, message);
   }
+
+  void ClearChatHistory(IGang gang);
+
+  IEnumerable<string> GetChatHistory(IGang gang);
 }
