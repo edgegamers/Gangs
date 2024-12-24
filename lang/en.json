@@ -115,8 +115,8 @@
   "raffle.notactive": "%prefix%There is no active raffle.",
   "raffle.notopen": "%prefix%The raffle closed entries and is currently drawing.",
   "raffle.noentrants": "%prefix%There are no entrants in the raffle.",
-  "math.query": "%prefix%Pop Math Quiz! Win %color.currency%{0} %currency%%s%",
-  "math.queryline": "%prefix%%color.emph%{0} %color.default%= %color.special%?",
-  "math.answered": "%prefix%%color.target%{0}%color.default% got the correct answer of %color.special%{1}%color.default% and won %color.currency%{2} %currency%%s%!",
+  "math.query": "%prefix%Pop Math Quiz! {darkblue}[%color.currency%{0} %currency%%s%{darkblue}]",
+  "math.queryline": "%prefix%{green}{0} {purple}= {green}%color.special%??",
+  "math.answered": "%prefix%%color.target%{0}%color.default% got the correct answer of %color.number%{1}%color.default% and won %color.currency%{2} %currency%%s%%color.default%!",
   "math.timeout": "%prefix%No one got the correct answer of %color.special%{0}%color.default% in time."
 }

@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using CounterStrikeSharp.API;
 using NCalc;
 
 namespace EcoRewards.EcoMath;
@@ -50,15 +51,17 @@ public class EquationBuilder {
 
   public EquationBuilder WithExponent(int x, bool parentheses = false) {
     if (parentheses && Equation.Contains(' '))
-      Equation = $"({Equation}) ^ {x}";
+      Equation = $"({Equation}) ** {x}";
     else
-      Equation += $" ^ {x}";
+      Equation += $" ** {x}";
     return this;
   }
 
   public double Evaluate() {
-    var expr = new Expression(Equation);
-    return expr.Evaluate() is double ? (double)(expr.Evaluate() ?? 0) : 0;
+    var expr = new Expression(Equation.Replace(" ", ""));
+    Server.PrintToChatAll(
+      $"Evaluating {Equation.Replace(" ", "")}, result: {expr.Evaluate()}");
+    return Convert.ToDouble(expr.Evaluate());
   }
 
   /// <summary>
@@ -67,9 +70,14 @@ public class EquationBuilder {
   /// </summary>
   /// <returns></returns>
   public double Difficulty() {
-    var length    = Equation.Length;
-    var operators = Equation.Count(c => c is '+' or '-' or '*' or '/' or '%');
-    var answer    = Evaluate();
-    return Math.Min(1, (length * 0.2 + operators * 0.5 + answer * 0.3) / 10);
+    var length           = Equation.Length;
+    var simpleOperators  = Equation.Count(c => c is '+' or '-');
+    var complexOperators = Equation.Count(c => c is '*' or '/' or '%');
+    var answer           = Evaluate();
+    var diff = (length * 0.2 + simpleOperators * 0.5 + complexOperators * 0.7)
+      / 10;
+    if (answer % 1 != 0) diff += 0.2;
+
+    return Math.Min(1, diff);
   }
 }

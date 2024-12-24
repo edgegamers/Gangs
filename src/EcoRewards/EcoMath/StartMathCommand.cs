@@ -1,4 +1,5 @@
-﻿using GangsAPI.Data;
+﻿using CounterStrikeSharp.API;
+using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Services.Commands;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,8 +17,8 @@ public class StartMathCommand(IServiceProvider provider) : ICommand {
     CommandInfoWrapper info) {
     if (math == null) return Task.FromResult(CommandResult.ERROR);
     if (executor == null) return Task.FromResult(CommandResult.PLAYER_ONLY);
-    math.StartMath();
 
+    Server.NextFrame(() => math.StartMath());
     return Task.FromResult(CommandResult.SUCCESS);
   }
 }
