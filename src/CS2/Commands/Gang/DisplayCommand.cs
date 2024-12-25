@@ -35,11 +35,9 @@ public class DisplayCommand(IServiceProvider provider)
     if (info.ArgCount != 2) return CommandResult.PRINT_USAGE;
 
     var display = info.Args[1].ToLower() switch {
-      "0"                 => 0,
-      "1"                 => 1,
-      "chat" or "c"       => 0,
-      "scoreboard" or "s" => 1,
-      _                   => -1
+      "0" or "chat" or "c"       => 0,
+      "1" or "scoreboard" or "s" => 1,
+      _                          => -1
     };
 
     if (display == -1) return CommandResult.PRINT_USAGE;
