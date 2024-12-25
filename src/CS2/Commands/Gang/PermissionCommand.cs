@@ -31,13 +31,13 @@ public class PermissionCommand(IServiceProvider provider)
 
   public override string Name => "permission";
 
-  public override string[] Aliases => ["permission", "perm", "perms"];
-
   public override string[] Usage
     => [
       "listranks", "listperms", "<rank>", "grant <rank> <perm>",
       "revoke <rank> <perm>", "set <rank> <int>"
     ];
+
+  public override string? Description => "Manage the permissions of your gang";
 
   public override void Start(BasePlugin? basePlugin, bool hotReload) {
     plugin = basePlugin!;

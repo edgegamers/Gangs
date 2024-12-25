@@ -11,6 +11,7 @@ public class DepositCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
   public override string Name => "deposit";
   public override string[] Usage => ["<amount/all>"];
+  public override string Description => "Deposit money into your gang's bank";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer gangPlayer, CommandInfoWrapper info) {

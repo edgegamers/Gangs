@@ -12,6 +12,7 @@ public class DisbandCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
   public override string Name => "disband";
   public override string[] Usage => ["", "confirm"];
+  public override string Description => "Disband your gang";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

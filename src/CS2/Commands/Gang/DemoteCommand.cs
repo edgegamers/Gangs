@@ -14,8 +14,8 @@ namespace Commands.Gang;
 public class DemoteCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
   public override string Name => "demote";
-
   public override string[] Usage => ["<player>"];
+  public override string Description => "Demote a player in your gang";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

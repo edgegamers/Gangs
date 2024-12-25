@@ -25,8 +25,8 @@ public class KickCommand(IServiceProvider provider)
     provider.GetRequiredService<IRankManager>();
 
   public override string Name => "kick";
-
   public override string[] Usage => ["<player>"];
+  public override string Description => "Kicks a player from the gang";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

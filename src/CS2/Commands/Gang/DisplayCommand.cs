@@ -27,8 +27,10 @@ public class DisplayCommand(IServiceProvider provider)
     provider.GetRequiredService<IRankManager>();
 
   public override string Name => "display";
-
   public override string[] Usage => ["<0/1>"];
+
+  public override string Description
+    => "Show your gang in chat or the scoreboard";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

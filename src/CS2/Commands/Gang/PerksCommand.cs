@@ -22,6 +22,7 @@ public class PerksCommand(IServiceProvider provider) : ICommand {
     provider.GetRequiredService<IPlayerManager>();
 
   public string Name => "perks";
+  public string? Description => "View and manage the perks of your gang";
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

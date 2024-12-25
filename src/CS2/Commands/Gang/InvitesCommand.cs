@@ -11,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Commands.Gang;
 
+/// <summary>
+/// TODO: Dont make this a GangedPlayerCommand
+/// </summary>
+/// <param name="provider"></param>
 public class InvitesCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
   private readonly IPlayerManager players =
@@ -18,6 +22,7 @@ public class InvitesCommand(IServiceProvider provider)
 
   public override string Name => "invites";
   public override string[] Usage => ["", "<player/steam>"];
+  public override string Description => "View and manage incoming invites";
 
   public override async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {
