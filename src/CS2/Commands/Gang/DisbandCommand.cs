@@ -39,7 +39,8 @@ public class DisbandCommand(IServiceProvider provider)
     var gang = await Gangs.GetGang(player.GangId.Value)
       ?? throw new GangNotFoundException(player.GangId.Value);
 
-    if (info[1] != "confirm") return CommandResult.PRINT_USAGE;
+    if (info[1].Equals("confirm", StringComparison.OrdinalIgnoreCase))
+      return CommandResult.PRINT_USAGE;
 
     if (GangChat != null)
       await GangChat.SendGangChat(gang,
