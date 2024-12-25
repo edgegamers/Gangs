@@ -16,8 +16,8 @@ public class BalanceCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
   public override string Name => "balance";
   public override string[] Aliases => [Name, "credits", "bank"];
-
   public override string[] Usage => ["", "<gang>"];
+  public override string? Description => "Check the balance of a gang";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

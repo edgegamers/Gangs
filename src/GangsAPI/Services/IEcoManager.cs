@@ -9,6 +9,9 @@ public interface IEcoManager : IPluginBehavior {
 
   Task<int> GetBalance(PlayerWrapper player, bool excludeGangCredits = false);
 
+  Task<int> GetBalance(int gangId);
+  Task<int> GetBalance(IGang gang) => GetBalance(gang.GangId);
+
   /// <summary>
   ///   Attempts to purchase an item for the player.
   ///   Returns the resulting balance.

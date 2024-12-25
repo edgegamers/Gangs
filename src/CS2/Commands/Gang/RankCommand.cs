@@ -22,17 +22,20 @@ public class RankCommand(IServiceProvider provider)
   public override string[] Usage
     => ["", "create <rank> <name>", "delete <rank>", "rename <rank> <name>"];
 
+  public override string? Description => "Manage gang ranks";
+
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {
     Debug.Assert(player.GangId != null, "player.GangId != null");
     var gang = await Gangs.GetGang(player.GangId.Value)
       ?? throw new GangNotFoundException(player);
-    if (info.ArgCount == 1) {
-      await Menus.OpenMenu(executor, new RankMenu(Provider, gang));
-      return CommandResult.SUCCESS;
+    switch (info.ArgCount) {
+      case 1:
+        await Menus.OpenMenu(executor, new RankMenu(Provider, gang));
+        return CommandResult.SUCCESS;
+      case < 3:
+        return CommandResult.PRINT_USAGE;
     }
-
-    if (info.ArgCount < 3) return CommandResult.PRINT_USAGE;
 
     var executorRank = await Ranks.GetRank(player)
       ?? throw new RankNotFoundException(player);

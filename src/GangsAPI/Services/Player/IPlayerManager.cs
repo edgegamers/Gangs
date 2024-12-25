@@ -48,7 +48,7 @@ public interface IPlayerManager : IPluginBehavior {
         && p.Name.Contains(query, StringComparison.OrdinalIgnoreCase))
      .ToList();
 
-    return matchedNames.Count != 1 ? null : matchedNames.First();
+    return matchedNames.Count != 1 ? null : matchedNames.FirstOrDefault();
   }
 
   Task<bool> UpdatePlayer(IGangPlayer player);

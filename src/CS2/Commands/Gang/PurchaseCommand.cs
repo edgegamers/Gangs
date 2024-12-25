@@ -27,8 +27,8 @@ public class PurchaseCommand(IServiceProvider provider) : ICommand {
     provider.GetRequiredService<IRankManager>();
 
   public string Name => "purchase";
-
   public string[] Usage => ["<item>"];
+  public string? Description => "Purchase a perk";
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

@@ -12,6 +12,7 @@ public class DisbandCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
   public override string Name => "disband";
   public override string[] Usage => ["", "confirm"];
+  public override string Description => "Disband your gang";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {
@@ -39,7 +40,8 @@ public class DisbandCommand(IServiceProvider provider)
     var gang = await Gangs.GetGang(player.GangId.Value)
       ?? throw new GangNotFoundException(player.GangId.Value);
 
-    if (info[1] != "confirm") return CommandResult.PRINT_USAGE;
+    if (!info[1].Equals("confirm", StringComparison.OrdinalIgnoreCase))
+      return CommandResult.PRINT_USAGE;
 
     if (GangChat != null)
       await GangChat.SendGangChat(gang,

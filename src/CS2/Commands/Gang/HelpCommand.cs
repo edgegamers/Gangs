@@ -14,7 +14,7 @@ public class HelpCommand(IServiceProvider provider,
     provider.GetRequiredService<IStringLocalizer>();
 
   public string Name => "help";
-  public string Description => "Displays help for gangs";
+  public string Description => "Prints a list of commands";
 
   public Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

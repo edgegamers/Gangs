@@ -30,7 +30,7 @@ public static class Startup {
     services.AddScoped<IPerkManager, MockPerkManager>();
     services.AddScoped<IEcoManager, MockEcoManager>();
     services.AddScoped<IGangTargeter, BasicGangTargeter>();
-    services.AddScoped<IGangChatPerk, GangChatPerk>();
+    services.AddScoped<IGangChatPerk, MockGangChatPerk>();
     services
      .TryAddSingleton<IStringLocalizerFactory, LocalFileLocalizerFactory>();
     services.TryAddTransient(typeof(IStringLocalizer), typeof(StringLocalizer));

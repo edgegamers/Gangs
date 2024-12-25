@@ -11,6 +11,7 @@ namespace Commands.Gang;
 public class LeaveCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
   public override string Name => "leave";
+  public override string? Description => "Leave your current gang";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

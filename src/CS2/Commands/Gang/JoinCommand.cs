@@ -45,6 +45,7 @@ public class JoinCommand(IServiceProvider provider) : ICommand {
 
   public string Name => "join";
   public string[] Usage => ["[gang]"];
+  public string Description => "Join a gang";
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

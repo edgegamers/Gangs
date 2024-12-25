@@ -8,7 +8,8 @@ namespace GenericDB;
 
 public abstract class AbstractDBPlayerManager(string connectionString,
   string table = "gang_players", bool testing = false) : IPlayerManager {
-  private readonly Dictionary<ulong, IGangPlayer> cache = new();
+  private readonly IDictionary<ulong, IGangPlayer> cache =
+    new Cache<ulong, IGangPlayer>(TimeSpan.FromMinutes(5));
 
   private readonly SemaphoreSlim semaphore = new(1, 1);
   protected DbConnection Connection = null!;

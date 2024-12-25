@@ -11,8 +11,10 @@ namespace Commands.Gang;
 public class TransferCommand(IServiceProvider provider)
   : GangedPlayerCommand(provider) {
   public override string Name => "transfer";
-
   public override string[] Usage => ["<player>"];
+
+  public override string Description
+    => "Transfer leadership of the gang to another player";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

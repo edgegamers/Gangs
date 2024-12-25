@@ -1,5 +1,6 @@
 using GangsAPI.Data;
 using GangsAPI.Extensions;
+using GangsAPI.Perks;
 using GangsAPI.Services;
 using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
@@ -35,6 +36,11 @@ public abstract class GangTest(IServiceProvider provider) {
   protected readonly IRankManager Ranks =
     provider.GetRequiredService<IRankManager>();
 
-  protected readonly PlayerWrapper TestPlayer =
-    new(new Random().NextULong(), "Test Player");
+  protected readonly IGangChatPerk GangChat =
+    provider.GetRequiredService<IGangChatPerk>();
+
+  protected readonly IEcoManager Eco =
+    provider.GetRequiredService<IEcoManager>();
+
+  protected readonly PlayerWrapper TestPlayer = TestUtil.CreateFakePlayer();
 }

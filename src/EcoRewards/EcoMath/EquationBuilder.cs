@@ -31,6 +31,7 @@ public class EquationBuilder {
   }
 
   public EquationBuilder WithDivision(int x, bool parentheses = false) {
+    if (x == 0) x = 1;
     if (parentheses && Equation.Contains(' '))
       Equation = $"({Equation}) / {x}";
     else
