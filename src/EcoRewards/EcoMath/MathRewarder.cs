@@ -83,7 +83,7 @@ public class MathRewarder(IServiceProvider provider)
     if (parent != null) plugin = parent;
     plugin?.AddTimer(60 * 8, () => {
       var players = Utilities.GetPlayers()
-       .Where(p => p is { IsBot: false, Team: > CsTeam.Spectator })
+       .Where(p => p is { IsBot: false, Team: > CsTeam.None })
        .Select(p => new PlayerWrapper(p))
        .ToList();
 
