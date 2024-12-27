@@ -13,9 +13,8 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
   : ILeaderboard, IPluginBehavior {
   public void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin == null) return;
-    var cmd = provider.GetRequiredService<ICommandManager>();
-    var lbCommand = new LeaderboardCommand(this,
-      provider.GetRequiredService<IGangManager>());
+    var cmd       = provider.GetRequiredService<ICommandManager>();
+    var lbCommand = new LeaderboardCommand(this, provider);
     cmd.RegisterCommand(lbCommand);
     plugin.RegisterAllAttributes(lbCommand);
   }
