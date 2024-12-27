@@ -62,7 +62,7 @@ public class SmokeColorCommand(IServiceProvider provider)
       if (GangChat == null) return CommandResult.SUCCESS;
 
       await GangChat.SendGangChat(player, gang,
-        Locale.Get(MSG.PERK_PURCHASED, color.ToString()));
+        Locale.Get(MSG.PERK_PURCHASED, player.Name ?? player.Steam.ToString(), color.ToString()));
       return CommandResult.SUCCESS;
     }
 
