@@ -50,7 +50,7 @@ public class CommandManager(IServiceProvider provider)
     var wrappedInfo = new CommandInfoWrapper(info);
     Task.Run(async () => {
       try { return await ProcessCommand(wrapper, wrappedInfo); } catch (
-        GangException e) {
+        Exception e) {
         var msg = e.Message;
         await Server.NextFrameAsync(() => {
           provider.GetRequiredService<ILoggerFactory>()
