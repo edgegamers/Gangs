@@ -63,6 +63,16 @@ public class CommandManager(IServiceProvider provider)
           Locale.Get(MSG.GENERIC_ERROR) :
           Locale.Get(MSG.GENERIC_ERROR_INFO, msg));
         return CommandResult.ERROR;
+      } catch (Exception e) {
+        await Server.NextFrameAsync(() => {
+          provider.GetRequiredService<ILoggerFactory>()
+           .CreateLogger("Gangs")
+           .LogError(e,
+              "Encountered an error when processing command: \"{command}\" by {steam}",
+              wrappedInfo.GetCommandString, wrapper?.Steam);
+        });
+        wrappedInfo.ReplySync(Locale.Get(MSG.GENERIC_ERROR));
+        return CommandResult.ERROR;
       }
     });
   }
