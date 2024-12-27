@@ -50,7 +50,7 @@ public class PromoteCommand(IServiceProvider provider)
     var gang = await gangs.GetGang(executor.Steam)
       ?? throw new GangNotFoundException(player);
 
-    var target = await searchPlayer(gang, query);
+    var target = await players.FindPlayerInGang(gang, query);
 
     if (target == null) {
       info.ReplySync(Locale.Get(MSG.GENERIC_PLAYER_NOT_FOUND, query));
@@ -86,13 +86,13 @@ public class PromoteCommand(IServiceProvider provider)
     return CommandResult.SUCCESS;
   }
 
-  private async Task<IGangPlayer?> searchPlayer(IGang gang, string query) {
-    var members = (await players.GetMembers(gang.GangId)).ToList();
-    var player = members.FirstOrDefault(p
-      => query.Equals(p.Name, StringComparison.OrdinalIgnoreCase));
-    if (player != null) return player;
-
-    if (!ulong.TryParse(query, out var id)) return null;
-    return members.FirstOrDefault(p => p.Steam == id);
-  }
+  // private async Task<IGangPlayer?> searchPlayer(IGang gang, string query) {
+  //   var members = (await players.GetMembers(gang.GangId)).ToList();
+  //   var player = members.FirstOrDefault(p
+  //     => query.Equals(p.Name, StringComparison.OrdinalIgnoreCase));
+  //   if (player != null) return player;
+  //
+  //   if (!ulong.TryParse(query, out var id)) return null;
+  //   return members.FirstOrDefault(p => p.Steam == id);
+  // }
 }
