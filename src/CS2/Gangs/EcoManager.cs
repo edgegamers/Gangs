@@ -97,8 +97,8 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
 
     // Pull remaining from player
     if (balanceDue > 0) {
-      usedPlayer = true;
-      await Grant(player, -balanceDue, print, item);
+      usedPlayer       = true;
+      balanceRemaining = await Grant(player, -balanceDue, print, item);
     }
 
     if (!print) return balanceRemaining;
