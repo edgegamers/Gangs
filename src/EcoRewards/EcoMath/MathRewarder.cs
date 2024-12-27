@@ -81,7 +81,7 @@ public class MathRewarder(IServiceProvider provider)
 
   public void Start(BasePlugin? parent, bool hotReload) {
     if (parent != null) plugin = parent;
-    plugin?.AddTimer(60 * 8, () => {
+    plugin?.AddTimer(60 * 10, () => {
       var players = Utilities.GetPlayers()
        .Where(p => p is { IsBot: false, Team: > CsTeam.None })
        .Select(p => new PlayerWrapper(p))
