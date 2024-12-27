@@ -27,7 +27,7 @@ public class CreateCommand(IServiceProvider provider) : ICommand {
     provider.GetRequiredService<IStringLocalizer>();
 
   public string Name => "create";
-  public string Description => "Creates a new gang";
+  public string Description => "Create a gang";
   public string[] Usage => ["[name]"];
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,

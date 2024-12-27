@@ -33,8 +33,8 @@ public class DoorPolicyCommand(IServiceProvider provider)
     provider.GetRequiredService<IRankManager>();
 
   public override string Name => "doorpolicy";
-
   public override string[] Usage => ["", "[policy]"];
+  public override string Description => "Change the door policy of your gang.";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

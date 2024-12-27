@@ -25,8 +25,8 @@ public class MotdCommand(IServiceProvider provider) : ICommand {
   public string Name => "motd";
 
   public string[] Aliases => ["motd", "description"];
-
   public string[] Usage => ["[motd]"];
+  public string? Description => "Set the gang's message of the day";
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

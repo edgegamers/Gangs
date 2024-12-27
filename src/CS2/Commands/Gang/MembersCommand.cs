@@ -32,8 +32,8 @@ public class MembersCommand(IServiceProvider provider) : ICommand {
     provider.GetRequiredService<IPlayerTargeter>();
 
   public string Name => "members";
-
   public string[] Usage => ["", "<gang/player>"];
+  public string? Description => "View the members of a gang";
 
   public async Task<CommandResult> Execute(PlayerWrapper? executor,
     CommandInfoWrapper info) {

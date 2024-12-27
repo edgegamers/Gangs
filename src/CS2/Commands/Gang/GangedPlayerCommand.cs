@@ -71,12 +71,10 @@ public abstract class GangedPlayerCommand(IServiceProvider provider)
 
     var gangPlayer = await Players.GetPlayer(executor.Steam)
       ?? throw new PlayerNotFoundException(executor.Steam);
-    if (gangPlayer.GangId == null || gangPlayer.GangRank == null) {
-      info.ReplySync(Locale.Get(MSG.NOT_IN_GANG));
-      return CommandResult.ERROR;
-    }
-
-    return await Execute(executor, gangPlayer, info);
+    if (gangPlayer is { GangId: not null, GangRank: not null })
+      return await Execute(executor, gangPlayer, info);
+    info.ReplySync(Locale.Get(MSG.NOT_IN_GANG));
+    return CommandResult.ERROR;
   }
 
   abstract protected Task<CommandResult> Execute(PlayerWrapper executor,

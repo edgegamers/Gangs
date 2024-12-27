@@ -12,7 +12,8 @@ namespace GenericDB;
 public abstract class AbstractDBGangManager(IServiceProvider provider,
   string connectionString, string table = "gang_gangs", bool testing = false)
   : IGangManager {
-  private readonly Dictionary<int, IGang> cache = new();
+  private readonly IDictionary<int, IGang> cache =
+    new Cache<int, IGang>(TimeSpan.FromMinutes(10));
 
   private readonly IPlayerManager players =
     provider.GetRequiredService<IPlayerManager>();

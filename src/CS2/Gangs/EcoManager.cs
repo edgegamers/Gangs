@@ -37,8 +37,6 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
-  private readonly string statId = new BalanceStat().StatId;
-
   public async Task<bool> CanAfford(PlayerWrapper player, int cost,
     bool excludeGangCredits = false) {
     var (playerBalance, total) = await getBalance(player.Steam);
@@ -49,6 +47,12 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     bool excludeGangCredits = false) {
     var (playerBalance, total) = await getBalance(player.Steam);
     return excludeGangCredits ? playerBalance : total;
+  }
+
+  public async Task<int> GetBalance(int gangId) {
+    var (success, balance) =
+      await gangStats.GetForGang<int>(gangId, BalanceStat.STAT_ID);
+    return success ? balance : 0;
   }
 
   public async Task<int> TryPurchase(PlayerWrapper player, int balanceDue,
@@ -146,7 +150,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
       await grantSemaphore.WaitAsync(TimeSpan.FromSeconds(1));
       var (playerBalance, _) = await getBalance(player.Steam);
 
-      await playerStats.SetForPlayer(player.Steam, statId,
+      await playerStats.SetForPlayer(player.Steam, BalanceStat.STAT_ID,
         playerBalance + amount);
 
       if (!print) return playerBalance + amount;
@@ -163,10 +167,11 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
 
   public async Task<int> Grant(int gangId, int amount, bool print,
     string? reason = null) {
-    var (success, balance) = await gangStats.GetForGang<int>(gangId, statId);
+    var (success, balance) =
+      await gangStats.GetForGang<int>(gangId, BalanceStat.STAT_ID);
     if (!success) balance = 0;
 
-    await gangStats.SetForGang(gangId, statId, balance + amount);
+    await gangStats.SetForGang(gangId, BalanceStat.STAT_ID, balance + amount);
     if (!print) return balance + amount;
 
     var gang = await gangs.GetGang(gangId)
@@ -186,7 +191,8 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
 
   private async Task<(int, int)> getBalance(ulong steam) {
     var gangTotal = 0;
-    var (success, balance) = await playerStats.GetForPlayer<int>(steam, statId);
+    var (success, balance) =
+      await playerStats.GetForPlayer<int>(steam, BalanceStat.STAT_ID);
     if (success) gangTotal += balance;
     var playerTotal        = gangTotal;
 
@@ -200,7 +206,8 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     if (!rank.Permissions.HasFlag(Perm.BANK_WITHDRAW))
       return (playerTotal, gangTotal);
     var (gSuccess, gBalance) =
-      await gangStats.GetForGang<int>(gangPlayer.GangId.Value, statId);
+      await gangStats.GetForGang<int>(gangPlayer.GangId.Value,
+        BalanceStat.STAT_ID);
     if (gSuccess) gangTotal += gBalance;
 
     return (playerTotal, gangTotal);

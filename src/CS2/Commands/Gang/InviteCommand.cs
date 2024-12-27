@@ -22,9 +22,7 @@ public class InviteCommand(IServiceProvider provider)
     provider.GetRequiredService<IPlayerTargeter>();
 
   public override string Name => "invite";
-
   public override string Description => "Invites a player to the gang";
-
   public override string[] Usage => ["[player/steam]", "cancel [player/steam]"];
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,

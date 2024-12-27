@@ -25,8 +25,8 @@ public class PromoteCommand(IServiceProvider provider)
     provider.GetRequiredService<IRankManager>();
 
   public override string Name => "promote";
-
   public override string[] Usage => ["<player>"];
+  public override string? Description => "Promote a player in your gang";
 
   override protected async Task<CommandResult> Execute(PlayerWrapper executor,
     IGangPlayer player, CommandInfoWrapper info) {

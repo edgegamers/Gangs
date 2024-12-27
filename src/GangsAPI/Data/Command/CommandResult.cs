@@ -18,7 +18,8 @@ public enum CommandResult {
   UNKNOWN_COMMAND,
 
   /// <summary>
-  ///   The command has an invalid number of arguments
+  ///   The command was passed invalid arguments, including
+  ///   incorrect number, or an invalid target
   /// </summary>
   INVALID_ARGS,
 

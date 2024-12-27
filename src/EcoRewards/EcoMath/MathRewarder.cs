@@ -81,9 +81,9 @@ public class MathRewarder(IServiceProvider provider)
 
   public void Start(BasePlugin? parent, bool hotReload) {
     if (parent != null) plugin = parent;
-    plugin?.AddTimer(60 * 15, () => {
+    plugin?.AddTimer(60 * 10, () => {
       var players = Utilities.GetPlayers()
-       .Where(p => p is { IsBot: false, Team: > CsTeam.Spectator })
+       .Where(p => p is { IsBot: false, Team: > CsTeam.None })
        .Select(p => new PlayerWrapper(p))
        .ToList();
 
@@ -111,30 +111,34 @@ public class MathRewarder(IServiceProvider provider)
   }
 
   private IMathService.MathParams generateEquation() {
-    EquationBuilder eq  = new(rng.Next(1, 20));
-    var             min = rng.Next(1, 10);
-    for (var i = 0; i < min; i++) {
-      if (i > 1 && rng.NextDouble() < 0.4) break;
-      eq = rng.Next(6) switch {
-        0 => eq.WithAddition(rng.Next(-10, 10), rng.Next(3) == 0),
-        1 => eq.WithSubtraction(rng.Next(-10, 10), rng.Next(3) == 0),
-        2 => eq.WithMultiplication(rng.Next(-5, 5), rng.Next(3) == 0),
-        3 => eq.WithDivision(rng.Next(-3, 10), rng.Next(3) == 0),
-        4 => eq.WithModulus(rng.Next(2, 5), rng.Next(3) == 0),
-        5 => eq.WithExponent(rng.Next(0, 3), rng.Next(3) == 0),
-        _ => eq.WithAddition(rng.Next(1, 20), rng.Next(3) == 0)
+    while (true) {
+      EquationBuilder eq  = new(rng.Next(1, 20));
+      var             min = rng.Next(1, 10);
+      for (var i = 0; i < min; i++) {
+        if (i > 1 && rng.NextDouble() < 0.4) break;
+        eq = rng.Next(6) switch {
+          0 => eq.WithAddition(rng.Next(-10, 10), rng.Next(3) == 0),
+          1 => eq.WithSubtraction(rng.Next(-10, 10), rng.Next(3) == 0),
+          2 => eq.WithMultiplication(rng.Next(-5, 5), rng.Next(3) == 0),
+          3 => eq.WithDivision(rng.Next(-3, 10), rng.Next(3) == 0),
+          4 => eq.WithModulus(rng.Next(2, 5), rng.Next(3) == 0),
+          5 => eq.WithExponent(rng.Next(0, 3), rng.Next(3) == 0),
+          _ => eq.WithAddition(rng.Next(1, 20), rng.Next(3) == 0)
+        };
+      }
+
+      var result = new IMathService.MathParams {
+        Equation = eq.Equation,
+        Reward =
+          (int)Math.Ceiling(Math.Pow(eq.Difficulty() * 5, 2)
+            * Math.Sqrt(Utilities.GetPlayers().Count * 4)),
+        Answer = eq.Evaluate()
       };
+
+      if (!double.IsFinite(result.Answer)) continue;
+
+      return result;
     }
-
-    var result = new IMathService.MathParams {
-      Equation = eq.Equation,
-      Reward =
-        (int)Math.Ceiling(Math.Pow(eq.Difficulty() * 5, 2)
-          * Math.Sqrt(Utilities.GetPlayers().Count * 4)),
-      Answer = eq.Evaluate()
-    };
-
-    return result;
   }
 
   private string convertToFancy(string eq) {
