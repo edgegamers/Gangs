@@ -34,7 +34,7 @@ public class DepositCommand(IServiceProvider provider)
         return CommandResult.INVALID_ARGS;
       }
 
-      amount = await Eco.GetBalance(executor);
+      amount = await Eco.GetBalance(executor, true);
       if (amount <= 0) {
         info.ReplySync(Locale.Get(MSG.COMMAND_BALANCE_NONE));
         return CommandResult.ERROR;
