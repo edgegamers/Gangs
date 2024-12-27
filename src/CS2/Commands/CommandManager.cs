@@ -50,7 +50,7 @@ public class CommandManager(IServiceProvider provider)
     var wrappedInfo = new CommandInfoWrapper(info);
     Task.Run(async () => {
       try { return await ProcessCommand(wrapper, wrappedInfo); } catch (
-        GangException e) {
+        Exception e) {
         var msg = e.Message;
         await Server.NextFrameAsync(() => {
           provider.GetRequiredService<ILoggerFactory>()
@@ -62,16 +62,6 @@ public class CommandManager(IServiceProvider provider)
         wrappedInfo.ReplySync(string.IsNullOrEmpty(msg) ?
           Locale.Get(MSG.GENERIC_ERROR) :
           Locale.Get(MSG.GENERIC_ERROR_INFO, msg));
-        return CommandResult.ERROR;
-      } catch (Exception e) {
-        await Server.NextFrameAsync(() => {
-          provider.GetRequiredService<ILoggerFactory>()
-           .CreateLogger("Gangs")
-           .LogError(e,
-              "Encountered an error when processing command: \"{command}\" by {steam}",
-              wrappedInfo.GetCommandString, wrapper?.Steam);
-        });
-        wrappedInfo.ReplySync(Locale.Get(MSG.GENERIC_ERROR));
         return CommandResult.ERROR;
       }
     });
