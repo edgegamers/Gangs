@@ -65,7 +65,7 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
     var desc = provider.GetService<IMotdPerk>();
     if (desc != null) {
       var motd                = await desc.GetMotd(gang);
-      if (motd != null) title += $"\n {ChatColors.Grey}{motd}";
+      if (motd != null) title += $"\\n {ChatColors.Grey}{motd}";
     }
 
     player.PrintToChat(title);

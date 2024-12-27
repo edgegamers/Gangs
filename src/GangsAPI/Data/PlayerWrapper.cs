@@ -137,7 +137,7 @@ public class PlayerWrapper {
     }
 
     Server.NextFrame(() => {
-      foreach (var s in message.Split('\n')) Player.PrintToChat(s);
+      foreach (var s in message.Split("\\n")) Player.PrintToChat(s);
     });
   }
 
@@ -149,7 +149,7 @@ public class PlayerWrapper {
     }
 
     Server.NextFrame(() => {
-      foreach (var s in message.Split('\n')) Player.PrintToConsole(s);
+      foreach (var s in message.Split("\\n")) Player.PrintToConsole(s);
     });
   }
 
