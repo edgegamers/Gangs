@@ -28,8 +28,7 @@ public class EloAssigner(ILeaderboard lb) : IPluginBehavior {
     ranks.Clear();
 
     var players = Utilities.GetPlayers()
-     .Where(player => !player.IsBot && player.Team != CsTeam.Spectator
-        && AdminManager.PlayerHasPermissions(player, "@ego/dssilver"))
+     .Where(player => !player.IsBot && player.Team != CsTeam.Spectator)
      .Select(p => new PlayerWrapper(p))
      .ToList();
 
@@ -48,8 +47,7 @@ public class EloAssigner(ILeaderboard lb) : IPluginBehavior {
 
   private void OnTick() {
     var players = Utilities.GetPlayers()
-     .Where(player => !player.IsBot && player.Team != CsTeam.Spectator
-        && AdminManager.PlayerHasPermissions(player, "@ego/dssilver"));
+     .Where(player => !player.IsBot && player.Team != CsTeam.Spectator);
 
     foreach (var player in players) {
       if (!ranks.TryGetValue(player.SteamID, out var rankInfo)) continue;
