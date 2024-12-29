@@ -6,6 +6,7 @@ using GangsAPI.Services.Commands;
 using GangsAPI.Services.Gang;
 using Microsoft.Extensions.DependencyInjection;
 using MySqlConnector;
+using Dapper;
 
 namespace Leaderboard;
 
@@ -50,8 +51,7 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
 
     cmd.Parameters.Add(new MySqlParameter("@gang", gang));
 
-    var result = await cmd.ExecuteScalarAsync();
-    return result == null ? null : Convert.ToInt32(result);
+    return await connection.QueryFirstOrDefaultAsync<int?>(cmd.CommandText);
   }
 
   public async Task<int?> GetELO(ulong steam) {
@@ -64,8 +64,7 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
 
     cmd.Parameters.Add(new MySqlParameter("@steam", steam));
 
-    var result = await cmd.ExecuteScalarAsync();
-    return result == null ? null : Convert.ToInt32(result);
+    return await connection.QueryFirstOrDefaultAsync<int?>(cmd.CommandText);
   }
 
   public async Task<IEnumerable<ILeaderboard.PlayerRank>> GetTopPlayers(
@@ -80,20 +79,8 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
     cmd.Parameters.Add(new MySqlParameter("@limit", limit));
     cmd.Parameters.Add(new MySqlParameter("@offset", offset));
 
-    await using var reader = await cmd.ExecuteReaderAsync();
-    var             result = new List<ILeaderboard.PlayerRank>();
-
-    while (await reader.ReadAsync())
-      result.Add(new ILeaderboard.PlayerRank {
-        Steam      = Convert.ToUInt64(reader.GetString(0)),
-        Name       = reader.GetString(1),
-        Score      = reader.GetFloat(2),
-        Position   = reader.GetInt32(3),
-        Percentile = reader.GetFloat(4),
-        ELO        = reader.GetFloat(5)
-      });
-
-    return result;
+    return await connection
+     .QueryAsync<ILeaderboard.PlayerRank>(cmd.CommandText);
   }
 
   public async Task<ILeaderboard.PlayerRank?> GetPlayerRank(ulong steam) {
@@ -106,16 +93,8 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
 
     cmd.Parameters.Add(new MySqlParameter("@steam", steam));
 
-    await using var reader = await cmd.ExecuteReaderAsync();
-    if (!await reader.ReadAsync()) return null;
-
-    return new ILeaderboard.PlayerRank {
-      Steam      = Convert.ToUInt64(reader.GetString(0)),
-      Name       = reader.GetString(1),
-      Score      = reader.GetFloat(2),
-      Position   = reader.GetInt32(3),
-      Percentile = reader.GetFloat(4),
-      ELO        = reader.GetFloat(5)
-    };
+    return connection
+     .Query<ILeaderboard.PlayerRank>(cmd.CommandText, new { steam })
+     .FirstOrDefault();
   }
 }
