@@ -17,8 +17,8 @@ public class KDRData {
 
   public override string ToString() {
     var deaths = TDeaths + CTDeaths;
-    if (deaths == 0) return $"{ChatColors.LightRed}{TKills}\n{CTKills}";
-    var line = $"CT KDR: {CTKills}/{CTDeaths} ({CTKills / CTDeaths:F2})\n";
+    if (deaths == 0) return $"{ChatColors.LightRed}{TKills}\\n{CTKills}";
+    var line = $"CT KDR: {CTKills}/{CTDeaths} ({CTKills / CTDeaths:F2})\\n";
     line += $"T KDR: {TKills}/{TDeaths} ({TKills / TDeaths:F2})";
     return line;
   }

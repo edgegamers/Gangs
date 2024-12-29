@@ -42,7 +42,7 @@ public abstract class AbstractMenu<T>(IMenuManager menus,
   virtual protected async Task Show(PlayerWrapper player, List<T> items) {
     for (var i = 0; i < items.Count; i++) {
       var str = await FormatItem(player, i, items[i]);
-      foreach (var s in str.Split('\n')) await Printer.Invoke(player, s);
+      foreach (var s in str.Split("\n")) await Printer.Invoke(player, s);
     }
   }
 

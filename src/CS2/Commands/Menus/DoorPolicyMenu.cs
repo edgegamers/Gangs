@@ -36,7 +36,7 @@ public class DoorPolicyMenu(IServiceProvider provider, DoorPolicy active)
     var result = item == active ?
       $"{index + 1}. {ChatColors.Green}{item.ToString().ToTitleCase()} (Selected)" :
       $"{index + 1}. {ChatColors.LightRed}{item.ToString().ToTitleCase()}";
-    if (index == 0) result = $" {ChatColors.DarkBlue}Door Policy\n{result}";
+    if (index == 0) result = $" {ChatColors.DarkBlue}Door Policy\\n{result}";
     return Task.FromResult(result);
   }
 }

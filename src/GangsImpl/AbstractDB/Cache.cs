@@ -1,11 +1,12 @@
 ﻿using System.Collections;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GenericDB;
 
 public class Cache<TKey, TValue>(TimeSpan expiration)
   : IDictionary<TKey, TValue> where TKey : notnull {
-  private readonly Dictionary<TKey, CacheItem<TValue?>> cache = new();
+  private readonly ConcurrentDictionary<TKey, CacheItem<TValue?>> cache = new();
 
   public void Add(TKey key, TValue value) {
     cache[key] = new CacheItem<TValue?>(value, expiration);
@@ -16,7 +17,7 @@ public class Cache<TKey, TValue>(TimeSpan expiration)
       && DateTimeOffset.Now - cached.Created < cached.ExpiresAfter;
   }
 
-  public bool Remove(TKey key) { return cache.Remove(key); }
+  public bool Remove(TKey key) { return cache.Remove(key, out _); }
 
   public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) {
     if (!cache.TryGetValue(key, out var cached)) {
@@ -29,7 +30,7 @@ public class Cache<TKey, TValue>(TimeSpan expiration)
       return true;
     }
 
-    cache.Remove(key);
+    cache.Remove(key, out _);
     value = default;
     return false;
   }
@@ -82,7 +83,7 @@ public class Cache<TKey, TValue>(TimeSpan expiration)
   }
 
   public bool Remove(KeyValuePair<TKey, TValue> item) {
-    return cache.Remove(item.Key);
+    return cache.Remove(item.Key, out _);
   }
 
   public int Count
