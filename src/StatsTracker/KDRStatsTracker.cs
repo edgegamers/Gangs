@@ -55,7 +55,7 @@ public class KDRStatsTracker(IServiceProvider provider) : IPluginBehavior {
       else
         stat.CTKills++;
 
-      await playerStats.SetForPlayer(wrapper.Steam, statId, stat);
+      await playerStats.SetForPlayer(killerWrapper.Steam, statId, stat);
     });
 
     return HookResult.Continue;
