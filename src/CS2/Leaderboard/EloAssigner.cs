@@ -1,6 +1,7 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
+using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Utils;
 using GangsAPI;
 using GangsAPI.Data;
@@ -27,7 +28,8 @@ public class EloAssigner(ILeaderboard lb) : IPluginBehavior {
     ranks.Clear();
 
     var players = Utilities.GetPlayers()
-     .Where(player => !player.IsBot && player.Team != CsTeam.Spectator)
+     .Where(player => !player.IsBot && player.Team != CsTeam.Spectator
+        && AdminManager.PlayerHasPermissions(player, "@ego/dssilver"))
      .Select(p => new PlayerWrapper(p))
      .ToList();
 
@@ -46,12 +48,13 @@ public class EloAssigner(ILeaderboard lb) : IPluginBehavior {
 
   private void OnTick() {
     var players = Utilities.GetPlayers()
-     .Where(player => !player.IsBot && player.Team != CsTeam.Spectator);
+     .Where(player => !player.IsBot && player.Team != CsTeam.Spectator
+        && AdminManager.PlayerHasPermissions(player, "@ego/dssilver"));
 
     foreach (var player in players) {
-      // if (!ranks.TryGetValue(player.SteamID, out var rankInfo)) continue;
+      if (!ranks.TryGetValue(player.SteamID, out var rankInfo)) continue;
       player.CompetitiveRankType = 11;
-      player.CompetitiveRanking  = 5000;
+      player.CompetitiveRanking  = rankInfo;
       player.CompetitiveWins     = 777;
     }
   }
