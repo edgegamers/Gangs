@@ -10,7 +10,7 @@ using MySqlConnector;
 namespace Leaderboard;
 
 public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
-  : ILeaderboard, IPluginBehavior {
+  : ILeaderboard {
   public void Start(BasePlugin? plugin, bool hotReload) {
     if (plugin == null) return;
     var cmd       = provider.GetRequiredService<ICommandManager>();
@@ -52,5 +52,70 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
 
     var result = await cmd.ExecuteScalarAsync();
     return result == null ? null : Convert.ToInt32(result);
+  }
+
+  public async Task<int?> GetELO(ulong steam) {
+    await using var connection = new MySqlConnection(config.ConnectionString);
+    await connection.OpenAsync();
+
+    var cmd = connection.CreateCommand();
+    cmd.CommandText =
+      $"SELECT ELO FROM {config.TablePrefix}_player_leaderboard WHERE Steam = @steam LIMIT 1";
+
+    cmd.Parameters.Add(new MySqlParameter("@steam", steam));
+
+    var result = await cmd.ExecuteScalarAsync();
+    return result == null ? null : Convert.ToInt32(result);
+  }
+
+  public async Task<IEnumerable<ILeaderboard.PlayerRank>> GetTopPlayers(
+    int limit = 10, int offset = 0) {
+    await using var connection = new MySqlConnection(config.ConnectionString);
+    await connection.OpenAsync();
+
+    var cmd = connection.CreateCommand();
+    cmd.CommandText =
+      $"SELECT Steam, Name, Score, Position, Percentile, ELO FROM {config.TablePrefix}_player_leaderboard ORDER BY Score DESC LIMIT @limit OFFSET @offset";
+
+    cmd.Parameters.Add(new MySqlParameter("@limit", limit));
+    cmd.Parameters.Add(new MySqlParameter("@offset", offset));
+
+    await using var reader = await cmd.ExecuteReaderAsync();
+    var             result = new List<ILeaderboard.PlayerRank>();
+
+    while (await reader.ReadAsync())
+      result.Add(new ILeaderboard.PlayerRank {
+        Steam      = Convert.ToUInt64(reader.GetString(0)),
+        Name       = reader.GetString(1),
+        Score      = reader.GetFloat(2),
+        Position   = reader.GetInt32(3),
+        Percentile = reader.GetFloat(4),
+        ELO        = reader.GetFloat(5)
+      });
+
+    return result;
+  }
+
+  public async Task<ILeaderboard.PlayerRank?> GetPlayerRank(ulong steam) {
+    await using var connection = new MySqlConnection(config.ConnectionString);
+    await connection.OpenAsync();
+
+    var cmd = connection.CreateCommand();
+    cmd.CommandText =
+      $"SELECT Steam, Name, Score, Position, Percentile, ELO FROM {config.TablePrefix}_player_leaderboard WHERE Steam = @steam LIMIT 1";
+
+    cmd.Parameters.Add(new MySqlParameter("@steam", steam));
+
+    await using var reader = await cmd.ExecuteReaderAsync();
+    if (!await reader.ReadAsync()) return null;
+
+    return new ILeaderboard.PlayerRank {
+      Steam      = Convert.ToUInt64(reader.GetString(0)),
+      Name       = reader.GetString(1),
+      Score      = reader.GetFloat(2),
+      Position   = reader.GetInt32(3),
+      Percentile = reader.GetFloat(4),
+      ELO        = reader.GetFloat(5)
+    };
   }
 }

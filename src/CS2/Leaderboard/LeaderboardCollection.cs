@@ -7,5 +7,6 @@ namespace Leaderboard;
 public static class LeaderboardCollection {
   public static void RegisterLeaderboard(this IServiceCollection provider) {
     provider.AddPluginBehavior<ILeaderboard, MSLeaderboard>();
+    provider.AddPluginBehavior<EloAssigner>();
   }
 }
