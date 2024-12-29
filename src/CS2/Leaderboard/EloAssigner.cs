@@ -31,16 +31,10 @@ public class EloAssigner(ILeaderboard lb) : IPluginBehavior {
      .Select(p => new PlayerWrapper(p))
      .ToList();
 
-    Server.PrintToChatAll($"Retrieving ELOs of {players.Count} players...");
-
     try {
       Task.Run(async () => {
         foreach (var player in players) {
-          await Server.NextFrameAsync(()
-            => Server.PrintToChatAll($"Retrieving ELO of {player.Name}..."));
-          var elo = await lb.GetELO(player.Steam);
-          await Server.NextFrameAsync(()
-            => Server.PrintToChatAll($"{player.Name} has ELO of {elo}"));
+          var elo                               = await lb.GetELO(player.Steam);
           if (elo.HasValue) ranks[player.Steam] = elo.Value;
         }
       });
@@ -55,9 +49,9 @@ public class EloAssigner(ILeaderboard lb) : IPluginBehavior {
      .Where(player => !player.IsBot && player.Team != CsTeam.Spectator);
 
     foreach (var player in players) {
-      if (!ranks.TryGetValue(player.SteamID, out var rankInfo)) continue;
+      // if (!ranks.TryGetValue(player.SteamID, out var rankInfo)) continue;
       player.CompetitiveRankType = 11;
-      player.CompetitiveRanking  = rankInfo;
+      player.CompetitiveRanking  = 5000;
       player.CompetitiveWins     = 777;
     }
   }
