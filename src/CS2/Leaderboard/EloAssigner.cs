@@ -54,6 +54,8 @@ public class EloAssigner(ILeaderboard lb) : IPluginBehavior {
       player.CompetitiveRankType = 11;
       player.CompetitiveRanking  = rankInfo;
       player.CompetitiveWins     = 777;
+      Utilities.SetStateChanged(player, "CCSPlayerController",
+        "m_iCompetitiveRankType");
     }
   }
 }

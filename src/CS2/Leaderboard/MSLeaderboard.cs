@@ -58,14 +58,15 @@ public class MSLeaderboard(IServiceProvider provider, IDBConfig config)
     await using var connection = new MySqlConnection(config.ConnectionString);
     await connection.OpenAsync();
 
-    var cmd = connection.CreateCommand();
-    cmd.CommandText =
+    var query =
       $"SELECT ELO FROM {config.TablePrefix}_player_leaderboard WHERE Steam = @steam LIMIT 1";
 
-    cmd.Parameters.Add(new MySqlParameter("@steam", steam));
+    var elo = await connection.QuerySingleOrDefaultAsync<decimal?>(query,
+      new { steam });
 
-    return await connection.QueryFirstOrDefaultAsync<int?>(cmd.CommandText);
+    return elo.HasValue ? (int)Math.Round(elo.Value) : null;
   }
+
 
   public async Task<IEnumerable<ILeaderboard.PlayerRank>> GetTopPlayers(
     int limit = 10, int offset = 0) {
