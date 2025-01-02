@@ -42,7 +42,7 @@
   "command.rank.rename_prompt": "%prefix%Please use %color.command%/gang rank rename {0} [new name]%color.default% to rename the rank.",
   "command.transfer.subordinate": "%prefix%You can only transfer ownership to someone with the \"%color.special%{0}%color.default%\" rank.",
   "command.coinflip.sent": "%prefix%You sent a coinflip request to %color.target%{0}%color.default% for %color.currency%{1} %currency%%s%.",
-  "command.coinflip.received": "%prefix%%color.target%{0}%color.default% sent you a coinflip request for %color.currency%{1} %currency%%s%.\n%prefix%Type %color.command%/coinflip yes%color.default% to accept.",
+  "command.coinflip.received": "%prefix%%color.target%{0}%color.default% sent you a coinflip request for %color.currency%{1} %currency%%s%.\\n%prefix%Type %color.command%/coinflip yes%color.default% to accept.",
   "command.coinflip.rejected": "%prefix%%color.target%{0}%color.default% rejected your coinflip request.",
   "command.coinflip.result": "%prefix%%color.target%{0}%color.default% won a coinflip against %color.target%{1}%color.default% for %color.currency%{2} %currency%%s%.",
   "command.coinflip.cooldown": "%prefix%You must wait before sending another coinflip request to %color.target%{0}%color.default%.",
