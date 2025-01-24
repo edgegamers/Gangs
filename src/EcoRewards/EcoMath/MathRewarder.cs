@@ -115,7 +115,7 @@ public class MathRewarder(IServiceProvider provider)
       EquationBuilder eq  = new(rng.Next(1, 20));
       var             min = rng.Next(1, 10);
       for (var i = 0; i < min; i++) {
-        if (i > 1 && rng.NextDouble() < 0.4) break;
+        if (i > 1 && rng.NextDouble() < 0.5) break;
         eq = rng.Next(6) switch {
           0 => eq.WithAddition(rng.Next(-10, 10), rng.Next(3) == 0),
           1 => eq.WithSubtraction(rng.Next(-10, 10), rng.Next(3) == 0),
