@@ -23,7 +23,13 @@ public class BasicGangTargeter(IServiceProvider provider)
     PlayerWrapper? executor = null, bool print = true) {
     var existing = (await gangs.GetGangs()).ToList();
 
-    var matches = existing.Where(g => g.Name.Contains(query)).ToList();
+    var matches = existing
+     .Where(g => g.Name.Equals(query, StringComparison.OrdinalIgnoreCase))
+     .ToList();
+    if (matches.Count == 1) return matches.First();
+
+    matches = existing.Where(g => g.Name.Contains(query)).ToList();
+
     switch (matches.Count) {
       case 1:
         return matches.First();
