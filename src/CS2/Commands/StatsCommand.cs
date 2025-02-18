@@ -45,12 +45,9 @@ public class StatsCommand(IServiceProvider provider) : ICommand {
         continue;
       }
 
-      var    result  = await task;
-      bool   success = result.Item1;
-      object value   = result.Item2;
-
-      if (!success || value is null) continue;
-      var str = value.ToString() ?? $"{stat.Name} {stat.Description}";
+      var result = await task;
+      if (result is null) continue;
+      var str = result.ToString() ?? $"{stat.Name} {stat.Description}";
       list.Add(str);
     }
 
