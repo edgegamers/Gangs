@@ -50,10 +50,9 @@ public class InviteCommand(IServiceProvider provider)
       }
     }
 
-    var (success, invites) =
+    var invites =
       await GangStats.GetForGang<InvitationData>(player.GangId.Value,
-        gangInviteId);
-    if (!success || invites == null) invites = new InvitationData();
+        gangInviteId) ?? new InvitationData();
 
     if (info[1].Equals("cancel", StringComparison.OrdinalIgnoreCase))
       return await handleCancelInvite(info, player, invites);
@@ -214,11 +213,9 @@ public class InviteCommand(IServiceProvider provider)
 
   private async Task<CommandResult> addPendingInvitation(IGangPlayer player,
     ulong steam) {
-    var (fetchedPending, pending) =
+    var pending =
       await PlayerStats.GetForPlayer<PendingInvitationData>(steam,
-        playerPendingId);
-    if (!fetchedPending || pending == null)
-      pending = new PendingInvitationData();
+        playerPendingId) ?? new PendingInvitationData();
 
     Debug.Assert(player.GangId != null, "player.GangId != null");
     pending.AddInvitation(player.GangId.Value);
@@ -228,10 +225,10 @@ public class InviteCommand(IServiceProvider provider)
   }
 
   private async Task cancelPendingInvitation(IGangPlayer player, ulong steam) {
-    var (fetchedPending, pending) =
+    var pending =
       await PlayerStats.GetForPlayer<PendingInvitationData>(steam,
         playerPendingId);
-    if (!fetchedPending || pending == null) return;
+    if (pending == null) return;
 
     Debug.Assert(player.GangId != null, "player.GangId != null");
     pending.RemoveInvitation(player.GangId.Value);

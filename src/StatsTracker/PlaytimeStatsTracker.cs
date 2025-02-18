@@ -32,7 +32,7 @@ public class PlaytimeStatsTracker(IServiceProvider provider) : IPluginBehavior {
       Task.Run(async () => {
         var gangPlayer = await players.GetPlayer(player.Steam);
         if (gangPlayer == null) return;
-        var (_, stat) =
+        var stat =
           await playerStats.GetForPlayer<PlaytimeData>(player.Steam, statId);
         stat ??= new PlaytimeData();
         switch (player.Team) {

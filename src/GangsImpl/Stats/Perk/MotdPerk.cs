@@ -19,30 +19,26 @@ public class MotdPerk(IServiceProvider provider)
 
   public override async Task<int?> GetCost(IGangPlayer player) {
     if (player.GangId == null || player.GangRank == null) return null;
-    var (success, _) =
-      await gangStats.GetForGang<string>(player.GangId.Value, StatId);
-    if (!success) return 7500;
+    var motd = await gangStats.GetForGang<string>(player.GangId.Value, StatId);
+    if (motd == null) return 7500;
     return null;
   }
 
   public override async Task OnPurchase(IGangPlayer player) {
     if (player.GangId == null || player.GangRank == null) return;
-    var (success, desc) =
-      await gangStats.GetForGang<string>(player.GangId.Value, StatId);
-    if (!success) desc = "Use /gang motd <message> to set the MOTD.";
-    await gangStats.SetForGang(player.GangId.Value, StatId, desc);
+    var motd = await gangStats.GetForGang<string>(player.GangId.Value, StatId)
+      ?? "Use /gang motd <message> to set the MOTD.";
+    await gangStats.SetForGang(player.GangId.Value, StatId, motd);
   }
 
   public async Task<string?> GetMotd(int gangid) {
-    var (success, desc) = await gangStats.GetForGang<string>(gangid, StatId);
-
-    return success ? desc : null;
+    return await gangStats.GetForGang<string>(gangid, StatId);
   }
 
   public async Task<bool> SetMotd(int gangid, string desc,
     IGangPlayer? player = null) {
-    var (success, _) = await gangStats.GetForGang<string>(gangid, StatId);
-    if (!success) return false;
+    var motd = await gangStats.GetForGang<string>(gangid, StatId);
+    if (motd == null) return false;
 
     await gangStats.SetForGang(gangid, StatId, desc);
 

@@ -77,21 +77,16 @@ public class JoinCommand(IServiceProvider provider) : ICommand {
       }
     }
 
-    var (fetchedPolicy, policy) =
-      await gangStats.GetForGang<DoorPolicy>(gang, doorPolicyId);
-
-    if (!fetchedPolicy) policy = DoorPolicy.INVITE_ONLY;
+    var policy = await gangStats.GetForGang<DoorPolicy>(gang, doorPolicyId);
 
     if (policy == DoorPolicy.OPEN) {
       await joinGang(gangPlayer, gang);
       return CommandResult.SUCCESS;
     }
 
-    var (fetchedInvites, inviteData) =
-      await gangStats.GetForGang<InvitationData>(gang, invitationId);
-
-    if (!fetchedInvites || inviteData == null)
-      inviteData = new InvitationData();
+    var inviteData =
+      await gangStats.GetForGang<InvitationData>(gang, invitationId)
+      ?? new InvitationData();
 
     switch (policy) {
       case DoorPolicy.INVITE_ONLY:
@@ -116,6 +111,8 @@ public class JoinCommand(IServiceProvider provider) : ICommand {
         inviteData.AddRequest(gangPlayer.Steam);
         await gangStats.SetForGang(gang, invitationId, inviteData);
         info.ReplySync(localizer.Get(MSG.GANG_POLICY_REQUEST_SENT, gang.Name));
+        break;
+      default:
         break;
     }
 

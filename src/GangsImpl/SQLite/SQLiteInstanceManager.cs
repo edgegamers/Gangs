@@ -15,7 +15,7 @@ public class SQLiteGangInstanceManager(string connectionString,
   private readonly string myTablePrefix = tablePrefix;
   override protected string PrimaryKey => "GangId";
 
-  public Task<(bool, TV?)> GetForGang<TV>(int key, string statId) {
+  public Task<TV?> GetForGang<TV>(int key, string statId) {
     return Get<TV>(key, statId);
   }
 
@@ -57,7 +57,7 @@ public class SQLitePlayerInstanceManager(string connectionString,
   private readonly string myTablePrefix = tablePrefix;
   override protected string PrimaryKey => "Steam";
 
-  public Task<(bool, TV?)> GetForPlayer<TV>(ulong key, string statId) {
+  public Task<TV?> GetForPlayer<TV>(ulong key, string statId) {
     return Get<TV>(key, statId);
   }
 

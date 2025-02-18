@@ -19,9 +19,8 @@ public class CapacityPerk(IServiceProvider provider)
 
   public override async Task<int?> GetCost(IGangPlayer player) {
     if (player.GangId == null || player.GangRank == null) return null;
-    var (success, capacity) =
-      await gangStats.GetForGang<int>(player.GangId.Value, StatId);
-    if (!success) capacity = 1;
+    var capacity = await gangStats.GetForGang<int>(player.GangId.Value, StatId);
+    if (capacity == 0) capacity = 1;
 
     if (capacity >= MaxCapacity) return null;
 
@@ -30,9 +29,8 @@ public class CapacityPerk(IServiceProvider provider)
 
   public override async Task OnPurchase(IGangPlayer player) {
     if (player.GangId == null || player.GangRank == null) return;
-    var (success, capacity) =
-      await gangStats.GetForGang<int>(player.GangId.Value, StatId);
-    if (!success) capacity = 1;
+    var capacity = await gangStats.GetForGang<int>(player.GangId.Value, StatId);
+    if (capacity == 0) capacity = 1;
     capacity++;
     await gangStats.SetForGang(player.GangId.Value, StatId, capacity);
 
@@ -48,8 +46,8 @@ public class CapacityPerk(IServiceProvider provider)
   }
 
   public async Task<int> GetCapacity(int gangid) {
-    var (success, capacity) = await gangStats.GetForGang<int>(gangid, StatId);
-    if (!success) capacity = 1;
+    var capacity = await gangStats.GetForGang<int>(gangid, StatId);
+    if (capacity == 0) capacity = 1;
     return capacity;
   }
 

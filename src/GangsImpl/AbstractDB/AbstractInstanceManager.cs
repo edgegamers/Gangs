@@ -16,10 +16,10 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
   abstract protected string PrimaryKey { get; }
   private string primaryTypeString => GetDBType(typeof(TK));
 
-  public async Task<(bool, TV?)> Get<TV>(TK key, string statId) {
+  public async Task<TV?> Get<TV>(TK key, string statId) {
     if (cache.TryGetValue(statId, out var dict)
       && dict.TryGetValue(key, out var value))
-      return (true, (TV)value);
+      return (TV)value;
 
     await createTable<TV>(statId);
 
@@ -27,17 +27,15 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
       await semaphore.WaitAsync(TimeSpan.FromSeconds(1));
       var dynamic = new DynamicParameters();
       dynamic.Add(PrimaryKey, key);
-      var result = await Connection.QuerySingleAsync<TV>(
+      var result = await Connection.QuerySingleOrDefaultAsync<TV>(
         $"SELECT {(typeof(TV).IsBasicallyPrimitive() ? statId : GetFieldNames<TV>())} FROM {table_prefix}_{statId} WHERE {PrimaryKey} = @{PrimaryKey}",
         dynamic);
-      if (result == null) return (false, result);
+      if (result == null) return default;
       if (!cache.ContainsKey(statId))
         cache[statId] = new Dictionary<TK, object>();
       cache[statId][key] = result;
-      return (true, result);
-    } catch (InvalidOperationException) { return (false, default); } finally {
-      semaphore.Release();
-    }
+      return result;
+    } finally { semaphore.Release(); }
   }
 
   virtual protected string GenerateInsertQuery<TV>(string statId,

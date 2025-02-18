@@ -12,7 +12,7 @@ public class MySQLGangInstanceManager(IDBConfig config)
     config.TablePrefix + "_gang_stats", config.Testing), IGangStatManager {
   override protected string PrimaryKey => "GangId";
 
-  public Task<(bool, TV?)> GetForGang<TV>(int key, string statId) {
+  public Task<TV?> GetForGang<TV>(int key, string statId) {
     return Get<TV>(key, statId);
   }
 
@@ -34,7 +34,7 @@ public class MySQLPlayerInstanceManager(IDBConfig config)
     config.TablePrefix + "_player_stats", config.Testing), IPlayerStatManager {
   override protected string PrimaryKey => "Steam";
 
-  public Task<(bool, TV?)> GetForPlayer<TV>(ulong steam, string statId) {
+  public Task<TV?> GetForPlayer<TV>(ulong steam, string statId) {
     return Get<TV>(steam, statId);
   }
 

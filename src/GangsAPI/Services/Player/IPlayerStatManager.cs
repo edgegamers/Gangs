@@ -4,7 +4,7 @@ using GangsAPI.Data.Stat;
 namespace GangsAPI.Services.Player;
 
 public interface IPlayerStatManager : IPluginBehavior {
-  Task<(bool, TV?)> GetForPlayer<TV>(ulong steam, string statId);
+  Task<TV?> GetForPlayer<TV>(ulong steam, string statId);
   Task<bool> SetForPlayer<TV>(ulong steam, string statId, TV value);
   Task<bool> RemoveFromPlayer(ulong steam, string statId);
 
@@ -12,7 +12,7 @@ public interface IPlayerStatManager : IPluginBehavior {
 
   #region Get
 
-  Task<(bool, TV?)> GetForPlayer<TV>(PlayerWrapper wrapper, string statId) {
+  Task<TV?> GetForPlayer<TV>(PlayerWrapper wrapper, string statId) {
     return GetForPlayer<TV>(wrapper.Steam, statId);
   }
 

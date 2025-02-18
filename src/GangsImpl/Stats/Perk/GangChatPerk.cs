@@ -68,9 +68,8 @@ public class GangChatPerk(IServiceProvider provider)
 
   public override async Task<int?> GetCost(IGangPlayer player) {
     if (player.GangId == null || player.GangRank == null) return null;
-    var (success, perk) =
-      await gangStats.GetForGang<bool>(player.GangId.Value, StatId);
-    return success && perk ? null : 10000;
+    var perk = await gangStats.GetForGang<bool>(player.GangId.Value, StatId);
+    return perk ? null : 10000;
   }
 
   public override async Task OnPurchase(IGangPlayer player) {
@@ -100,10 +99,10 @@ public class GangChatPerk(IServiceProvider provider)
         return;
       }
 
-      var (success, perk) =
+      var perk =
         await gangStats.GetForGang<bool>(gangPlayer.GangId.Value, StatId);
 
-      if (!success || !perk) {
+      if (!perk) {
         wrapper.PrintToChat(localizer.Get(MSG.PERK_MISSING, Name));
         return;
       }

@@ -68,10 +68,10 @@ public class SmokeListener(IServiceProvider provider) : IPluginBehavior {
       if (!cachedGangs.TryGetValue(player.GangId.Value, out var color)) {
         var gang = await gangs.GetGang(player.GangId.Value);
         if (gang == null) continue;
-        var (success, data) =
+        var data =
           await gangStats.GetForGang<SmokePerkData>(gang,
             SmokeColorPerk.STAT_ID);
-        if (!success || data == null) {
+        if (data == null) {
           cachedGangs.Add(player.GangId.Value, null);
           continue;
         }

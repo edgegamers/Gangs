@@ -32,10 +32,9 @@ public class BalanceCommand(IServiceProvider provider) : ICommand {
     if (executor == null) return CommandResult.PLAYER_ONLY;
 
     if (info.ArgCount == 1 || !executor.HasFlags("@css/ban")) {
-      var (success, balance) =
-        await playerStats.GetForPlayer<int>(executor.Steam, id);
+      var balance = await playerStats.GetForPlayer<int>(executor.Steam, id);
 
-      if (!success) {
+      if (balance == 0) {
         info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_NONE));
         return CommandResult.SUCCESS;
       }
@@ -52,10 +51,9 @@ public class BalanceCommand(IServiceProvider provider) : ICommand {
     if (subject == null) return CommandResult.SUCCESS;
 
     if (info.ArgCount == 2 || !executor.HasFlags("@css/root")) {
-      var (success, balance) =
-        await playerStats.GetForPlayer<int>(subject.Steam, id);
+      var balance = await playerStats.GetForPlayer<int>(subject.Steam, id);
 
-      if (!success) {
+      if (balance == 0) {
         info.ReplySync(localizer.Get(MSG.COMMAND_BALANCE_OTHER_NONE,
           subject.Name ?? subject.Steam.ToString()));
         return CommandResult.SUCCESS;

@@ -51,10 +51,10 @@ public class MemberMenu(IServiceProvider provider, IGangPlayer member)
     if (viewerRank.Permissions.HasFlag(Perm.KICK_OTHERS))
       result.Add($"{ChatColors.Orange}Kick");
 
-    var (success, data) =
+    var data =
       await playerStats.GetForPlayer<PlaytimeData>(member.Steam, playtimeId);
 
-    if (!success || data == null) return result;
+    if (data == null) return result;
 
     result.Add(
       $" {ChatColors.Grey}Last Played: {ChatColors.Default}{data.GetLastPlayed().FormatRelative()}");

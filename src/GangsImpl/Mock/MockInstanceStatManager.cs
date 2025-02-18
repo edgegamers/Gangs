@@ -24,14 +24,15 @@ public class MockInstanceStatManager : IPlayerStatManager, IGangStatManager {
   private readonly Dictionary<ulong, Dictionary<string, object>>
     cachedPlayerValues = [], backendPlayerValues = [];
 
-  public Task<(bool, TV?)> GetForPlayer<TV>(ulong steam, string statId) {
+  public Task<TV?> GetForPlayer<TV>(ulong steam, string statId) {
     if (!cachedPlayerValues.TryGetValue(steam, out var playerStatMap))
-      return Task.FromResult<(bool, TV?)>((false, default));
+      return Task.FromResult<TV?>(default);
     if (!playerStatMap.TryGetValue(statId, out var value))
-      return Task.FromResult<(bool, TV?)>((false, default));
+      return Task.FromResult<TV?>(default);
+
     return value is not TV val ?
-      Task.FromResult<(bool, TV?)>((false, default)) :
-      Task.FromResult((true, (TV?)val));
+      Task.FromResult<TV?>(default) :
+      Task.FromResult<TV?>(val);
   }
 
   public Task<bool> SetForPlayer<TV>(ulong steam, string statId, TV value) {
@@ -73,14 +74,14 @@ public class MockInstanceStatManager : IPlayerStatManager, IGangStatManager {
     return Task.FromResult(true);
   }
 
-  public Task<(bool, TV?)> GetForGang<TV>(int key, string statId) {
+  public Task<TV?> GetForGang<TV>(int key, string statId) {
     if (!cachedGangValues.TryGetValue(key, out var gangStatMap))
-      return Task.FromResult<(bool, TV?)>((false, default));
+      return Task.FromResult<TV?>(default);
     if (!gangStatMap.TryGetValue(statId, out var value))
-      return Task.FromResult<(bool, TV?)>((false, default));
+      return Task.FromResult<TV?>(default);
     return value is not TV val ?
-      Task.FromResult<(bool, TV?)>((false, default)) :
-      Task.FromResult((true, (TV?)val));
+      Task.FromResult<TV?>(default) :
+      Task.FromResult<TV?>(val);
   }
 
   public Task<bool> SetForGang<TV>(int gangId, string statId, TV value) {

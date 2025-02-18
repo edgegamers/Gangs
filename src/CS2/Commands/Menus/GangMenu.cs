@@ -121,18 +121,18 @@ public class GangMenu(IServiceProvider provider, IGang gang) : IMenu {
   private async Task addInviteItem(Perm rank, PlayerWrapper player) {
     if (!rank.HasFlag(Perm.INVITE_OTHERS)) return;
 
-    var (success, invites) =
+    var invites =
       await gangStatManager.GetForGang<InvitationData>(gang, invitationStatId);
-    if (!success || invites == null) invites = new InvitationData();
+    if (invites == null) invites = new InvitationData();
 
     var entry =
       $" {ChatColors.DarkRed}2{ChatColors.Grey}. {ChatColors.Yellow}{invites.GetInvitedSteams().Count} {ChatColors.LightRed}Invite";
 
-    var (policySuccess, doorPolicy) =
+    var doorPolicy =
       await gangStatManager.GetForGang<DoorPolicy>(gang, doorPolicyId);
     if (invites.GetInvitedSteams().Count != 1) entry += "s";
 
-    if (!policySuccess || doorPolicy != DoorPolicy.REQUEST_ONLY) {
+    if (doorPolicy != DoorPolicy.REQUEST_ONLY) {
       player.PrintToChat(entry);
       return;
     }
