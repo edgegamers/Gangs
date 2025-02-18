@@ -72,7 +72,7 @@ public class DoorPolicyCommand(IServiceProvider provider)
       return CommandResult.SUCCESS;
     }
 
-    var (_, policy) =
+    var policy =
       await gangStats.GetForGang<DoorPolicy>(player.GangId.Value, doorPolicyId);
 
     var menu = new DoorPolicyMenu(Provider, policy);

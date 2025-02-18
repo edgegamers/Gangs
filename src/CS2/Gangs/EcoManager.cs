@@ -50,9 +50,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
   }
 
   public async Task<int> GetBalance(int gangId) {
-    var (success, balance) =
-      await gangStats.GetForGang<int>(gangId, BalanceStat.STAT_ID);
-    return success ? balance : 0;
+    return await gangStats.GetForGang<int>(gangId, BalanceStat.STAT_ID);
   }
 
   public async Task<int> TryPurchase(PlayerWrapper player, int balanceDue,
@@ -167,9 +165,7 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
 
   public async Task<int> Grant(int gangId, int amount, bool print,
     string? reason = null) {
-    var (success, balance) =
-      await gangStats.GetForGang<int>(gangId, BalanceStat.STAT_ID);
-    if (!success) balance = 0;
+    var balance = await gangStats.GetForGang<int>(gangId, BalanceStat.STAT_ID);
 
     await gangStats.SetForGang(gangId, BalanceStat.STAT_ID, balance + amount);
     if (!print) return balance + amount;
@@ -190,11 +186,9 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
   }
 
   private async Task<(int, int)> getBalance(ulong steam) {
-    var gangTotal = 0;
-    var (success, balance) =
+    var gangTotal =
       await playerStats.GetForPlayer<int>(steam, BalanceStat.STAT_ID);
-    if (success) gangTotal += balance;
-    var playerTotal        = gangTotal;
+    var playerTotal = gangTotal;
 
     var gangPlayer = await players.GetPlayer(steam)
       ?? throw new PlayerNotFoundException(steam);
@@ -205,10 +199,10 @@ public class EcoManager(IServiceProvider provider) : IEcoManager {
     if (rank == null) return (playerTotal, gangTotal);
     if (!rank.Permissions.HasFlag(Perm.BANK_WITHDRAW))
       return (playerTotal, gangTotal);
-    var (gSuccess, gBalance) =
+    var gBalance =
       await gangStats.GetForGang<int>(gangPlayer.GangId.Value,
         BalanceStat.STAT_ID);
-    if (gSuccess) gangTotal += gBalance;
+    gangTotal += gBalance;
 
     return (playerTotal, gangTotal);
   }

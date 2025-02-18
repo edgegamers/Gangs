@@ -19,31 +19,29 @@ public class DisplaySetting(IServiceProvider provider)
   public override DisplaySettingData? Value { get; set; } = new();
 
   public async Task<bool> IsChatEnabled(ulong steam) {
-    var (success, data) =
+    var data =
       await playerStats.GetForPlayer<DisplaySettingData>(steam, StatId);
 
-    return success && data is { ChatVisible: true };
+    return data is { ChatVisible: true };
   }
 
   public async Task<bool> IsScoreboardEnabled(ulong steam) {
-    var (success, data) =
+    var data =
       await playerStats.GetForPlayer<DisplaySettingData>(steam, StatId);
 
-    return success && data is { ScoreboardVisible: true };
+    return data is { ScoreboardVisible: true };
   }
 
   public async Task SetChatEnabled(ulong steam, bool enabled) {
-    var (success, data) =
-      await playerStats.GetForPlayer<DisplaySettingData>(steam, StatId);
-    if (!success || data == null) data = new DisplaySettingData();
+    var data = await playerStats.GetForPlayer<DisplaySettingData>(steam, StatId)
+      ?? new DisplaySettingData();
     data.ChatVisible = enabled;
     await playerStats.SetForPlayer(steam, StatId, data);
   }
 
   public async Task SetScoreboardEnabled(ulong steam, bool enabled) {
-    var (success, data) =
-      await playerStats.GetForPlayer<DisplaySettingData>(steam, StatId);
-    if (!success || data == null) data = new DisplaySettingData();
+    var data = await playerStats.GetForPlayer<DisplaySettingData>(steam, StatId)
+      ?? new DisplaySettingData();
     data.ScoreboardVisible = enabled;
     await playerStats.SetForPlayer(steam, StatId, data);
   }

@@ -27,9 +27,9 @@ public class SmokeColorPerk(IServiceProvider provider)
 
   public override async Task<IMenu?> GetMenu(IGangPlayer player) {
     Debug.Assert(player.GangId != null, "player.GangId != null");
-    var (success, data) =
-      await gangStats.GetForGang<SmokePerkData>(player.GangId.Value, STAT_ID);
-    if (!success || data == null) data = new SmokePerkData();
+    var data =
+      await gangStats.GetForGang<SmokePerkData>(player.GangId.Value, STAT_ID)
+      ?? new SmokePerkData();
     return new SmokeColorMenu(Provider, data);
   }
 

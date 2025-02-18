@@ -6,8 +6,8 @@ public class GangTests(IGangManager gangs) : TestParent(gangs) {
   [Theory]
   [ClassData(typeof(TestData))]
   public async Task Instance_Fetch_Unregistered(IGangStatManager manager) {
-    var (success, _) = await manager.GetForGang<int>(TestGang, TestStat.StatId);
-    Assert.False(success);
+    var result = await manager.GetForGang<int>(TestGang, TestStat.StatId);
+    Assert.Equal(0, result);
   }
 
   [Theory]
@@ -15,8 +15,8 @@ public class GangTests(IGangManager gangs) : TestParent(gangs) {
   public async Task Instance_Delete(IGangStatManager manager) {
     Assert.True(await manager.SetForGang(TestGang, TestStat));
     Assert.True(await manager.RemoveFromGang(TestGang, TestStat.StatId));
-    var (success, _) = await manager.GetForGang<int>(TestGang, TestStat.StatId);
-    Assert.False(success);
+    var result = await manager.GetForGang<int>(TestGang, TestStat.StatId);
+    Assert.Equal(0, result);
   }
 
   [Theory]

@@ -37,13 +37,12 @@ public class BalanceCommand(IServiceProvider provider)
   }
 
   private async Task reportBalance(CommandInfoWrapper info, int gangId) {
-    var (success, balance) =
-      await GangStats.GetForGang<int>(gangId, BalanceStat.STAT_ID);
+    var balance = await GangStats.GetForGang<int>(gangId, BalanceStat.STAT_ID);
 
     var gang = await Gangs.GetGang(gangId)
       ?? throw new GangNotFoundException(gangId);
 
-    if (!success) {
+    if (balance == 0) {
       info.ReplySync(Locale.Get(MSG.COMMAND_BALANCE_GANG_NONE, gang.Name));
       return;
     }

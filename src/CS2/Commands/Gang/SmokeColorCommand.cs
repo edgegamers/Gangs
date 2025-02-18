@@ -20,10 +20,9 @@ public class SmokeColorCommand(IServiceProvider provider)
     var gang = await Gangs.GetGang(player.GangId.Value)
       ?? throw new GangNotFoundException(player.GangId.Value);
 
-    var (success, data) =
-      await GangStats.GetForGang<SmokePerkData>(gang, SmokeColorPerk.STAT_ID);
-
-    if (!success || data == null) data = new SmokePerkData();
+    var data =
+      await GangStats.GetForGang<SmokePerkData>(gang, SmokeColorPerk.STAT_ID)
+      ?? new SmokePerkData();
 
     if (info.ArgCount == 1) {
       var menu = new SmokeColorMenu(Provider, data);
@@ -62,7 +61,8 @@ public class SmokeColorCommand(IServiceProvider provider)
       if (GangChat == null) return CommandResult.SUCCESS;
 
       await GangChat.SendGangChat(player, gang,
-        Locale.Get(MSG.PERK_PURCHASED, player.Name ?? player.Steam.ToString(), color.ToString()));
+        Locale.Get(MSG.PERK_PURCHASED, player.Name ?? player.Steam.ToString(),
+          color.ToString()));
       return CommandResult.SUCCESS;
     }
 

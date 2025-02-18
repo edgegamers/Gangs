@@ -34,7 +34,7 @@ public class KDRStatsTracker(IServiceProvider provider) : IPluginBehavior {
     Task.Run(async () => {
       var gangPlayer = await players.GetPlayer(wrapper.Steam);
       if (gangPlayer == null) return;
-      var (_, stat) = await playerStats.GetForPlayer<KDRData>(wrapper, statId);
+      var stat = await playerStats.GetForPlayer<KDRData>(wrapper, statId);
 
       stat ??= new KDRData();
 

@@ -31,32 +31,32 @@ public class DisplayPerk(IServiceProvider provider)
 
   public override async Task<IMenu?> GetMenu(IGangPlayer player) {
     Debug.Assert(player.GangId != null, "player.GangId != null");
-    var (_, data) =
+    var data =
       await gangStats.GetForGang<DisplayData>(player.GangId.Value, StatId);
     var menu = new DisplayPerkMenu(Provider, data ?? new DisplayData());
     return menu;
   }
 
   public async Task<bool> HasChatDisplay(IGang gang) {
-    var (success, data) = await gangStats.GetForGang<DisplayData>(gang, StatId);
-    return success && data is { ChatBought: true };
+    var data = await gangStats.GetForGang<DisplayData>(gang, StatId);
+    return data is { ChatBought: true };
   }
 
   public async Task<bool> HasScoreboardDisplay(IGang gang) {
-    var (success, data) = await gangStats.GetForGang<DisplayData>(gang, StatId);
-    return success && data is { ScoreboardBought: true };
+    var data = await gangStats.GetForGang<DisplayData>(gang, StatId);
+    return data is { ScoreboardBought: true };
   }
 
   public async Task SetChatDisplay(IGang gang, bool value) {
-    var (success, data) = await gangStats.GetForGang<DisplayData>(gang, StatId);
-    if (!success || data == null) data = new DisplayData();
+    var data = await gangStats.GetForGang<DisplayData>(gang, StatId)
+      ?? new DisplayData();
     data.ChatBought = value;
     await gangStats.SetForGang(gang, StatId, data);
   }
 
   public async Task SetScoreboardDisplay(IGang gang, bool value) {
-    var (success, data) = await gangStats.GetForGang<DisplayData>(gang, StatId);
-    if (!success || data == null) data = new DisplayData();
+    var data = await gangStats.GetForGang<DisplayData>(gang, StatId)
+      ?? new DisplayData();
     data.ScoreboardBought = value;
     await gangStats.SetForGang(gang, StatId, data);
   }

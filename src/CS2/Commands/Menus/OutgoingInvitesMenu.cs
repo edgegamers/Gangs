@@ -30,7 +30,7 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
     players   = provider.GetRequiredService<IPlayerManager>();
     gangStats = provider.GetRequiredService<IGangStatManager>();
 
-    var (_, policy) = gangStats.GetForGang<DoorPolicy>(gang, doorPolicyId)
+    var policy = gangStats.GetForGang<DoorPolicy>(gang, doorPolicyId)
      .GetAwaiter()
      .GetResult();
 
@@ -40,9 +40,9 @@ public class OutgoingInvitesMenu : AbstractPagedMenu<InvitationEntry?> {
   override protected async Task<List<InvitationEntry?>> GetItems(
     PlayerWrapper _) {
     var results = new List<InvitationEntry?> { null };
-    var (success, invites) =
+    var invites =
       await gangStats.GetForGang<InvitationData>(gang, invitationStat.StatId);
-    if (!success || invites == null) return results;
+    if (invites == null) return results;
 
     var entries = invites.GetEntries();
     results.AddRange(entries.Select(entry => (InvitationEntry?)entry));
