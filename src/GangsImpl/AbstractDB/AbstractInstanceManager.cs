@@ -35,9 +35,7 @@ public abstract class AbstractInstanceManager<TK>(string connectionString,
         cache[statId] = new Dictionary<TK, object>();
       cache[statId][key] = result;
       return (true, result);
-    } catch (InvalidOperationException) { return (false, default); } finally {
-      semaphore.Release();
-    }
+    } finally { semaphore.Release(); }
   }
 
   virtual protected string GenerateInsertQuery<TV>(string statId,
