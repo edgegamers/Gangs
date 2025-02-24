@@ -1,3 +1,5 @@
+using System.Text;
+using System.Text.Json;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
@@ -31,6 +33,9 @@ public class GangChatPerk(IServiceProvider provider)
   private readonly IRankManager ranks =
     provider.GetRequiredService<IRankManager>();
 
+  private readonly IWebhookConfig? webhookConfig =
+    provider.GetService<IWebhookConfig>();
+
   private readonly Dictionary<int, List<string>> history = new();
 
   public override bool Value { get; set; }
@@ -58,6 +63,22 @@ public class GangChatPerk(IServiceProvider provider)
           message));
       }
     });
+
+    await SendToDiscordWebhook(gang.Name, name, message);
+  }
+
+  private async Task SendToDiscordWebhook(string gangName, string sender,
+    string message) {
+    if (webhookConfig == null) return;
+    using var httpClient = new HttpClient();
+    var payload = new {
+      username = "Gang Chat", content = $"**[{gangName}]** {sender}: {message}"
+    };
+
+    var json    = JsonSerializer.Serialize(payload);
+    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+    await httpClient.PostAsync(webhookConfig.WebhookUrl, content);
   }
 
   public void ClearChatHistory(IGang gang) { history.Remove(gang.GangId); }
