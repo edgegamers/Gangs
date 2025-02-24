@@ -71,9 +71,7 @@ public class GangChatPerk(IServiceProvider provider)
     string message) {
     if (webhookConfig == null) return;
     using var httpClient = new HttpClient();
-    var payload = new {
-      username = "Gang Chat", content = $"**[{gangName}]** {sender}: {message}"
-    };
+    var payload = new { username = gangName, content = $"{sender}: {message}" };
 
     var json    = JsonSerializer.Serialize(payload);
     var content = new StringContent(json, Encoding.UTF8, "application/json");
