@@ -23,6 +23,7 @@ namespace GangsImpl;
 public class GangServiceCollection : IPluginServiceCollection<CS2Gangs> {
   public void ConfigureServices(IServiceCollection serviceCollection) {
     serviceCollection.AddScoped<IDBConfig, EnvDBConfig>();
+    serviceCollection.AddScoped<IWebhookConfig, EnvWebhookConfig>();
     serviceCollection.AddPluginBehavior<IServerProvider, CS2ServerProvider>();
     serviceCollection.AddPluginBehavior<IPlayerTargeter, Cs2PlayerTargeter>();
     serviceCollection.AddPluginBehavior<IGangManager, MySQLGangManager>();
