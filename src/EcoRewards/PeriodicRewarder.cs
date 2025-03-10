@@ -24,14 +24,18 @@ public class PeriodicRewarder(IServiceProvider provider) : IPluginBehavior {
       players = players.Where(p => p.Player != null).ToList();
 
       foreach (var player in players) {
-        var reward = getReward(player);
+        var reward = getBaseReward(player);
+        
+        if (players.Count < 15)
+          reward *= 2;
+        
         Task.Run(
           async () => await eco.Grant(player, reward, reason: "Playtime"));
       }
     }, TimerFlags.REPEAT);
   }
 
-  private int getReward(PlayerWrapper player) {
+  private static int getBaseReward(PlayerWrapper player) {
     var alive = player.Player != null && player.Player.PawnIsAlive;
     if (player.HasFlags("@ego/royal")) return alive ? 21 : 14;
     if (player.HasFlags("@ego/platinum")) return alive ? 14 : 10;
