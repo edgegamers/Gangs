@@ -3,6 +3,7 @@ using System.Text.Json;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
+using CounterStrikeSharp.API.Modules.Events;
 using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Gang;
