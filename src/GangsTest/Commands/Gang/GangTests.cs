@@ -1,6 +1,9 @@
 ﻿using Commands;
+using Commands.Gang;
 using CounterStrikeSharp.API.Modules.Commands;
+using GangsAPI;
 using GangsAPI.Data.Command;
+using GangsAPI.Extensions;
 using GangsAPI.Services.Gang;
 using GangsAPI.Services.Menu;
 using Microsoft.Extensions.DependencyInjection;
@@ -85,5 +88,33 @@ public class GangTests(IServiceProvider provider) : TestParent(provider,
       await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Chat,
         Command.Name));
     Assert.NotNull(menus.GetActiveMenu(TestPlayer));
+  }
+
+  [Fact]
+  public async Task Gang_Transfer_Ownership()
+  {
+    // Ensure command is registered
+    Commands.RegisterCommand(new TransferCommand(provider));
+    
+    // Create original owner and owned gang
+    await Players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    var owner = await Players.GetPlayer(TestPlayer.Steam);
+    Assert.NotNull(owner);
+    var gang = await Gangs.CreateGang("Test Gang", owner);
+    Assert.NotNull(gang);
+    Assert.NotNull(owner.GangRank);
+    
+    // Create player to transfer ownership to
+    var newOwner = await Players.CreatePlayer(new Random().NextULong(), "NewOwner");
+    newOwner.GangId   = gang.GangId;
+    var rank = await Ranks.GetLowerRank(gang.GangId, owner.GangRank.Value);
+    Assert.NotNull(rank);
+    newOwner.GangRank = rank.Rank;
+    await Players.UpdatePlayer(newOwner);
+    
+    // Transfer ownership
+    Assert.Equal(CommandResult.SUCCESS,
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "transfer", newOwner.Steam.ToString()));
   }
 }
