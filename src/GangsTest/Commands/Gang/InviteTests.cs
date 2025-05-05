@@ -4,6 +4,7 @@ using GangsAPI;
 using GangsAPI.Data;
 using GangsAPI.Data.Command;
 using GangsAPI.Extensions;
+using GangsAPI.Perks;
 using GangsAPI.Permissions;
 using GangsAPI.Services;
 using GangsAPI.Services.Gang;
@@ -194,5 +195,37 @@ public class InviteTests(IServiceProvider provider)
     Assert.Equal(
       [Locale.Get(MSG.COMMAND_INVITE_SUCCESS, guest.Name!, gang.Name)],
       TestPlayer.ConsoleOutput);
+  }
+
+  [Fact]
+  public async Task Invite_Cancel_When_Max_Capacity() {
+    // Create executor and gang
+    await Players.CreatePlayer(TestPlayer.Steam, TestPlayer.Name);
+    var gang = await Gangs.CreateGang("Test Gang", TestPlayer);
+    Assert.NotNull(gang);
+    
+    // Send player that we want to cancel the invite to an invite
+    var playerToCancel = await Players.CreatePlayer(new Random().NextULong(), "PlayerToCancel");
+    await Players.UpdatePlayer(playerToCancel);
+    Assert.Equal(CommandResult.SUCCESS,
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", playerToCancel.Steam.ToString()));
+    
+    // Assume gang capacity and current member count
+    var capacity = 20;
+    var members  = 1;
+    
+    // Fill gang to capacity starting at the current member count
+    for (int i = members; i < capacity; ++i) {
+      var guest = await Players.CreatePlayer(new Random().NextULong(), "Guest" + i);
+      guest.GangId   = gang.GangId;
+      guest.GangRank = (await Ranks.GetJoinRank(gang)).Rank;
+      await Players.UpdatePlayer(guest);
+    }
+ 
+    // Attempt to cancel invite to player
+    Assert.Equal(CommandResult.SUCCESS,
+      await Commands.ProcessCommand(TestPlayer, CommandCallingContext.Console,
+        "invite", "cancel", playerToCancel.Name!));
   }
 }

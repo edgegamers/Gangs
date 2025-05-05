@@ -55,7 +55,7 @@ public class TransferCommand(IServiceProvider provider)
     var targetRank = await Ranks.GetRank(target)
       ?? throw new GangException("Target does not have a rank.");
 
-    if (targetRank != immediatelyLower) {
+    if (targetRank.Rank != immediatelyLower.Rank) {
       info.ReplySync(Locale.Get(MSG.COMMAND_TRANSFER_SUBORDINATE,
         immediatelyLower.Name));
       return CommandResult.SUCCESS;

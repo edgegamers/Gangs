@@ -37,6 +37,13 @@ public class InviteCommand(IServiceProvider provider)
 
     if (!perms.Permissions.HasFlag(Perm.INVITE_OTHERS))
       return await handleNoPermission(player, info);
+    
+    var invites =
+      await GangStats.GetForGang<InvitationData>(player.GangId.Value,
+        gangInviteId) ?? new InvitationData();
+
+    if (info[1].Equals("cancel", StringComparison.OrdinalIgnoreCase))
+      return await handleCancelInvite(info, player, invites);
 
     var capacityPerk = Provider.GetService<ICapacityPerk>();
     if (capacityPerk != null) {
@@ -49,13 +56,6 @@ public class InviteCommand(IServiceProvider provider)
         return CommandResult.ERROR;
       }
     }
-
-    var invites =
-      await GangStats.GetForGang<InvitationData>(player.GangId.Value,
-        gangInviteId) ?? new InvitationData();
-
-    if (info[1].Equals("cancel", StringComparison.OrdinalIgnoreCase))
-      return await handleCancelInvite(info, player, invites);
 
     return await handleInvite(executor, player, info, invites);
   }
