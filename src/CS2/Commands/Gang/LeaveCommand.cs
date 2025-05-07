@@ -35,8 +35,11 @@ public class LeaveCommand(IServiceProvider provider)
     player.GangRank = null;
 
     await Players.UpdatePlayer(player);
-    Server.PrintToChatAll(Locale.Get(MSG.COMMAND_LEAVE_LEFT,
-      player.Name ?? player.Steam.ToString(), gang.Name));
+    
+    await Server.NextFrameAsync(() => 
+      Server.PrintToChatAll(Locale.Get(MSG.COMMAND_LEAVE_LEFT,
+      player.Name ?? player.Steam.ToString(), gang.Name)));
+    
     return CommandResult.SUCCESS;
   }
 }
