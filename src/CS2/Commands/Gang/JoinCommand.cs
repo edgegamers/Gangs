@@ -127,7 +127,9 @@ public class JoinCommand(IServiceProvider provider) : ICommand {
 
     await players.UpdatePlayer(player);
     if (chatPerk != null) await chatPerk.SendGangChat(player, gang, "joined.");
+    
+    await Server.NextFrameAsync(() => 
     Server.PrintToChatAll(localizer.Get(MSG.GANG_PLAYER_JOINED,
-      player.Name ?? player.Steam.ToString(), gang.Name));
+      player.Name ?? player.Steam.ToString(), gang.Name)));
   }
 }
