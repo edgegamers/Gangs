@@ -50,7 +50,7 @@ public class DisbandTests(IServiceProvider provider)
 
   [Fact]
   public async Task Disband_WithOwner_ShouldAskForConfirmation() {
-    var gang = await Gangs.CreateGang("Test Gang", TestPlayer);
+    await Gangs.CreateGang("Test Gang", TestPlayer);
     var result = await Commands.ProcessCommand(TestPlayer,
       CommandCallingContext.Chat, Command.Name);
     var exp = Locale.Get(MSG.COMMAND_GANG_DISBAND_WARN);
