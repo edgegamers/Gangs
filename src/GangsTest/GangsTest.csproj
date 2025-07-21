@@ -10,16 +10,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="6.0.4"/>
-        <PackageReference Include="FuzzDotNet.MSTest" Version="0.1.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>
-        <PackageReference Include="Xunit.DependencyInjection" Version="9.7.1"/>
-        <PackageReference Include="Xunit.DependencyInjection.Logging" Version="9.0.0"/>
+        <PackageReference Include="coverlet.collector" Version="6.0.4" />
+        <PackageReference Include="FuzzDotNet.MSTest" Version="0.1.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.7" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageReference Include="Xunit.DependencyInjection" Version="10.6.0" />
+        <PackageReference Include="Xunit.DependencyInjection.Logging" Version="10.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit"/>
+        <Using Include="Xunit" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,12 +29,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\CS2\Commands\Commands.csproj"/>
-        <ProjectReference Include="..\GangsImpl\Mock\Mock.csproj"/>
-        <ProjectReference Include="..\GangsImpl\SQLite\SQLite.csproj"/>
-        <ProjectReference Include="..\GangsImpl\MySQL\MySQL.csproj"/>
-        <ProjectReference Include="..\GangsImpl\Stats\Stats.csproj"/>
-        <ProjectReference Include="..\CS2\Gangs\Gangs.csproj"/>
+        <ProjectReference Include="..\CS2\Commands\Commands.csproj" />
+        <ProjectReference Include="..\GangsImpl\Mock\Mock.csproj" />
+        <ProjectReference Include="..\GangsImpl\SQLite\SQLite.csproj" />
+        <ProjectReference Include="..\GangsImpl\MySQL\MySQL.csproj" />
+        <ProjectReference Include="..\GangsImpl\Stats\Stats.csproj" />
+        <ProjectReference Include="..\CS2\Gangs\Gangs.csproj" />
     </ItemGroup>
 
 </Project>
