@@ -1,4 +1,4 @@
-# This workflow will build a .NET project
+# This workflow will build a .NET project 
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
 name: Nightly
@@ -11,7 +11,7 @@ on:
       - 'src/**'
       - '.github/workflows/nightly.yml'
   schedule:
-    - cron: '15 0 * * 3' # Every Wednesday at 00:15 UTC
+    - cron: '15 0 * * 3'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -55,3 +55,4 @@ jobs:
             -F ref=dev \
             https://gitlab.edgegamers.io/api/v4/projects/2594/trigger/pipeline
 
+ 
