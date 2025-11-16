@@ -10,6 +10,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4"/>
     </ItemGroup>
     <ItemGroup>
+      <PackageReference Include="System.Text.Json" Version="8.0.5" />
         <Reference Include="CounterStrikeSharp.API">
             <HintPath>..\..\..\..\..\.nuget\packages\counterstrikesharp.api\1.0.263\lib\net8.0\CounterStrikeSharp.API.dll</HintPath>
         </Reference>
