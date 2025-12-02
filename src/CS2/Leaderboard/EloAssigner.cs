@@ -21,7 +21,8 @@ public class EloAssigner(ILeaderboard lb) : IPluginBehavior {
 
   [GameEventHandler]
   public HookResult OnStart(EventRoundStart ev, GameEventInfo info) {
-    refresh();
+    // ELO assigner disabled to prevent crashes
+    // refresh();
     return HookResult.Continue;
   }
 
