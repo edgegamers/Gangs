@@ -13,16 +13,14 @@ public class EloAssigner(ILeaderboard lb) : IPluginBehavior {
   private readonly Dictionary<ulong, int> ranks = new();
 
   public void Start(BasePlugin? plugin, bool hotReload) {
-    // ELO assigner disabled to prevent crashes
-    // plugin?.RegisterListener<Listeners.OnTick>(OnTick);
+    plugin?.RegisterListener<Listeners.OnTick>(OnTick);
 
-    // if (hotReload) refresh();
+    if (hotReload) refresh();
   }
 
   [GameEventHandler]
   public HookResult OnStart(EventRoundStart ev, GameEventInfo info) {
-    // ELO assigner disabled to prevent crashes
-    // refresh();
+    refresh();
     return HookResult.Continue;
   }
 
@@ -48,20 +46,17 @@ public class EloAssigner(ILeaderboard lb) : IPluginBehavior {
   }
 
   private void OnTick() {
-    // ELO assigner disabled to prevent crashes
-    return;
-    
-    // var players = Utilities.GetPlayers()
-    //  .Where(player => !player.IsBot && player.Team != CsTeam.Spectator
-    //     && AdminManager.PlayerHasPermissions(player, "@ego/dssilver"));
+    var players = Utilities.GetPlayers()
+     .Where(player => !player.IsBot && player.Team != CsTeam.Spectator
+        && AdminManager.PlayerHasPermissions(player, "@ego/dssilver"));
 
-    // foreach (var player in players) {
-    //   if (!ranks.TryGetValue(player.SteamID, out var rankInfo)) continue;
-    //   player.CompetitiveRankType = 11;
-    //   player.CompetitiveRanking  = rankInfo;
-    //   player.CompetitiveWins     = 777;
-    //   Utilities.SetStateChanged(player, "CCSPlayerController",
-    //     "m_iCompetitiveRankType");
-    // }
+    foreach (var player in players) {
+      if (!ranks.TryGetValue(player.SteamID, out var rankInfo)) continue;
+      player.CompetitiveRankType = 11;
+      player.CompetitiveRanking  = rankInfo;
+      player.CompetitiveWins     = 777;
+      Utilities.SetStateChanged(player, "CCSPlayerController",
+        "m_iCompetitiveRankType");
+    }
   }
 }
