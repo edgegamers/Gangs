@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-          show-progress: true
+          show-progress: true,
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
